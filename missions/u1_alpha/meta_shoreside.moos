@@ -32,7 +32,7 @@ ProcessConfig = uFldFlagMgr
   AppTick       = 2
   CommsTick     = 2
 
-  flag = x=80,  y=-90, label=one
+  flag = x=62,  y=-90, label=one
   flag = x=120, y=-90, label=two
 }
 
@@ -106,6 +106,7 @@ ProcessConfig = pMarineViewer
   appcast_viewable = true
   appcast_color_scheme = indigo
 
+  scope = FLAG_GRAB_REPORT
   scope = NODE_BROKER_PING
   scope = DEPLOY_ALL
 
