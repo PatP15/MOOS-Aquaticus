@@ -32,21 +32,23 @@ class FlagManager : public AppCastingMOOSApp
    void registerVariables();
    bool handleConfigFlag(std::string);
    bool handleMailNodeReport(std::string str);
+   void postFlagMarkers();
 
+ private: // Config variables
 
- private: // Configuration variables
-   
- private: // State variables
+   // Flag Configuration
    std::vector<double>      m_flags_x;
    std::vector<double>      m_flags_y;
    std::vector<double>      m_flags_grab_dist;
    std::vector<std::string> m_flags_ownedby;
    std::vector<std::string> m_flags_label;
-
    double m_default_grab_dist;
    
-   
-   // Holds last node report received for vehicle vname     
+   bool   m_report_flags_on_start;
+     
+ private: // State variables
+ 
+   // Vehicle node report state vars
    std::map<std::string, NodeRecord>   m_map_record;
    std::map<std::string, double>       m_map_tstamp;
    std::map<std::string, unsigned int> m_map_rcount;

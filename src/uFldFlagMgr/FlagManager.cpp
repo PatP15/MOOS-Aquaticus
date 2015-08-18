@@ -10,6 +10,7 @@
 #include "ACTable.h"
 #include "FlagManager.h"
 #include "NodeRecordUtils.h"
+#include "XYMarker.h"
 
 using namespace std;
 
@@ -20,7 +21,8 @@ FlagManager::FlagManager()
 {
   m_default_grab_dist = 10; // meters
 
-  m_total_reports_rcvd = 0;
+  m_total_reports_rcvd    = 0;
+  m_report_flags_on_start = true;
 }
 
 //---------------------------------------------------------
@@ -34,25 +36,25 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
     string key    = msg.GetKey();
+    string sval  = msg.GetString(); 
 
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
-    string sval  = msg.GetString(); 
     string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
 #endif
 
-     if(key == "FOO") 
-       cout << "great!";
-
-     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
-       reportRunWarning("Unhandled Mail: " + key);
-   }
+    bool handled = false;
+    if(key == "NODE_REPORT") 
+      handled = handleMailNodeReport(sval);
+    else 
+      reportRunWarning("Unhandled Mail: " + key);
+  }
 	
-   return(true);
+  return(true);
 }
 
 //---------------------------------------------------------
@@ -105,6 +107,9 @@ bool FlagManager::OnStartUp()
   }
   
   registerVariables();	
+
+
+  postFlagMarkers();
   return(true);
 }
 
@@ -194,11 +199,47 @@ bool FlagManager::handleMailNodeReport(string str)
   return(true);
 }
 
+//------------------------------------------------------------ 
+// Procedure: postFlagMarkers
+
+void FlagManager::postFlagMarkers()
+{
+  for(unsigned int i=0; i<m_flags_x.size(); i++) {
+    XYMarker new_marker;
+    new_marker.set_vx(m_flags_x[i]);
+    new_marker.set_vy(m_flags_y[i]);
+    new_marker.set_label(m_flags_label[i]);
+    new_marker.set_width(2);
+    new_marker.set_type("circle");
+    new_marker.set_color("fill_color", "red");
+    new_marker.set_color("edge_color", "black");
+    string spec = new_marker.get_spec();
+    Notify("VIEW_MARKER", spec);
+  }
+}
+
 //------------------------------------------------------------
 // Procedure: buildReport()
 
 bool FlagManager::buildReport() 
 {
+  m_msgs << "Node Report Summary"                    << endl;
+  m_msgs << "======================================" << endl;
+  m_msgs << "        Total Received: " << m_total_reports_rcvd << endl;
+
+  map<string, unsigned int>::iterator p;
+  for(p=m_map_rcount.begin(); p!=m_map_rcount.end(); p++) {
+    string vname = p->first;
+    unsigned int total = p->second;
+    string pad_vname  = padString(vname, 20);
+    m_msgs << "  " << pad_vname << ": " << total;
+
+    double elapsed_time = m_curr_time - m_map_tstamp[vname];
+    string stime = "(" + doubleToString(elapsed_time,1) + ")";
+    stime = padString(stime,12);
+    m_msgs << stime << endl;
+  }
+
   m_msgs << "============================================ \n";
   m_msgs << "File:                                        \n";
   m_msgs << "============================================ \n";
