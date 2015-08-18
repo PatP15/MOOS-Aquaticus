@@ -32,6 +32,7 @@ class FlagManager : public AppCastingMOOSApp
    void registerVariables();
    bool handleConfigFlag(std::string);
    bool handleMailNodeReport(std::string str);
+   bool handleMailFlagGrab(std::string, std::string);
    void postFlagMarkers();
 
  private: // Config variables

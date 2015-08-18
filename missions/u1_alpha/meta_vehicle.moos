@@ -27,8 +27,8 @@ ProcessConfig = uTimerScript
 {
 	paused = false
 
-  event     = var=FLAG_GRAB, val=true, time=3
-  reset_max = unlimited
+  event      = var=FLAG_GRAB, val=true, time=3
+  reset_max  = unlimited
 	reset_time = all-posted
 }
 

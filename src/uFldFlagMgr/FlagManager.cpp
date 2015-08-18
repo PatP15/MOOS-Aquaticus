@@ -35,11 +35,11 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
   MOOSMSG_LIST::iterator p;
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
-    string key    = msg.GetKey();
+    string key   = msg.GetKey();
     string sval  = msg.GetString(); 
+    string comm  = msg.GetCommunity();
 
 #if 0 // Keep these around just for template
-    string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
     string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
@@ -50,6 +50,8 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if(key == "NODE_REPORT") 
       handled = handleMailNodeReport(sval);
+    else if(key == "FLAG_GRAB_REQ") 
+      handled = handleMailFlagGrab(sval, comm);
     else 
       reportRunWarning("Unhandled Mail: " + key);
   }
@@ -119,7 +121,7 @@ bool FlagManager::OnStartUp()
 void FlagManager::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  Register("FLAG_GRAB", 0);
+  Register("FLAG_GRAB_REQ", 0);
   Register("NODE_REPORT", 0);
 }
 
@@ -195,6 +197,63 @@ bool FlagManager::handleMailNodeReport(string str)
     m_map_rcount[vname]++;
 
   m_total_reports_rcvd++;
+
+  return(true);
+}
+
+//------------------------------------------------------------ 
+// Procedure: handleMailFlagGrab
+//   Example: GRAB_FLAG_REQ = "vname=henry"
+
+bool FlagManager::handleMailFlagGrab(string str, string community)
+{
+  string grabbing_vname;
+
+  vector<string> svector = parseString(str, ',');
+  for(unsigned int i=0; i<svector.size(); i++) {
+    string param = biteStringX(svector[i], '=');
+    string value = svector[i];
+
+    if(param == "vname") {
+      string vname = tolower(value);
+      if(community == vname)
+	grabbing_vname = vname;
+    }
+  }
+
+  // If the grabbing vehicle is not set, return false
+  if(grabbing_vname == "")
+    return(false);
+
+  // If no node records of the grabbing vehicle, return false
+  string up_vname = toupper(grabbing_vname);
+  if(m_map_record.count(up_vname) == 0)
+    return(false);
+
+  // Get the grabbing vehicle's position from the record
+  NodeRecord record = m_map_record[up_vname];
+  double curr_vx = record.getX();
+  double curr_vy = record.getY();
+
+  // For each flag with the grab_dist of the vehicle, GRAB
+  string result;
+  for(unsigned int i=0; i<m_flags_x.size(); i++) {
+    if(m_flags_ownedby[i] == "") {
+      double x = m_flags_x[i];
+      double y = m_flags_y[i];
+      double dist = hypot(x-curr_vx, y-curr_vy);
+      if(dist <= m_flags_grab_dist[i]) {
+	if(result != "")
+	  result += ",";
+	result += "grabbed=" + m_flags_label[i];
+	m_flags_ownedby[i] = grabbing_vname;
+      }
+    }
+  }
+  if(result == "")
+    result = "nothing_grabbed";
+
+  Notify("GRAB_FLAG_RESULT", result);
 
   return(true);
 }
