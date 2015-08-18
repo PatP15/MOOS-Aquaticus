@@ -14,6 +14,8 @@ ADD_EXECUTABLE(uFldFlagMgr ${SRC})
 TARGET_LINK_LIBRARIES(uFldFlagMgr
    ${MOOS_LIBRARIES}
    apputil
+   contacts
+   geometry
    mbutil
    m
    pthread)

@@ -8,7 +8,8 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "FldFlagMgr.h"
+#include "FlagManager.h"
+#include "NodeRecordUtils.h"
 
 using namespace std;
 
@@ -17,6 +18,9 @@ using namespace std;
 
 FlagManager::FlagManager()
 {
+  m_default_grab_dist = 10; // meters
+
+  m_total_reports_rcvd = 0;
 }
 
 //---------------------------------------------------------
@@ -89,20 +93,15 @@ bool FlagManager::OnStartUp()
   for(p=sParams.begin(); p!=sParams.end(); p++) {
     string orig  = *p;
     string line  = *p;
-    string param = toupper(biteStringX(line, '='));
+    string param = tolower(biteStringX(line, '='));
     string value = line;
 
     bool handled = false;
-    if(param == "FOO") {
-      handled = true;
-    }
-    else if(param == "BAR") {
-      handled = true;
-    }
+    if(param == "flag") 
+      handled = handleConfigFlag(value);
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
-
   }
   
   registerVariables();	
@@ -115,14 +114,90 @@ bool FlagManager::OnStartUp()
 void FlagManager::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+  Register("FLAG_GRAB", 0);
+  Register("NODE_REPORT", 0);
 }
 
+
+//---------------------------------------------------------
+// Procedure: handleConfigFlag
+
+bool FlagManager::handleConfigFlag(string str)
+{
+  double x = 0;
+  double y = 0;
+  double grab_dist = m_default_grab_dist;
+  string label;
+  
+  vector<string> svector = parseString(str, ',');
+  for(unsigned int i=0; i<svector.size(); i++) {
+    string param = tolower(biteStringX(svector[i], '='));
+    string value = svector[i];
+    if((param == "x") && isNumber(value))
+      x = atof(value.c_str());
+    else if((param == "y") && isNumber(value))
+      y = atof(value.c_str());
+    else if((param == "grab_dist") && isNumber(value))
+      grab_dist = atof(value.c_str());
+    else if(param == "label")
+      label = value;
+  }
+  
+  // Ensure that a non-empty label has been provided
+  if(label == "") {
+    reportConfigWarning("Flag with missing label: " + str);
+    return(false);
+  }
+
+  // Ensure that a unique label has been provided
+  for(unsigned int j=0; j<m_flags_label.size(); j++) {
+    if(label == m_flags_label[j]) {
+      reportConfigWarning("Flag with duplicate label: " + str);
+      return(false);
+    }
+  }
+    
+  m_flags_x.push_back(x);
+  m_flags_y.push_back(y);
+  m_flags_grab_dist.push_back(grab_dist);
+  m_flags_label.push_back(label);
+  m_flags_ownedby.push_back("");
+
+  return(true);
+}
+
+//------------------------------------------------------------ 
+// Procedure: handleMailNodeReport      
+
+bool FlagManager::handleMailNodeReport(string str)
+{
+  NodeRecord new_record = string2NodeRecord(str);
+
+  string whynot;
+  if(!new_record.valid("x,y,name", whynot)) {
+    reportRunWarning("Unhandled NodeReport: " + whynot);
+    return(false);
+  }
+
+  string vname = toupper(new_record.getName());
+
+  m_map_record[vname] = new_record;
+  m_map_tstamp[vname] = m_curr_time;
+
+  if(m_map_rcount.count(vname) == 0)
+    m_map_rcount[vname] = 1;
+  else
+    m_map_rcount[vname]++;
+
+  m_total_reports_rcvd++;
+
+  return(true);
+}
 
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool FldFlagMgr::buildReport() 
+bool FlagManager::buildReport() 
 {
   m_msgs << "============================================ \n";
   m_msgs << "File:                                        \n";
