@@ -22,6 +22,7 @@ FlagManager::FlagManager()
   m_default_grab_dist = 10; // meters
 
   m_total_reports_rcvd    = 0;
+  m_total_grabs_rcvd      = 0;
   m_report_flags_on_start = true;
 }
 
@@ -50,7 +51,7 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if(key == "NODE_REPORT") 
       handled = handleMailNodeReport(sval);
-    else if(key == "FLAG_GRAB_REQ") 
+    else if(key == "FLAG_GRAB_REQUEST") 
       handled = handleMailFlagGrab(sval, comm);
     else 
       reportRunWarning("Unhandled Mail: " + key);
@@ -121,7 +122,7 @@ bool FlagManager::OnStartUp()
 void FlagManager::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  Register("FLAG_GRAB_REQ", 0);
+  Register("FLAG_GRAB_REQUEST", 0);
   Register("NODE_REPORT", 0);
 }
 
@@ -203,7 +204,7 @@ bool FlagManager::handleMailNodeReport(string str)
 
 //------------------------------------------------------------ 
 // Procedure: handleMailFlagGrab
-//   Example: GRAB_FLAG_REQ = "vname=henry"
+//   Example: GRAB_FLAG_REQUEST = "vname=henry"
 
 bool FlagManager::handleMailFlagGrab(string str, string community)
 {
@@ -230,6 +231,9 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   if(m_map_record.count(up_vname) == 0)
     return(false);
 
+  m_map_grab_count[up_vname]++;
+  m_total_grabs_rcvd++;
+
   // Get the grabbing vehicle's position from the record
   NodeRecord record = m_map_record[up_vname];
   double curr_vx = record.getX();
@@ -247,13 +251,14 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 	  result += ",";
 	result += "grabbed=" + m_flags_label[i];
 	m_flags_ownedby[i] = grabbing_vname;
+	m_map_flag_count[up_vname]++;
       }
     }
   }
   if(result == "")
     result = "nothing_grabbed";
 
-  Notify("GRAB_FLAG_RESULT", result);
+  Notify("FLAG_GRAB_REPORT", result);
 
   return(true);
 }
@@ -299,14 +304,28 @@ bool FlagManager::buildReport()
     m_msgs << stime << endl;
   }
 
-  m_msgs << "============================================ \n";
-  m_msgs << "File:                                        \n";
-  m_msgs << "============================================ \n";
+  m_msgs << endl << endl;
 
-  ACTable actab(4);
-  actab << "Alpha | Bravo | Charlie | Delta";
+  ACTable actab(3);
+  actab << "VName | Grabs | Flags ";
   actab.addHeaderLines();
-  actab << "one" << "two" << "three" << "four";
+
+  map<string,unsigned int>::iterator p2;
+  for(p2=m_map_rcount.begin(); p2!=m_map_rcount.end(); p2++) {
+    string vname = p2->first;
+    unsigned int grab_count = 0;
+    if(m_map_grab_count.count(vname) != 0)
+      grab_count = m_map_grab_count[vname];
+    unsigned int flag_count = 0;
+    if(m_map_flag_count.count(vname) != 0)
+      flag_count = m_map_flag_count[vname];
+
+    string s_grab_count = uintToString(grab_count);
+    string s_flag_count = uintToString(flag_count);
+
+    actab << vname << s_grab_count << s_flag_count;
+  }
+
   m_msgs << actab.getFormattedString();
 
   return(true);
