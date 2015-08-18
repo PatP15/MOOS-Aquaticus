@@ -19,7 +19,20 @@ Processconfig = ANTLER
   Run = pHelmIvP         @ NewConsole = false
   Run = pHostInfo        @ NewConsole = false
   Run = uFldNodeBroker   @ NewConsole = false
+  Run = uTimerScript     @ NewConsole = false
 }
+
+//------------------------------------------------------------
+ProcessConfig = uTimerScript  
+{
+	paused = false
+
+  event     = var=FLAG_GRAB, val=true, time=3
+  reset_max = unlimited
+	reset_time = all-posted
+}
+
+
 
 #include plug_pShare.moos
 #include plug_pHostInfo.moos
