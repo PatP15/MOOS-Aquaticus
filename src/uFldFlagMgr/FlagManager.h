@@ -34,7 +34,8 @@ class FlagManager : public AppCastingMOOSApp
    bool handleMailNodeReport(std::string str);
    bool handleMailFlagGrab(std::string, std::string);
    void postFlagMarkers();
-
+   void postFlagSummary();
+   
  private: // Config variables
 
    // Flag Configuration
@@ -59,8 +60,6 @@ class FlagManager : public AppCastingMOOSApp
 
    // Grab request state vars
    unsigned int m_total_grabs_rcvd;
-
-
 };
 
 #endif 

@@ -109,10 +109,14 @@ bool FlagManager::OnStartUp()
       reportUnhandledConfigWarning(orig);
   }
   
-  registerVariables();	
-
-
+  // Post a bunch of viewable artifacts
   postFlagMarkers();
+
+  // Possibly post a report for all vehicles to know the flags
+  if(m_report_flags_on_start)
+    postFlagSummary();
+
+  registerVariables();	
   return(true);
 }
 
@@ -263,6 +267,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   return(true);
 }
 
+
 //------------------------------------------------------------ 
 // Procedure: postFlagMarkers
 
@@ -280,6 +285,28 @@ void FlagManager::postFlagMarkers()
     string spec = new_marker.get_spec();
     Notify("VIEW_MARKER", spec);
   }
+}
+
+//------------------------------------------------------------ 
+// Procedure: postFlagSummary
+
+void FlagManager::postFlagSummary()
+{
+  string summary;
+  for(unsigned int i=0; i<m_flags_x.size(); i++) {
+    string spec = "label=" + m_flags_label[i];
+    spec += ",x=" + doubleToString(m_flags_x[i],2);
+    spec += ",y=" + doubleToString(m_flags_y[i],2);
+    spec += ",grab_dist=" + doubleToString(m_flags_grab_dist[i],2);
+    if(m_flags_ownedby[i] != "")
+      spec += ",ownedby=" + m_flags_ownedby[i];
+    else
+      spec += ",ownedby=none";
+    if(summary != "")
+      summary += " # ";
+    summary += spec;
+  }
+  Notify("FLAG_SUMMARY", summary);
 }
 
 //------------------------------------------------------------
