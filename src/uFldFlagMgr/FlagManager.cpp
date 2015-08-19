@@ -27,6 +27,9 @@ FlagManager::FlagManager()
   // Default state values
   m_total_node_reports_rcvd  = 0;
   m_total_grab_requests_rcvd = 0;
+
+  m_grabbed_color   = "white";
+  m_ungrabbed_color = "red";
 }
 
 //---------------------------------------------------------
@@ -245,9 +248,11 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   }
   if(result == "")
     result = "nothing_grabbed";
-  else
+  else {
     postFlagSummary();
-  
+    postFlagMarkers();
+  }
+
   Notify("FLAG_GRAB_REPORT", result);
 
   return(true);
@@ -265,8 +270,11 @@ void FlagManager::postFlagMarkers()
     XYMarker marker = m_flags[i];
     marker.set_width(2);
     marker.set_type("circle");
-    marker.set_color("fill_color", "red");
-    marker.set_color("edge_color", "black");
+    if(m_flags_ownedby[i] == "")
+      marker.set_color("primary_color", m_ungrabbed_color);
+    else
+      marker.set_color("primary_color", m_grabbed_color);
+    marker.set_color("secondary_color", "black");
     string spec = marker.get_spec();
     Notify("VIEW_MARKER", spec);
   }

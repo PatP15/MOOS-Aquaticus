@@ -43,9 +43,11 @@ class FlagManager : public AppCastingMOOSApp
    std::vector<XYMarker>    m_flags;
    std::vector<std::string> m_flags_ownedby;
    double m_default_flag_range;
-   
    bool   m_report_flags_on_start;
-     
+   
+   std::string m_grabbed_color;
+   std::string m_ungrabbed_color;
+  
  private: // State variables
  
    // Vehicle node report state vars. Each map keyed on vname.
