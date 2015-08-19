@@ -20,6 +20,7 @@ Processconfig = ANTLER
   Run = pHostInfo        @ NewConsole = false
   Run = uFldNodeBroker   @ NewConsole = false
   Run = uTimerScript     @ NewConsole = false
+  Run = pFlagStrategy    @ NewConsole = false
 }
 
 //------------------------------------------------------------
@@ -30,6 +31,11 @@ ProcessConfig = uTimerScript
   event      = var=FLAG_GRAB_REQUEST, val=vname=$(VNAME), time=3
   reset_max  = unlimited
 	reset_time = all-posted
+}
+
+//------------------------------------------------------------
+ProcessConfig = pFlagStrategy
+{
 }
 
 #include plug_pShare.moos
