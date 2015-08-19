@@ -11,6 +11,7 @@
 #include "FlagManager.h"
 #include "NodeRecordUtils.h"
 #include "XYMarker.h"
+#include "XYFormatUtilsMarker.h"
 
 using namespace std;
 
@@ -19,11 +20,13 @@ using namespace std;
 
 FlagManager::FlagManager()
 {
-  m_default_grab_dist = 10; // meters
-
-  m_total_reports_rcvd    = 0;
-  m_total_grabs_rcvd      = 0;
+  // Default config values
+  m_default_flag_range    = 10; // meters
   m_report_flags_on_start = true;
+
+  // Default state values
+  m_total_node_reports_rcvd  = 0;
+  m_total_grab_requests_rcvd = 0;
 }
 
 //---------------------------------------------------------
@@ -133,48 +136,37 @@ void FlagManager::registerVariables()
 
 //---------------------------------------------------------
 // Procedure: handleConfigFlag
+//   Example: flag = x=2,y=3,range=10,label=one
+
 
 bool FlagManager::handleConfigFlag(string str)
 {
-  double x = 0;
-  double y = 0;
-  double grab_dist = m_default_grab_dist;
-  string label;
-  
-  vector<string> svector = parseString(str, ',');
-  for(unsigned int i=0; i<svector.size(); i++) {
-    string param = tolower(biteStringX(svector[i], '='));
-    string value = svector[i];
-    if((param == "x") && isNumber(value))
-      x = atof(value.c_str());
-    else if((param == "y") && isNumber(value))
-      y = atof(value.c_str());
-    else if((param == "grab_dist") && isNumber(value))
-      grab_dist = atof(value.c_str());
-    else if(param == "label")
-      label = value;
+  XYMarker flag = string2Marker(str);
+
+  if(!flag.is_set_x() || !flag.is_set_y()) {
+    reportConfigWarning("Flag with missing x-y position: " + str);
+    return(false);
   }
-  
-  // Ensure that a non-empty label has been provided
-  if(label == "") {
+  if(flag.get_label() == "") {
     reportConfigWarning("Flag with missing label: " + str);
     return(false);
   }
 
+  if(!flag.is_set_range())
+    flag.set_range(m_default_flag_range);
+
+
   // Ensure that a unique label has been provided
-  for(unsigned int j=0; j<m_flags_label.size(); j++) {
-    if(label == m_flags_label[j]) {
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    if(flag.get_label() == m_flags[i].get_label()) {
       reportConfigWarning("Flag with duplicate label: " + str);
       return(false);
     }
   }
-    
-  m_flags_x.push_back(x);
-  m_flags_y.push_back(y);
-  m_flags_grab_dist.push_back(grab_dist);
-  m_flags_label.push_back(label);
-  m_flags_ownedby.push_back("");
 
+  m_flags.push_back(flag);
+  m_flags_ownedby.push_back("");
+  
   return(true);
 }
 
@@ -201,7 +193,7 @@ bool FlagManager::handleMailNodeReport(string str)
   else
     m_map_rcount[vname]++;
 
-  m_total_reports_rcvd++;
+  m_total_node_reports_rcvd++;
 
   return(true);
 }
@@ -212,20 +204,11 @@ bool FlagManager::handleMailNodeReport(string str)
 
 bool FlagManager::handleMailFlagGrab(string str, string community)
 {
-  string grabbing_vname;
 
-  vector<string> svector = parseString(str, ',');
-  for(unsigned int i=0; i<svector.size(); i++) {
-    string param = biteStringX(svector[i], '=');
-    string value = svector[i];
+  // Part 1: Parse the Grab Request
+  string grabbing_vname = tokStringParse(str, "vname", ',', '=');
 
-    if(param == "vname") {
-      string vname = tolower(value);
-      if(community == vname)
-	grabbing_vname = vname;
-    }
-  }
-
+  // Part 2: Sanity check on the Grab Request
   // If the grabbing vehicle is not set, return false
   if(grabbing_vname == "")
     return(false);
@@ -235,25 +218,26 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   if(m_map_record.count(up_vname) == 0)
     return(false);
 
+  // Part 3: OK grab, so increment counters.
   m_map_grab_count[up_vname]++;
-  m_total_grabs_rcvd++;
-
-  // Get the grabbing vehicle's position from the record
+  m_total_grab_requests_rcvd++;
+  
+  // Part 4: Get the grabbing vehicle's position from the record
   NodeRecord record = m_map_record[up_vname];
   double curr_vx = record.getX();
   double curr_vy = record.getY();
 
-  // For each flag with the grab_dist of the vehicle, GRAB
+  // Part 5: For each flag with the grab_dist of the vehicle, GRAB
   string result;
-  for(unsigned int i=0; i<m_flags_x.size(); i++) {
+  for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags_ownedby[i] == "") {
-      double x = m_flags_x[i];
-      double y = m_flags_y[i];
+      double x = m_flags[i].get_vx();
+      double y = m_flags[i].get_vy();
       double dist = hypot(x-curr_vx, y-curr_vy);
-      if(dist <= m_flags_grab_dist[i]) {
+      if(dist <= m_flags[i].get_range()) {
 	if(result != "")
 	  result += ",";
-	result += "grabbed=" + m_flags_label[i];
+	result += "grabbed=" + m_flags[i].get_label();
 	m_flags_ownedby[i] = grabbing_vname;
 	m_map_flag_count[up_vname]++;
       }
@@ -261,7 +245,9 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   }
   if(result == "")
     result = "nothing_grabbed";
-
+  else
+    postFlagSummary();
+  
   Notify("FLAG_GRAB_REPORT", result);
 
   return(true);
@@ -270,19 +256,18 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 
 //------------------------------------------------------------ 
 // Procedure: postFlagMarkers
+//      Note: Typically JUST called on startup unless marker 
+//            positions or colors are allowed to change.
 
 void FlagManager::postFlagMarkers()
 {
-  for(unsigned int i=0; i<m_flags_x.size(); i++) {
-    XYMarker new_marker;
-    new_marker.set_vx(m_flags_x[i]);
-    new_marker.set_vy(m_flags_y[i]);
-    new_marker.set_label(m_flags_label[i]);
-    new_marker.set_width(2);
-    new_marker.set_type("circle");
-    new_marker.set_color("fill_color", "red");
-    new_marker.set_color("edge_color", "black");
-    string spec = new_marker.get_spec();
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    XYMarker marker = m_flags[i];
+    marker.set_width(2);
+    marker.set_type("circle");
+    marker.set_color("fill_color", "red");
+    marker.set_color("edge_color", "black");
+    string spec = marker.get_spec();
     Notify("VIEW_MARKER", spec);
   }
 }
@@ -293,11 +278,11 @@ void FlagManager::postFlagMarkers()
 void FlagManager::postFlagSummary()
 {
   string summary;
-  for(unsigned int i=0; i<m_flags_x.size(); i++) {
-    string spec = "label=" + m_flags_label[i];
-    spec += ",x=" + doubleToString(m_flags_x[i],2);
-    spec += ",y=" + doubleToString(m_flags_y[i],2);
-    spec += ",grab_dist=" + doubleToString(m_flags_grab_dist[i],2);
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    string spec = "label=" + m_flags[i].get_label();
+    spec += ",x=" + doubleToString(m_flags[i].get_vx(),2);
+    spec += ",y=" + doubleToString(m_flags[i].get_vy(),2);
+    spec += ",range=" + doubleToString(m_flags[i].get_range(),2);
     if(m_flags_ownedby[i] != "")
       spec += ",ownedby=" + m_flags_ownedby[i];
     else
@@ -316,7 +301,7 @@ bool FlagManager::buildReport()
 {
   m_msgs << "Node Report Summary"                    << endl;
   m_msgs << "======================================" << endl;
-  m_msgs << "        Total Received: " << m_total_reports_rcvd << endl;
+  m_msgs << "        Total Received: " << m_total_node_reports_rcvd << endl;
 
   map<string, unsigned int>::iterator p;
   for(p=m_map_rcount.begin(); p!=m_map_rcount.end(); p++) {
