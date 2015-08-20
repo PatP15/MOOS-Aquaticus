@@ -130,8 +130,6 @@ void FlagStrategy::registerVariables()
 
 bool FlagStrategy::handleMailFlagSummary(string str)
 {
-  cout << "In handleMailFlagSummary TOP" << endl;
-
   // Part 1: Process the summary making a new vector of flags for now.
   vector<XYMarker> new_flags;
   vector<string> svector = parseString(str, '#');
@@ -144,27 +142,44 @@ bool FlagStrategy::handleMailFlagSummary(string str)
       reportRunWarning("Ivalid Flag Summary: " + flag_spec);
   }
 
-  // Part 2: Handle the new vector of flags, using the label as a key.
-  // Replace any existing flags if a flag has changed. Add a new flag if
-  // a newly received flag was not known prior.
-  
-  bool some_flags_were_changed_or_added = false;
+  bool flagset_modified = false;
 
+  // Part 2: Using the flag label as a key, determine if the new set
+  // of flags have all the old flags.
   for(unsigned int i=0; i<new_flags.size(); i++) {
-    XYMarker new_flag = new_flags[i];
     bool found = false;
     for(unsigned int j=0; j<m_flags.size(); j++) {
-      if(new_flag.get_label() == m_flags[j].get_label()) {
+      if(new_flags[i].get_label() == m_flags[j].get_label()) 
 	found = true;
+    }
+    if(!found) 
+      flagset_modified = true;
+  }
+
+  // Part 3: Using the flag label as a key, determine if the old set
+  // of flags have all the new flags.
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    bool found = false;
+    for(unsigned int j=0; j<new_flags.size(); j++) {
+      if(m_flags[i].get_label() == new_flags[j].get_label()) 
+	found = true;
+    }
+    if(!found) 
+      flagset_modified = true;
+  }
+
+  // Part 4: Using the flag label as a key, update old flags based on
+  // new flags, and note if any flag has been modified.
+  
+  for(unsigned int i=0; i<new_flags.size(); i++) {
+    XYMarker new_flag = new_flags[i];
+    for(unsigned int j=0; j<m_flags.size(); j++) {
+      if(new_flag.get_label() == m_flags[j].get_label()) {
 	if(!flagsMatch(new_flag, m_flags[j])) {
 	  m_flags[j] = new_flag;
-	  some_flags_were_changed_or_added = true;
+	  flagset_modified = true;
 	}
       }
-    }
-    if(!found) {
-      m_flags.push_back(new_flag);
-      some_flags_were_changed_or_added = true;
     }
   }
 
@@ -172,8 +187,7 @@ bool FlagStrategy::handleMailFlagSummary(string str)
   m_flag_summaries_received++;
   m_flag_summary_tstamp = m_curr_time - m_start_time;
   
-  cout << "In handleMailFlagSummary BOTTOM" << endl;
-  return(true);
+  return(flagset_modified);
 }
 
 
