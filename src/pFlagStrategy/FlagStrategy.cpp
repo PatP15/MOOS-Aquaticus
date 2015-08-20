@@ -221,10 +221,7 @@ bool FlagStrategy::generateSearchPath()
   if(!m_nav_x_set || !m_nav_y_set)
     return(false);
 
-  m_search_path_debug2 = uintToString(m_flags.size());
-
   XYSegList segl;
-  
   unsigned int flags_size = m_flags.size();
   vector<bool> flags_marked(flags_size, false);
   
@@ -233,7 +230,7 @@ bool FlagStrategy::generateSearchPath()
     int     closest_ix   = -1;
     double  closest_dist = 0;
     for(unsigned int i=0; i<m_flags.size(); i++) {
-      if(!flags_marked[i]) {
+      if(!flags_marked[i] && m_flags[i].get_owner()=="") {
 	double x = m_flags[i].get_vx();
 	double y = m_flags[i].get_vy();
 	double dist = hypot(m_nav_x-x, m_nav_y-y);
@@ -257,12 +254,19 @@ bool FlagStrategy::generateSearchPath()
     }
   }
 
-  string segl_spec = segl.get_spec();
-  string pts = tokStringParse(segl_spec, "pts", ',', '=');
-
-  m_search_path = segl_spec;
-  
-  Notify("WPT_FLAGS", "polygon="+segl_spec);
+  if(segl.size() == 0) {
+    m_search_path = "empty";
+    Notify("FLAG_PATH", "");
+    Notify("FLAGS_TO_GRAB", "false");
+  }
+  else {
+    string segl_spec = segl.get_spec();
+    string pts = tokStringParse(segl_spec, "pts", ',', '=');
+    m_search_path = segl_spec;
+    Notify("FLAG_PATH", "polygon="+segl_spec);
+    Notify("FLAGS_TO_GRAB", "true");
+  }
+    
   return(true);
 }
 
