@@ -10,6 +10,7 @@
 #include "ACTable.h"
 #include "FlagStrategy.h"
 #include "XYFormatUtilsMarker.h"
+#include "XYSegList.h"
 
 using namespace std;
 
@@ -20,6 +21,11 @@ FlagStrategy::FlagStrategy()
 {
   m_flag_summaries_received = 0;
   m_flag_summary_tstamp = 0;
+
+  m_nav_x_set = false;
+  m_nav_y_set = false;
+  m_nav_x = 0;
+  m_nav_y = 0;
 }
 
 //---------------------------------------------------------
@@ -34,10 +40,10 @@ bool FlagStrategy::OnNewMail(MOOSMSG_LIST &NewMail)
     CMOOSMsg &msg = *p;
     string key   = msg.GetKey();
     string sval  = msg.GetString(); 
+    double dval  = msg.GetDouble();
 
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
-    double dval  = msg.GetDouble();
     string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
@@ -47,10 +53,17 @@ bool FlagStrategy::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if(key == "FLAG_SUMMARY") 
       handled = handleMailFlagSummary(sval);
-	
-     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
-       reportRunWarning("Unhandled Mail: " + key);
-   }
+    else if(key == "NAV_X") {
+      m_nav_x = dval;
+      m_nav_x_set = true;
+    }
+    else if(key == "NAV_Y") {
+      m_nav_y = dval;
+      m_nav_y_set = true;
+    }	
+    else 
+      reportRunWarning("Unhandled Mail: " + key);
+  }
 	
    return(true);
 }
@@ -121,6 +134,8 @@ void FlagStrategy::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("FLAG_SUMMARY", 0);
+  Register("NAV_X", 0);
+  Register("NAV_Y", 0);
 }
 
 //---------------------------------------------------------
@@ -144,33 +159,8 @@ bool FlagStrategy::handleMailFlagSummary(string str)
 
   bool flagset_modified = false;
 
-  // Part 2: Using the flag label as a key, determine if the new set
-  // of flags have all the old flags.
-  for(unsigned int i=0; i<new_flags.size(); i++) {
-    bool found = false;
-    for(unsigned int j=0; j<m_flags.size(); j++) {
-      if(new_flags[i].get_label() == m_flags[j].get_label()) 
-	found = true;
-    }
-    if(!found) 
-      flagset_modified = true;
-  }
-
-  // Part 3: Using the flag label as a key, determine if the old set
-  // of flags have all the new flags.
-  for(unsigned int i=0; i<m_flags.size(); i++) {
-    bool found = false;
-    for(unsigned int j=0; j<new_flags.size(); j++) {
-      if(m_flags[i].get_label() == new_flags[j].get_label()) 
-	found = true;
-    }
-    if(!found) 
-      flagset_modified = true;
-  }
-
-  // Part 4: Using the flag label as a key, update old flags based on
-  // new flags, and note if any flag has been modified.
-  
+  // Part 2: Using the flag label as a key, update old flags based on
+  // new flags, and note if any flag has been modified.  
   for(unsigned int i=0; i<new_flags.size(); i++) {
     XYMarker new_flag = new_flags[i];
     for(unsigned int j=0; j<m_flags.size(); j++) {
@@ -183,13 +173,98 @@ bool FlagStrategy::handleMailFlagSummary(string str)
     }
   }
 
+  // Part 3: Using the flag label as a key, determine if the old set
+  // of flags have all the new flags.
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    bool found = false;
+    for(unsigned int j=0; j<new_flags.size(); j++) {
+      if(m_flags[i].get_label() == new_flags[j].get_label()) 
+	found = true;
+    }
+    if(!found) {
+      // New flagset missing a previously known flag
+      flagset_modified = true; // 
+    }
+  }
+
+  // Part 4: Using the flag label as a key, determine if the new set
+  // of flags have all the old flags.
+  for(unsigned int i=0; i<new_flags.size(); i++) {
+    bool found = false;
+    for(unsigned int j=0; j<m_flags.size(); j++) {
+      if(new_flags[i].get_label() == m_flags[j].get_label()) 
+	found = true;
+    }
+    if(!found) {
+      // New flagset contains a previously unknown flag
+      flagset_modified = true; 
+      m_flags.push_back(new_flags[i]);
+    }
+  }
+
   // Increment the counter and timestamp of the latest summary
   m_flag_summaries_received++;
   m_flag_summary_tstamp = m_curr_time - m_start_time;
+
+  if(flagset_modified)
+    generateSearchPath();
   
   return(flagset_modified);
 }
 
+
+//------------------------------------------------------------
+// Procedure: generateSearchPath
+
+bool FlagStrategy::generateSearchPath()
+{
+  if(!m_nav_x_set || !m_nav_y_set)
+    return(false);
+
+  m_search_path_debug2 = uintToString(m_flags.size());
+
+  XYSegList segl;
+  
+  unsigned int flags_size = m_flags.size();
+  vector<bool> flags_marked(flags_size, false);
+  
+  bool done = false;
+  while(!done) {
+    int     closest_ix   = -1;
+    double  closest_dist = 0;
+    for(unsigned int i=0; i<m_flags.size(); i++) {
+      if(!flags_marked[i]) {
+	double x = m_flags[i].get_vx();
+	double y = m_flags[i].get_vy();
+	double dist = hypot(m_nav_x-x, m_nav_y-y);
+	if((closest_ix < 0) || (dist < closest_dist)) {
+	  closest_ix = i;
+	  closest_dist = dist;
+	}
+      }
+    }
+
+    m_search_path_debug1 += "," + intToString(closest_ix);
+
+    if(closest_ix == -1)
+      done = true;
+    else {
+      unsigned int ix = (unsigned int)(closest_ix);
+      flags_marked[ix] = true;
+      double next_x = m_flags[ix].get_vx();
+      double next_y = m_flags[ix].get_vy();
+      segl.add_vertex(next_x, next_y);
+    }
+  }
+
+  string segl_spec = segl.get_spec();
+  string pts = tokStringParse(segl_spec, "pts", ',', '=');
+
+  m_search_path = segl_spec;
+  
+  Notify("WPT_FLAGS", "polygon="+segl_spec);
+  return(true);
+}
 
 //------------------------------------------------------------
 // Procedure: flagsMatch
@@ -234,7 +309,13 @@ bool FlagStrategy::buildReport()
     actab << label << ownedby << s_x << s_y << s_range;
   }
 
+
   m_msgs << actab.getFormattedString();
+  m_msgs << endl;
+  
+  m_msgs << "Search path:" << m_search_path << endl;
+  m_msgs << "Search pathD1:" << m_search_path_debug1 << endl;
+  m_msgs << "Search pathD2:" << m_search_path_debug2 << endl;
 
   return(true);
 }

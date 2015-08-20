@@ -14,33 +14,43 @@
 class FlagStrategy : public AppCastingMOOSApp
 {
  public:
-   FlagStrategy();
-   ~FlagStrategy() {};
-
+  FlagStrategy();
+  ~FlagStrategy() {};
+  
  protected: // Standard MOOSApp functions to overload  
-   bool OnNewMail(MOOSMSG_LIST &NewMail);
-   bool Iterate();
-   bool OnConnectToServer();
-   bool OnStartUp();
-
+  bool OnNewMail(MOOSMSG_LIST &NewMail);
+  bool Iterate();
+  bool OnConnectToServer();
+  bool OnStartUp();
+  
  protected: // Standard AppCastingMOOSApp function to overload 
-   bool buildReport();
+  bool buildReport();
+  void registerVariables();
+  
+ protected: // Handler functions
+  bool handleMailFlagSummary(std::string);
+  bool generateSearchPath();
 
- protected:
-   void registerVariables();
-   bool handleMailFlagSummary(std::string);
-
-   bool flagsMatch(const XYMarker&, const XYMarker&) const;
-
-   
+ private: // Local utility functions
+  bool flagsMatch(const XYMarker&, const XYMarker&) const;
+  
+  
  private: // Configuration variables
-   
+  
  private: // State variables
-   
-   unsigned int m_flag_summaries_received;
-   double       m_flag_summary_tstamp;
+  
+  unsigned int m_flag_summaries_received;
+  double       m_flag_summary_tstamp;
+  double       m_nav_x;
+  double       m_nav_y;
+  bool         m_nav_x_set;
+  bool         m_nav_y_set;
 
-   std::vector<XYMarker>    m_flags;
+  std::string  m_search_path;
+  std::string  m_search_path_debug1;
+  std::string  m_search_path_debug2;
+  
+  std::vector<XYMarker>    m_flags;
 };
 
 #endif 
