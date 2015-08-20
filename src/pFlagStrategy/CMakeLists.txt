@@ -1,6 +1,6 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for:                       pFlagStrategy
-# Author(s):                              Mike Benjamin
+# The CMakeLists.txt for:                   pFlagStrategy
+# Author(s):                                Mike Benjamin
 #--------------------------------------------------------
 
 SET(SRC
@@ -14,6 +14,7 @@ ADD_EXECUTABLE(pFlagStrategy ${SRC})
 TARGET_LINK_LIBRARIES(pFlagStrategy
    ${MOOS_LIBRARIES}
    apputil
+   geometry
    mbutil
    m
    pthread)

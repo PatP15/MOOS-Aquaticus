@@ -34,17 +34,20 @@ class FlagManager : public AppCastingMOOSApp
    bool handleConfigFlag(std::string);
    bool handleMailNodeReport(std::string str);
    bool handleMailFlagGrab(std::string, std::string);
+   bool handleMailFlagReset(std::string);
+
+   bool resetFlagsByLabel(std::string);
+   bool resetFlagsByVName(std::string);
    void postFlagMarkers();
    void postFlagSummary();
    
  private: // Config variables
 
-   // Flag Configuration
-   std::vector<XYMarker>    m_flags;
-   std::vector<std::string> m_flags_ownedby;
-   double m_default_flag_range;
-   bool   m_report_flags_on_start;
-   
+   // Flag Configurations
+   std::vector<XYMarker>  m_flags;
+
+   double      m_default_flag_range;
+   bool        m_report_flags_on_start;
    std::string m_grabbed_color;
    std::string m_ungrabbed_color;
   

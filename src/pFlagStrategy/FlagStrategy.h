@@ -9,6 +9,7 @@
 #define FLAG_STRATEGY_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include "XYMarker.h"
 
 class FlagStrategy : public AppCastingMOOSApp
 {
@@ -28,6 +29,9 @@ class FlagStrategy : public AppCastingMOOSApp
  protected:
    void registerVariables();
    bool handleMailFlagSummary(std::string);
+
+   bool flagsMatch(const XYMarker&, const XYMarker&) const;
+
    
  private: // Configuration variables
    
@@ -36,11 +40,7 @@ class FlagStrategy : public AppCastingMOOSApp
    unsigned int m_flag_summaries_received;
    double       m_flag_summary_tstamp;
 
-   std::vector<double>      m_flags_x;
-   std::vector<double>      m_flags_y;
-   std::vector<double>      m_flags_grab_dist;
-   std::vector<std::string> m_flags_ownedby;
-   std::vector<std::string> m_flags_label;
+   std::vector<XYMarker>    m_flags;
 };
 
 #endif 

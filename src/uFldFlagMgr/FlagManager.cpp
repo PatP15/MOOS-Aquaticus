@@ -57,6 +57,8 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if(key == "NODE_REPORT") 
       handled = handleMailNodeReport(sval);
+    else if(key == "FLAG_RESET") 
+      handled = handleMailFlagReset(sval);
     else if(key == "FLAG_GRAB_REQUEST") 
       handled = handleMailFlagGrab(sval, comm);
     else 
@@ -133,6 +135,7 @@ void FlagManager::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("FLAG_GRAB_REQUEST", 0);
+  Register("FLAG_RESET", 0);
   Register("NODE_REPORT", 0);
 }
 
@@ -168,7 +171,6 @@ bool FlagManager::handleConfigFlag(string str)
   }
 
   m_flags.push_back(flag);
-  m_flags_ownedby.push_back("");
   
   return(true);
 }
@@ -202,18 +204,46 @@ bool FlagManager::handleMailNodeReport(string str)
 }
 
 //------------------------------------------------------------ 
+// Procedure: handleMailFlagReset
+//   Example: FLAG_RESET = vname=henry
+//   Example: FLAG_RESET = label=alpha
+
+bool FlagManager::handleMailFlagReset(string str)
+{
+  bool some_flags_were_reset = false;
+
+  string vname = tokStringParse(str, "vname", ',', '=');
+  if(vname != "")
+    some_flags_were_reset = resetFlagsByVName(vname);
+  
+  string label = tokStringParse(str, "label", ',', '=');
+  if(label != "")
+    some_flags_were_reset = resetFlagsByLabel(label);
+
+  if((label == "") && (vname == ""))
+    return(false);
+
+  if(some_flags_were_reset) {
+    postFlagMarkers();
+    postFlagSummary();
+  }
+  
+  return(true);
+}
+
+//------------------------------------------------------------ 
 // Procedure: handleMailFlagGrab
 //   Example: GRAB_FLAG_REQUEST = "vname=henry"
 
 bool FlagManager::handleMailFlagGrab(string str, string community)
 {
-
   // Part 1: Parse the Grab Request
   string grabbing_vname = tokStringParse(str, "vname", ',', '=');
 
+  
   // Part 2: Sanity check on the Grab Request
-  // If the grabbing vehicle is not set, return false
-  if(grabbing_vname == "")
+  // Check if grabbing vname is set and matches message community
+  if((grabbing_vname == "") || (grabbing_vname != community))
     return(false);
 
   // If no node records of the grabbing vehicle, return false
@@ -233,7 +263,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   // Part 5: For each flag with the grab_dist of the vehicle, GRAB
   string result;
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    if(m_flags_ownedby[i] == "") {
+    if(m_flags[i].get_owner() == "") {
       double x = m_flags[i].get_vx();
       double y = m_flags[i].get_vy();
       double dist = hypot(x-curr_vx, y-curr_vy);
@@ -241,7 +271,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 	if(result != "")
 	  result += ",";
 	result += "grabbed=" + m_flags[i].get_label();
-	m_flags_ownedby[i] = grabbing_vname;
+	m_flags[i].set_owner(grabbing_vname);
 	m_map_flag_count[up_vname]++;
       }
     }
@@ -260,6 +290,47 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 
 
 //------------------------------------------------------------ 
+// Procedure: resetFlagsByLabel
+//      Note: Resets any flag with the given label to be not
+//            ownedby anyone.
+//   Returns: true if a flag was indeed reset, possibly visuals
+//            then need updating
+
+bool FlagManager::resetFlagsByLabel(string label)
+{
+  bool some_flags_were_reset = false;
+  
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    if(m_flags[i].get_label() == label) {
+      if(m_flags[i].get_owner() != "") {
+	m_flags[i].set_owner("");
+	some_flags_were_reset = true;
+      }
+    }
+  }
+  return(some_flags_were_reset);
+}
+
+//------------------------------------------------------------ 
+// Procedure: resetFlagsByVName
+//      Note: Resets any flag presently owned by the given vehicle
+//   Returns: true if a flag was indeed reset, possibly visuals
+//            then need updating
+
+bool FlagManager::resetFlagsByVName(string vname)
+{
+  bool some_flags_were_reset = false;
+  
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    if(m_flags[i].get_owner() == vname) {
+      m_flags[i].set_owner("");
+      some_flags_were_reset = true;
+    }
+  }
+  return(some_flags_were_reset);
+}
+
+//------------------------------------------------------------ 
 // Procedure: postFlagMarkers
 //      Note: Typically JUST called on startup unless marker 
 //            positions or colors are allowed to change.
@@ -270,7 +341,7 @@ void FlagManager::postFlagMarkers()
     XYMarker marker = m_flags[i];
     marker.set_width(2);
     marker.set_type("circle");
-    if(m_flags_ownedby[i] == "")
+    if(m_flags[i].get_owner() == "")
       marker.set_color("primary_color", m_ungrabbed_color);
     else
       marker.set_color("primary_color", m_grabbed_color);
@@ -287,14 +358,7 @@ void FlagManager::postFlagSummary()
 {
   string summary;
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    string spec = "label=" + m_flags[i].get_label();
-    spec += ",x=" + doubleToString(m_flags[i].get_vx(),2);
-    spec += ",y=" + doubleToString(m_flags[i].get_vy(),2);
-    spec += ",range=" + doubleToString(m_flags[i].get_range(),2);
-    if(m_flags_ownedby[i] != "")
-      spec += ",ownedby=" + m_flags_ownedby[i];
-    else
-      spec += ",ownedby=none";
+    string spec = m_flags[i].get_spec();
     if(summary != "")
       summary += " # ";
     summary += spec;

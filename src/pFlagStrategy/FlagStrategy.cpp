@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "FlagStrategy.h"
+#include "XYFormatUtilsMarker.h"
 
 using namespace std;
 
@@ -96,8 +97,8 @@ bool FlagStrategy::OnStartUp()
     string value = line;
 
     bool handled = false;
-    if(param == "FOO") {
-      handled = true;
+    if(param == "FLAG_SUMMARY") {
+      handled = handleMailFlagSummary(value);
     }
     else if(param == "BAR") {
       handled = true;
@@ -107,7 +108,8 @@ bool FlagStrategy::OnStartUp()
       reportUnhandledConfigWarning(orig);
 
   }
-  
+
+  cout << "Successfully started" << endl;
   registerVariables();	
   return(true);
 }
@@ -128,41 +130,41 @@ void FlagStrategy::registerVariables()
 
 bool FlagStrategy::handleMailFlagSummary(string str)
 {
-  // First clear everything we know about flags
-  m_flags_x.clear();
-  m_flags_y.clear();
-  m_flags_grab_dist.clear();
-  m_flags_ownedby.clear();
-  m_flags_label.clear();
+  cout << "In handleMailFlagSummary TOP" << endl;
 
-  // Process the new flag summary
+  // Part 1: Process the summary making a new vector of flags for now.
+  vector<XYMarker> new_flags;
   vector<string> svector = parseString(str, '#');
   for(unsigned int i=0; i<svector.size(); i++) {
-    vector<string> jvector = parseString(svector[i], ',');
-    string label, ownedby;
-    double x=0;
-    double y=0;
-    double grab_dist=0;
-    for(unsigned int j=0; j<jvector.size(); j++) {
-      string param = biteStringX(jvector[j], '=');
-      string value = jvector[j];
-      if(param == "label")
-	label = value;
-      else if(param == "ownedby")
-	ownedby = value;
-      else if(param == "x")
-	x = atof(value.c_str());
-      else if(param == "y")
-	y = atof(value.c_str());
-      else if(param == "grab_dist")
-	grab_dist = atof(value.c_str());
+    string flag_spec = svector[i];
+    XYMarker flag = string2Marker(flag_spec);
+    if(flag.is_set_x() && flag.is_set_y() && (flag.get_label() != "")) 
+      new_flags.push_back(flag);
+    else
+      reportRunWarning("Ivalid Flag Summary: " + flag_spec);
+  }
+
+  // Part 2: Handle the new vector of flags, using the label as a key.
+  // Replace any existing flags if a flag has changed. Add a new flag if
+  // a newly received flag was not known prior.
+  
+  bool some_flags_were_changed_or_added = false;
+
+  for(unsigned int i=0; i<new_flags.size(); i++) {
+    XYMarker new_flag = new_flags[i];
+    bool found = false;
+    for(unsigned int j=0; j<m_flags.size(); j++) {
+      if(new_flag.get_label() == m_flags[j].get_label()) {
+	found = true;
+	if(!flagsMatch(new_flag, m_flags[j])) {
+	  m_flags[j] = new_flag;
+	  some_flags_were_changed_or_added = true;
+	}
+      }
     }
-    if(label != "") {
-      m_flags_x.push_back(x);
-      m_flags_y.push_back(y);
-      m_flags_grab_dist.push_back(grab_dist);
-      m_flags_label.push_back(label);
-      m_flags_ownedby.push_back(ownedby);
+    if(!found) {
+      m_flags.push_back(new_flag);
+      some_flags_were_changed_or_added = true;
     }
   }
 
@@ -170,9 +172,26 @@ bool FlagStrategy::handleMailFlagSummary(string str)
   m_flag_summaries_received++;
   m_flag_summary_tstamp = m_curr_time - m_start_time;
   
+  cout << "In handleMailFlagSummary BOTTOM" << endl;
   return(true);
 }
 
+
+//------------------------------------------------------------
+// Procedure: flagsMatch
+
+bool FlagStrategy::flagsMatch(const XYMarker& ma, const XYMarker& mb) const
+{
+  if(ma.get_vx() != mb.get_vx())
+    return(false);
+  if(ma.get_vy() != mb.get_vy())
+    return(false);
+  if(ma.get_range() != mb.get_range())
+    return(false);
+  if(ma.get_owner() != mb.get_owner())
+    return(false);
+  return(false);
+}
 
 //------------------------------------------------------------
 // Procedure: buildReport()
@@ -191,14 +210,14 @@ bool FlagStrategy::buildReport()
   actab << "Label | OwnedBy | X | Y | GrabDist";
   actab.addHeaderLines();
 
-  for(unsigned int i=0; i<m_flags_x.size(); i++) {
-    string label, ownedby, s_x, s_y, s_grab_dist;
-    label = m_flags_label[i];
-    ownedby = m_flags_ownedby[i];
-    s_x = doubleToStringX(m_flags_x[i],2);
-    s_y = doubleToStringX(m_flags_y[i],2);
-    s_grab_dist = doubleToStringX(m_flags_grab_dist[i],2);
-    actab << label << ownedby << s_x << s_y << s_grab_dist;
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    string label, ownedby, s_x, s_y, s_range;
+    label   = m_flags[i].get_label();
+    ownedby = m_flags[i].get_owner();
+    s_x = doubleToStringX(m_flags[i].get_vx(),2);
+    s_y = doubleToStringX(m_flags[i].get_vy(),2);
+    s_range = doubleToStringX(m_flags[i].get_range(),2);
+    actab << label << ownedby << s_x << s_y << s_range;
   }
 
   m_msgs << actab.getFormattedString();
