@@ -23,11 +23,22 @@ for ARGI; do
     fi
 done
 
+# Ensure AMT is in the range of [1,26]
+if [ $AMT -gt 26 ] ; then
+    AMT=20
+fi
+if [ $AMT -lt 1 ] ; then
+    AMT=1
+fi
+
+
+
+
 #-------------------------------------------------------
 #  Part 2: Create the GoodGuy .moos and .bhv files. 
 #-------------------------------------------------------
 VNAME="henry"   
-START_POS="0,0"         
+START_POS="0,0,180"         
 SHORE_LISTEN="9300"
 
 nsplug meta_vehicle.moos targ_henry.moos -f WARP=$TIME_WARP \
@@ -52,21 +63,16 @@ if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos";  exit; fi
 VNAMES=( apia baku cary doha elko fahy galt hays iola juba kiev lima mesa 
 	 nuuk oslo pace quay rome sako troy ubly vimy waco xian york zahl )
 
-STARTX=( 0 20 40 60 80 100 120 140 5 25 45 65 85 105 125 145 10 50 90 130
-	 15 55 95 135 140 145 150 155 160 165 170 175 180 185 190 195 200 )
+STARTX=( 20 40 60 80 100 120 140 5 25 45 65 85 105 125 145 10 50 90 130
+	 15 55 95 135 140 145 150 155 )
 
-# Cap the AMT to be 26 (just our limit of unique names)
-if [ $AMT -ge 1 ] ; then
-    AMT=`expr $AMT - 1`
-fi
-
-for INDEX in `seq 0 $AMT`;
+for INDEX in `seq 0 $(($AMT-1))`;
 do 
     VNAME=${VNAMES[$INDEX]}
     VPOSX=${STARTX[$INDEX]}
     VPORT=`expr $INDEX + 9400`
     LPORT=`expr $INDEX + 9500`
-    START_POS=$POSX",0,180"
+    START_POS=$VPOSX",0,180"
     
     echo "Vehicle:" $VNAME
     echo "Index:" $INDEX  "Port:" $VPORT "POS:" $START_POS 
@@ -86,7 +92,6 @@ do
 
 done
 
-
 #-------------------------------------------------------
 #  Part 4: Possibly exit now if we're just building targ files
 #-------------------------------------------------------
@@ -95,13 +100,12 @@ if [ ${JUST_MAKE} = "yes" ] ; then
     exit 0
 fi
 
-
 #-------------------------------------------------------
 #  Part 5: Launch the GoodGuy processes
 #-------------------------------------------------------
 printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
 pAntler targ_shoreside.moos >& /dev/null &
-printf "Launching $VNAME1 MOOS Community (WARP=%s) \n" $TIME_WARP
+printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
 pAntler targ_henry.moos >& /dev/null &
 printf "Done Launching Good Guys \n"
 
@@ -109,7 +113,7 @@ printf "Done Launching Good Guys \n"
 #-------------------------------------------------------
 #  Part 6: Launch the BadGuy processes
 #-------------------------------------------------------
-for INDEX in `seq 0 $AMT`;
+for INDEX in `seq 0 $(($AMT-1))`;
 do 
     VNAME=${VNAMES[$INDEX]}
     printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
