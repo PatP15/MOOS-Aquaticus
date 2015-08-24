@@ -22,14 +22,26 @@ Processconfig = ANTLER
   Run = uTimerScript     @ NewConsole = false
 }
 
-//------------------------------------------------------------
-ProcessConfig = uTimerScript  
-{
-	paused = false
+//--------------------------------------------------------
+// uTimerScript Configuration Block
 
-  event      = var=FLAG_GRAB_REQUEST, val=vname=$(VNAME), time=3
+ProcessConfig = uTimerScript
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+  paused     = false
   reset_max  = unlimited
-	reset_time = all-posted
+  reset_time = none
+
+  randvar = varname=X1, min=25,   max=175,  key=at_reset
+  randvar = varname=Y1, min=-50,  max=-5,   key=at_reset
+  randvar = varname=X2, min=25,   max=175,  key=at_reset
+  randvar = varname=Y2, min=-170, max=-125, key=at_reset
+	randvar = varname=SPD, min=0.5, max=2.0,  key=at_reset
+	
+  event = var=WPT_UPDATE, val="polygon=$[X1],$[Y1]:$[X2],$[Y2]", time=0
+	event = var=WPT_UPDATE, val="speed=$[SPD]", time=0 
 }
 
 #include plug_pShare.moos

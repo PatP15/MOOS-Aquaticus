@@ -3,9 +3,9 @@
 
 initialize   DEPLOY  = false
 initialize   RETURN  = false
-initialize   STATION_KEEP = false
-initialize   LOITER  = true
+initialize   CHASING = true
 initialize   AVOID   = true
+initialize   STATION_KEEP = false
 
 set MODE = ACTIVE {
   DEPLOY = true
@@ -19,29 +19,19 @@ set MODE = STATION-KEEPING {
 set MODE = RETURNING {
   MODE = ACTIVE
   RETURN = true
-} 
-
-set MODE = LOITERING {
-  MODE = ACTIVE
-  LOITER = true
-} 
+} CHASING
 
 
 //----------------------------------------------
 Behavior = BHV_Waypoint
 { 
-  name      = waypt_survey
+  name      = waypt_search
   pwt       = 100
-  condition = RETURN = false
-  condition = DEPLOY = true
-  endflag   = RETURN = true
-//  updates   = WPT_UPDATE
-  updates   = WPT_FLAGS
+  condition = MODE==CHASING
+  endflag   = UTS_RESET=true
+  updates   = WPT_UPDATE
   perpetual = true
 
-                lead = 8
-         lead_damper = 1
-       lead_to_start = true
                speed = 2   // meters per second
         capture_line = true
       capture_radius = 5.0
@@ -50,11 +40,12 @@ Behavior = BHV_Waypoint
              polygon = 60,-40 : 60,-160 : 150,-160 : 180,-100 : 150,-40
              repeat = 0
 
-  visual_hints = nextpt_color=yellow
-    visual_hints = nextpt_vertex_size=8
-    visual_hints = nextpt_lcolor=gray70
-    visual_hints = vertex_color=dodger_blue, edge_color=white
-    visual_hints = vertex_size=5, edge_size=1
+    visual_hints = nextpt_color=gray20
+    visual_hints = nextpt_vertex_size=2
+    visual_hints = nextpt_lcolor=invisible
+    visual_hints = label_color=invisible
+    visual_hints = vertex_color=invisible, edge_color=invisible
+    visual_hints = vertex_size=2, edge_size=1
 }
 
 //----------------------------------------------

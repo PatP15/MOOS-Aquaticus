@@ -5,6 +5,8 @@
 TIME_WARP=1
 JUST_MAKE="no"
 AMT=1
+GOOD_GUYS="yes"
+BAD_GUYS="yes"
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
 	printf "%s [SWITCHES] [time_warp]   \n" $0
@@ -15,6 +17,10 @@ for ARGI; do
         TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
 	JUST_MAKE="yes"
+    elif [ "${ARGI}" = "--bad_guys_no" -o "${ARGI}" = "-b" ] ; then
+	BAD_GUYS="no"
+    elif [ "${ARGI}" = "--good_guys_no" -o "${ARGI}" = "-g" ] ; then
+	GOOD_GUYS="no"
     elif [ "${ARGI:0:6}" = "--amt=" ] ; then
         AMT="${ARGI#--amt=*}"
     else 
@@ -30,8 +36,6 @@ fi
 if [ $AMT -lt 1 ] ; then
     AMT=1
 fi
-
-
 
 
 #-------------------------------------------------------
@@ -97,21 +101,33 @@ done
 #-------------------------------------------------------
 
 if [ ${JUST_MAKE} = "yes" ] ; then
+    printf "targ files built. Nothing launched.\n"
+    exit 0
+fi
+
+if [ ${BAD_GUYS} = "no" -a ${GOOD_GUYS} = "no"] ; then
+    printf "targ files built. Nothing launched.\n"
     exit 0
 fi
 
 #-------------------------------------------------------
-#  Part 5: Launch the GoodGuy processes
+#  Part 5: Launch the Shoreside
 #-------------------------------------------------------
 printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
 pAntler targ_shoreside.moos >& /dev/null &
-printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
-pAntler targ_henry.moos >& /dev/null &
-printf "Done Launching Good Guys \n"
-
+printf "Done Launching Shoreside \n"
 
 #-------------------------------------------------------
-#  Part 6: Launch the BadGuy processes
+#  Part 6: Launch the GoodGuy processes
+#-------------------------------------------------------
+if [ ${GOOD_GUYS} = "yes" ] ; then
+    printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
+    pAntler targ_henry.moos >& /dev/null &
+    printf "Done Launching Good Guys \n"
+fi
+
+#-------------------------------------------------------
+#  Part 7: Launch the BadGuy processes
 #-------------------------------------------------------
 for INDEX in `seq 0 $(($AMT-1))`;
 do 
@@ -121,7 +137,6 @@ do
     sleep 0.1
 done
 printf "Done Launching Bad Guys \n"
-
 
 
 uMAC targ_shoreside.moos
