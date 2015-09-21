@@ -29,10 +29,28 @@ using namespace std;
 
 VTag::VTag()
 {
-  m_x = 0;
-  m_y = 0;
-  m_time_launched = 0;
-  m_range         = -1;
+  m_x      = 0;
+  m_y      = 0;
+  m_range  = -1;
+
+  m_time_posted = 0;
+
+  m_x_set = false;
+  m_y_set = false;
+}
+
+
+//------------------------------------------------------------
+// Constructor
+
+VTag::VTag(string vname, double x, double y, double time_posted)
+{
+  m_vname  = vname;
+  m_x      = x;
+  m_y      = y;
+  m_range  = -1;
+
+  m_time_posted = time_posted;
 
   m_x_set = false;
   m_y_set = false;
@@ -45,7 +63,7 @@ bool VTag::valid() const
 {
   if(!m_x_set || !m_y_set)
     return(false);
-  if(m_time_launched <= 0)
+  if(m_time_posted <= 0)
     return(false);
   if(m_range <= 0)
     return(false);

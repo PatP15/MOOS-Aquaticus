@@ -6,6 +6,7 @@ initialize   RETURN  = false
 initialize   STATION_KEEP = false
 initialize   LOITER  = true
 initialize   AVOID   = true
+initialize   FLAGS_TO_GRAB   = false
 
 set MODE = ACTIVE {
   DEPLOY = true
@@ -30,13 +31,40 @@ set MODE = LOITERING {
 //----------------------------------------------
 Behavior = BHV_Waypoint
 { 
+  name      = waypt_flags
+  pwt       = 100
+  condition = RETURN = false
+  condition = DEPLOY = true
+  condition = FLAGS_TO_GRAB = true
+  endflag   = FLAGS_TO_GRAP = false
+  updates   = FLAG_PATH
+  perpetual = true
+
+               speed = 2   // meters per second
+        capture_line = true
+      capture_radius = 5.0
+         slip_radius = 15.0
+
+             polygon = 0,0
+             repeat = 0
+
+  visual_hints = nextpt_color=yellow
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+//----------------------------------------------
+Behavior = BHV_Waypoint
+{ 
   name      = waypt_survey
   pwt       = 100
   condition = RETURN = false
   condition = DEPLOY = true
+  condition = FLAGS_TO_GRAB = false
   endflag   = RETURN = true
-//  updates   = WPT_UPDATE
-  updates   = WPT_FLAGS
+  updates   = WPT_UPDATE
   perpetual = true
 
              lead = 8

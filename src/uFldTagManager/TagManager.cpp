@@ -24,6 +24,7 @@
 #include <iostream>
 #include <cmath>
 #include "AngleUtils.h"
+#include "ColorParse.h"
 #include "TagManager.h"
 #include "MBUtils.h"
 #include "ACTable.h"
@@ -37,11 +38,12 @@ using namespace std;
 TagManager::TagManager()
 {
   // Default visual hints
-  m_hit_color  = "white";
-  m_miss_color = "red";
-
+  m_post_color = "white";
+  m_hit_color  = "red";
+  m_miss_color = "green";
   m_vtag_range = 50;
 }
+
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
@@ -59,7 +61,7 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleNodeReport(sval);
-    else if(key == "VTAG_LAUNCH")
+    else if(key == "TAG_POST")
       handled = handleVTagLaunch(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
@@ -90,8 +92,10 @@ bool TagManager::OnStartUp()
     bool handled = true;
     if(param == "vtag_range")
       handled = setVTagRange(value);
-
-    if(param == "hit_color")
+    
+    if(param == "post_color")
+      handled = setColorOnString(m_post_color, value);
+    else if(param == "hit_color")
       handled = setColorOnString(m_hit_color, value);
     else if(param == "miss_color") 
       handled = setColorOnString(m_miss_color, value);
@@ -136,8 +140,8 @@ void TagManager::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
-  Register("VTAG_LAUNCH", 0);
-  Register("VTAG_STATUS_REQ", 0);
+  Register("TAG_POST", 0);
+  Register("TAG_STATUS_REQ", 0);
 }
 
 //---------------------------------------------------------
@@ -159,15 +163,13 @@ bool TagManager::handleNodeReport(const string& node_report_str)
   m_map_node_records[vname] = new_node_record;
   // No promise that m_map_node_reports_rcd[vname] will equal 0 when it is created
   //  Therefore we check if it exists, if not we create it and set it to 0
-  if (m_map_node_reports_rcd.count(vname) == 0)
-    m_map_node_reports_rcd[vname] = 0;
   m_map_node_reports_rcd[vname]++;
 
   return(true);
 }
 
 //---------------------------------------------------------
-// Procedure: handleVTagLaunch
+// Procedure: handleVTagPost
 //   Example: vname=alpha
 
 bool TagManager::handleVTagLaunch(const string& launch_str)
@@ -190,56 +192,32 @@ bool TagManager::handleVTagLaunch(const string& launch_str)
   double elapsed = m_curr_time - m_map_node_vtag_last[vname];
   if(elapsed < m_vtag_min_interval) {
     m_map_node_vtags_rej_2freq[vname]++;
+    reportEvent(toupper(vname) + " : Tag Attempt Rejected");
     return(false);
   }
     
-  
-  
-#if 0
+  // Part 3: Tag is accepted for later proccessing, increment and 
+  // add an appcasting event.
+  m_tag_events++;
+  string event = toupper(vname)+" : Tag Attempt Accepted ";
+  reportEvent(event + "[" + uintToString(m_tag_events) + "]");
 
-
-  unsigned int amt_remaining = getChargesRemaining(vname);
-  bool launch_allowed = (amt_remaining > 0);
-  
-  if(!launch_allowed) {
-    string msg = toupper(vname) + "  ----[ooo] No More Depth Charges! ";
-    reportEvent(msg);
-    return(true);
-  }
-
-  m_map_node_launches_now[vname]++;
-  m_map_node_launches_ever[vname]++;
-  reportEvent(toupper(vname) + "  ----[---] Depth Charge deployed.... ");
-
-  if(amt_remaining > 0)
-    m_map_node_charges_have[vname]--;
-  
-  // Part 3: Create a new Depth Charge
+  // Part 4: Create a VTag and push it on the list of pending vtags
+  // for subsequent processing.
   NodeRecord record = m_map_node_records[vname];
-  double     dcharge_range = m_map_node_charge_range[vname];
   double     vx = record.getX();
   double     vy = record.getY();
-
-  DepthCharge depth_charge;
-  depth_charge.setVName(vname);
-  depth_charge.setX(vx);
-  depth_charge.setY(vy);
-  depth_charge.setTimeLaunched(m_curr_time);
-  depth_charge.setTimeDelay(delay_dval);
-  depth_charge.setRange(dcharge_range);
-  m_pending_charges.push_back(depth_charge);
-
-
-  // Part 4: Post the RangePulse for the requesting vehicle. This is
+  VTag vtag(vname, vx, vy, m_curr_time);
+  m_pending_vtags.push_back(vtag);
+  
+  
+  // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
   double pulse_duration = 10;
-  double linger = delay_dval - pulse_duration;
-  if(linger < 0)
-    linger = 0;
-  postRangePulse(vx, vy, m_hit_color, vname+"_dcharge", 
-     pulse_duration, dcharge_range, linger);
-
-#endif
+  double linger = 2;
+  postRangePulse(vx, vy, m_post_color, vname+"_vtag", 
+		 pulse_duration, m_vtag_range, linger);
+  
   return(true);
 }
 
@@ -247,10 +225,9 @@ bool TagManager::handleVTagLaunch(const string& launch_str)
 // Procedure: postRangePulse
 
 void TagManager::postRangePulse(double x, double y, const string& color,
-           const string& label, double duration,
-           double radius, double linger)
+				const string& label, double duration,
+				double radius, double linger)
 {
-#if 0
   XYRangePulse pulse;
   pulse.set_x(x);
   pulse.set_y(y);
@@ -267,7 +244,6 @@ void TagManager::postRangePulse(double x, double y, const string& color,
   }
   string spec = pulse.get_spec();
   Notify("VIEW_RANGE_PULSE", spec);
-#endif
 }
 
 

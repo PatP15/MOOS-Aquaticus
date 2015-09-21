@@ -31,20 +31,21 @@ class VTag
 {
  public:
   VTag();
+  VTag(std::string vname, double x, double y, double time_posted);
   virtual ~VTag() {};
 
   void  setVName(std::string str) {m_vname=str;};
   void  setX(double x)            {m_x=x; m_x_set=true;};
   void  setY(double y)            {m_y=y; m_y_set=true;};
   void  setXY(double x, double y) {m_x=x; m_y=y; m_x_set=true; m_y_set=true;};
-  void  setTimeLaunched(double t) {m_time_launched=t;};
+  void  setTimePosted(double t)   {m_time_posted=t;};
   void  setRange(double r)        {m_range=r;};
 
-  std::string  getVName() const         {return(m_vname);};
-  double       getX() const             {return(m_x);};
-  double       getY() const             {return(m_y);};
-  double       getTimeLaunched() const  {return(m_time_launched);};
-  double       getRange() const         {return(m_range);};
+  std::string  getVName() const       {return(m_vname);};
+  double       getX() const           {return(m_x);};
+  double       getY() const           {return(m_y);};
+  double       getTimePosted() const  {return(m_time_posted);};
+  double       getRange() const       {return(m_range);};
 
   bool  valid() const;
 
@@ -53,7 +54,7 @@ class VTag
   std::string  m_vname;
   double       m_x;
   double       m_y;
-  double       m_time_launched;
+  double       m_time_posted;
   double       m_range;
 
   bool         m_x_set;

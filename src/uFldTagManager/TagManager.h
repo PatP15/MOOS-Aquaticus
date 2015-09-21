@@ -95,7 +95,10 @@ class TagManager : public AppCastingMOOSApp
   double        m_vtag_range;
   double        m_vtag_min_interval;
   
+  unsigned int  m_tag_events;
+
   // Visual hints
+  std::string   m_post_color;
   std::string   m_hit_color;
   std::string   m_miss_color;
 };
