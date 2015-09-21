@@ -36,24 +36,12 @@ using namespace std;
 
 TagManager::TagManager()
 {
-  // Default depth charge range and amount for all vehicles
-  m_depth_charge_range_default  = 25; // meters
-  m_depth_charge_amount_default = 5;
-
   // Default visual hints
-  m_drop_color     = "blue";
-  m_detonate_color = "white";
-  m_hit_color      = "red";
+  m_drop_color = "blue";
+  m_hit_color  = "white";
+  m_miss_color = "red";
 
-  // Default Replenish Position, Range and Time
-  m_replenish_x = 0;
-  m_replenish_y = 0;
-  m_replenish_range = 50;
-  m_replenish_time = 30;
-
-  // Depth charge delay parameters
-  m_depth_charge_delay_max = 60;
-  m_depth_charge_delay_default = 15;
+  m_vtag_range = 50;
 }
 //---------------------------------------------------------
 // Procedure: OnNewMail
@@ -72,14 +60,8 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleNodeReport(sval);
-    else if(key == "DEPTH_CHARGE_LAUNCH")
-      handled = handleDepthChargeLaunch(sval);
-    else if(key == "DEPTH_CHARGE_STATUS_REQ")
-      handled = handleDepthChargeStatusRequest(sval);
-    else if(key == "DEPTH_CHARGE_REPLENISH_REQ")
-      handled = handleReplenishRequest(sval);
-    else if(key == "REPLENISH_CLARIFY")
-      handled = postReplenishRules();
+    else if(key == "VTAG_LAUNCH")
+      handled = handleVTagLaunch(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
 
@@ -107,34 +89,18 @@ bool TagManager::OnStartUp()
     string value  = sLine;
     
     bool handled = true;
-    if(param == "depth_charge_config")
-      handled = setDepthChargeConfig(value);
-    else if((param == "depth_charge_range_default") || 
-	    (param == "default_depth_charge_range"))
-      handled = setDefaultChargeRange(value);
-    else if((param == "default_depth_charge_amount") ||
-	    (param == "depth_charge_amount_default"))
-      handled = setDefaultChargeAmount(value);
-    else if(param == "depth_charge_delay_default")
-      handled = setDepthChargeDelayDefault(value);
-    else if(param == "depth_charge_delay_max")
-      handled = setDepthChargeDelayMax(value);
+    if(param == "vtag_config")
+      handled = setVTagConfig(value);
+    else if(param == "vtag_range")
+      handled = setVTagRange(value);
 
+    else if(param == "drop_color") 
+      handled = setColorOnString(m_drop_color, value);
+    else if(param == "hit_color")
+      handled = setColorOnString(m_hit_color, value);
+    else if(param == "miss_color") 
+      handled = setColorOnString(m_miss_color, value);
 
-    else if(param == "replenish_time")
-      handled = setReplenishTime(value);
-    else if(param == "replenish_range")
-      handled = setReplenishRange(value);
-    else if(param == "replenish_station")
-      handled = setReplenishStation(value);
-    else if((param == "drop_color") && isColor(value)) {
-      m_drop_color = value;
-      handled = true;
-    }
-    else if((param == "hit_color") && isColor(value)) {
-      m_hit_color = value;
-      handled = true;
-    }
     else if(param == "visual_hints") 
       handled = handleVisualHints(value);
 
@@ -152,15 +118,7 @@ bool TagManager::OnStartUp()
 bool TagManager::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  processPendingDepthCharges();
-
-  // Check for Replenish Requests
-  map<string, NodeRecord>::iterator p;
-  for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
-    string vname = p->first;
-    if(m_map_node_replenish_req[vname] == true)
-      postReplenishStatus(vname);
-  }
+  processPendingVTags();
 
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -183,10 +141,8 @@ void TagManager::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
-  Register("DEPTH_CHARGE_LAUNCH", 0);
-  Register("DEPTH_CHARGE_REPLENISH_REQ", 0);
-  Register("DEPTH_CHARGE_STATUS_REQ", 0);
-  Register("REPLENISH_CLARIFY", 0);
+  Register("VTAG_LAUNCH", 0);
+  Register("VTAG_STATUS_REQ", 0);
 }
 
 //---------------------------------------------------------
@@ -212,61 +168,29 @@ bool TagManager::handleNodeReport(const string& node_report_str)
     m_map_node_reports_rcd[vname] = 0;
   m_map_node_reports_rcd[vname]++;
 
-  // Step 3: If number of node depth charges are not pre-config, set to node default
-  if(m_map_node_charges_have.count(vname) == 0)
-    if (isUUV(vname))
-      m_map_node_charges_have[vname] = 0;
-    else
-      m_map_node_charges_have[vname] = m_depth_charge_amount_default;
-
-  // Step 4: If node depth charge range not pre-config, set to node default
-  if(m_map_node_charge_range.count(vname) == 0)
-    if (isUUV(vname))
-      m_map_node_charge_range[vname] = 0;
-    else
-      m_map_node_charge_range[vname] = m_depth_charge_range_default;
-  
-  // Step 5: If node replenish request not pre-config, set to false
-  if (m_map_node_replenish_req.count(vname) == 0) {
-    m_map_node_replenish_req[vname] = false;
-  }
-  
   return(true);
 }
 
 //---------------------------------------------------------
-// Procedure: handleDepthChargeLaunch
-//   Example: vname=alpha,delay=30
+// Procedure: handleVTagLaunch
+//   Example: vname=alpha
 
-bool TagManager::handleDepthChargeLaunch(const string& launch_str)
+bool TagManager::handleVTagLaunch(const string& launch_str)
 {
   string vname = tokStringParse(launch_str, "name",  ',', '=');
-  string delay = tokStringParse(launch_str, "delay", ',', '=');
   
   // Part 1: Error checking
   // Confirm this request is coming from a known vehicle.
   if((vname == "")  || (m_map_node_records.count(vname) == 0)) {
-    reportRunWarning("Failed DepthCharge Launch: Unknown vehicle["+vname+"]");
-    reportEvent("Failed Range Request: Unknown vehicle["+vname+"]");
+    reportRunWarning("Failed VTag Launch: Unknown vehicle[" + vname + "]");
+    reportEvent("Failed VTagt: Unknown vehicle[" + vname + "]");
     return(false);
   }
 
-  // Convert the string delay value to a numerical value
-  double delay_dval = atof(delay.c_str());
-  if(!isNumber(delay) || (delay_dval < 0)) {
-    delay_dval = m_depth_charge_delay_default;
-    string msg = "DepthCharge Launch by " + vname + " invalid delay. Default used.";
-    reportRunWarning(msg);
-    reportEvent(msg);
-  }
-
-  // Make sure the depth charge delay is not over the maximum allowed.
-  if(delay_dval > m_depth_charge_delay_max)
-    delay_dval = m_depth_charge_delay_max;
-
-  // Part 2: Determine if this vehicle is allowed to launch a depth
+  // Part 2: Determine if this vehicle is allowed to launch a vtag
   // charge based on the amount of charges remaining for this vehicle.
 
+#if 0
   unsigned int amt_remaining = getChargesRemaining(vname);
   bool launch_allowed = (amt_remaining > 0);
   
@@ -308,121 +232,9 @@ bool TagManager::handleDepthChargeLaunch(const string& launch_str)
   postRangePulse(vx, vy, m_drop_color, vname+"_dcharge", 
      pulse_duration, dcharge_range, linger);
 
+#endif
   return(true);
 }
-
-//---------------------------------------------------------
-// Procedure: handleDepthChargeStatusRequest
-//   Example: vname=alpha
-
-bool TagManager::handleDepthChargeStatusRequest(const string& sval_in)
-{
-  // Get the vname from the request
-  string vname = tokStringParse(sval_in, "name",  ',', '=');
-  
-  // Verify vehicle is already known to us
-  if (m_map_node_records.count(vname) == 0)
-    return true;
-
-  // Get the status of the vehicle to be published
-  string amt = uintToString(m_map_node_charges_have[vname]);
-  string range = doubleToStringX(m_map_node_charge_range[vname]);
-  string launches_ever = uintToString(m_map_node_launches_ever[vname]);
-  string launches_now  = uintToString(m_map_node_launches_now[vname]);
-  string launches_hit  = uintToString(m_map_node_launches_hit[vname]);
-
-  // Post the status to variable to be bridged to vehicle
-  string charge_status = "DEPTH_CHARGE_STATUS_" + toupper(vname);
-  string sval = "name=" + vname + ",amt=" + amt + ",range=" + range +
-    ",launches_ever=" + launches_ever + ",launches_now=" +
-    launches_now + ",hits=" + launches_hit;
-  Notify(charge_status,sval);
-
-  return(true);
-}
-
-//---------------------------------------------------------
-// Procedure: handleReplenishRequest
-//   Example: vname=alpha
-
-bool TagManager::handleReplenishRequest(const string& sval)
-{
-  // Get the vname from the request
-  string vname = tokStringParse(sval, "name",  ',', '=');
-  
-  // Check to see if vehicle is close to replenish spot
-  double distance = rangeToReplenishStation(vname);
-
-  if(isUUV(vname)) {
-    //TODO: Publish message that vehicle is not eligible to replenish
-    return true;
-  }
-  
-  if (!m_map_node_replenish_req[vname])
-    if (distance < m_replenish_range) {
-      m_map_node_replenish_req[vname] = true;
-      m_map_node_replenish_req_time[vname] = MOOSTime();
-    }
-
-  //TODO: Publish message that replenish will not happen due to distance
-    else {
-    }
-  
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure: postReplenishRules
-
-bool TagManager::postReplenishRules()
-{
-  stringstream ss;
-  ss << "station=" << m_replenish_x << ":" << m_replenish_y << ",";
-  ss << "range=" << m_replenish_range << ",";
-  ss << "time=" << m_replenish_time;
-
-  Notify("REPLENISH_RULES", ss.str());
-  return(true);
-}
-
-
-//------------------------------------------------------------
-// Procedure: postReplenishStatus
-
-void TagManager::postReplenishStatus(const string& vname)
-{
-  double distance = rangeToReplenishStation(vname);
-  double time_remaining = m_map_node_replenish_req_time[vname] 
-    + m_replenish_time - MOOSTime();
-
-  // Get the Replenish Status
-  string sval;
-  if(distance > m_replenish_range) {
-    sval = "name=" + vname + ",status=out_of_range";
-    m_map_node_replenish_req[vname] = false;
-  }
-  else if(time_remaining > 0)
-    sval = "name=" + vname + ",status=replenishing,time=" +
-      doubleToStringX(time_remaining);
-  else {
-    sval = "name=" + vname + ",status=complete,time=" +
-      doubleToStringX(MOOSTime());
-    m_map_node_charges_have[vname] = m_depth_charge_amount_default;
-    m_map_node_replenish_req[vname] = false;
-  }
-
-  string var = "REPLENISH_STATUS_" + toupper(vname);
-  Notify(var,sval);
-}
-
-
-//------------------------------------------------------------
-// Procedure: isUUV
-bool TagManager::isUUV(string& vname)
-{
-  return (MOOSStrCmp(m_map_node_records[vname].getType(), "UUV"));
-}
-
 
 //------------------------------------------------------------
 // Procedure: postRangePulse
@@ -431,6 +243,7 @@ void TagManager::postRangePulse(double x, double y, const string& color,
            const string& label, double duration,
            double radius, double linger)
 {
+#if 0
   XYRangePulse pulse;
   pulse.set_x(x);
   pulse.set_y(y);
@@ -447,6 +260,7 @@ void TagManager::postRangePulse(double x, double y, const string& color,
   }
   string spec = pulse.get_spec();
   Notify("VIEW_RANGE_PULSE", spec);
+#endif
 }
 
 
@@ -465,62 +279,21 @@ double TagManager::getTrueNodeRange(double x, double y, const string& node)
   return(range);
 }
 
+
 //------------------------------------------------------------
-// Procedure: setDepthChargeConfig
-//   Example: "name=henry, range=35, amt=3"
+// Procedure: setVTagConfig
 
-bool TagManager::setDepthChargeConfig(string str)
+bool TagManager::setVTagConfig(string str)
 {
-  vector<string> svector = parseString(str, ',');
-
-  string vname, range, amount;
-
-  unsigned int i, vsize = svector.size();
-  for(i=0; i<vsize; i++) {
-    string left  = biteStringX(svector[i], '=');
-    string right = tolower(svector[i]); 
-    
-    if(left == "name")
-      vname = right;
-
-    else if(left == "range") {
-      range = right;
-      if(range == "")
-  return(false);
-    }
-    else if(left == "amt") {
-      amount = right;
-      if(amount == "")
-  return(false);
-    }
-  }
-
-  if(vname == "")
-    return(false);
-
-  // Handle setting the depth charge range
-  double drange = atof(range.c_str());
-  if(!isNumber(range) || (drange < 0))
-    return(false);
-  else
-    m_map_node_charge_range[vname] = drange;
-
-  // Handle setting the depth charge count
-  int int_amt = atoi(amount.c_str());
-  if(!isNumber(amount) || (int_amt < 0))
-    return(false);
-  //else
-    //m_map_node_charges_have[vname] = int_amt;
-  
   return(true);
 }
 
 //------------------------------------------------------------
-// Procedure: setDefaultChargeRange
+// Procedure: setDefaultVTagRange
 //      Note: Argument must be a non-negative number
 //   Example: "50"
 
-bool TagManager::setDefaultChargeRange(string str)
+bool TagManager::setVTagRange(string str)
 {
   if(!isNumber(str))
     return(false);
@@ -529,160 +302,20 @@ bool TagManager::setDefaultChargeRange(string str)
   if(range < 0)
     return(false);
 
-  m_depth_charge_range_default = range;
+  m_vtag_range = range;
   return(true);
 }
 
-//------------------------------------------------------------
-// Procedure: setDefaultChargeAmount
-//      Note: Argument must be a non-negative number
-//   Example: "3"
-
-bool TagManager::setDefaultChargeAmount(string str)
-{
-  if(!isNumber(str))
-    return(false);
-
-  int amount = atof(str.c_str());
-  if(amount < 0)
-    return(false);
-
-  m_depth_charge_amount_default = amount;
-  return(true);
-}
 
 //------------------------------------------------------------
-// Procedure:  setReplenishTime
-//     Notes: Sets the time required for replenish
-//            Argument must be a non-negative number
-//   Example:  "30"
+// Procedure: processPendingVTags
 
-bool TagManager::setReplenishTime(string str)
+void TagManager::processPendingVTags()
 {
-  if(!isNumber(str))
-    return(false);
-
-  double amount = atof(str.c_str());
-  if(amount < 0)
-    return(false);
-
-  m_replenish_time = amount;
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure:  setReplenishRange
-//     Notes: Sets the range (m) from the replenish point within which
-//            a vehicle needs to be to replenish its depth charges.
-//   Example:  "50"
-
-bool TagManager::setReplenishRange(string str)
-{
-  if(!isNumber(str))
-    return(false);
-
-  double range = atof(str.c_str());
-  if(range < 0)
-    return(false);
-
-  m_replenish_range = range;
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure:  setDepthChargeDelayMax
-//   Example:  "90"
-
-bool TagManager::setDepthChargeDelayMax(string str)
-{
-  if(!isNumber(str))
-    return(false);
-
-  double delay = atof(str.c_str());
-  if(delay < 0)
-    return(false);
-
-  m_depth_charge_delay_max = delay;
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure: setDepthChargeDelayDefault
-//      Note: This is the depth charge delay time used if a launch request
-//            is sent without specifying a depth charge delay.
-
-bool TagManager::setDepthChargeDelayDefault(string str)
-{
-  if(!isNumber(str))
-    return(false);
-
-  double delay = atof(str.c_str());
-  if(delay < 0)
-    return(false);
-
-  m_depth_charge_delay_default = delay;
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure: setReplenishStation
-//     Notes: Sets location of the replenish station in local coordinates.
-//   Example: "10,50"
-
-bool TagManager::setReplenishStation(string str)
-{
-  string x_str = biteStringX(str, ',');
-  string y_str = str;
-
-  if(!isNumber(x_str) || !isNumber(y_str))
-    return(false);
-  
-  double x_dbl = atof(x_str.c_str());
-  double y_dbl = atof(y_str.c_str());
-
-  m_replenish_x = x_dbl;
-  m_replenish_y = y_dbl;
-  
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure: rangeToReplenishStation()
-
-double TagManager::rangeToReplenishStation(string vname) 
-{
-  NodeRecord record = m_map_node_records[vname];
-  double x = record.getX();
-  double y = record.getY();
-  double xdelta = (x - m_replenish_x);
-  double ydelta = (y - m_replenish_y);
-  double distance = hypot(xdelta, ydelta);
-
-  return(distance);
-}
-
-//------------------------------------------------------------
-// Procedure: getChargesRemaining
-//   Example: "henry"
-
-unsigned int TagManager::getChargesRemaining(string vname) const
-{
-  map<string, unsigned int>::const_iterator p;
-  p = m_map_node_charges_have.find(vname);
-  if(p == m_map_node_charges_have.end())
-    return(0);
-  else
-    return(p->second);
-}
-
-//------------------------------------------------------------
-// Procedure: processPendingDepthCharges
-
-void TagManager::processPendingDepthCharges()
-{
-  list<DepthCharge>::iterator p;
-  for(p=m_pending_charges.begin(); p!=m_pending_charges.end(); ) {
-    DepthCharge dcharge = *p;
+#if 0
+  list<VTag>::iterator p;
+  for(p=m_pending_vtags.begin(); p!=m_pending_vtags.end(); ) {
+    VTag vtag = *p;
     double elapsed = m_curr_time - dcharge.getTimeLaunched(); 
     if(elapsed >= dcharge.getTimeDelay()) {
       invokeDepthCharge(dcharge);
@@ -691,6 +324,7 @@ void TagManager::processPendingDepthCharges()
     else
       ++p;
   }
+#endif
 }
 
 //------------------------------------------------------------
@@ -705,10 +339,10 @@ bool TagManager::handleVisualHints(string str)
     
     if((param == "drop_color") && isColor(value))
       m_drop_color = value;
-    else if((param == "detonate_color") && isColor(value))
-      m_detonate_color = value;
     else if((param == "hit_color") && isColor(value))
       m_hit_color = value;
+    else if((param == "miss_color") && isColor(value))
+      m_miss_color = value;
     else
       return(false);
   }
@@ -716,10 +350,11 @@ bool TagManager::handleVisualHints(string str)
 }
 
 //------------------------------------------------------------
-// Procedure: invokeDepthCharge()
+// Procedure: invokeVTag()
 
-void TagManager::invokeDepthCharge(DepthCharge dcharge)
+void TagManager::invokeVTag(VTag vtag)
 {
+#if 0
   double dcharge_x = dcharge.getX();
   double dcharge_y = dcharge.getY();
   double dcharge_range = dcharge.getRange();
@@ -731,42 +366,48 @@ void TagManager::invokeDepthCharge(DepthCharge dcharge)
   double pulse_duration = 1;
   double linger = 20;
   postRangePulse(dcharge_x, dcharge_y, m_hit_color, dcharge_vname+"_dchargex", 
-     pulse_duration, dcharge_range, linger);
+		 pulse_duration, dcharge_range, linger);
   
   
   reportEvent(toupper(dcharge_vname) + "  ----[***] Depth Charge Detonated.....");
-
-    // Check all vehicles to see if they are in range of the depth charge
-    map<string, NodeRecord>::iterator p;
-    for (p = m_map_node_records.begin(); p != m_map_node_records.end(); p++) {
-        string node_name  = p->first;
-
-        // A vehicle cannot be a victim of its own depth charge
-        if (node_name != dcharge_vname) {
-            double node_range = getTrueNodeRange(dcharge_x, dcharge_y, node_name);
-
-            // A depth charge hit!!!!
-            if (node_range < dcharge_range) {
-                m_map_node_launches_hit[dcharge_vname]++;
-
-                // Declare the hit to the MOOSDB (outside the scope here as to the
-                // consequences of the hit. Here we just declare it.)
-                string msg = "target=" + node_name + ",range=" + doubleToString(node_range, 1);
-                Notify("DEPTH_CHARGE_HIT", msg);
-                Notify("TARGET_HIT_ALL", node_name);
-
-                // We don't remove the hit vehicle from the records, but we do
-                // zero-out any depth charges that vehicle may have had.
-                m_map_node_charges_have[node_name] = 0;
-
-                reportEvent(toupper(dcharge_vname) + "  ----[***] Depth Charge HIT: " + node_name); }
-
-            // A depth charge miss...
-            else {
-                // Declare the miss to the MOOSDB
-                string msg = "target=" + node_name + ",range =" + doubleToString(node_range, 1);
-                Notify("DEPTH_CHARGE_MISS", msg);
-                reportEvent(toupper(dcharge_vname) + "  ----[***] Depth Charge MISS"); } } }
+  
+  // Check all vehicles to see if they are in range of the depth charge
+  map<string, NodeRecord>::iterator p;
+  for (p = m_map_node_records.begin(); p != m_map_node_records.end(); p++) {
+    string node_name  = p->first;
+    
+    // A vehicle cannot be a victim of its own depth charge
+    if (node_name != dcharge_vname) {
+      double node_range = getTrueNodeRange(dcharge_x, dcharge_y, node_name);
+      
+      // A depth charge hit!!!!
+      if (node_range < dcharge_range) {
+	m_map_node_launches_hit[dcharge_vname]++;
+	
+	// Declare the hit to the MOOSDB (outside the scope here as to the
+	// consequences of the hit. Here we just declare it.)
+	string msg = "target=" + node_name + ",range=" +
+	  doubleToString(node_range, 1);
+	Notify("DEPTH_CHARGE_HIT", msg);
+	Notify("TARGET_HIT_ALL", node_name);
+	
+	// We don't remove the hit vehicle from the records, but we do
+	// zero-out any depth charges that vehicle may have had.
+	m_map_node_charges_have[node_name] = 0;
+	
+	reportEvent(toupper(dcharge_vname) +
+		    "  ----[***] Depth Charge HIT: " + node_name); }
+      
+      // A depth charge miss...
+      else {
+	// Declare the miss to the MOOSDB
+	string msg = "target=" + node_name + ",range =" + doubleToString(node_range, 1);
+	Notify("DEPTH_CHARGE_MISS", msg);
+	reportEvent(toupper(dcharge_vname) + "  ----[***] Depth Charge MISS");
+      }
+    }
+  }
+#endif
 }
 
 //------------------------------------------------------------
@@ -804,14 +445,13 @@ void TagManager::invokeDepthCharge(DepthCharge dcharge)
 
 bool TagManager::buildReport()
 {
+#if 0
   m_msgs << "Inventory Configuration Settings " << endl;
   m_msgs << "  Default Charge Range:  " << m_depth_charge_range_default  << endl;
   m_msgs << "  Default Charge Amount: " << m_depth_charge_amount_default << endl;
   m_msgs << "Delay Configuration Settings " << endl;
   m_msgs << "  Depth Charge Delay Max:     " << m_depth_charge_delay_max << endl;
-  m_msgs << "  Depth Charge Delay Default: " << m_depth_charge_delay_default << endl;
   m_msgs << "Replenish Configuration Settings " << endl;
-  m_msgs << "  Replenish station: " << m_replenish_x << "," << m_replenish_y << endl;
   m_msgs << "  Replenish range:   " << m_replenish_range << endl;
   m_msgs << "  Replenish time:    " << m_replenish_time  << endl;
   m_msgs << "Visual Hints " << endl;
@@ -839,8 +479,10 @@ bool TagManager::buildReport()
     string launches_now  = uintToString(m_map_node_launches_now[vname]);
     string launches_hit  = uintToString(m_map_node_launches_hit[vname]);
     
-    actab << vname << chrgs << range << launches_ever << launches_now << launches_hit;
+    actab << vname << chrgs << range << launches_ever << launches_now
+	  << launches_hit;
   }
   m_msgs << actab.getFormattedString();
+#endif
   return(true);
 }

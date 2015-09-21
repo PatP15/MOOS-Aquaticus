@@ -1,8 +1,8 @@
 /*****************************************************************/
 /*    NAME: Michael Benjamin, Henrik Schmidt, and John Leonard   */
 /*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
-/*    FILE: DepthCharge.h                                        */
-/*    DATE: Sep 22nd, 2012                                       */
+/*    FILE: VTag.h                                               */
+/*    DATE: Sep 21st, 2015                                       */
 /*                                                               */
 /* This program is free software; you can redistribute it and/or */
 /* modify it under the terms of the GNU General Public License   */
@@ -20,32 +20,30 @@
 /* Boston, MA 02111-1307, USA.                                   */
 /*****************************************************************/
 
-#ifndef UFLD_DEPTH_CHARGE_RECORD_HEADER
-#define UFLD_DEPTH_CHARGE_RECORD_HEADER
+#ifndef VTAG_HEADER
+#define VTAG_HEADER
 
 #include <vector>
 #include <string>
 #include <map>
 
-class DepthCharge 
+class VTag 
 {
  public:
-  DepthCharge();
-  virtual ~DepthCharge() {};
+  VTag();
+  virtual ~VTag() {};
 
   void  setVName(std::string str) {m_vname=str;};
   void  setX(double x)            {m_x=x; m_x_set=true;};
   void  setY(double y)            {m_y=y; m_y_set=true;};
   void  setXY(double x, double y) {m_x=x; m_y=y; m_x_set=true; m_y_set=true;};
   void  setTimeLaunched(double t) {m_time_launched=t;};
-  void  setTimeDelay(double t)    {m_time_delay=t;};
   void  setRange(double r)        {m_range=r;};
 
   std::string  getVName() const         {return(m_vname);};
   double       getX() const             {return(m_x);};
   double       getY() const             {return(m_y);};
   double       getTimeLaunched() const  {return(m_time_launched);};
-  double       getTimeDelay() const     {return(m_time_delay);};
   double       getRange() const         {return(m_range);};
 
   bool  valid() const;
@@ -56,7 +54,6 @@ class DepthCharge
   double       m_x;
   double       m_y;
   double       m_time_launched;
-  double       m_time_delay;
   double       m_range;
 
   bool         m_x_set;

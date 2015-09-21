@@ -48,8 +48,7 @@ class TagManager : public AppCastingMOOSApp
  protected: // Incoming mail utility
   bool    handleNodeReport(const std::string&);
   bool    handleVTagLaunch(const std::string&);
-  bool    handleVTagStatusRequest(const std::string&);
-  bool    handleReplenishRequest(const std::string&);
+
 
  protected: // Outgoing mail utility
   void    postVTagLaunch(const std::string&, const std::string&, double rng); 
@@ -57,26 +56,18 @@ class TagManager : public AppCastingMOOSApp
   void    postRangePulse(double x, double y, const std::string& color,
 			 const std::string& label, double dur, double radius, 
 			 double linger=0);
-  bool    postReplenishRules();
-  void    postReplenishStatus(const std::string&);
 
  protected: // Utilities
   bool    setVTagConfig(std::string);
   bool    setVTagRange(std::string);
   bool    setVTagAmount(std::string);
-  bool    setReplenishTime(std::string);
-  bool    setReplenishRange(std::string);
-  bool    setReplenishStation(std::string);
   bool    setVTagDelayMax(std::string);
   bool    setVTagDefault(std::string);
 
   double  getTrueNodeRange(double, double, const std::string&);
   double  getNoisyNodeRange(double true_range) const;
 
-  double  rangeToReplenishStation(std::string vname);
-
   unsigned int getVTagsRemaining(std::string) const;
-  bool    isUUV(std::string&);
 
   void    processPendingVTags();
   void    invokeVTag(VTag);
@@ -93,32 +84,18 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_vtags_hit;
   std::map<std::string, unsigned int> m_map_node_vtags_have;
   std::map<std::string, double>       m_map_node_vtag_range;
-  std::map<std::string, bool>         m_map_node_replenish_req;
-  std::map<std::string, double>       m_map_node_replenish_req_time;
 
-  std::list<VTag>  m_pending_charges;
+  std::list<VTag>  m_pending_vtags;
 
  protected: // Configuration variables
   // Config params for depth charge range and amount. These values may
   // but overridden with unique values for a particular vehicle.
-  double        m_vtag_range_default;
-  unsigned int  m_vtag_amount_default;
+  double        m_vtag_range;
 
-  // Config params for depth charge delays. Cannot be overridden with 
-  // unique values per vehicle - applies to all vehicles.
-  double        m_vtag_delay_max;
-  double        m_vtag_delay_default;
-
-  // Config params for replenishment. Applies equally to all vehicles.
-  double m_replenish_x;
-  double m_replenish_y;
-  double m_replenish_range;
-  double m_replenish_time;
-  
   // Visual hints
   std::string   m_drop_color;
-  std::string   m_detonate_color;
   std::string   m_hit_color;
+  std::string   m_miss_color;
 };
 
 #endif 

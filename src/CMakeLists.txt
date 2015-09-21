@@ -18,6 +18,7 @@ ADD_SUBDIRECTORY(lib_behaviors-test)
 ADD_SUBDIRECTORY(pXRelayTest)
 ADD_SUBDIRECTORY(pExampleApp)
 ADD_SUBDIRECTORY(uFldFlagMgr)
+ADD_SUBDIRECTORY(uFldTagManager)
 ADD_SUBDIRECTORY(pFlagStrategy)
 
 ##############################################################################

@@ -1,8 +1,8 @@
 /*****************************************************************/
 /*    NAME: Michael Benjamin, Henrik Schmidt, and John Leonard   */
 /*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
-/*    FILE: DepthCharge.cpp                                      */
-/*    DATE: Sep 22nd, 2012                                       */
+/*    FILE: VTag.cpp                                             */
+/*    DATE: Sep 21st, 2015                                       */
 /*                                                               */
 /* This program is free software; you can redistribute it and/or */
 /* modify it under the terms of the GNU General Public License   */
@@ -20,19 +20,18 @@
 /* Boston, MA 02111-1307, USA.                                   */
 /*****************************************************************/
 
-#include "DepthCharge.h"
+#include "VTag.h"
 
 using namespace std;
 
 //------------------------------------------------------------
 // Constructor
 
-DepthCharge::DepthCharge()
+VTag::VTag()
 {
   m_x = 0;
   m_y = 0;
   m_time_launched = 0;
-  m_time_delay    = 0;
   m_range         = -1;
 
   m_x_set = false;
@@ -42,13 +41,11 @@ DepthCharge::DepthCharge()
 //------------------------------------------------------------
 // Procedure: valid()
 
-bool DepthCharge::valid() const
+bool VTag::valid() const
 {
   if(!m_x_set || !m_y_set)
     return(false);
   if(m_time_launched <= 0)
-    return(false);
-  if(m_time_delay <= 0)
     return(false);
   if(m_range <= 0)
     return(false);
