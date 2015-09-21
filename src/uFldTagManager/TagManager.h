@@ -1,5 +1,5 @@
 /*****************************************************************/
-/*    NAME: Michael Benjamin, Henrik Schmidt, and John Leonard   */
+/*    NAME: Michael Benjamin                                     */
 /*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
 /*    FILE: TagManager.h                                         */
 /*    DATE: Sep 20th, 2015                                       */
@@ -79,21 +79,23 @@ class TagManager : public AppCastingMOOSApp
   // Map is keyed on the name of the vehicle
   std::map<std::string, NodeRecord>   m_map_node_records;
   std::map<std::string, unsigned int> m_map_node_reports_rcd;
-  std::map<std::string, unsigned int> m_map_node_vtags_now;
-  std::map<std::string, unsigned int> m_map_node_vtags_ever;
+
+  std::map<std::string, unsigned int> m_map_node_vtags_requested;
+  std::map<std::string, unsigned int> m_map_node_vtags_rej_range;
+  std::map<std::string, unsigned int> m_map_node_vtags_rej_2freq;
+  std::map<std::string, unsigned int> m_map_node_vtags_missed;
   std::map<std::string, unsigned int> m_map_node_vtags_hit;
-  std::map<std::string, unsigned int> m_map_node_vtags_have;
+
+  std::map<std::string, double>       m_map_node_vtag_last;
   std::map<std::string, double>       m_map_node_vtag_range;
 
   std::list<VTag>  m_pending_vtags;
 
  protected: // Configuration variables
-  // Config params for depth charge range and amount. These values may
-  // but overridden with unique values for a particular vehicle.
   double        m_vtag_range;
-
+  double        m_vtag_min_interval;
+  
   // Visual hints
-  std::string   m_drop_color;
   std::string   m_hit_color;
   std::string   m_miss_color;
 };

@@ -1,5 +1,5 @@
 /*****************************************************************/
-/*    NAME: Michael Benjamin, Henrik Schmidt, and John Leonard   */
+/*    NAME: Michael Benjamin                                     */
 /*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
 /*    FILE: TagManager.cpp                                       */
 /*    DATE: Sep 20th, 2015                                       */
@@ -37,7 +37,6 @@ using namespace std;
 TagManager::TagManager()
 {
   // Default visual hints
-  m_drop_color = "blue";
   m_hit_color  = "white";
   m_miss_color = "red";
 
@@ -83,20 +82,16 @@ bool TagManager::OnStartUp()
   
   STRING_LIST::iterator p;
   for(p = sParams.begin(); p!=sParams.end(); p++) {
-    string sLine  = *p;
-    string origl  = *p;
-    string param  = tolower(biteStringX(sLine, '='));
-    string value  = sLine;
+    string line  = *p;
+    string orig  = line;
+    string param = tolower(biteStringX(line, '='));
+    string value = line;
     
     bool handled = true;
-    if(param == "vtag_config")
-      handled = setVTagConfig(value);
-    else if(param == "vtag_range")
+    if(param == "vtag_range")
       handled = setVTagRange(value);
 
-    else if(param == "drop_color") 
-      handled = setColorOnString(m_drop_color, value);
-    else if(param == "hit_color")
+    if(param == "hit_color")
       handled = setColorOnString(m_hit_color, value);
     else if(param == "miss_color") 
       handled = setColorOnString(m_miss_color, value);
@@ -105,7 +100,7 @@ bool TagManager::OnStartUp()
       handled = handleVisualHints(value);
 
     if(!handled)
-      reportUnhandledConfigWarning("Unhandled config: " + origl);
+      reportUnhandledConfigWarning("Unhandled config: " + orig);
   }
 
   registerVariables();
@@ -182,15 +177,27 @@ bool TagManager::handleVTagLaunch(const string& launch_str)
   // Part 1: Error checking
   // Confirm this request is coming from a known vehicle.
   if((vname == "")  || (m_map_node_records.count(vname) == 0)) {
-    reportRunWarning("Failed VTag Launch: Unknown vehicle[" + vname + "]");
-    reportEvent("Failed VTagt: Unknown vehicle[" + vname + "]");
+    reportRunWarning("Failed VTag Post: Unknown vehicle[" + vname + "]");
+    reportEvent("Failed VTag: Unknown vehicle[" + vname + "]");
     return(false);
   }
 
+  // Increment the counter of requested tags made by this vehicle.
+  m_map_node_vtags_requested[vname]++;
+  
   // Part 2: Determine if this vehicle is allowed to launch a vtag
-  // charge based on the amount of charges remaining for this vehicle.
-
+  // based on the last time it posted a vtag.
+  double elapsed = m_curr_time - m_map_node_vtag_last[vname];
+  if(elapsed < m_vtag_min_interval) {
+    m_map_node_vtags_rej_2freq[vname]++;
+    return(false);
+  }
+    
+  
+  
 #if 0
+
+
   unsigned int amt_remaining = getChargesRemaining(vname);
   bool launch_allowed = (amt_remaining > 0);
   
@@ -229,7 +236,7 @@ bool TagManager::handleVTagLaunch(const string& launch_str)
   double linger = delay_dval - pulse_duration;
   if(linger < 0)
     linger = 0;
-  postRangePulse(vx, vy, m_drop_color, vname+"_dcharge", 
+  postRangePulse(vx, vy, m_hit_color, vname+"_dcharge", 
      pulse_duration, dcharge_range, linger);
 
 #endif
@@ -337,9 +344,7 @@ bool TagManager::handleVisualHints(string str)
     string param = biteStringX(svector[i], '=');
     string value = svector[i];
     
-    if((param == "drop_color") && isColor(value))
-      m_drop_color = value;
-    else if((param == "hit_color") && isColor(value))
+    if((param == "hit_color") && isColor(value))
       m_hit_color = value;
     else if((param == "miss_color") && isColor(value))
       m_miss_color = value;
@@ -455,8 +460,7 @@ bool TagManager::buildReport()
   m_msgs << "  Replenish range:   " << m_replenish_range << endl;
   m_msgs << "  Replenish time:    " << m_replenish_time  << endl;
   m_msgs << "Visual Hints " << endl;
-  m_msgs << "  Drop Color:     " << m_drop_color      << endl;
-  m_msgs << "  Detonate Color: " << m_detonate_color  << endl;
+  m_msgs << "  Miss Color: " << m_detonate_color  << endl;
   m_msgs << "  Hit Color:      " << m_hit_color       << endl;
   m_msgs << endl;
 
