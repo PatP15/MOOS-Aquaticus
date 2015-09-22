@@ -292,60 +292,60 @@ void TagManager::processVTags()
 
 void TagManager::processVTag(VTag vtag)
 {
-  double vtag_vx = vtag.getX();
-  double vtag_vy = vtag.getY();
-  string vtag_vname = vtag.getVName();
-  string vtag_vteam = vtag.getVTeam();
+  double vx = vtag.getX();
+  double vy = vtag.getY();
+  string vname = vtag.getVName();
+  string vteam = vtag.getVTeam();
 
-#if 0
-  // Part 3: Determine if this vehicle is allowed to launch a vtag
+  // Part 1: Check if tag allowed based on frequency
   // based on the last time it posted a vtag.
   double elapsed = m_curr_time - m_map_node_vtag_last[vname];
   if(elapsed < m_vtag_min_interval) {
     string msg = "event=" + uintToString(m_tag_events);
-    msg += ",source=" + vname + ",accepted=false";
+    msg += ",source=" + vname + ",result=rejected_toofreq";
     m_map_node_vtags_rej_2freq[vname]++;
     reportEvent(msg);
-    Notify("TAG_RESULT"+toupper(vname), msg) 
-    Notify("TAG_RESULT_VERBOSE", msg) 
-    return(false);
+    Notify("TAG_RESULT"+toupper(vname), msg);
+    Notify("TAG_RESULT_VERBOSE", msg);
+    return;
   }
-#endif
+  
+  // Part 2: Check if tag-target vehicle in zone for tagging
   
   
 
   
-  // Check all vehicles to see if they are in range of the vtag
+  // Part 3: Check all vehicles to see if in range of the vtag
   map<string, NodeRecord>::iterator p;
   for (p = m_map_node_records.begin(); p != m_map_node_records.end(); p++) {
-    string node_name = p->first;
-    string node_team = p->second.getGroup();
+    string targ_name = p->first;
+    string targ_team = p->second.getGroup();
     
     // No Tag: A vehicle cannot be tagged by itself
-    if(node_name == vtag_vname)
+    if(targ_name == vname)
       continue;
     // No Tag: A vehicle cannot be tagged another team member
-    if(node_team == vtag_vteam)
+    if(targ_team == vteam)
       continue;
 
-    double node_range = getTrueNodeRange(vtag_vx, vtag_vy, node_name);
+    double targ_range = getTrueNodeRange(vx, vy, targ_name);
 
     // No Tag: Target vehicle is out of range
-    if(node_range > m_vtag_range) {
-      m_map_node_vtags_rej_range[vtag_vname]++;
-      m_map_node_vtags_missed[vtag_vname]++;
+    if(targ_range > m_vtag_range) {
+      m_map_node_vtags_rej_range[vname]++;
+      m_map_node_vtags_missed[vname]++;
       continue;
     }
 
     // TAG!!
-    m_map_node_vtags_hit[vtag_vname]++;
+    m_map_node_vtags_hit[vname]++;
       
     // Declare the hit to the MOOSDB (outside the scope here as to the
     // consequences of the hit. Here we just declare it.)
-    string msg = "event=" + node_name + ",range=" +
-      doubleToString(node_range, 1);
+    string msg = "event=" + targ_name + ",range=" +
+      doubleToString(targ_range, 1);
     Notify("TAG_RESULT", msg);
-    Notify("TARGET_HIT_ALL", node_name);
+    Notify("TARGET_HIT_ALL", targ_name);
   }
 }
 
