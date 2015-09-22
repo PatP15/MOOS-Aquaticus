@@ -62,7 +62,7 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleNodeReport(sval);
     else if(key == "TAG_POST")
-      handled = handleVTagLaunch(sval);
+      handled = handleVTagPost(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
 
@@ -91,8 +91,7 @@ bool TagManager::OnStartUp()
     
     bool handled = true;
     if(param == "vtag_range")
-      handled = setVTagRange(value);
-    
+      handled = handleConfigVTagRange(value);    
     if(param == "post_color")
       handled = setColorOnString(m_post_color, value);
     else if(param == "hit_color")
@@ -117,7 +116,7 @@ bool TagManager::OnStartUp()
 bool TagManager::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  processPendingVTags();
+  processVTags();
 
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -161,8 +160,7 @@ bool TagManager::handleNodeReport(const string& node_report_str)
   // Step 2: Add/Update the node record and increment the counter
   string vname = new_node_record.getName();
   m_map_node_records[vname] = new_node_record;
-  // No promise that m_map_node_reports_rcd[vname] will equal 0 when it is created
-  //  Therefore we check if it exists, if not we create it and set it to 0
+
   m_map_node_reports_rcd[vname]++;
 
   return(true);
@@ -172,45 +170,39 @@ bool TagManager::handleNodeReport(const string& node_report_str)
 // Procedure: handleVTagPost
 //   Example: vname=alpha
 
-bool TagManager::handleVTagLaunch(const string& launch_str)
+bool TagManager::handleVTagPost(const string& launch_str)
 {
+  // Part 1: Confirm request is coming from a known vehicle.
   string vname = tokStringParse(launch_str, "name",  ',', '=');
-  
-  // Part 1: Error checking
-  // Confirm this request is coming from a known vehicle.
-  if((vname == "")  || (m_map_node_records.count(vname) == 0)) {
-    reportRunWarning("Failed VTag Post: Unknown vehicle[" + vname + "]");
-    reportEvent("Failed VTag: Unknown vehicle[" + vname + "]");
+  if((vname == "") || (m_map_node_records.count(vname) == 0)) {
+    string msg = "Failed VTag Post: Unknown vehicle [" + vname + "]";
+    Notify("TAG_RESULT_VERBOSE", msg);
+    reportRunWarning(msg);
+    reportEvent(msg);
     return(false);
   }
 
-  // Increment the counter of requested tags made by this vehicle.
-  m_map_node_vtags_requested[vname]++;
-  
-  // Part 2: Determine if this vehicle is allowed to launch a vtag
-  // based on the last time it posted a vtag.
-  double elapsed = m_curr_time - m_map_node_vtag_last[vname];
-  if(elapsed < m_vtag_min_interval) {
-    m_map_node_vtags_rej_2freq[vname]++;
-    reportEvent(toupper(vname) + " : Tag Attempt Rejected");
-    return(false);
-  }
-    
-  // Part 3: Tag is accepted for later proccessing, increment and 
-  // add an appcasting event.
+  // Part 2: Legal tag request, so increment key counters
   m_tag_events++;
-  string event = toupper(vname)+" : Tag Attempt Accepted ";
-  reportEvent(event + "[" + uintToString(m_tag_events) + "]");
+  m_map_node_vtags_requested[vname]++;
+
+
+  // Part 3: Tag is accepted. Add an appcasting event.
+  stringstream ss;
+  ss << "Tag attempt by " << vname << "[" << m_tag_events << "]";
+  reportEvent(ss.str());
 
   // Part 4: Create a VTag and push it on the list of pending vtags
   // for subsequent processing.
   NodeRecord record = m_map_node_records[vname];
   double     vx = record.getX();
   double     vy = record.getY();
+  string     group = record.getGroup();
   VTag vtag(vname, vx, vy, m_curr_time);
+  vtag.setEvent(m_tag_events);
+  vtag.setVTeam(group);
   m_pending_vtags.push_back(vtag);
-  
-  
+    
   // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
   double pulse_duration = 10;
@@ -264,19 +256,9 @@ double TagManager::getTrueNodeRange(double x, double y, const string& node)
 
 
 //------------------------------------------------------------
-// Procedure: setVTagConfig
+// Procedure: handleConfigVTagRange()
 
-bool TagManager::setVTagConfig(string str)
-{
-  return(true);
-}
-
-//------------------------------------------------------------
-// Procedure: setDefaultVTagRange
-//      Note: Argument must be a non-negative number
-//   Example: "50"
-
-bool TagManager::setVTagRange(string str)
+bool TagManager::handleConfigVTagRange(string str)
 {
   if(!isNumber(str))
     return(false);
@@ -291,23 +273,80 @@ bool TagManager::setVTagRange(string str)
 
 
 //------------------------------------------------------------
-// Procedure: processPendingVTags
+// Procedure: processVTags
 
-void TagManager::processPendingVTags()
+void TagManager::processVTags()
 {
-#if 0
   list<VTag>::iterator p;
   for(p=m_pending_vtags.begin(); p!=m_pending_vtags.end(); ) {
     VTag vtag = *p;
-    double elapsed = m_curr_time - dcharge.getTimeLaunched(); 
-    if(elapsed >= dcharge.getTimeDelay()) {
-      invokeDepthCharge(dcharge);
-      p = m_pending_charges.erase(p);
-    }
+    if(vtag.valid())
+      processVTag(vtag);
     else
-      ++p;
+      reportEvent("Invalid vtag: " + vtag.str());
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: processVTag()
+
+void TagManager::processVTag(VTag vtag)
+{
+  double vtag_vx = vtag.getX();
+  double vtag_vy = vtag.getY();
+  string vtag_vname = vtag.getVName();
+  string vtag_vteam = vtag.getVTeam();
+
+#if 0
+  // Part 3: Determine if this vehicle is allowed to launch a vtag
+  // based on the last time it posted a vtag.
+  double elapsed = m_curr_time - m_map_node_vtag_last[vname];
+  if(elapsed < m_vtag_min_interval) {
+    string msg = "event=" + uintToString(m_tag_events);
+    msg += ",source=" + vname + ",accepted=false";
+    m_map_node_vtags_rej_2freq[vname]++;
+    reportEvent(msg);
+    Notify("TAG_RESULT"+toupper(vname), msg) 
+    Notify("TAG_RESULT_VERBOSE", msg) 
+    return(false);
   }
 #endif
+  
+  
+
+  
+  // Check all vehicles to see if they are in range of the vtag
+  map<string, NodeRecord>::iterator p;
+  for (p = m_map_node_records.begin(); p != m_map_node_records.end(); p++) {
+    string node_name = p->first;
+    string node_team = p->second.getGroup();
+    
+    // No Tag: A vehicle cannot be tagged by itself
+    if(node_name == vtag_vname)
+      continue;
+    // No Tag: A vehicle cannot be tagged another team member
+    if(node_team == vtag_vteam)
+      continue;
+
+    double node_range = getTrueNodeRange(vtag_vx, vtag_vy, node_name);
+
+    // No Tag: Target vehicle is out of range
+    if(node_range > m_vtag_range) {
+      m_map_node_vtags_rej_range[vtag_vname]++;
+      m_map_node_vtags_missed[vtag_vname]++;
+      continue;
+    }
+
+    // TAG!!
+    m_map_node_vtags_hit[vtag_vname]++;
+      
+    // Declare the hit to the MOOSDB (outside the scope here as to the
+    // consequences of the hit. Here we just declare it.)
+    string msg = "event=" + node_name + ",range=" +
+      doubleToString(node_range, 1);
+    Notify("TAG_RESULT", msg);
+    Notify("TARGET_HIT_ALL", node_name);
+  }
 }
 
 //------------------------------------------------------------
@@ -328,67 +367,6 @@ bool TagManager::handleVisualHints(string str)
       return(false);
   }
   return(true);
-}
-
-//------------------------------------------------------------
-// Procedure: invokeVTag()
-
-void TagManager::invokeVTag(VTag vtag)
-{
-#if 0
-  double dcharge_x = dcharge.getX();
-  double dcharge_y = dcharge.getY();
-  double dcharge_range = dcharge.getRange();
-  string dcharge_vname = dcharge.getVName();
-  
-  if(m_map_node_launches_now[dcharge_vname] > 0)
-    m_map_node_launches_now[dcharge_vname]--;
-
-  double pulse_duration = 1;
-  double linger = 20;
-  postRangePulse(dcharge_x, dcharge_y, m_hit_color, dcharge_vname+"_dchargex", 
-		 pulse_duration, dcharge_range, linger);
-  
-  
-  reportEvent(toupper(dcharge_vname) + "  ----[***] Depth Charge Detonated.....");
-  
-  // Check all vehicles to see if they are in range of the depth charge
-  map<string, NodeRecord>::iterator p;
-  for (p = m_map_node_records.begin(); p != m_map_node_records.end(); p++) {
-    string node_name  = p->first;
-    
-    // A vehicle cannot be a victim of its own depth charge
-    if (node_name != dcharge_vname) {
-      double node_range = getTrueNodeRange(dcharge_x, dcharge_y, node_name);
-      
-      // A depth charge hit!!!!
-      if (node_range < dcharge_range) {
-	m_map_node_launches_hit[dcharge_vname]++;
-	
-	// Declare the hit to the MOOSDB (outside the scope here as to the
-	// consequences of the hit. Here we just declare it.)
-	string msg = "target=" + node_name + ",range=" +
-	  doubleToString(node_range, 1);
-	Notify("DEPTH_CHARGE_HIT", msg);
-	Notify("TARGET_HIT_ALL", node_name);
-	
-	// We don't remove the hit vehicle from the records, but we do
-	// zero-out any depth charges that vehicle may have had.
-	m_map_node_charges_have[node_name] = 0;
-	
-	reportEvent(toupper(dcharge_vname) +
-		    "  ----[***] Depth Charge HIT: " + node_name); }
-      
-      // A depth charge miss...
-      else {
-	// Declare the miss to the MOOSDB
-	string msg = "target=" + node_name + ",range =" + doubleToString(node_range, 1);
-	Notify("DEPTH_CHARGE_MISS", msg);
-	reportEvent(toupper(dcharge_vname) + "  ----[***] Depth Charge MISS");
-      }
-    }
-  }
-#endif
 }
 
 //------------------------------------------------------------

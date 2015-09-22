@@ -21,6 +21,7 @@
 /*****************************************************************/
 
 #include "VTag.h"
+#include "MBUtils.h"
 
 using namespace std;
 
@@ -54,6 +55,8 @@ VTag::VTag(string vname, double x, double y, double time_posted)
 
   m_x_set = false;
   m_y_set = false;
+  m_time_set = false;
+  m_event_set = false;
 }
 
 //------------------------------------------------------------
@@ -61,7 +64,7 @@ VTag::VTag(string vname, double x, double y, double time_posted)
 
 bool VTag::valid() const
 {
-  if(!m_x_set || !m_y_set)
+  if(!m_x_set || !m_y_set || !m_time_set || !m_event_set)
     return(false);
   if(m_time_posted <= 0)
     return(false);
@@ -69,5 +72,23 @@ bool VTag::valid() const
     return(false);
   if(m_vname == "")
     return(false);
+  if(m_vteam == "")
+    return(false);
   return(true);
+}
+
+
+//------------------------------------------------------------
+// Procedure: str()
+
+string VTag::str() const
+{
+  string spec = "vname=" + m_vname;
+  spec += ",vteam=" + m_vteam;
+  spec += ",x=" + doubleToString(m_x,2);
+  spec += ",y=" + doubleToString(m_y,2);
+  spec += ",time_posted=" + doubleToString(m_time_posted,2);
+  spec += ",range=" + doubleToString(m_range,2);
+
+  return(spec);
 }

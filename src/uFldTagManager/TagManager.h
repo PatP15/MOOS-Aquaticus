@@ -45,9 +45,12 @@ class TagManager : public AppCastingMOOSApp
   void  registerVariables();
   bool  buildReport();
 
+ protected: // Config Utilities
+  bool    handleConfigVTagRange(std::string);
+
  protected: // Incoming mail utility
   bool    handleNodeReport(const std::string&);
-  bool    handleVTagLaunch(const std::string&);
+  bool    handleVTagPost(const std::string&);
 
 
  protected: // Outgoing mail utility
@@ -57,20 +60,11 @@ class TagManager : public AppCastingMOOSApp
 			 const std::string& label, double dur, double radius, 
 			 double linger=0);
 
- protected: // Utilities
-  bool    setVTagConfig(std::string);
-  bool    setVTagRange(std::string);
-  bool    setVTagAmount(std::string);
-  bool    setVTagDelayMax(std::string);
-  bool    setVTagDefault(std::string);
-
   double  getTrueNodeRange(double, double, const std::string&);
   double  getNoisyNodeRange(double true_range) const;
 
-  unsigned int getVTagsRemaining(std::string) const;
-
-  void    processPendingVTags();
-  void    invokeVTag(VTag);
+  void    processVTags();
+  void    processVTag(VTag);
 
   bool    handleVisualHints(std::string);
 
@@ -81,8 +75,8 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_reports_rcd;
 
   std::map<std::string, unsigned int> m_map_node_vtags_requested;
-  std::map<std::string, unsigned int> m_map_node_vtags_rej_range;
   std::map<std::string, unsigned int> m_map_node_vtags_rej_2freq;
+  std::map<std::string, unsigned int> m_map_node_vtags_rej_range;
   std::map<std::string, unsigned int> m_map_node_vtags_missed;
   std::map<std::string, unsigned int> m_map_node_vtags_hit;
 
