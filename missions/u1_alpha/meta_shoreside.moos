@@ -19,7 +19,9 @@ Processconfig = ANTLER
   Run = pShare          @ NewConsole = false
   Run = pHostInfo       @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
+  Run = uFldNodeComms   @ NewConsole = false
 	Run = uFldFlagMgr     @ NewConsole = false
+	Run = uFldTagManager  @ NewConsole = false
 }
 
 #include plug_pShare.moos
@@ -37,6 +39,39 @@ ProcessConfig = uFldFlagMgr
 }
 
 //--------------------------------------------------
+// uFldTagManager Configuration Block
+
+ProcessConfig = uFldTagManager
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  vtag_range = 30
+	post_color = white
+	miss_color = blue
+	hit_color  = red
+}
+
+//-------------------------------------------------- 
+// ufldnodecomms Configuration Block    
+
+ProcessConfig = uFldNodeComms
+{
+  AppTick       = 2
+  CommsTick     = 2
+
+  comms_range      = 5000
+  critical_range   = 25
+
+  min_msg_interval = 15
+  max_msg_length   = 1000
+  groups           = true
+
+  view_node_rpt_pulses = true
+}
+
+
+	//--------------------------------------------------
 // uFldShoreBroker Configuration Block
 
 ProcessConfig = uFldShoreBroker
@@ -49,7 +84,7 @@ ProcessConfig = uFldShoreBroker
   //       [BRIDGE = src=FOO_ALL, alias=FOO]
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
-  qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID
+  qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
 
   bridge   = src=UP_LOITER_$N, alias=UP_LOITER
   bridge   = src=HELM_MAP_CLEAR, alias=HELM_MAP_CLEAR
@@ -113,6 +148,7 @@ ProcessConfig = pMarineViewer
 
   action = STATION_KEEP_ALL = false
   action = STATION_KEEP_ALL = true
+  action = CHASE_ALL = false
 
   button_one   = DEPLOY  # DEPLOY_ALL=true 
   button_one   = MOOS_MANUAL_OVERRIDE_ALL=false 
@@ -120,6 +156,7 @@ ProcessConfig = pMarineViewer
 
   button_two   = RETURN  # RETURN_ALL=true
   button_two   = RETURN  # STATION_KEEP_ALL=false
+  button_three = CHASE   # CHASE_ALL=true
   button_four  = STATION   # STATION_KEEP_ALL=true
 }
 

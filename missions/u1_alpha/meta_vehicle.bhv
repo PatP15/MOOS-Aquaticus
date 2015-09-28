@@ -20,27 +20,47 @@ set MODE = STATION-KEEPING {
 set MODE = RETURNING {
   MODE = ACTIVE
   RETURN = true
-} 
-
-set MODE = LOITERING {
-  MODE = ACTIVE
-  LOITER = true
-} 
+} TRAVERSING
 
 
+//----------------------------------------------  
+Behavior = BHV_AvdColregs
+{
+  name       = avdcol_
+  pwt        = 300
+  condition  = MODE==ACTIVE
+  updates    = CONTACT_COLREGS
+  endflag    = CONTACT_RESOLVED = $[CONTACT]
+  templating = spawn
+
+  activeflag = AVOIDING=true
+  inactiveflag = AVOIDING=false
+
+             contact = to-be-set
+    on_no_contact_ok = true
+         extrapolate = true
+               decay = 30,60
+
+        pwt_outer_dist = 40
+        pwt_inner_dist = 15
+        completed_dist = 50
+     min_util_cpa_dist = 5
+     max_util_cpa_dist = 25
+}
+
+	
 //----------------------------------------------
 Behavior = BHV_Waypoint
 { 
   name      = waypt_flags
   pwt       = 100
-  condition = RETURN = false
-  condition = DEPLOY = true
+  condition = MODE==TRAVERSING
   condition = FLAGS_TO_GRAB = true
   endflag   = FLAGS_TO_GRAP = false
   updates   = FLAG_PATH
   perpetual = true
 
-               speed = 2   // meters per second
+               speed = 4   // meters per second
         capture_line = true
       capture_radius = 5.0
          slip_radius = 15.0
@@ -60,23 +80,22 @@ Behavior = BHV_Waypoint
 { 
   name      = waypt_survey
   pwt       = 100
-  condition = RETURN = false
-  condition = DEPLOY = true
+  condition = MODE==TRAVERSING
   condition = FLAGS_TO_GRAB = false
   endflag   = RETURN = true
   updates   = WPT_UPDATE
   perpetual = true
 
-             lead = 8
-      lead_damper = 1
+             lead = 50
+      lead_damper = 4
     lead_to_start = true
-            speed = 2   // meters per second
+            speed = 4   // meters per second
      capture_line = true
    capture_radius = 5.0
       slip_radius = 15.0
 
           polygon = 60,-40 : 60,-160 : 150,-160 : 180,-100 : 150,-40
-           repeat = 0
+           repeat = 40
 
      visual_hints = nextpt_color=yellow
      visual_hints = label_color=invisible

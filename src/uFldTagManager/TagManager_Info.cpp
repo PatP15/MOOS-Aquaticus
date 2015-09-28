@@ -50,15 +50,15 @@ void showHelpAndExit()
 {
   blk("                                                          ");
   blu("==========================================================");
-  blu("Usage: uFldTagMgr  file.moos [OPTIONS]                    ");
+  blu("Usage: uFldTagManager  file.moos [OPTIONS]                ");
   blu("==========================================================");
   blk("                                                          ");
   showSynopsis();
   blk("                                                          ");
   blk("Options:                                                  ");
   mag("  --alias","=<ProcessName>                                ");
-  blk("      Launch uFldTagMgr with the given process name       ");
-  blk("      rather than uFldTagMgr.                             ");
+  blk("      Launch uFldTagManager with the given process name   ");
+  blk("      rather than uFldTagManager.                         ");
   mag("  --example, -e                                           ");
   blk("      Display example MOOS configuration block.           ");
   mag("  --help, -h                                              ");
@@ -66,7 +66,7 @@ void showHelpAndExit()
   mag("  --interface, -i                                         ");
   blk("      Display MOOS publications and subscriptions.        ");
   mag("  --version,-v                                            ");
-  blk("      Display release version of uFldTagMgr.              ");
+  blk("      Display release version of uFldTagManager.          ");
   blk("                                                          ");
   blk("Note: If argv[2] does not otherwise match a known option, ");
   blk("      then it will be interpreted as a run alias. This is ");
@@ -82,26 +82,20 @@ void showHelpAndExit()
 void showExampleConfigAndExit()
 {
   blu("=============================================================== ");
-  blu("uFldTagMgr Example MOOS Configuration                           ");
+  blu("uFldTagManager Example MOOS Configuration                       ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = uFldTagMgr                                      ");
+  blk("ProcessConfig = uFldTagManager                                  ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
-  blk("  depth_charge_config         = name=henry,range=35,amt=3       ");
-  blk("  depth_charge_range_default  = 25                              ");
-  blk("  depth_charge_amount_default = 5                               ");
-  blk("  depth_charge_delay_default  = 15                              ");
-  blk("  depth_charge_delay_max      = 60                              ");
+  blk("  vtag_range = 50     // default (meters)                       ");
   blk("                                                                ");
-  blk("  replenish_range   = 50                                        ");
-  blk("  replenish_time    = 60                                        ");
-  blk("  replenish_station = 0,0                                       ");
+  blk("  post_color = white  // default                                ");
+  blk("  miss_color = blue   // default                                ");
+  blk("  hit_color  = red    // default                                ");
   blk("                                                                ");
-  blk("  visual_hints = drop_color=blue, detination_color=white        ");
-  blk("  visual_hints = hit_color=red                                  ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -115,40 +109,32 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uFldTagMgr INTERFACE                                            ");
+  blu("uFldTagManager INTERFACE                                        ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_REPORT                                                   ");
   blk("  NODE_REPORT = NAME=alpha,TYPE=UUV,TIME=1252348077.59,x=51.7,  ");
   blk("                Y=-35.50,LAT=43.824981,LON=-70.329755,SPD=2.0,  ");
   blk("                HDG=118.8,YAW=118.8,DEPTH=4.6,LENGTH=3.8,       ");
   blk("                MODE=MODE@ACTIVE:LOITERING                      ");
   blk("                                                                ");
-  blk("  DEPTH_CHARGE_LAUNCH        = name=archie,delay=30             ");
-  blk("  DEPTH_CHARGE_REPLENISH_REQ = name=archie                      ");
-  blk("  DEPTH_CHARGE_STATUS_REQ    = name=archie                      ");
-  blk("  REPLENISH_CLARIFY          = name=archie                      ");
+  blk("  TAG_POST    = vname=henry                                     ");
+  blk("  APPCAST_REQ                                                   ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  DEPTH_CHARGE_HIT    = target=jackal,range =11.9               ");
-  blk("  TARGET_HIT_ALL      = jackal                                  ");
-  blk("  DEPTH_CHARGE_MISS   = target=jackal,range =92.3               ");
-  blk("  VIEW_RANGE_PULSE    = x=-40,y=-150,radius=40,duration=15,     ");
-  blk("                        fill=0.25,fill_color=green,label=04,    ");
-  blk("                        edge_color=green,time=3892830128.5,     ");
-  blk("                        edge_size=1                             ");
-  blk("                                                                ");
-  blk("  DEPTH_CHARGE_STATUS_VNAME = name=alpha,amt=3,range=25,        ");
-  blk("                              launches_ever=2,launches_now=1,   ");
-  blk("                              hits=2                            ");
-  blk("  REPLENISH_RULES        = station=30:150, range=50, time=60    ");
-  blk("  REPLENISH_STATUS_VNAME = name=henry,status=replenishing,      ");
-  blk("                           time_remaining=21.3                  ");
+  blk("  TAG_RESULT         = event=23,source=henry,                   ");
+  blk("                       result=rejected_toofreq                  ");
+  blk("  TAG_RESULT         = event=23,source=henry,                   ");
+  blk("                       tagged=gus                               ");
+  blk("  TAG_RESULT_VERBOSE =                                          ");
+  blk("  VIEW_RANGE_PULSE   = x=-40,y=-150,radius=40,duration=15,     ");
+  blk("                       fill=0.25,fill_color=green,label=04,    ");
+  blk("                       edge_color=green,time=3892830128.5,     ");
+  blk("                       edge_size=1                             ");
 
   exit(0);
 }
@@ -158,7 +144,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uFldTagMgr", "gpl");
+  showReleaseInfo("uFldTagManager", "gpl");
   exit(0);
 }
 

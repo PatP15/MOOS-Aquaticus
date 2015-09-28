@@ -49,6 +49,7 @@ class VTag
   double       getY() const           {return(m_y);}
   double       getTimePosted() const  {return(m_time_posted);}
   double       getRange() const       {return(m_range);}
+  unsigned int getEvent() const       {return(m_event);}
 
   std::string  str() const;
   bool         valid() const;

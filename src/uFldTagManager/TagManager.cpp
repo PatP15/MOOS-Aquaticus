@@ -99,9 +99,6 @@ bool TagManager::OnStartUp()
     else if(param == "miss_color") 
       handled = setColorOnString(m_miss_color, value);
 
-    else if(param == "visual_hints") 
-      handled = handleVisualHints(value);
-
     if(!handled)
       reportUnhandledConfigWarning("Unhandled config: " + orig);
   }
@@ -189,7 +186,7 @@ bool TagManager::handleVTagPost(const string& launch_str)
 
   // Part 3: Tag is accepted. Add an appcasting event.
   stringstream ss;
-  ss << "Tag attempt by " << vname << "[" << m_tag_events << "]";
+  ss << "Tag requested by " << vname << "[" << m_tag_events << "]";
   reportEvent(ss.str());
 
   // Part 4: Create a VTag and push it on the list of pending vtags
@@ -206,9 +203,8 @@ bool TagManager::handleVTagPost(const string& launch_str)
   // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
   double pulse_duration = 10;
-  double linger = 2;
   postRangePulse(vx, vy, m_post_color, vname+"_vtag", 
-		 pulse_duration, m_vtag_range, linger);
+		 pulse_duration, m_vtag_range);
   
   return(true);
 }
@@ -216,9 +212,8 @@ bool TagManager::handleVTagPost(const string& launch_str)
 //------------------------------------------------------------
 // Procedure: postRangePulse
 
-void TagManager::postRangePulse(double x, double y, const string& color,
-				const string& label, double duration,
-				double radius, double linger)
+void TagManager::postRangePulse(double x, double y, string color,
+				string label, double duration, double radius)
 {
   XYRangePulse pulse;
   pulse.set_x(x);
@@ -228,7 +223,7 @@ void TagManager::postRangePulse(double x, double y, const string& color,
   pulse.set_fill(0.60);
   pulse.set_fill_invariant(true);
   pulse.set_duration(duration);
-  pulse.set_linger(linger);
+  pulse.set_linger(2);
   pulse.set_time(m_curr_time);
   if(color != "") {
     pulse.set_color("edge", color);
@@ -242,7 +237,7 @@ void TagManager::postRangePulse(double x, double y, const string& color,
 //------------------------------------------------------------
 // Procedure: getTrueNodeRange()
 
-double TagManager::getTrueNodeRange(double x, double y, const string& node)
+double TagManager::getTrueNodeRange(double x, double y, string node)
 {
   if(m_map_node_records.count(node) == 0)
     return(-1);
@@ -296,151 +291,192 @@ void TagManager::processVTag(VTag vtag)
   double vy = vtag.getY();
   string vname = vtag.getVName();
   string vteam = vtag.getVTeam();
-
+  string event = uintToString(vtag.getEvent());
+  
   // Part 1: Check if tag allowed based on frequency
   // based on the last time it posted a vtag.
-  double elapsed = m_curr_time - m_map_node_vtag_last[vname];
+  double elapsed = m_curr_time - m_map_node_vtags_last_tag[vname];
   if(elapsed < m_vtag_min_interval) {
-    string msg = "event=" + uintToString(m_tag_events);
-    msg += ",source=" + vname + ",result=rejected_toofreq";
-    m_map_node_vtags_rej_2freq[vname]++;
-    reportEvent(msg);
-    Notify("TAG_RESULT"+toupper(vname), msg);
-    Notify("TAG_RESULT_VERBOSE", msg);
+    m_map_node_vtags_rejfreq[vname]++;
+    string result = "rejected=freq";
+    postResult(event, vname, vteam, result);
     return;
   }
   
   // Part 2: Check if tag-target vehicle in zone for tagging
+#if 0
+  if(!inZone(vname)) {
+    m_map_node_vtags_rejzone[vname]++;
+    string result = "rejected=zone";
+    postResult(event, vname, vteam, result);
+    return;
+  }
+#endif
   
   
-
+  // Tag request ok in terms of frequency, zone etc, so declare the
+  // tag to be accepted and increment the counter.
+  m_map_node_vtags_accepted[vname]++;
+  m_map_node_vtags_last_tag[vname] = m_curr_time;
   
-  // Part 3: Check all vehicles to see if in range of the vtag
+  // Part 3: Measure and collect the range to each non-team member
+  //         Taking note of the closest target.
+  string node_closest;
+  map<string, double> map_node_range;
   map<string, NodeRecord>::iterator p;
-  for (p = m_map_node_records.begin(); p != m_map_node_records.end(); p++) {
+  for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
     string targ_name = p->first;
     string targ_team = p->second.getGroup();
     
-    // No Tag: A vehicle cannot be tagged by itself
-    if(targ_name == vname)
-      continue;
-    // No Tag: A vehicle cannot be tagged another team member
-    if(targ_team == vteam)
-      continue;
-
-    double targ_range = getTrueNodeRange(vx, vy, targ_name);
-
-    // No Tag: Target vehicle is out of range
-    if(targ_range > m_vtag_range) {
-      m_map_node_vtags_rej_range[vname]++;
-      m_map_node_vtags_missed[vname]++;
-      continue;
+    // Disregard members of the same team
+    if(targ_team != vteam) {
+      double targ_range = getTrueNodeRange(vx, vy, targ_name);
+      map_node_range[targ_name] = targ_range;
+      if(node_closest == "")
+	node_closest = targ_name;
+      else if(targ_range < map_node_range[node_closest])
+	node_closest = targ_name;
     }
-
-    // TAG!!
-    m_map_node_vtags_hit[vname]++;
-      
-    // Declare the hit to the MOOSDB (outside the scope here as to the
-    // consequences of the hit. Here we just declare it.)
-    string msg = "event=" + targ_name + ",range=" +
-      doubleToString(targ_range, 1);
-    Notify("TAG_RESULT", msg);
-    Notify("TARGET_HIT_ALL", targ_name);
   }
+  // Always post the full range results to the verbose variable
+  postResult(event, vname, map_node_range);
+
+  // Part 4: Sanity checks. 
+  if(map_node_range.size() == 0)
+    return;
+  if(node_closest == "")
+    return;
+  if(map_node_range.count(node_closest) == 0)
+    return;
+  
+  // Part 5: Examine the closest target, declare it tagged if in range
+  double node_closest_dist = map_node_range[node_closest];
+  string result = "tagged=none";
+  if(node_closest_dist <= m_vtag_range) {
+    result = "tagged=" + node_closest;
+    m_map_node_vtags_succeeded[vname]++;
+    m_map_node_vtags_beentagged[node_closest]++;
+  }
+
+  postResult(event, vname, vteam, result);
 }
+
 
 //------------------------------------------------------------
-// Procedure: handleVisualHints
+// Procedure: postResult
 
-bool TagManager::handleVisualHints(string str)
+void TagManager::postResult(string event, string vname,
+			    string vteam, string result)
 {
-  vector<string> svector = parseString(str, ',');
-  for(unsigned int i=0; i<svector.size(); i++) {
-    string param = biteStringX(svector[i], '=');
-    string value = svector[i];
-    
-    if((param == "hit_color") && isColor(value))
-      m_hit_color = value;
-    else if((param == "miss_color") && isColor(value))
-      m_miss_color = value;
-    else
-      return(false);
-  }
-  return(true);
+  string msg = "event=" + event;
+  msg += ",src=" + vname;
+  msg += ",team=" + vteam;
+  msg += result;
+  
+  reportEvent(msg);
+  Notify("TAG_RESULT"+toupper(vname), msg);
 }
+  
+
+//------------------------------------------------------------
+// Procedure: postResult
+
+void TagManager::postResult(string event, string vname,
+			    map<string, double> map_node_range)
+{
+  string msg = "event=" + event;
+  msg += ",src=" + vname;
+  msg += ",ranges=";
+  
+  map<string,double>::iterator p;
+  for(p=map_node_range.begin(); p!=map_node_range.end(); p++) {
+    string targ = p->first;
+    double dist = p->second;
+    if(p != map_node_range.begin())
+      msg += "#";
+    msg += targ + ":" + doubleToString(dist,1);
+  }
+  Notify("TAG_RESULT_VERBOSE", msg);
+}
+  
+
 
 //------------------------------------------------------------
 // Procedure: buildReport()
 //   
-//   Depth Charge Inventory
+//   Global Settings
 //   ======================================================
-//                              Ever       Presently
-//   Name       Amt    Range    Deployed   Deployed    Hits
-//   --------   -----  -----    --------   ---------   ----
-//   archie     2      35       11         1           1
-//   betty      1      35       7          0           3
-//   jackal     0      0        0          0           0
+//   Tag Range: 35
+//   Tag Interval: 10
 
-//   
-//   Pending Depth Charges
-//   =====================================================
-//            Time to 
-//   Source   Destination
+//   Tag Application Stats
+//   ======================================================
+//             ReQ   Rejec  Rejec            Applied  Time
+//   Name      Tags  Zone   Freq   Accepted     Tags  Next 
+//   --------  ----  -----  -----  --------   ------   ----
+//   lou        5        1      3        1         1   n/a
+//   mal        8        2      1        5         0    23
+//   ned        23      11      2       10         4     4
+//   opi        18      2       9        7         1   n/a
+//   --------  ----   ----  -----  --------   ------   ----
+//   lima       2        0      1        1         1   n/a
+//   mesa       4        2      1        1         0    23
+//   nuuk       11      11      0        0         0   n/a
+//   oslo       1        0      0        1         1    44
 //
+//   Tag Application Stats
+//   ======================================================
+//             Times   Currently  Time    
+//   Name      Tagged  Tagged     Remain   Taggable
+//   --------  ------  ---------  ------   ---------   
+//   lou            2         no     n/a       no 
+//   mal            1        YES      14      YES 
+//   ned            1         no     n/a      YES 
+//   opi            0         no     n/a      YES 
+//   --------  ------  ---------  ------   ---------   
+//   lima           0         no     n/a       no 
+//   mesa           1        YES      58      YES 
+//   nuuk           1        YES       7      YES 
+//   oslo           2         no     n/a      YES 
 //
 //   Events (Last 8):
 //   ====================================================
-//   201.0   CHARLIE ----[---] Depth Charge HIT: jackal
-//   201.0   CHARLIE ----[***] Depth Charge Detonated 
-
-//   201.0   CHARLIE ----[---] Depth Charge Deployed
-//   201.0   CHARLIE ----[---] Depth Charge Deployed
-//   201.0   CHARLIE ----[ooo] No More Depth Charges!
+//   201.0   Tag Attempt by HENRY [27]
+//   201.0   Tag Attempt by HENRY [27]
+//   201.0       BETTY tagged by ARCHIE
+//   201.0   Tag Attempt by ARCHIE [23]
 //   .....
-//   198.2   BETTY   ----)) 
-//   198.2   DAVIS   <--     BETTY
-//   198.2   CHARLIE <--     BETTY
-
+//   198.2   Failed VTag Post: Unknown vehicle [jake]
 
 bool TagManager::buildReport()
 {
-#if 0
-  m_msgs << "Inventory Configuration Settings " << endl;
-  m_msgs << "  Default Charge Range:  " << m_depth_charge_range_default  << endl;
-  m_msgs << "  Default Charge Amount: " << m_depth_charge_amount_default << endl;
-  m_msgs << "Delay Configuration Settings " << endl;
-  m_msgs << "  Depth Charge Delay Max:     " << m_depth_charge_delay_max << endl;
-  m_msgs << "Replenish Configuration Settings " << endl;
-  m_msgs << "  Replenish range:   " << m_replenish_range << endl;
-  m_msgs << "  Replenish time:    " << m_replenish_time  << endl;
-  m_msgs << "Visual Hints " << endl;
-  m_msgs << "  Miss Color: " << m_detonate_color  << endl;
-  m_msgs << "  Hit Color:      " << m_hit_color       << endl;
+  m_msgs << "Global Settings            " << endl;
+  m_msgs << "===========================" << endl;
+  m_msgs << "Tag Range:    " << doubleToStringX(m_vtag_range,1)   << endl;
+  m_msgs << "Tag Interval: " << doubleToStringX(m_vtag_min_interval,1) << endl;
   m_msgs << endl;
 
-
   // Part 2: Build a report on the Vehicles
-  m_msgs << "Depth Charge Inventory" << endl;
-  m_msgs << "=================================================" << endl;
-  ACTable actab(6);
-  actab << "     |      |       | Ever     | Presently |      ";
-  actab << "Name | Amt  | Range | Deployed | Deployed  | Hits ";
+  m_msgs << "Per-Vehicle Stats:         " << endl;
+  m_msgs << "===========================" << endl;
+  ACTable actab(7);
+  actab << "     | ReQ  | Rejec | Rejec |          | Applied | Time ";
+  actab << "Name | Tags | Zone  | Freq  | Accepted |    Tags | Next";
   actab.addHeaderLines();
 
   map<string, NodeRecord>::iterator p;
   for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
-    string vname = p->first;
+    string vname = p->first;  // col1
+    string tags = uintToString(m_map_node_vtags_requested[vname]);   // col2
+    string zone = uintToString(m_map_node_vtags_rejzone[vname]);     // col3
+    string freq = uintToString(m_map_node_vtags_rejfreq[vname]);     // col4
+    string accp = uintToString(m_map_node_vtags_accepted[vname]);    // col5
+    string hits = uintToString(m_map_node_vtags_succeeded[vname]);   // col6
+    string next = "n/a";  // col7
     
-    string chrgs = uintToString(m_map_node_charges_have[vname]);
-    string range = doubleToStringX(m_map_node_charge_range[vname]);
-    string launches_ever = uintToString(m_map_node_launches_ever[vname]);
-    string launches_now  = uintToString(m_map_node_launches_now[vname]);
-    string launches_hit  = uintToString(m_map_node_launches_hit[vname]);
-    
-    actab << vname << chrgs << range << launches_ever << launches_now
-	  << launches_hit;
+    actab << vname << tags << zone << freq << accp << hits << next;
   }
   m_msgs << actab.getFormattedString();
-#endif
   return(true);
 }
+

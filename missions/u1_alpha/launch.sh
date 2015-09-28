@@ -67,7 +67,7 @@ if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos";  exit; fi
 VNAMES=( apia baku cary doha elko fahy galt hays iola juba kiev lima mesa 
 	 nuuk oslo pace quay rome sako troy ubly vimy waco xian york zahl )
 
-STARTX=( 20 40 60 80 100 120 140 5 25 45 65 85 105 125 145 10 50 90 130
+STARTX=( 0 40 60 80 100 120 140 5 25 45 65 85 105 125 145 10 50 90 130
 	 15 55 95 135 140 145 150 155 )
 
 for INDEX in `seq 0 $(($AMT-1))`;
@@ -76,19 +76,19 @@ do
     VPOSX=${STARTX[$INDEX]}
     VPORT=`expr $INDEX + 9400`
     LPORT=`expr $INDEX + 9500`
-    START_POS=$VPOSX",0,180"
+    START_POS=$VPOSX",-80,180"
     
     echo "Vehicle:" $VNAME
     echo "Index:" $INDEX  "Port:" $VPORT "POS:" $START_POS 
 
-    nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP  \
+    nsplug meta_tagger.moos targ_$VNAME.moos -f WARP=$TIME_WARP  \
 	   VNAME=$VNAME                \
 	   VPORT=$VPORT                \
 	   SHARE_LISTEN=$LPORT         \
 	   SHORE_LISTEN=$SHORE_LISTEN  \
 	   START_POS=$START_POS
     
-    nsplug meta_chaser.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
+    nsplug meta_tagger.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
 	START_POS=$START_POS  
 
     if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi

@@ -48,26 +48,26 @@ class TagManager : public AppCastingMOOSApp
  protected: // Config Utilities
   bool    handleConfigVTagRange(std::string);
 
- protected: // Incoming mail utility
+ protected: // Incoming mail utilities
   bool    handleNodeReport(const std::string&);
   bool    handleVTagPost(const std::string&);
 
-
- protected: // Outgoing mail utility
-  void    postVTagLaunch(const std::string&, const std::string&, double rng); 
-  void    postVTagHit(const std::string&, const std::string&, double rng); 
-  void    postRangePulse(double x, double y, const std::string& color,
-			 const std::string& label, double dur, double radius, 
-			 double linger=0);
-
-  double  getTrueNodeRange(double, double, const std::string&);
+ protected: // Processing Utilities
+  double  getTrueNodeRange(double, double, std::string);
   double  getNoisyNodeRange(double true_range) const;
 
   void    processVTags();
-  void    processVTag(VTag);
+  void    processVTag(VTag);  
+  
+ protected: // Outgoing mail utilities
+  void    postRangePulse(double x, double y, std::string color,
+			 std::string label, double dur, double radius);
 
-  bool    handleVisualHints(std::string);
-
+  void    postResult(std::string event, std::string vname,
+		     std::string vteam, std::string result);
+  void    postResult(std::string event, std::string vname,
+		     std::map<std::string, double>);
+  
  protected: // State variables
 
   // Map is keyed on the name of the vehicle
@@ -75,13 +75,14 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_reports_rcd;
 
   std::map<std::string, unsigned int> m_map_node_vtags_requested;
-  std::map<std::string, unsigned int> m_map_node_vtags_rej_2freq;
-  std::map<std::string, unsigned int> m_map_node_vtags_rej_range;
-  std::map<std::string, unsigned int> m_map_node_vtags_missed;
-  std::map<std::string, unsigned int> m_map_node_vtags_hit;
+  std::map<std::string, unsigned int> m_map_node_vtags_accepted;
+  std::map<std::string, unsigned int> m_map_node_vtags_succeeded;
+  std::map<std::string, unsigned int> m_map_node_vtags_rejfreq;
+  std::map<std::string, unsigned int> m_map_node_vtags_rejzone;
+  std::map<std::string, double>       m_map_node_vtags_last_tag;
 
-  std::map<std::string, double>       m_map_node_vtag_last;
-  std::map<std::string, double>       m_map_node_vtag_range;
+  std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
+
 
   std::list<VTag>  m_pending_vtags;
 
