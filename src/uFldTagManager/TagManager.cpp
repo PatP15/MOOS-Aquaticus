@@ -424,7 +424,7 @@ void TagManager::postResult(string event, string vname,
 //   nuuk       11      11      0        0         0   n/a
 //   oslo       1        0      0        1         1    44
 //
-//   Tag Application Stats
+//   Tag Receiver Stats
 //   ======================================================
 //             Times   Currently  Time    
 //   Name      Tagged  Tagged     Remain   Taggable
@@ -456,17 +456,17 @@ bool TagManager::buildReport()
   m_msgs << "Tag Interval: " << doubleToStringX(m_vtag_min_interval,1) << endl;
   m_msgs << endl;
 
-  // Part 2: Build a report on the Vehicles
-  m_msgs << "Per-Vehicle Stats:         " << endl;
+  // Part 2: Build report from perspective of tagging vehicles
+  m_msgs << "Tag Application Stats:         " << endl;
   m_msgs << "===========================" << endl;
   ACTable actab(7);
   actab << "     | ReQ  | Rejec | Rejec |          | Applied | Time ";
   actab << "Name | Tags | Zone  | Freq  | Accepted |    Tags | Next";
   actab.addHeaderLines();
 
-  map<string, NodeRecord>::iterator p;
-  for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
-    string vname = p->first;  // col1
+  map<string, NodeRecord>::iterator p1;
+  for(p1=m_map_node_records.begin(); p1!=m_map_node_records.end(); p1++) {
+    string vname = p1->first;  // col1
     string tags = uintToString(m_map_node_vtags_requested[vname]);   // col2
     string zone = uintToString(m_map_node_vtags_rejzone[vname]);     // col3
     string freq = uintToString(m_map_node_vtags_rejfreq[vname]);     // col4
@@ -477,6 +477,26 @@ bool TagManager::buildReport()
     actab << vname << tags << zone << freq << accp << hits << next;
   }
   m_msgs << actab.getFormattedString();
+
+  // Part 3: Build report from perspective of vehicles being tagged.
+  m_msgs << "Tag Receiver Stats:         " << endl;
+  m_msgs << "===========================" << endl;
+  ACTable actabb(5);
+  actabb << "     | Times  | Currently | Time   |          ";
+  actabb << "Name | Tagged | Tagged    | Remain | Taggable ";
+  actabb.addHeaderLines();
+
+  map<string, NodeRecord>::iterator p2;
+  for(p2=m_map_node_records.begin(); p2!=m_map_node_records.end(); p2++) {
+    string vname = p2->first;  // col1
+    string times = uintToString(m_map_node_vtags_beentagged[vname]);   // col2
+    string tamt  = "0";
+    string trem  = "n/a";
+    string tgabl = "yes"; 
+    
+    actabb << vname << times << tamt << trem << tgabl;
+  }
+  m_msgs << actabb.getFormattedString();
   return(true);
 }
 
