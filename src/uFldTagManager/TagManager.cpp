@@ -157,9 +157,18 @@ bool TagManager::handleNodeReport(const string& node_report_str)
   // Step 2: Add/Update the node record and increment the counter
   string vname = new_node_record.getName();
   m_map_node_records[vname] = new_node_record;
-
   m_map_node_reports_rcd[vname]++;
 
+  // Step 3: Get the Group/Team name and make sure we know this
+  // vehicle and associate it with the proper team.
+  string vteam = new_node_record.getGroup();
+  if(vteam == "") {
+    string msg = "Node report for " + vname + " with no group.";
+    reportRunWarning(msg);
+  }
+  else
+    m_map_teams[vteam].insert(vname);
+  
   return(true);
 }
 
@@ -280,6 +289,7 @@ void TagManager::processVTags()
     else
       reportEvent("Invalid vtag: " + vtag.str());
   }
+  m_pending_vtags.clear();
 }
 
 //------------------------------------------------------------

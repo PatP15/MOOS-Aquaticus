@@ -26,6 +26,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "VTag.h"
 #include "NodeRecord.h"
@@ -70,10 +71,11 @@ class TagManager : public AppCastingMOOSApp
   
  protected: // State variables
 
-  // Map is keyed on the name of the vehicle
+  // Node (postion) records: Map keyed on vehicle name
   std::map<std::string, NodeRecord>   m_map_node_records;
   std::map<std::string, unsigned int> m_map_node_reports_rcd;
 
+  // Perspective of vehicles doing tagging: Mapp keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_requested;
   std::map<std::string, unsigned int> m_map_node_vtags_accepted;
   std::map<std::string, unsigned int> m_map_node_vtags_succeeded;
@@ -81,11 +83,14 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_vtags_rejzone;
   std::map<std::string, double>       m_map_node_vtags_last_tag;
 
+  // Perspective of vehicles being tagged: Mapp keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
 
-
+  // Other key states
   std::list<VTag>  m_pending_vtags;
 
+  std::map<std::string, std::set<std::string> > m_map_teams;
+  
  protected: // Configuration variables
   double        m_vtag_range;
   double        m_vtag_min_interval;
