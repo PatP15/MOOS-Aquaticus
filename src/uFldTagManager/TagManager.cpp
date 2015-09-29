@@ -562,11 +562,13 @@ void TagManager::postZonePolys()
 
 bool TagManager::buildReport()
 {
+  // Part 1: Build the easy global settings output
   m_msgs << "Global Settings            " << endl;
   m_msgs << "===========================" << endl;
   m_msgs << "Tag Range:    " << doubleToStringX(m_vtag_range,1)   << endl;
   m_msgs << "Tag Interval: " << doubleToStringX(m_vtag_min_interval,1) << endl;
 
+  // Part 2: Produce the team structure
   map<string, set<string> >::iterator pp;
   for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {
     string team_name = pp->first;
@@ -582,9 +584,9 @@ bool TagManager::buildReport()
   }
   m_msgs << endl;
 
-  // Part 2: Build report from perspective of tagging vehicles
+  // Part 3: Build report from perspective of tagging vehicles
   m_msgs << "Tag Application Stats:         " << endl;
-  m_msgs << "===========================" << endl;
+  m_msgs << "=================================================" << endl;
   ACTable actab(7);
   actab << "     | ReQ  | Rejec | Rejec |          | Applied | Time ";
   actab << "Name | Tags | Zone  | Freq  | Accepted |    Tags | Next";
@@ -603,26 +605,32 @@ bool TagManager::buildReport()
     actab << vname << tags << zone << freq << accp << hits << next;
   }
   m_msgs << actab.getFormattedString();
-  m_msgs << endl;
+  m_msgs << endl << endl;
 
-  // Part 3: Build report from perspective of vehicles being tagged.
+  // Part 4: Build report from perspective of vehicles being tagged.
   m_msgs << "Tag Receiver Stats:         " << endl;
-  m_msgs << "===========================" << endl;
+  m_msgs << "=================================================" << endl;
   ACTable actabb(5);
   actabb << "     | Times  | Currently | Time   |          ";
   actabb << "Name | Tagged | Tagged    | Remain | Taggable ";
   actabb.addHeaderLines();
 
-  map<string, NodeRecord>::iterator p2;
-  for(p2=m_map_node_records.begin(); p2!=m_map_node_records.end(); p2++) {
-    string vname = p2->first;  // col1
-    string times = uintToString(m_map_node_vtags_beentagged[vname]);   // col2
-    string tamt  = "0";
-    string trem  = "n/a";
-    string tgabl = "yes"; 
-    
-    actabb << vname << times << tamt << trem << tgabl;
+
+  for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {
+    if(pp!=m_map_teams.begin())
+      actabb.addHeaderLines();
+    set<string> team = pp->second;
+    set<string>::iterator qq;
+    for(qq=team.begin(); qq!=team.end(); qq++) {
+      string vname = *qq;
+      string times = uintToString(m_map_node_vtags_beentagged[vname]);   // col2
+      string tamt  = "no";
+      string trem  = "n/a";
+      string tgabl = "YES"; 
+      actabb << vname << times << tamt << trem << tgabl;
+    }
   }
+
   m_msgs << actabb.getFormattedString();
   return(true);
 }
