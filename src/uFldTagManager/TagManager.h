@@ -93,6 +93,7 @@ class TagManager : public AppCastingMOOSApp
   // Other key states
   std::list<VTag>  m_pending_vtags;
 
+  // Map from team name to members of the team (team name == zone name)
   std::map<std::string, std::set<std::string> > m_map_teams;
   
  protected: // Configuration variables

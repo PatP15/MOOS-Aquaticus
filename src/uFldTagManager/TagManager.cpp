@@ -402,14 +402,18 @@ void TagManager::processVTag(VTag vtag)
   }
   
   // Part 2: Check if tag-target vehicle in zone for tagging
-#if 0
-  if(!inZone(vname)) {
+  bool in_own_zone = false;
+  if((vteam == m_team_one) && (m_zone_one.contains(vx, vy)))
+    in_own_zone = true;
+  else if((vteam == m_team_two) && (m_zone_two.contains(vx, vy)))
+    in_own_zone = true;
+
+  if(!in_own_zone) {
     m_map_node_vtags_rejzone[vname]++;
     string result = "rejected=zone";
     postResult(event, vname, vteam, result);
     return;
   }
-#endif
   
   
   // Tag request ok in terms of frequency, zone etc, so declare the
