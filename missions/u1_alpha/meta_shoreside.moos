@@ -34,8 +34,8 @@ ProcessConfig = uFldFlagMgr
   AppTick       = 2
   CommsTick     = 2
 
-  flag = x=62,  y=-90, label=one
-  flag = x=120, y=-90, label=two
+  flag = x=60, y=-30,  label=one
+  flag = x=60, y=-170, label=two
 }
 
 //--------------------------------------------------
@@ -50,6 +50,11 @@ ProcessConfig = uFldTagManager
 	post_color = white
 	miss_color = blue
 	hit_color  = red
+
+	team_one   = $(VTEAM1)
+	team_two   = $(VTEAM2)
+	zone_one   = pts={0,-20:120,-20:120,-100:0,-100}
+	zone_two   = pts={0,-100:120,-100:120,-180:0,-180}
 }
 
 //-------------------------------------------------- 
@@ -130,10 +135,11 @@ ProcessConfig = pMarineViewer
   AppTick    = 4
   CommsTick  = 4
 
-  TIFF_FILE            = forrest19.tif
-  set_pan_x            = -90
-  set_pan_y            = -280
-  zoom                 = 0.65
+  //TIFF_FILE            = forrest19.tif
+  TIFF_FILE            = AerialMIT.tif
+  set_pan_x            = -70
+  set_pan_y            = 80
+  zoom                 = 3.75
   vehicles_shape_scale = 1.5
   vehicles_name_mode   = names
 
@@ -158,6 +164,11 @@ ProcessConfig = pMarineViewer
   button_two   = RETURN  # STATION_KEEP_ALL=false
   button_three = CHASE   # CHASE_ALL=true
   button_four  = STATION   # STATION_KEEP_ALL=true
+
+  op_vertex = x=0,   y=-20,  lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=120, y=-20,  lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=120, y=-180, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=0,   y=-180, lwidth=1,lcolor=yellow,looped=true,group=moa
 }
 
 //--------------------------------------------------------

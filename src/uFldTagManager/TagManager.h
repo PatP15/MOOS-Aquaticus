@@ -28,9 +28,10 @@
 #include <map>
 #include <set>
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
-#include "VTag.h"
 #include "NodeRecord.h"
 #include "XYRangePulse.h"
+#include "XYPolygon.h"
+#include "VTag.h"
 
 class TagManager : public AppCastingMOOSApp
 {
@@ -48,10 +49,12 @@ class TagManager : public AppCastingMOOSApp
 
  protected: // Config Utilities
   bool    handleConfigVTagRange(std::string);
+  bool    handleConfigZone(int, std::string);
+  bool    handleConfigTeamName(int, std::string);
 
  protected: // Incoming mail utilities
-  bool    handleNodeReport(const std::string&);
-  bool    handleVTagPost(const std::string&);
+  bool    handleMailNodeReport(const std::string&);
+  bool    handleMailVTagPost(const std::string&);
 
  protected: // Processing Utilities
   double  getTrueNodeRange(double, double, std::string);
@@ -68,6 +71,7 @@ class TagManager : public AppCastingMOOSApp
 		     std::string vteam, std::string result);
   void    postResult(std::string event, std::string vname,
 		     std::map<std::string, double>);
+  void    postZonePolys();
   
  protected: // State variables
 
@@ -94,6 +98,11 @@ class TagManager : public AppCastingMOOSApp
  protected: // Configuration variables
   double        m_vtag_range;
   double        m_vtag_min_interval;
+
+  XYPolygon     m_zone_one;
+  XYPolygon     m_zone_two;
+  std::string   m_team_one;
+  std::string   m_team_two;
   
   unsigned int  m_tag_events;
 

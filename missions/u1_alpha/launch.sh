@@ -7,6 +7,8 @@ JUST_MAKE="no"
 AMT=1
 GOOD_GUYS="yes"
 BAD_GUYS="yes"
+VTEAM1="red"
+VTEAM2="blue"
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
 	printf "%s [SWITCHES] [time_warp]   \n" $0
@@ -39,26 +41,32 @@ fi
 
 
 #-------------------------------------------------------
+#  Part 1: Create the Shoreside MOOS file
+#-------------------------------------------------------
+SHORE_LISTEN="9300"
+
+nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
+       SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
+       VTEAM1=$VTEAM1 VTEAM2=$VTEAM2
+
+if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit; fi
+
+#-------------------------------------------------------
 #  Part 2: Create the GoodGuy .moos and .bhv files. 
 #-------------------------------------------------------
 VNAME="henry"   
 START_POS="0,0,180"         
-SHORE_LISTEN="9300"
 
 nsplug meta_vehicle.moos targ_henry.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9301"              \
     VPORT="9001"           SHORE_LISTEN=$SHORE_LISTEN       \
-    START_POS=$START_POS 
-
-nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
-    SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"       
+    VTEAM=$VTEAM1          START_POS=$START_POS 
 
 nsplug meta_vehicle.bhv targ_henry.bhv -f VNAME=$VNAME     \
     START_POS=$START_POS 
 
 if [ ! -e targ_henry.moos ]; then echo "no targ_henry.moos"; exit; fi
 if [ ! -e targ_henry.bhv  ]; then echo "no targ_henry.bhv "; exit; fi
-if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos";  exit; fi
 
 
 #-------------------------------------------------------
@@ -84,6 +92,7 @@ do
     nsplug meta_tagger.moos targ_$VNAME.moos -f WARP=$TIME_WARP  \
 	   VNAME=$VNAME                \
 	   VPORT=$VPORT                \
+	   VTEAM=$VTEAM2               \
 	   SHARE_LISTEN=$LPORT         \
 	   SHORE_LISTEN=$SHORE_LISTEN  \
 	   START_POS=$START_POS

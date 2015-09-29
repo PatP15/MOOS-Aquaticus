@@ -29,6 +29,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "NodeRecordUtils.h"
+#include "XYFormatUtilsPoly.h"
 
 using namespace std;
 
@@ -60,9 +61,9 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
 
     bool handled = false;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
-      handled = handleNodeReport(sval);
+      handled = handleMailNodeReport(sval);
     else if(key == "TAG_POST")
-      handled = handleVTagPost(sval);
+      handled = handleMailVTagPost(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
 
@@ -98,11 +99,20 @@ bool TagManager::OnStartUp()
       handled = setColorOnString(m_hit_color, value);
     else if(param == "miss_color") 
       handled = setColorOnString(m_miss_color, value);
+    else if(param == "zone_one") 
+      handled = handleConfigZone(1, value);
+    else if(param == "zone_two") 
+      handled = handleConfigZone(2, value);
+    else if(param == "team_one") 
+      handled = handleConfigTeamName(1, value);
+    else if(param == "team_two") 
+      handled = handleConfigTeamName(2, value);
 
     if(!handled)
       reportUnhandledConfigWarning("Unhandled config: " + orig);
   }
 
+  postZonePolys();
   registerVariables();
   return(true);
 }
@@ -141,13 +151,12 @@ void TagManager::registerVariables()
 }
 
 //---------------------------------------------------------
-// Procedure: handleNodeReport
-//   Example: NAME=alpha,TYPE=KAYAK,UTC_TIME=1267294386.51,
-//            X=29.66,Y=-23.49,LAT=43.825089, LON=-70.330030,
-//            SPD=2.00, HDG=119.06,YAW=119.05677,DEPTH=0.00,   
-//            LENGTH=4.0,MODE=ENGAGED
+// Procedure: handleMailNodeReport
+//   Example: NAME=alpha,TYPE=KAYAK,UTC_TIME=1267294386.51,X=29.66,Y=3.9,
+//            LAT=43.825089, LON=-70.330030,SPD=2.0, HDG=119.06,
+//            YAW=119.05677,DEPTH=0, LENGTH=4.0,MODE=ENGAGED
 
-bool TagManager::handleNodeReport(const string& node_report_str)
+bool TagManager::handleMailNodeReport(const string& node_report_str)
 {
   // Step 1: Deserialize the node record and check validity
   NodeRecord new_node_record = string2NodeRecord(node_report_str);
@@ -165,18 +174,24 @@ bool TagManager::handleNodeReport(const string& node_report_str)
   if(vteam == "") {
     string msg = "Node report for " + vname + " with no group.";
     reportRunWarning(msg);
+    return(false);
   }
-  else
-    m_map_teams[vteam].insert(vname);
+  if((vteam != m_team_one) && (vteam != m_team_two)) {
+    string msg = "Node report for " + vname + " w/ unknown team: " + vteam;
+    reportRunWarning(msg);
+    return(false);
+  }
+  
+  m_map_teams[vteam].insert(vname);
   
   return(true);
 }
 
 //---------------------------------------------------------
-// Procedure: handleVTagPost
+// Procedure: handleMailVTagPost
 //   Example: vname=alpha
 
-bool TagManager::handleVTagPost(const string& launch_str)
+bool TagManager::handleMailVTagPost(const string& launch_str)
 {
   // Part 1: Confirm request is coming from a known vehicle.
   string vname = tokStringParse(launch_str, "name",  ',', '=');
@@ -272,6 +287,79 @@ bool TagManager::handleConfigVTagRange(string str)
     return(false);
 
   m_vtag_range = range;
+  return(true);
+}
+
+
+//------------------------------------------------------------
+// Procedure: handleConfigZone()
+//      Note: Zone number must be 1 or 2. Polygon must be convex
+//   Example: pts={0,-20:120,-20:120,-160:0,-160}
+
+bool TagManager::handleConfigZone(int zone_number, string str)
+{
+  if((zone_number != 1) && (zone_number != 2))
+    return(false);
+
+  XYPolygon poly = string2Poly(str);
+  if(poly.size() == 0)
+    return(false);
+
+  poly.set_edge_size(1);
+  poly.set_vertex_size(1);
+  poly.set_transparency(0.1);
+
+  if(zone_number == 1) {
+    poly.set_color("vertex", "gray50");
+    poly.set_color("edge", "gray50");
+    poly.set_color("fill", "white");
+    if(m_team_one != "")
+      poly.set_label(m_team_one);
+    else
+      poly.set_label("zone_one");
+    m_zone_one = poly;
+  }
+  else {
+    poly.set_color("vertex", "gray50");
+    poly.set_color("edge", "gray50");
+    poly.set_color("fill", "green");
+    if(m_team_two != "")
+      poly.set_label(m_team_two);
+    else
+      poly.set_label("zone_two");
+    m_zone_two = poly;
+  }
+
+  return(true);
+}
+
+
+//------------------------------------------------------------
+// Procedure: handleConfigTeamName()
+
+bool TagManager::handleConfigTeamName(int zone_number, string team_name)
+{
+  // Sanity check - this app only handles TWO zones
+  if((zone_number != 1) && (zone_number != 2))
+    return(false);
+  if(team_name == "")
+    return(false);
+  
+  // Set the m_team_one member variable and apply the label to the
+  // polygon representing the zone. Even if the polygon has not been
+  // set yet. Now that m_team_one is set, it will be applied when/if
+  // the polygon/zone is later configured.
+  if((zone_number == 1) && (m_team_one == "")) {
+    m_team_one = team_name;
+    m_zone_one.set_label(team_name);
+  }
+  else if((zone_number == 2) && (m_team_two == "")) {
+    m_team_two = team_name;
+    m_zone_two.set_label(team_name);
+  }
+  else
+    return(false);
+  
   return(true);
 }
 
@@ -409,6 +497,18 @@ void TagManager::postResult(string event, string vname,
   Notify("TAG_RESULT_VERBOSE", msg);
 }
   
+//------------------------------------------------------------
+// Procedure: postZonePolys
+
+void TagManager::postZonePolys()
+{
+  string spec_one = m_zone_one.get_spec();
+  string spec_two = m_zone_two.get_spec();
+
+  Notify("VIEW_POLYGON", spec_one);
+  Notify("VIEW_POLYGON", spec_two);
+}
+  
 
 
 //------------------------------------------------------------
@@ -418,7 +518,9 @@ void TagManager::postResult(string event, string vname,
 //   ======================================================
 //   Tag Range: 35
 //   Tag Interval: 10
-
+//   Team [red]: lou, mal, ned, opi (4)
+//   Team [blue]: lima, mesa, nuuk, oslo (4)
+//
 //   Tag Application Stats
 //   ======================================================
 //             ReQ   Rejec  Rejec            Applied  Time
@@ -464,6 +566,20 @@ bool TagManager::buildReport()
   m_msgs << "===========================" << endl;
   m_msgs << "Tag Range:    " << doubleToStringX(m_vtag_range,1)   << endl;
   m_msgs << "Tag Interval: " << doubleToStringX(m_vtag_min_interval,1) << endl;
+
+  map<string, set<string> >::iterator pp;
+  for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {
+    string team_name = pp->first;
+    set<string> team = pp->second;
+    m_msgs << "Team [" << team_name << "]: ";
+    set<string>::iterator qq;
+    for(qq=team.begin(); qq!=team.end(); qq++) {
+      if(qq!=team.begin())
+	m_msgs << ", ";
+      m_msgs << *qq;
+    }
+    m_msgs << " (" << team.size() << ")" << endl;
+  }
   m_msgs << endl;
 
   // Part 2: Build report from perspective of tagging vehicles
@@ -487,6 +603,7 @@ bool TagManager::buildReport()
     actab << vname << tags << zone << freq << accp << hits << next;
   }
   m_msgs << actab.getFormattedString();
+  m_msgs << endl;
 
   // Part 3: Build report from perspective of vehicles being tagged.
   m_msgs << "Tag Receiver Stats:         " << endl;
