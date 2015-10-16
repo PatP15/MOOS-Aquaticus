@@ -22,6 +22,7 @@ ADD_SUBDIRECTORY(uFldTagManager)
 ADD_SUBDIRECTORY(pFlagStrategy)
 ADD_SUBDIRECTORY(iJoyStick)
 ADD_SUBDIRECTORY(pMapValues)
+ADD_SUBDIRECTORY(iActuationMokai)
 
 ##############################################################################
 #                           END of CMakeLists.txt
