@@ -1,0 +1,8 @@
+Using iJoystick on Mac OS X:
+
+For all joysticks:
+  $ sudo port install libsdl2
+
+Using a Microsoft XBox 360 controller on OS X:
+  Launch the attached .dmg and follow its instructions
+  Reboot the Mac
