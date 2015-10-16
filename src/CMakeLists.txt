@@ -20,6 +20,8 @@ ADD_SUBDIRECTORY(pExampleApp)
 ADD_SUBDIRECTORY(uFldFlagMgr)
 ADD_SUBDIRECTORY(uFldTagManager)
 ADD_SUBDIRECTORY(pFlagStrategy)
+ADD_SUBDIRECTORY(iJoyStick)
+ADD_SUBDIRECTORY(pMapValues)
 
 ##############################################################################
 #                           END of CMakeLists.txt
