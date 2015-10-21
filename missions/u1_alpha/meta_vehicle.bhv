@@ -56,7 +56,7 @@ Behavior = BHV_Waypoint
   pwt       = 100
   condition = MODE==TRAVERSING
   condition = FLAGS_TO_GRAB = true
-  endflag   = FLAGS_TO_GRAP = false
+  endflag   = FLAGS_TO_GRAB = false
   updates   = FLAG_PATH
   perpetual = true
 
