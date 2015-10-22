@@ -18,7 +18,9 @@ void showSynopsis()
   blk("SYNOPSIS:");
   blk("------------------------------------");
   blk(" Reads a joystick and publishes axis and button info as MOOS messages.");
-  blk(" Designed to be cross-platform and joystick-agnostic.");
+  blk(" Designed to be cross-platform and joystick-agnostic. Axis output is raw,");
+  blk(" there are no dead zones or mapping of values. Button output is published");
+  blk(" only on change of press status.");
 }
 
 void showHelpAndExit()
@@ -64,21 +66,6 @@ void showExampleConfigAndExit()
   blk("  Output_Prefix = JOY0_  // All output for this joystick will be published");
   blk("                         //   with this prefix on the message names.");
   blk("                         //   Default is JOY_");
-  blk("");
-  blk("  //  raw values -32768            0            32767");
-  blk("  //                  |---.-----.--|--.-----.---|");
-  blk("  //  translated        a |  b  |  c  |  d  | e");
-  blk("  //                      W     X     Y     Z");
-  blk("  //     W = -32768 + DEAD_END     a: Always reports -MAX_AXIS");
-  blk("  //     X = 0 - DEAD_ZERO         b: Between 0 and -MAX_AXIS");
-  blk("  //     Y = DEAD_ZERO             c: Always 0");
-  blk("  //     Z = 32767 - DEAD_END      d: Between 0 and MAX_AXIS");
-  blk("  //                               e: Always MAX_AXIS");
-  blk("");
-  blk("  Max_Axis  = 1000      // Axes are normalized to +/- this value");
-  blk("  Dead_End  = 200       // Taken off the raw value at the +/- ends");
-  blk("  Dead_Zero = 500       // Between +/- this value reports 0 (centered)");
-  blk("");
   blk("}");
   blk("");
   exit(0);
@@ -99,21 +86,16 @@ void showInterfaceAndExit()
   blk("");
   blk("PUBLICATIONS:                                                               ");
   blk("------------------------------------                                        ");
-  blk("  [prefix] is defined in the Output_predix mission file parameter");
-  blk("  [X]      is the channel number for the current joystick");
-  blk("  [prefix]_AXIS_COUNT       Number of valid axes current joystick reports");
-  blk("  [prefix]_AXIS_[X]         Axis position value published for each valid joystick axis.");
-  blk("                              ONLY PUBLISHED WHEN values change.");
-  blk("                              Leftmost:    -32768");
-  blk("                              Rightmost:    32767");
-  blk("                              Centered:         0");
-  blk("                              Example:      JOY0_AXIS_3 = 5162");
-  blk("  [prefix]_BUTTON_COUNT     Number of valid buttons current joystick reports");
-  blk("  [prefix]_BUTTON_[X]       Binary button status published for each valid joystick button.");
-  blk("                              ONLY PUBLISHED WHEN the button status changes.");
-  blk("                              Pressed:      DOWN");
-  blk("                              Not pressed:  UP");
-  blk("                              Example:      JOY2_BUTTON_6 = ");
+  blk("  // [prefix] is defined in the Output_predix mission file parameter");
+  blk("  // [X]      is the channel number for the current joystick");
+  blk("  [prefix]_AXIS_COUNT    integer   Number of valid axes current joystick reports");
+  blk("  [prefix]_AXIS_[X]      integer   Axis position value published for each valid joystick axis.");
+  blk("  [prefix]_BUTTON_COUNT  integer   Number of valid buttons current joystick reports");
+  blk("  [prefix]_BUTTON_[X]    string    Button status published for each valid joystick button.");
+  blk("                                     ONLY PUBLISHED WHEN the button status changes.");
+  blk("                                     Pressed:      DOWN");
+  blk("                                     Not pressed:  UP");
+  blk("                                     Example:      JOY2_BUTTON_6 = UP");
   blk("");
   exit(0);
 }
