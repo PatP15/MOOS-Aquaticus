@@ -25,6 +25,7 @@ public:
     bool    buildReport();
 
 protected:
+    void    PublishOutput();
     bool    RegisterForMOOSMessages();
     bool    SetParam_RANGE(std::string sVal);
     bool    SetParam_SWITCH(std::string sVal);

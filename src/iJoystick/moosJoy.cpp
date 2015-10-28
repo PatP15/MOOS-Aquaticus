@@ -12,7 +12,7 @@ using namespace std;
 
 moosJoy::moosJoy()
 {
-    m_prefix                = "JOY0_";
+    m_prefix                = "JOY_";
     m_joystickID            = 0;
     m_joystickCount         = 0;
     m_joy                   = 0;
@@ -37,7 +37,7 @@ bool moosJoy::OnNewMail(MOOSMSG_LIST &NewMail)
         // if (MOOSStrCmp(rMsg.GetKey(), "SOME_MOOS_MESSAGE"))
         //     DoSomeWork(sVal);
         }
-    return UpdateMOOSVariables(NewMail);
+    return true;
 }
 
 bool moosJoy::Iterate()
@@ -52,10 +52,14 @@ bool moosJoy::Iterate()
 
 void moosJoy::GetandPublishMostRecentJoystickValues()
 {
-    SDL_JoystickUpdate();        // Grab most recent joystick values
-    for (int i = 0; i < m_countAxes; i++) {
+    // Grab and store most recent joystick values
+    SDL_JoystickUpdate();
+    for (int i = 0; i < m_countAxes; i++)
         m_joyAxisVal[i] = (int) SDL_JoystickGetAxis(m_joy, i);
-        PublishJoystickAxisValue(i); }
+
+    // Once all the values are stored, then publish
+    for (int i = 0; i < m_countAxes; i++)
+        PublishJoystickAxisValue(i);
 
     // Deal with buttons
     SDL_Event event;
@@ -85,11 +89,19 @@ void moosJoy::GetandPublishMostRecentJoystickValues()
 
 void moosJoy::PublishJoystickAxisValue(int axis)
 {
+    // Publish the axis value as double
     stringstream ss;
-    ss << m_prefix;
-    ss << "AXIS_";
-    ss << axis;
+    ss << m_prefix << "AXIS_" << axis;
     m_Comms.Notify(ss.str(), m_joyAxisVal[axis]);
+
+    // For dependent axes, also publish a string with two values
+    if (m_axisDep[axis] != NO_DEPENDENCY) {
+        ss << "_DEP";
+        stringstream outStr;
+        outStr << m_joyAxisVal[axis];
+        outStr << ",";
+        outStr << m_joyAxisVal[m_axisDep[axis]];
+        m_Comms.Notify(ss.str(), outStr.str()); }
 }
 
 void moosJoy::PublishJoystickButtonValue(int button)
@@ -124,12 +136,19 @@ bool moosJoy::OnStartUp()
             bHandled = SetParam_JOYSTICK_ID(value);
         else if (param == "OUTPUT_PREFIX")
             bHandled = SetParam_OUTPUT_PREFIX(value);
+        else if (param == "DEPENDENT")
+            m_depDefs.push_back(value);
         else
             reportUnhandledConfigWarning(orig); }
     RegisterForMOOSMessages();
     RegisterVariables();
 
     JoystickSetup();
+
+    // Configure dependent axes (after setting up the joystick)
+    vector<string>::iterator it = m_depDefs.begin();
+    for (;it !=m_depDefs.end(); ++it)
+        SetParam_DEPENDENT(*it);
 
     // OnStartup() must always return true
     //    - Or else it will quit during launch and appCast info will be unavailable
@@ -187,9 +206,10 @@ bool moosJoy::JoystickSetup()
         msgName = m_prefix + "BUTTON_COUNT";
         m_Comms.Notify(msgName, (double) m_countButtons);
 
-        // Load axes into the map
-        for (int i = 0; i < m_countAxes; i++)
+        // Load axes into the map and clear out the dependency vector
+        for (int i = 0; i < m_countAxes; i++) {
             m_joyAxisVal[i] = 0;
+            m_axisDep[i] = NO_DEPENDENCY; }
 
         // Load buttons into the map and publish all buttons as being up
         for (int i = 0; i < m_countButtons; i++) {
@@ -206,7 +226,7 @@ bool moosJoy::JoystickConnected()
     return m_goodJoy;
 }
 
-bool moosJoy::SetParam_JOYSTICK_ID(std::string sVal)
+bool moosJoy::SetParam_JOYSTICK_ID(string sVal)
 {
     if (sVal.empty())
         reportConfigWarning("JOYSTICK_ID must not be blank. Using default value.");
@@ -219,7 +239,7 @@ bool moosJoy::SetParam_JOYSTICK_ID(std::string sVal)
     return true;
 }
 
-bool moosJoy::SetParam_OUTPUT_PREFIX(std::string sVal)
+bool moosJoy::SetParam_OUTPUT_PREFIX(string sVal)
 {
     int len = sVal.length();
     if (!len)
@@ -234,11 +254,34 @@ bool moosJoy::SetParam_OUTPUT_PREFIX(std::string sVal)
     return true;
 }
 
+bool moosJoy::SetParam_DEPENDENT(string sVal)
+{
+    if (sVal.empty()) {
+        reportConfigWarning("DEPENDENT should not be blank. No dependency defined.");
+        return true; }
+    vector<string> sVec = parseString(sVal, ',');
+    if (sVec.size() != 2) {
+        reportConfigWarning("DEPENDENT should be two integers describing dependent axes. No dependency defined.");
+        return true; }
+    int depA = strtol(sVec[0].c_str(), 0, 10);
+    int depB = strtol(sVec[1].c_str(), 0, 10);
+    if (depA > m_countAxes - 1 || depA < 0 || depB > m_countAxes -1 || depB < 0) {
+        string strVR = "[0, ";
+        strVR.append(intToString(m_countAxes - 1));
+        strVR.append("]");
+        reportConfigWarning("DEPENDENT is attempting to describe an axis outside the valid range of " + strVR);
+        return true; }
+    m_axisDep[depA] = depB;
+    m_axisDep[depB] = depA;
+
+    return true;
+}
+
 int moosJoy::appCastBlanks(int val)
 {
     int    num      = val + 32768;              // num is positive int in range [0, 65535]
     double dNorm    = (double) num / 65535.0;   // dNorm in range [0.0, 1.0]
-    return 10 + (int) (30.0 * dNorm);           // return value is in range [10, 40]
+    return BLANK_LEN + (int) (30.0 * dNorm);           // return value is in range [10, 40]
 }
 
 bool moosJoy::buildReport()
@@ -246,7 +289,7 @@ bool moosJoy::buildReport()
     m_msgs <<                " Settings" << endl;
     m_msgs <<                " --------" << endl;
     m_msgs <<                "    Joystick_ID:               " << m_joystickID << endl;
-    m_msgs <<                 "    Output_Prefix:             " << m_prefix << endl;
+    m_msgs <<                "    Output_Prefix:             " << m_prefix << endl;
     m_msgs << endl;
     m_msgs <<                " Joystick" << endl;
     m_msgs <<                " --------" << endl;
@@ -261,13 +304,18 @@ bool moosJoy::buildReport()
     m_msgs <<                " --------" << endl;
     for (int i = 0; i < m_countAxes; i++) {
         int axisVal = m_joyAxisVal[i];
-        m_msgs <<            "    Axis   ";
+        m_msgs <<            "    Axis  ";
         m_msgs.width(3);
         m_msgs << i << "\t";
+        if (m_axisDep[i] != NO_DEPENDENCY)
+            m_msgs << "dep-" << m_axisDep[i];
+        else
+            m_msgs << "     ";
         m_msgs.width(appCastBlanks(axisVal));
-        m_msgs << axisVal << endl; }
+        m_msgs << axisVal;
+        m_msgs << endl; }
     for (int i = 0; i < m_countButtons; i++) {
-        m_msgs <<            "    Button ";
+        m_msgs <<            "    Button";
         m_msgs.width(3);
         m_msgs << i << "   ";
         m_msgs << m_joyButtons[i] << endl; }

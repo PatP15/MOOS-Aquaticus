@@ -12,18 +12,12 @@
 #include "MOOS/libMOOS/MOOSLib.h"
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
-//#define BAD_AXIS_VAL   		-99999
-//#define BAD_BUTTON_VAL 		254
-//#define	DEFAULT_DEAD_END	200
-//#define DEFAULT_DEAD_ZERO	500
-//#define DEFAULT_MAX_AXIS	1000
-//#define JOY_FULL_RIGHT      32767
-//#define JOY_FULL_LEFT       -32768
-
+#define NO_DEPENDENCY       -1
 #define BUTTON_UP           false
 #define BUTTON_DOWN         true
 #define BUTTON_UP_STR       "UP"
 #define BUTTON_DOWN_STR     "DOWN"
+#define BLANK_LEN           10
 
 class moosJoy : public AppCastingMOOSApp
 {
@@ -41,6 +35,7 @@ protected:
     bool    JoystickSetup();
     bool    SetParam_JOYSTICK_ID(std::string sVal);
     bool    SetParam_OUTPUT_PREFIX(std::string sVal);
+    bool    SetParam_DEPENDENT(std::string sVal);
     void	GetandPublishMostRecentJoystickValues();
     void	PublishJoystickAxisValue(int axis);
     void	PublishJoystickButtonValue(int button);
@@ -57,7 +52,9 @@ protected:
     int				m_countAxes;
     int				m_countButtons;
 
+    std::vector<std::string> m_depDefs;
     std::map<int, int> m_joyAxisVal;
+    std::map<int, int> m_axisDep;
     std::map<int, std::string> m_joyButtons;
 };
 

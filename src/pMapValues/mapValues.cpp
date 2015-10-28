@@ -18,18 +18,25 @@ mapValues::mapValues()
 bool mapValues::OnNewMail(MOOSMSG_LIST &NewMail)
 {
     AppCastingMOOSApp::OnNewMail(NewMail);
+
     MOOSMSG_LIST::iterator p;
     for (p=NewMail.begin(); p!=NewMail.end(); ++p) {
         CMOOSMsg & rMsg = *p;
         string msgKey = rMsg.GetKey();
-        double msgVal = rMsg.GetDouble();
-		if (m_axes.count(msgKey))
-			m_axes[msgKey].MapAndNotify(msgVal);
+
+        // Check if incoming message exists in the axis map
+        //      - Double value means it's a single value
+        //      - String value means it's a value and a dependent value
+		if (m_axes.count(msgKey)) {
+            if (rMsg.IsDouble())    m_axes[msgKey].SetInputValue(rMsg.GetDouble());
+            else                    m_axes[msgKey].SetInputValues(rMsg.GetString()); }
+
+		// Check if incoming message exists in the button map
+		//      - Handle double or string messages
 		else if (m_switches.count(msgKey)) {
-			if (rMsg.IsDouble())
-				m_switches[msgKey].CheckValueThenPublish(rMsg.GetDouble());
-			else
-				m_switches[msgKey].CheckValueThenPublish(rMsg.GetString()); } }
+			if (rMsg.IsDouble())    m_switches[msgKey].CheckValueThenPublish(rMsg.GetDouble());
+			else                    m_switches[msgKey].CheckValueThenPublish(rMsg.GetString()); } }
+
     return UpdateMOOSVariables(NewMail);
 }
 
@@ -37,9 +44,40 @@ bool mapValues::Iterate()
 {
     AppCastingMOOSApp::Iterate();
 
+    PublishOutput();
 
     AppCastingMOOSApp::PostReport();
     return true;
+}
+
+void mapValues::PublishOutput()
+{
+    map<string, mapAxis>::iterator it = m_axes.begin();
+    for (; it != m_axes.end(); ++it)
+        m_Comms.Notify(it->second.GetPublishName(), it->second.GetOutputMappedValue());
+
+#ifdef DEBUGMODE
+    stringstream strCircle;
+    strCircle << "x=0,y=0,radius=100.0,active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
+    m_Comms.Notify("VIEW_CIRCLE", strCircle.str());
+
+    stringstream strBox;
+    strBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
+    m_Comms.Notify("VIEW_POLYGON", strBox.str());
+
+    stringstream strNorm;
+    strNorm << "x="   << m_axes["JOY0_AXIS_0_DEP"].GetNormalizedValue() * 100;
+    strNorm << ",y="  << m_axes["JOY0_AXIS_1_DEP"].GetNormalizedValue() * 100;
+    strNorm << ",active=true,label=joyNorm,label_color=red,vertex_color=red,vertex_size=4";
+    m_Comms.Notify("VIEW_POINT", strNorm.str());
+
+    stringstream strOut;
+    strOut << "x=" << m_axes["JOY0_AXIS_0_DEP"].GetOutputMappedValue() * 6.666667;
+    strOut << ",y=" << m_axes["JOY0_AXIS_1_DEP"].GetOutputMappedValue();
+    strOut << ",active=true,label=joyOut,label_color=green,vertex_color=green,vertex_size=4";
+    m_Comms.Notify("VIEW_POINT", strOut.str());
+#endif
+
 }
 
 bool mapValues::OnConnectToServer()
@@ -50,7 +88,15 @@ bool mapValues::OnConnectToServer()
 bool mapValues::RegisterForMOOSMessages()
 {
     AppCastingMOOSApp::RegisterVariables();
-    // Axis and button messages registered in constructors of mapAxis and mapButton
+
+    map<string, mapAxis>::iterator it = m_axes.begin();
+
+    // Register for axis input messages
+    for (; it != m_axes.end(); ++it)
+        m_Comms.Register(it->second.GetSubscribeName(), 0.0);
+
+    // Button input messages are registered in the mapButton class
+
     return RegisterMOOSVariables();
 }
 
@@ -99,11 +145,11 @@ bool mapValues::SetParam_RANGE(string sVal)
 	if (sVal.empty()) {
 		reportConfigWarning("RANGE cannot not be blank.");
 		return true; }
-	mapAxis ma = mapAxis(&m_Comms, sVal);
-	if (ma.IsValid())
-		m_axes[ma.GetKey()] = ma;
+	mapAxis ma = mapAxis(sVal);
+	if (ma.HasValidSetup())
+		m_axes[ma.GetSubscribeName()] = ma;
 	else
-		reportConfigWarning("Error: " + ma.GetError());
+		reportConfigWarning("Error: " + ma.GetErrorString());
     return true;
 }
 
@@ -139,10 +185,14 @@ bool mapValues::buildReport()
 {
 	int numAxes = m_axes.size();
     m_msgs <<                " Axis definitions:   " << numAxes << endl;
+    m_msgs << setw(20) << "IN_MSG"  << setw(7) << "IN_MIN"  << setw(7)  << "IN_MAX";
+    m_msgs << setw(20) << "OUT_MSG" << setw(7) << "OUT_MIN" << setw(7)  << "OUT_MAX";
+    m_msgs << setw(7)  << "DEAD"    << setw(7) << "SAT."    << setw(20) << "DEP_NAME";
+    m_msgs << endl;
     map<std::string, mapAxis>::iterator itAxes = m_axes.begin();
     for (; itAxes != m_axes.end(); ++itAxes) {
     	mapAxis ma = itAxes->second;
-    	m_msgs <<            "          " << ma.GetAppCastMsg() << endl; }
+    	m_msgs <<            " " << ma.GetAppCastSetupString() << endl; }
 	m_msgs << endl;
 
 	int numButtons = m_switches.size();
@@ -150,8 +200,16 @@ bool mapValues::buildReport()
     map<std::string, mapButton>::iterator itButtons = m_switches.begin();
     for (; itButtons != m_switches.end(); ++itButtons) {
     	mapButton mb = itButtons->second;
-    	m_msgs <<            "          " << mb.GetAppCastMsg() << endl; }
-	m_msgs << endl;
+    	m_msgs <<            " " << mb.GetAppCastMsg() << endl; }
+	m_msgs << endl << endl;
+
+	m_msgs << " Axis Data:" << endl;
+	itAxes = m_axes.begin();
+	for (; itAxes != m_axes.end(); ++itAxes) {
+	        mapAxis ma = itAxes->second;
+	        m_msgs << ma.GetAppCastStatusString() << endl; }
+	    m_msgs << endl;
+
     return true;
 }
 

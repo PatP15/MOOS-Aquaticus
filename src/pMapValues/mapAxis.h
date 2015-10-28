@@ -12,45 +12,83 @@
 #include "MOOS/libMOOS/MOOSLib.h"
 
 #ifndef BAD_DOUBLE
-#define BAD_DOUBLE -99999.99
+#define BAD_DOUBLE   -999999.99
+#define NO_DEPENDENT BAD_DOUBLE
 #endif
+
+#define DEBUG_MODE
+
+// Input range [inMin, inMax]
+// Output range [outMin, outMax]
+// Input value dIn
+// Output mapped value dOut
+//
+//                  (dIn - inMin) x (maxOut - minOut)
+// dOut = outMin +  ---------------------------------
+//                         (maxIn - minIn)
+//
 
 class mapAxis {
 public:
-	mapAxis();
-	mapAxis(MOOS::MOOSAsyncCommClient* pComms, std::string sDef);
-	~mapAxis() {}
+                mapAxis();
+                mapAxis(const std::string sDef);
+                ~mapAxis() {}
 
-	bool        MapAndNotify(double dIn);
-	double      MapInToOut(double dIn);
-	bool        AxisNotify(double dMappedAlready);
-	std::string	PublishAs() { return m_outName; }
-	unsigned int CountPublished() { return m_countNotified; }
-	std::string GetAppCastMsg();
-	bool        IsValid() { return m_error.empty(); }
-	std::string	GetError() { return m_error; }
-	std::string GetKey() { return m_inName; }
+    bool        HasValidSetup()                 { return m_bValidSetup; }
+    std::string GetErrorString()                { return m_errorStr; }
+    std::string GetSubscribeName()              { return m_inName; }
+    std::string GetPublishName()                { return m_outName; }
+    std::string GetDependentName()              { return m_depName; }
+    std::string GetAppCastSetupString()         { return m_appcastSetup; }
+    double      GetOutputMappedValue()          { return m_curOutValue; }
+    double      GetNormalizedValue()            { return m_curNorm; }
+    std::string GetAppCastStatusString();
+    void        SetInputValue(const double dIn);
+    void        SetInputValues(const std::string sIn);
+
 
 private:
-	void        SetConstraints();
-	void        PrepAppCastMsg();
+    double      ConstrainDouble(const double in);
+    void        SetInputValues(const double rawIn, const double depRawIn);
+    double      MapToNorm(const double d);
+    bool        SetRequiredDef(const std::string key, std::string& storeHere);
+    bool        SetRequiredDef(const std::string key, double& storeHere);
+    void        SetOptionalDef(const std::string key, std::string& storeHere);
+    void        SetOptionalDef(const std::string key, double& storeHere);
 
-	unsigned int m_countNotified;
+    std::string m_inDef;
+    bool        m_bValidSetup;          // TRUE when this mapping had a valid definition string
+    bool        m_bValidValues;         // TRUE when current value (and dependent value if applicable) are not BAD_DOUBLE
+    double      m_curInValue;           // Latest incoming value, BAD_DOUBLE before first input
+    double      m_curNorm;              // Latest input value normalized to [-1, 1]. BAD_DOUBLE before first input
+    double      m_curDepValue;          // Latest dependent value to the input
+    double      m_curDepNorm;           // Latest dependent value normalized to [-1, 1], BAD_DOUBLE before first input and if no dependent
+    double      m_curOutValue;          // Latest output value
+    bool        m_HasDep;               // True when a dependent map was assigned
+    std::string m_depName;              // Name of dependent mapping, empty string if not applicable
 
-	std::string m_inName;
-	double		m_inMin;
-	double		m_inMax;
-	double		m_inConstrainMin;
-	double		m_inConstrainMax;
+    // Definition of the input
+    std::string m_inName;               // Name of the input MOOS message
+    double      m_inMin;                // Minimum expected value on the input
+    double      m_inMax;                // Maximum expected value on the input
+    double      m_inConstrainMin;       // Lower constraint (in case min and max are reversed)
+    double      m_inConstrainMax;       // Upper constraint (in case min and max are reversed)
+    double      m_dead;                 // Percent of dead zone, stored in range [0, 100]. No dead zone = 0.0
+    double      m_sat;                  // Percent of end saturation, stored in range [0, 100]. No saturation = 0.0
 
-	std::string	m_outName;
-	double		m_outMin;
-	double		m_outMax;
-	std::string m_appCastPrep;
-	std::string	m_error;
+    // Definition of the output
+    double      m_normMin;              // Minimum norm value to map
+    double      m_normMax;              // Maximum norm value to map
+    std::string m_outName;              // Name to publish mapped value to
+    double      m_outMin;               // Minimum value output can be mapped to
+    double      m_outMax;               // Maximum value output can be mapped to
 
-	MOOS::MOOSAsyncCommClient* m_pComms;
+    unsigned int m_count;               // Count how many inputs have been processed
+    std::string m_errorStr;             // Stores error message to pass when definition is bad
+    std::string m_appcastSetup;         // Created once, info about setup for appcasting.
 };
+
+
 
 #endif
 
