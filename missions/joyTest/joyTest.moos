@@ -2,7 +2,7 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = joytest
 
-MOOSTimeWarp = 10
+MOOSTimeWarp = 1
 
 /// MIT Sailing Pavilion
 LatOrigin  = 42.358456
@@ -27,9 +27,7 @@ ProcessConfig = iJoystick
   CommsTick     = 10
   JoystickID    = 0
   Output_Prefix = JOY0
-  Max_Axis      = 100
-  Dead_End      = 10
-  Dead_Zero     = 10000 
+  Dependent     = 0,1
 }
 
 
@@ -37,8 +35,8 @@ ProcessConfig = pMapValues
 {
   AppTick       = 10
   CommsTick     = 10
-  RANGE = in_msg=JOY0_AXIS_0, in_min=-100, in_max=100, out_msg=DESIRED_RUDDER, out_min=-45, out_max=45
-  RANGE = in_msg=JOY0_AXIS_1, in_min=-100, in_max=0,   out_msg=DESIRED_THRUST, out_min=100,   out_max=0
+  RANGE = in_msg=JOY0_AXIS_0, in_min=-32768, in_max=32767, dead=10, sat=5, out_msg=DESIRED_RUDDER, out_min=-30, out_max=30
+  RANGE = in_msg=JOY0_AXIS_1, in_min=-32768, in_max=32767, norm_min=-1.0, norm_max=0.0, out_msg=DESIRED_THRUST, out_min=100, out_max=0
   SWITCH = in_msg=JOY0_BUTTON_1, trigger=1, out_msg=VIEW_POINT, out_val=x=5,y=25,label=home,vertex_size=3
 }
 
