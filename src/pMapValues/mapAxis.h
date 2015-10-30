@@ -43,6 +43,10 @@ public:
     double      GetOutputMappedValue()          { return m_curOutValue; }
     double      GetNormalizedValue()            { return m_curNorm; }
     double      GetInputValue()                 { return m_curInValue; }
+    double      GetInMax()                      { return m_inMax; }
+    double      GetOutMax()                     { return m_outMax; }
+    double      GetSaturation()                 { return m_sat; }
+    double      GetDeadZone()                   { return m_dead; }
     std::string GetAppCastStatusString();
     void        SetInputValue(const double dIn);
     void        SetInputValues(const std::string sIn);

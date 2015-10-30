@@ -62,27 +62,49 @@ void mapValues::PublishOutput()
         strCircle << "x=0,y=0,radius=100.0,active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
         m_Comms.Notify("VIEW_CIRCLE", strCircle.str());
 
-        stringstream strBox;
-        strBox << "pts={71,71:71,-71:-71,-71:-71,71},active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
-        m_Comms.Notify("VIEW_POLYGON", strBox.str());
+        stringstream strFullBox;
+        strFullBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,label=fullBox,vertex_size=0,edge_color=white,edge_size=2";
+        m_Comms.Notify("VIEW_POLYGON", strFullBox.str());
 
-        stringstream strIn;
-        strIn << "x="   << m_axes["JOY0_AXIS_0"].GetInputValue() * 0.003051850948;
-        strIn << ",y="  << m_axes["JOY0_AXIS_1"].GetInputValue() * 0.003051850948;
+        { stringstream strDeadBox;
+        double tb = m_axes[m_strDebug0].GetDeadZone() * 100.0;
+        double lr = m_axes[m_strDebug1].GetDeadZone() * 100.0;
+        strDeadBox << "pts={";
+        strDeadBox <<        lr << ","  << tb << ":";
+        strDeadBox <<        lr << ",-" << tb << ":";
+        strDeadBox << "-" << lr << ",-" << tb << ":";
+        strDeadBox << "-" << lr << "," << tb;
+        strDeadBox << "},active=true,label=deadZone,vertex_size=0,edge_color=gray,edge_size=2";
+        m_Comms.Notify("VIEW_POLYGON", strDeadBox.str()); }
+
+        { stringstream strSatBox;
+        double tb = 100.0 - m_axes[m_strDebug0].GetSaturation() * 100.0;
+        double lr = 100.0 - m_axes[m_strDebug1].GetSaturation() * 100.0;
+        strSatBox << "pts={";
+        strSatBox <<        lr << ","  << tb << ":";
+        strSatBox <<        lr << ",-" << tb << ":";
+        strSatBox << "-" << lr << ",-" << tb << ":";
+        strSatBox << "-" << lr << "," << tb;
+        strSatBox << "},active=true,label=saturation,vertex_size=0,edge_color=gray,edge_size=2";
+        m_Comms.Notify("VIEW_POLYGON", strSatBox.str()); }
+
+        { stringstream strIn;
+        strIn << "x="   << m_axes[m_strDebug0].GetInputValue() * 100.0 / m_axes[m_strDebug0].GetInMax();
+        strIn << ",y="  << m_axes[m_strDebug1].GetInputValue() * 100.0 / m_axes[m_strDebug1].GetInMax();
         strIn << ",active=true,label=joyIn,label_color=yellow,vertex_color=yellow,vertex_size=4";
-        m_Comms.Notify("VIEW_POINT", strIn.str());
+        m_Comms.Notify("VIEW_POINT", strIn.str()); }
 
-        stringstream strNorm;
-        strNorm << "x="   << m_axes["JOY0_AXIS_0"].GetNormalizedValue() * 100.0;
-        strNorm << ",y="  << m_axes["JOY0_AXIS_1"].GetNormalizedValue() * 100.0;
+        { stringstream strNorm;
+        strNorm << "x="   << m_axes[m_strDebug0].GetNormalizedValue() * 100.0;
+        strNorm << ",y="  << m_axes[m_strDebug1].GetNormalizedValue() * 100.0;
         strNorm << ",active=true,label=joyNorm,label_color=red,vertex_color=red,vertex_size=4";
-        m_Comms.Notify("VIEW_POINT", strNorm.str());
+        m_Comms.Notify("VIEW_POINT", strNorm.str()); }
 
-        stringstream strOut;
-        strOut << "x=" << m_axes["JOY0_AXIS_0"].GetOutputMappedValue() * 2.5;
-        strOut << ",y=" << m_axes["JOY0_AXIS_1"].GetOutputMappedValue() * -1.0;
+        { stringstream strOut;
+        strOut << "x=" << m_axes[m_strDebug0].GetOutputMappedValue() * 100.0 / m_axes[m_strDebug0].GetOutMax();
+        strOut << ",y=" << m_axes[m_strDebug1].GetOutputMappedValue() * 100.0 / m_axes[m_strDebug1].GetOutMax();
         strOut << ",active=true,label=joyOut,label_color=green,vertex_color=green,vertex_size=4";
-        m_Comms.Notify("VIEW_POINT", strOut.str()); }
+        m_Comms.Notify("VIEW_POINT", strOut.str()); } }
 
 }
 
@@ -129,6 +151,10 @@ bool mapValues::OnStartUp()
         else if (param == "DEBUG_MODE") {
             m_debugMode =  (toupper(value) == "TRUE");
             bHandled = true; }
+        else if (param == "DEBUG_AXIS0")
+            bHandled = SetParam_DEBUG_AXIS0(value);
+        else if (param == "DEBUG_AXIS1")
+            bHandled = SetParam_DEBUG_AXIS1(value);
         else
             reportUnhandledConfigWarning(orig); }
 
@@ -188,6 +214,24 @@ bool mapValues::SetParam_SWITCH(string sVal)
 	else
 		reportConfigWarning("Error: " + mb.GetError());
 	return true;
+}
+
+bool mapValues::SetParam_DEBUG_AXIS0(string sVal)
+{
+    if (sVal.empty()) {
+        reportConfigWarning("DEBUG_AXIS0 cannot not be blank.");
+        return true; }
+    m_strDebug0 = sVal;
+    return true;
+}
+
+bool mapValues::SetParam_DEBUG_AXIS1(string sVal)
+{
+    if (sVal.empty()) {
+        reportConfigWarning("DEBUG_AXIS1 cannot not be blank.");
+        return true; }
+    m_strDebug1 = sVal;
+    return true;
 }
 
 bool mapValues::buildReport()

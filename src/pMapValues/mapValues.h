@@ -29,10 +29,14 @@ protected:
     bool    RegisterForMOOSMessages();
     bool    SetParam_RANGE(std::string sVal);
     bool    SetParam_SWITCH(std::string sVal);
+    bool    SetParam_DEBUG_AXIS0(std::string sVal);
+    bool    SetParam_DEBUG_AXIS1(std::string sVal);
     std::map<std::string, mapAxis> m_axes;
     std::map<std::string, mapButton> m_switches;
 
     bool m_debugMode;
+    std::string m_strDebug0;
+    std::string m_strDebug1;
 };
 
 #endif
