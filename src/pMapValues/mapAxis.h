@@ -45,6 +45,7 @@ public:
     double      GetInputValue()                 { return m_curInValue; }
     double      GetInMax()                      { return m_inMax; }
     double      GetOutMax()                     { return m_outMax; }
+    double      GetOutMin()                     { return m_outMin; }
     double      GetSaturation()                 { return m_sat; }
     double      GetDeadZone()                   { return m_dead; }
     std::string GetAppCastStatusString();

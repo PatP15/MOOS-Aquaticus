@@ -59,11 +59,11 @@ void mapValues::PublishOutput()
 
     if (m_debugMode) {
         stringstream strCircle;
-        strCircle << "x=0,y=0,radius=100.0,active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
+        strCircle << "x=0,y=0,radius=100.0,active=true,vertex_size=0,edge_color=white,edge_size=2";
         m_Comms.Notify("VIEW_CIRCLE", strCircle.str());
 
         stringstream strFullBox;
-        strFullBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,label=fullBox,vertex_size=0,edge_color=white,edge_size=2";
+        strFullBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,vertex_size=0,edge_color=white,edge_size=2";
         m_Comms.Notify("VIEW_POLYGON", strFullBox.str());
 
         { stringstream strDeadBox;
@@ -101,11 +101,29 @@ void mapValues::PublishOutput()
         m_Comms.Notify("VIEW_POINT", strNorm.str()); }
 
         { stringstream strOut;
-        strOut << "x=" << m_axes[m_strDebug0].GetOutputMappedValue() * 100.0 / m_axes[m_strDebug0].GetOutMax();
-        strOut << ",y=" << m_axes[m_strDebug1].GetOutputMappedValue() * 100.0 / m_axes[m_strDebug1].GetOutMax();
+        double xMax = fabs(m_axes[m_strDebug0].GetOutMax());
+        double xMin = fabs(m_axes[m_strDebug0].GetOutMin());
+        double xUse = (xMax > xMin ? xMax : xMin);
+        double x = (xUse == 0.0 ? 0.0 :  m_axes[m_strDebug0].GetOutputMappedValue() * 100.0 / xUse);
+        strOut << "x=" << x;
+        double yMay = fabs(m_axes[m_strDebug1].GetOutMax());
+        double yMin = fabs(m_axes[m_strDebug1].GetOutMin());
+        double yUse = (yMay > yMin ? yMay : yMin);
+        double y = (yUse == 0.0 ? 0.0 :  m_axes[m_strDebug1].GetOutputMappedValue() * 100.0 / yUse);
+        strOut << ",y=" << y;
         strOut << ",active=true,label=joyOut,label_color=green,vertex_color=green,vertex_size=4";
-        m_Comms.Notify("VIEW_POINT", strOut.str()); } }
-
+        m_Comms.Notify("VIEW_POINT", strOut.str());
+        { stringstream strLabelL, strLabelR, strLabelT, strLabelB;
+        strLabelL << "label=" << -1 * yUse << ",x=0"    << ",y=-100" << ",active=true,label_color=green,scale=5,vertex_color=green,vertex_size=0";
+        m_Comms.Notify("VIEW_POINT", strLabelL.str());
+        reportEvent(strLabelL.str());
+        strLabelR << "label=" <<      yUse << ",x=0"    << ",y=100"  << ",active=true,label_color=green,vertex_color=green,vertex_size=0";
+        m_Comms.Notify("VIEW_POINT", strLabelR.str());
+        strLabelT << "label=" << -1 * xUse << ",x=-110" << ",y=0"    << ",active=true,label_color=green,vertex_color=green,vertex_size=0";
+        m_Comms.Notify("VIEW_POINT", strLabelT.str());
+        strLabelB << "label=" <<      xUse << ",x=110"  << ",y=0"    << ",active=true,label_color=green,vertex_color=green,vertex_size=0";
+        m_Comms.Notify("VIEW_POINT", strLabelB.str());
+        } } }
 }
 
 bool mapValues::OnConnectToServer()
