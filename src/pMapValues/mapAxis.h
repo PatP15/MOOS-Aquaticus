@@ -42,6 +42,7 @@ public:
     std::string GetAppCastSetupString()         { return m_appcastSetup; }
     double      GetOutputMappedValue()          { return m_curOutValue; }
     double      GetNormalizedValue()            { return m_curNorm; }
+    double      GetInputValue()                 { return m_curInValue; }
     std::string GetAppCastStatusString();
     void        SetInputValue(const double dIn);
     void        SetInputValues(const std::string sIn);

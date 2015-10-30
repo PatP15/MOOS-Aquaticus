@@ -195,9 +195,34 @@ void mapAxis::SetInputValues(double rawIn, double depRawIn)
         m_curNorm       = (m_curNorm < 0.0) ? d * -1 : d; }
 
     // Adjust norm: Dead zone and saturation
-    if (fabs(m_curNorm) < m_dead)       m_curNorm =  0.0;
-    else if (m_curNorm > 1.0 - m_sat)   m_curNorm =  1.0;
-    else if (m_curNorm < -1.0 + m_sat)  m_curNorm = -1.0;
+
+
+
+//    leftStickX = (abs(normLX) < deadzoneX ? 0 : (abs(normLX) - deadzoneX) * (normLX / abs(normLX)));
+//    leftStickY = (abs(normLY) < deadzoneY ? 0 : (abs(normLY) - deadzoneY) * (normLY / abs(normLY)));
+//    if (deadzoneX > 0) leftStickX /= 1 - deadzoneX;
+//    if (deadzoneY > 0) leftStickY /= 1 - deadzoneY;
+    double sign = (m_curNorm < 0.0 ? -1.0 : 1.0);
+    double absNorm = fabs(m_curNorm);
+    if (absNorm < m_dead)
+        m_curNorm = 0.0;
+    else if (absNorm > 1.0 - m_sat)
+        m_curNorm = sign;
+    else
+
+        //                  (dIn - inMin) x (maxOut - minOut)
+        // dOut = outMin +  ---------------------------------
+        //                         (maxIn - minIn)
+        //
+        //               (absNorm - m_dead) x (1.0 - 0.0)
+        // norm = 0.0 + ----------------------------------
+        //                      (1.0 - m_sat - m_dead)
+        //
+        m_curNorm = sign * (absNorm - m_dead) / (1.0 - m_sat - m_dead);
+
+    //    if (fabs(m_curNorm) < m_dead)       m_curNorm =  0.0;
+//    else if (m_curNorm > 1.0 - m_sat)   m_curNorm =  1.0;
+//    else if (m_curNorm < -1.0 + m_sat)  m_curNorm = -1.0;
 
     //                  (norm - normMin) x (maxOut - minOut)
     // dOut = outMin +  ---------------------------------

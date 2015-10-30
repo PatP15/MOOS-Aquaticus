@@ -13,6 +13,7 @@ using namespace std;
 
 mapValues::mapValues()
 {
+    m_debugMode = false;
 }
 
 bool mapValues::OnNewMail(MOOSMSG_LIST &NewMail)
@@ -56,27 +57,32 @@ void mapValues::PublishOutput()
     for (; it != m_axes.end(); ++it)
         m_Comms.Notify(it->second.GetPublishName(), it->second.GetOutputMappedValue());
 
-#ifdef DEBUGMODE
-    stringstream strCircle;
-    strCircle << "x=0,y=0,radius=100.0,active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
-    m_Comms.Notify("VIEW_CIRCLE", strCircle.str());
+    if (m_debugMode) {
+        stringstream strCircle;
+        strCircle << "x=0,y=0,radius=100.0,active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
+        m_Comms.Notify("VIEW_CIRCLE", strCircle.str());
 
-    stringstream strBox;
-    strBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
-    m_Comms.Notify("VIEW_POLYGON", strBox.str());
+        stringstream strBox;
+        strBox << "pts={71,71:71,-71:-71,-71:-71,71},active=true,label=box,vertex_size=0,edge_color=white,edge_size=2";
+        m_Comms.Notify("VIEW_POLYGON", strBox.str());
 
-    stringstream strNorm;
-    strNorm << "x="   << m_axes["JOY0_AXIS_0_DEP"].GetNormalizedValue() * 100;
-    strNorm << ",y="  << m_axes["JOY0_AXIS_1_DEP"].GetNormalizedValue() * 100;
-    strNorm << ",active=true,label=joyNorm,label_color=red,vertex_color=red,vertex_size=4";
-    m_Comms.Notify("VIEW_POINT", strNorm.str());
+        stringstream strIn;
+        strIn << "x="   << m_axes["JOY0_AXIS_0"].GetInputValue() * 0.003051850948;
+        strIn << ",y="  << m_axes["JOY0_AXIS_1"].GetInputValue() * 0.003051850948;
+        strIn << ",active=true,label=joyIn,label_color=yellow,vertex_color=yellow,vertex_size=4";
+        m_Comms.Notify("VIEW_POINT", strIn.str());
 
-    stringstream strOut;
-    strOut << "x=" << m_axes["JOY0_AXIS_0_DEP"].GetOutputMappedValue() * 6.666667;
-    strOut << ",y=" << m_axes["JOY0_AXIS_1_DEP"].GetOutputMappedValue();
-    strOut << ",active=true,label=joyOut,label_color=green,vertex_color=green,vertex_size=4";
-    m_Comms.Notify("VIEW_POINT", strOut.str());
-#endif
+        stringstream strNorm;
+        strNorm << "x="   << m_axes["JOY0_AXIS_0"].GetNormalizedValue() * 100.0;
+        strNorm << ",y="  << m_axes["JOY0_AXIS_1"].GetNormalizedValue() * 100.0;
+        strNorm << ",active=true,label=joyNorm,label_color=red,vertex_color=red,vertex_size=4";
+        m_Comms.Notify("VIEW_POINT", strNorm.str());
+
+        stringstream strOut;
+        strOut << "x=" << m_axes["JOY0_AXIS_0"].GetOutputMappedValue() * 2.5;
+        strOut << ",y=" << m_axes["JOY0_AXIS_1"].GetOutputMappedValue() * -1.0;
+        strOut << ",active=true,label=joyOut,label_color=green,vertex_color=green,vertex_size=4";
+        m_Comms.Notify("VIEW_POINT", strOut.str()); }
 
 }
 
@@ -120,6 +126,9 @@ bool mapValues::OnStartUp()
             bHandled = SetParam_RANGE(value);
         else if (param == "SWITCH")
             bHandled = SetParam_SWITCH(value);
+        else if (param == "DEBUG_MODE") {
+            m_debugMode =  (toupper(value) == "TRUE");
+            bHandled = true; }
         else
             reportUnhandledConfigWarning(orig); }
 

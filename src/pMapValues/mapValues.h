@@ -31,6 +31,8 @@ protected:
     bool    SetParam_SWITCH(std::string sVal);
     std::map<std::string, mapAxis> m_axes;
     std::map<std::string, mapButton> m_switches;
+
+    bool m_debugMode;
 };
 
 #endif
