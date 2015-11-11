@@ -108,7 +108,7 @@ void moosJoy::PublishJoystickButtonValue(int button)
 {
     stringstream ss;
     ss << m_prefix;
-    ss << "button_";
+    ss << "BUTTON_";
     ss << button;
     m_Comms.Notify(ss.str(), m_joyButtons[button]);
 }
