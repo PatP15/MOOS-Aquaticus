@@ -25,18 +25,18 @@ bool mapValues::OnNewMail(MOOSMSG_LIST &NewMail)
         CMOOSMsg & rMsg = *p;
         string msgKey = rMsg.GetKey();
 
-        // Check if incoming message exists in the axis map
+        // Check if incoming RANGE message exists in the axis map
         //      - Double value means it's a single value
         //      - String value means it's a value and a dependent value
-		if (m_axes.count(msgKey)) {
-            if (rMsg.IsDouble())    m_axes[msgKey].SetInputValue(rMsg.GetDouble());
-            else                    m_axes[msgKey].SetInputValues(rMsg.GetString()); }
+		if (m_ranges.count(msgKey)) {
+            if (rMsg.IsDouble())    m_ranges[msgKey].SetInputValue(rMsg.GetDouble());
+            else                    m_ranges[msgKey].SetInputValues(rMsg.GetString()); }
 
-		// Check if incoming message exists in the button map
+		// Check if incoming TRIGGER message exists in the button map
 		//      - Handle double or string messages
-		else if (m_switches.count(msgKey)) {
-			if (rMsg.IsDouble())    m_switches[msgKey].CheckValueThenPublish(rMsg.GetDouble());
-			else                    m_switches[msgKey].CheckValueThenPublish(rMsg.GetString()); } }
+		else if (m_triggers.count(msgKey)) {
+			if (rMsg.IsDouble())    m_triggers[msgKey].StoreValueThenPublish(rMsg.GetDouble());
+			else                    m_triggers[msgKey].StoreValueThenPublish(rMsg.GetString()); } }
 
     return UpdateMOOSVariables(NewMail);
 }
@@ -53,9 +53,19 @@ bool mapValues::Iterate()
 
 void mapValues::PublishOutput()
 {
-    map<string, mapAxis>::iterator it = m_axes.begin();
-    for (; it != m_axes.end(); ++it)
-        m_Comms.Notify(it->second.GetPublishName(), it->second.GetOutputMappedValue());
+    // Cycle through RANGE definitions
+    map<string, mapRange>::iterator it = m_ranges.begin();
+    for (; it != m_ranges.end(); ++it) {
+        mapRange* r = &it->second;
+
+        // Set the current trigger value when necessary
+        if (r->HasTrigger()) {
+            string triggerName = r->GetTriggerMessageName();
+            string triggerVal = "No published message for " + triggerName;
+            if (m_triggers.count(triggerName))
+                triggerVal = m_triggers[triggerName].GetLastValue();
+            r->SetTriggerValue(triggerVal); }
+        r->ConditionalPublish(&m_Comms); }
 
     if (m_debugMode) {
         stringstream strCircle;
@@ -67,8 +77,8 @@ void mapValues::PublishOutput()
         m_Comms.Notify("VIEW_POLYGON", strFullBox.str());
 
         { stringstream strDeadBox;
-        double tb = m_axes[m_strDebug0].GetDeadZone() * 100.0;
-        double lr = m_axes[m_strDebug1].GetDeadZone() * 100.0;
+        double tb = m_ranges[m_strDebug0].GetDeadZone() * 100.0;
+        double lr = m_ranges[m_strDebug1].GetDeadZone() * 100.0;
         strDeadBox << "pts={";
         strDeadBox <<        lr << ","  << tb << ":";
         strDeadBox <<        lr << ",-" << tb << ":";
@@ -78,8 +88,8 @@ void mapValues::PublishOutput()
         m_Comms.Notify("VIEW_POLYGON", strDeadBox.str()); }
 
         { stringstream strSatBox;
-        double tb = 100.0 - m_axes[m_strDebug0].GetSaturation() * 100.0;
-        double lr = 100.0 - m_axes[m_strDebug1].GetSaturation() * 100.0;
+        double tb = 100.0 - m_ranges[m_strDebug0].GetSaturation() * 100.0;
+        double lr = 100.0 - m_ranges[m_strDebug1].GetSaturation() * 100.0;
         strSatBox << "pts={";
         strSatBox <<        lr << ","  << tb << ":";
         strSatBox <<        lr << ",-" << tb << ":";
@@ -89,34 +99,34 @@ void mapValues::PublishOutput()
         m_Comms.Notify("VIEW_POLYGON", strSatBox.str()); }
 
         { stringstream strIn;
-        strIn << "x="   << m_axes[m_strDebug0].GetInputValue() * 100.0 / m_axes[m_strDebug0].GetInMax();
-        strIn << ",y="  << m_axes[m_strDebug1].GetInputValue() * 100.0 / m_axes[m_strDebug1].GetInMax();
+        strIn << "x="   << m_ranges[m_strDebug0].GetInputValue() * 100.0 / m_ranges[m_strDebug0].GetInMax();
+        strIn << ",y="  << m_ranges[m_strDebug1].GetInputValue() * 100.0 / m_ranges[m_strDebug1].GetInMax();
         strIn << ",active=true,label=joyIn,label_color=yellow,vertex_color=yellow,vertex_size=4";
         m_Comms.Notify("VIEW_POINT", strIn.str()); }
 
         { stringstream strNorm;
-        strNorm << "x="   << m_axes[m_strDebug0].GetNormalizedValue() * 100.0;
-        strNorm << ",y="  << m_axes[m_strDebug1].GetNormalizedValue() * 100.0;
+        strNorm << "x="   << m_ranges[m_strDebug0].GetNormalizedValue() * 100.0;
+        strNorm << ",y="  << m_ranges[m_strDebug1].GetNormalizedValue() * 100.0;
         strNorm << ",active=true,label=joyNorm,label_color=red,vertex_color=red,vertex_size=4";
         m_Comms.Notify("VIEW_POINT", strNorm.str()); }
 
         { stringstream strOut;
-        double xMax = fabs(m_axes[m_strDebug0].GetOutMax());
-        double xMin = fabs(m_axes[m_strDebug0].GetOutMin());
+        double xMax = fabs(m_ranges[m_strDebug0].GetOutMax());
+        double xMin = fabs(m_ranges[m_strDebug0].GetOutMin());
         double xUse = (xMax > xMin ? xMax : xMin);
-        double x = (xUse == 0.0 ? 0.0 :  m_axes[m_strDebug0].GetOutputMappedValue() * 100.0 / xUse);
+        double x = (xUse == 0.0 ? 0.0 :  m_ranges[m_strDebug0].GetOutputMappedValue() * 100.0 / xUse);
         strOut << "x=" << x;
-        double yMay = fabs(m_axes[m_strDebug1].GetOutMax());
-        double yMin = fabs(m_axes[m_strDebug1].GetOutMin());
+        double yMay = fabs(m_ranges[m_strDebug1].GetOutMax());
+        double yMin = fabs(m_ranges[m_strDebug1].GetOutMin());
         double yUse = (yMay > yMin ? yMay : yMin);
-        double y = (yUse == 0.0 ? 0.0 :  m_axes[m_strDebug1].GetOutputMappedValue() * 100.0 / yUse);
+        double y = (yUse == 0.0 ? 0.0 :  m_ranges[m_strDebug1].GetOutputMappedValue() * 100.0 / yUse);
         strOut << ",y=" << y;
         strOut << ",active=true,label=joyOut,label_color=green,vertex_color=green,vertex_size=4";
         m_Comms.Notify("VIEW_POINT", strOut.str());
+
         { stringstream strLabelL, strLabelR, strLabelT, strLabelB;
         strLabelL << "label=" << -1 * yUse << ",x=0"    << ",y=-100" << ",active=true,label_color=green,scale=5,vertex_color=green,vertex_size=0";
         m_Comms.Notify("VIEW_POINT", strLabelL.str());
-        reportEvent(strLabelL.str());
         strLabelR << "label=" <<      yUse << ",x=0"    << ",y=100"  << ",active=true,label_color=green,vertex_color=green,vertex_size=0";
         m_Comms.Notify("VIEW_POINT", strLabelR.str());
         strLabelT << "label=" << -1 * xUse << ",x=-110" << ",y=0"    << ",active=true,label_color=green,vertex_color=green,vertex_size=0";
@@ -135,10 +145,10 @@ bool mapValues::RegisterForMOOSMessages()
 {
     AppCastingMOOSApp::RegisterVariables();
 
-    map<string, mapAxis>::iterator it = m_axes.begin();
+    map<string, mapRange>::iterator it = m_ranges.begin();
 
     // Register for axis input messages
-    for (; it != m_axes.end(); ++it)
+    for (; it != m_ranges.end(); ++it)
         m_Comms.Register(it->second.GetSubscribeName(), 0.0);
 
     // Button input messages are registered in the mapButton class
@@ -164,8 +174,8 @@ bool mapValues::OnStartUp()
 
         if (param == "RANGE")
             bHandled = SetParam_RANGE(value);
-        else if (param == "SWITCH")
-            bHandled = SetParam_SWITCH(value);
+        else if (param == "TRIGGER")
+            bHandled = SetParam_TRIGGER(value);
         else if (param == "DEBUG_MODE") {
             m_debugMode =  (toupper(value) == "TRUE");
             bHandled = true; }
@@ -198,15 +208,13 @@ bool mapValues::SetParam_RANGE(string sVal)
 	if (sVal.empty()) {
 		reportConfigWarning("RANGE cannot not be blank.");
 		return true; }
-	mapAxis ma = mapAxis(sVal);
-	if (ma.HasValidSetup())
-		m_axes[ma.GetSubscribeName()] = ma;
-	else
-		reportConfigWarning("Error: " + ma.GetErrorString());
+	mapRange ma = mapRange(sVal);
+	if (ma.IsValid())   m_ranges[ma.GetSubscribeName()] = ma;
+	else                reportConfigWarning("Error: " + ma.GetErrorString());
     return true;
 }
 
-// SWITCH = in_msg=w, trigger=x, out_msg=y, out_val=z
+// TRIGGER = in_msg=w, trigger=x, out_msg=y, out_val=z
                   // in_msg     Message name for incoming switch value
                   // trigger    When in_msg contents change to match this trigger,
                   //              the out_msg will be published.
@@ -218,19 +226,17 @@ bool mapValues::SetParam_RANGE(string sVal)
                   //              string is published. To publish a numeric as a
                   //              string, put the number in quotes.");
    // Examples:
-   //    SWITCH    = JOY_BUTTON_4, 1, ALL_STOP=true
-   //    SWITCH    = JOY_BUTTON_7, off, VEHICLE_NUMBER=\"3\"
-bool mapValues::SetParam_SWITCH(string sVal)
+   //    TRIGGER  = JOY_BUTTON_4, 1, ALL_STOP=true
+   //    TRIGGER  = JOY_BUTTON_7, off, VEHICLE_NUMBER=\"3\"
+bool mapValues::SetParam_TRIGGER(string sVal)
 {
 	if (sVal.empty()) {
 		reportConfigWarning("SWITCH cannot not be blank.");
 		return true; }
 
-	mapButton mb = mapButton(&m_Comms, sVal);
-	if (mb.IsValid())
-		m_switches[mb.GetKey()] = mb;
-	else
-		reportConfigWarning("Error: " + mb.GetError());
+	mapTrigger mb = mapTrigger(&m_Comms, sVal);
+	if (mb.IsValid())   m_triggers[mb.GetKey()] = mb;
+	else                reportConfigWarning("Error: " + mb.GetError());
 	return true;
 }
 
@@ -254,32 +260,35 @@ bool mapValues::SetParam_DEBUG_AXIS1(string sVal)
 
 bool mapValues::buildReport()
 {
-	int numAxes = m_axes.size();
-    m_msgs <<                " Axis definitions:   " << numAxes << endl;
-    m_msgs << setw(20) << "IN_MSG"  << setw(7) << "IN_MIN"  << setw(7)  << "IN_MAX";
-    m_msgs << setw(20) << "OUT_MSG" << setw(7) << "OUT_MIN" << setw(7)  << "OUT_MAX";
-    m_msgs << setw(7)  << "DEAD"    << setw(7) << "SAT."    << setw(20) << "DEP_NAME";
-    m_msgs << endl;
-    map<std::string, mapAxis>::iterator itAxes = m_axes.begin();
-    for (; itAxes != m_axes.end(); ++itAxes) {
-    	mapAxis ma = itAxes->second;
-    	m_msgs <<            " " << ma.GetAppCastSetupString() << endl; }
-	m_msgs << endl;
+	int numAxes = m_ranges.size();
+    m_msgs << "--- Range definitions ---" << endl;
+	map<std::string, mapRange>::iterator itAxes = m_ranges.begin();
+    for (; itAxes != m_ranges.end(); ++itAxes) {
+    	mapRange ma = itAxes->second;
+    	m_msgs << endl << ma.GetAppCastSetupString() << endl; }
 
-	int numButtons = m_switches.size();
-    m_msgs <<                " Button definitions: " << numButtons << endl;
-    map<std::string, mapButton>::iterator itButtons = m_switches.begin();
-    for (; itButtons != m_switches.end(); ++itButtons) {
-    	mapButton mb = itButtons->second;
+	int numButtons = m_triggers.size();
+    m_msgs << "--- Button definitions ---" << endl;
+    map<std::string, mapTrigger>::iterator itButtons = m_triggers.begin();
+    for (; itButtons != m_triggers.end(); ++itButtons) {
+        m_msgs << endl;
+    	mapTrigger mb = itButtons->second;
     	m_msgs <<            " " << mb.GetAppCastMsg() << endl; }
-	m_msgs << endl << endl;
 
-	m_msgs << " Axis Data:" << endl;
-	itAxes = m_axes.begin();
-	for (; itAxes != m_axes.end(); ++itAxes) {
-	        mapAxis ma = itAxes->second;
-	        m_msgs << ma.GetAppCastStatusString() << endl; }
-	    m_msgs << endl;
+	m_msgs << "---  Live Range Data ---" << endl << endl;
+	itAxes = m_ranges.begin();
+    for (; itAxes != m_ranges.end(); ++itAxes) {
+        mapRange ma = itAxes->second;
+        m_msgs << ma.GetAppCastStatusString() << endl; }
+    m_msgs << endl;
+
+    m_msgs << "---  Live Trigger Data ---" << endl << endl;
+    map<std::string, mapTrigger>::iterator itTrig = m_triggers.begin();
+    for (; itTrig != m_triggers.end(); ++itTrig) {
+        m_msgs << endl;
+        mapTrigger mb = itTrig->second;
+        m_msgs << mb.GetAppCastStatusString() << endl;
+    }
 
     return true;
 }

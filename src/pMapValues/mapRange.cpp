@@ -1,5 +1,5 @@
 /*
- * mapAxis.cpp
+ * mapRange.cpp
  *
  *  Created on: Sep 30, 2015
  *      Author: Alon Yaari
@@ -7,7 +7,7 @@
 
 #include "math.h"       // fabs(), sqrt()
 #include "MBUtils.h"
-#include "mapAxis.h"
+#include "mapRange.h"
 
 using namespace std;
 
@@ -21,48 +21,57 @@ using namespace std;
 //                         (maxIn - minIn)
 //
 
-mapAxis::mapAxis()
-{
-    m_bValidSetup       = false;
-    m_bValidValues      = false;
-    m_HasDep            = false;
-    m_inDef             = "";
-    m_curInValue        = BAD_DOUBLE;
-    m_curNorm           = BAD_DOUBLE;
-    m_curDepValue       = BAD_DOUBLE;
-    m_curDepNorm        = BAD_DOUBLE;
-    m_curOutValue       = BAD_DOUBLE;
-    m_count             = 0;
-    m_appcastSetup      = "Undefined mapping.";
-    m_errorStr          = "";
 
-    // Will be set by the define string
+mapRange::mapRange()
+{
+    // Setup params
+    m_inDef             = "";
     m_inName            = "";
     m_inMin             = BAD_DOUBLE;
     m_inMax             = BAD_DOUBLE;
     m_inConstrainMin    = BAD_DOUBLE;
     m_inConstrainMax    = BAD_DOUBLE;
-    m_dead              = 0.0;
-    m_sat               = 0.0;
+    m_normMin           = -1.0;
+    m_normMax           = 1.0;
     m_outName           = "";
     m_outMin            = BAD_DOUBLE;
     m_outMax            = BAD_DOUBLE;
-    m_normMin           = -1.0;
-    m_normMax           = 1.0;
+    m_dead              = 0.0;
+    m_sat               = 0.0;
+
+    // Current values
+    m_curInValue        = BAD_DOUBLE;
+    m_curNorm           = BAD_DOUBLE;
+    m_curDepValue       = BAD_DOUBLE;
+    m_curDepNorm        = BAD_DOUBLE;
+    m_curOutValue       = BAD_DOUBLE;
+
+    // Dependents
+    m_hasDep            = false;
+    m_depName           = "";
+
+    // Triggering
+    m_trigger           = "";
+    m_triggerVal        = "";
+    m_curTriggerVal     = "";
+    m_bTriggered        = false;
+
+    // AppCasting
+    m_countIn           = 0u;
+    m_countOut          = 0u;
+    m_errorStr          = "";
+    m_appcastStatic     = "Undefined mapping.";
 }
 
-// Sample string to parse for definition:
-//      in_msg=JOY_AXIS_2, in_min=-32768, in_max=32768, dead=5, sat=5,
-//          out_msg=DESIRED_RUDDER, out_min=-40, out_max=40
-
-mapAxis::mapAxis(const std::string sDef)
+mapRange::mapRange(const std::string sDef)
 {
-    m_normMin           = -1.0;
-    m_normMax           = 1.0;
     if (sDef.empty()) {
         m_errorStr = "Mapping definition cannot be blank.";
         return; }
-    m_inDef = toupper(sDef);
+
+    m_normMin           = -1.0;
+    m_normMax           = 1.0;
+    m_inDef             = toupper(sDef);
     bool bGood = true;
     bGood &= SetRequiredDef("IN_MSG",  m_inName);
     bGood &= SetRequiredDef("IN_MIN",  m_inMin);
@@ -90,32 +99,44 @@ mapAxis::mapAxis(const std::string sDef)
     if (m_normMax < -1.0 || m_normMax > 1.0) {
         m_errorStr = "NORM_MAX must be in range [-1.0, 1.0].";
         return; }
-    SetOptionalDef("DEP",     m_depName);
-    m_HasDep = !m_depName.empty();
+    SetOptionalDef("DEP",       m_depName);
+    m_hasDep = !m_depName.empty();
+    bool bHasTrigger = tokParse(m_inDef, "TRIG_MSG", ',', '=', m_trigger);
+    if (bHasTrigger) {
+        SetOptionalDef("TRIG_VAL",   m_triggerVal);
+        bHasTrigger = !m_triggerVal.empty();
+        if (!bHasTrigger) {
+            m_errorStr = "For triggering, TRIG_MSG and TRIG_VAL must be defined together.";
+            return; } }
+    else
+        m_trigger = "";
 
     // Set constraints (in case min and max are reversed)
     //m_inConstrainMin = (m_inMin < m_inMax) ? m_inMin : m_inMax;
     //m_inConstrainMax = (m_inMin < m_inMax) ? m_inMax : m_inMin;
     m_inConstrainMin = m_inMin;
     m_inConstrainMax = m_inMax;
+
     // Create the appcast string detaling setup
     stringstream ss;
-    ss << "    IN_NAME:       " << m_inName  << endl;
-    ss << "    IN_MIN,MAX:    " << m_inMin   << ", " << m_inMax  << endl;
-    ss << "    OUT_NAME:      " << m_outName << endl;
-    ss << "    NORM_MIN, MAX: " << m_normMin << ", " << m_normMax << endl;
-    ss << "    OUT_MIN, MAX:  " << m_outMin  << ", " << m_outMax << endl;
-    ss << "    DEAD, SAT:     " << m_dead * 100.0 << ", " << m_sat * 100.0 << endl;
-    m_appcastSetup = ss.str();
-    m_bValidSetup = true;
+    ss <<     "        Msg In:   " << m_inName  << "    [" << m_inMin   << ", " << m_inMax   << "]" << endl;
+    ss <<     "        Msg Out:  " << m_outName << "    [" << m_outMin  << ", " << m_outMax  << "]" << endl;
+    ss <<     "        Norm:     [" << m_normMin << ", " << m_normMax << "]" << endl;
+    ss <<     "        Dead:     " << m_dead * 100.0 << "%" << endl;
+    ss <<     "        Sat:      " << m_sat  * 100.0 << "%" << endl;
+    if (bHasTrigger)
+        ss << "        Trigger:  " << m_trigger << " == " << m_triggerVal << endl;
+    else
+        ss << "        Trigger:  None (always publish)" << endl;
+    m_appcastStatic = ss.str();
 }
 
-void mapAxis::SetOptionalDef(const string key, string& storeHere)
+void mapRange::SetOptionalDef(const string key, string& storeHere)
 {
     tokParse(m_inDef, key, ',', '=', storeHere);
 }
 
-void mapAxis::SetOptionalDef(const string key, double& storeHere)
+void mapRange::SetOptionalDef(const string key, double& storeHere)
 {
     string sVal;
     bool bGood = tokParse(m_inDef, key, ',', '=', sVal);
@@ -123,7 +144,7 @@ void mapAxis::SetOptionalDef(const string key, double& storeHere)
         storeHere = strtod(sVal.c_str(), 0);
 }
 
-bool mapAxis::SetRequiredDef(const string key, double& storeHere)
+bool mapRange::SetRequiredDef(const string key, double& storeHere)
 {
     string sVal;
     bool bGood = SetRequiredDef(key, sVal);
@@ -132,7 +153,7 @@ bool mapAxis::SetRequiredDef(const string key, double& storeHere)
     return bGood;
 }
 
-bool mapAxis::SetRequiredDef(const string key, string& storeHere)
+bool mapRange::SetRequiredDef(const string key, string& storeHere)
 {
     bool bGood = tokParse(m_inDef, key, ',', '=', storeHere);
     if (!bGood) {
@@ -143,31 +164,41 @@ bool mapAxis::SetRequiredDef(const string key, string& storeHere)
     return true;
 }
 
-string mapAxis::GetAppCastStatusString()
+void mapRange::SetTriggerValue(const string sVal)
 {
-    //    in_msg name     in_value    norm   out_msg name  out_value  count
+    m_curTriggerVal = sVal;
+    m_bTriggered    = (m_triggerVal == m_curTriggerVal);
+}
+
+string mapRange::GetAppCastStatusString()
+{
     stringstream ss;
-    ss << "    MSG_IN name:  " << m_inName      << "    count : " << m_count << endl;
-    ss << "    In value:     " << m_curInValue  << endl;
-    ss << "    Normalized:   " << m_curNorm     << endl;
-    ss << "    MSG_OUT name: " << m_outName     << endl;
-    ss << "    Out value:    " << m_curOutValue << endl;
+    ss << "   " << m_inName << endl;
+    ss << "   In:        " << m_curInValue   << " (" << m_countIn << " received)" << endl;
+    ss << "   Norm:      " << m_curNorm      << endl;
+    ss << "   Mapped:    " << m_curOutValue  << endl;
+    if (HasTrigger()) {
+        if (m_bTriggered)
+            ss << "   Trigger:   Triggered on " << m_trigger << " == " << m_triggerVal << endl;
+        else
+            ss << "   Trigger:   Not publishing (" << m_trigger << ": \"" << m_triggerVal << "\" != \"" << m_curTriggerVal << "\")" <<endl; }
+    ss << "   Published: " << m_countOut << "" << endl;
     return ss.str();
 }
 
-double mapAxis::ConstrainDouble(const double in)
+double mapRange::ConstrainDouble(const double in)
 {
     if (in < m_inConstrainMin)      return m_inConstrainMin;
     else if (in > m_inConstrainMax) return m_inConstrainMax;
     return in;
 }
 
-void mapAxis::SetInputValue(double dIn)
+void mapRange::SetInputValue(double dIn)
 {
     SetInputValues(dIn, BAD_DOUBLE);
 }
 
-void mapAxis::SetInputValues(string sIn)
+void mapRange::SetInputValues(string sIn)
 {
     if (sIn.empty()) return;
     vector<string> sVec = parseString(sIn, ',');
@@ -177,8 +208,10 @@ void mapAxis::SetInputValues(string sIn)
     SetInputValues(inVal, inDep);
 }
 
-void mapAxis::SetInputValues(double rawIn, double depRawIn)
+void mapRange::SetInputValues(double rawIn, double depRawIn)
 {
+    m_countIn++;
+
     // Normalize input axis
     m_curInValue    = ConstrainDouble(rawIn);
     m_curNorm       = MapToNorm(m_curInValue);
@@ -191,9 +224,37 @@ void mapAxis::SetInputValues(double rawIn, double depRawIn)
         m_curDepNorm    = MapToNorm(m_curDepValue);
 
         // Relate input axis to dependent value
-        double d        = sqrt((m_curNorm * m_curNorm) + (m_curDepNorm * m_curDepNorm));
-        m_curNorm       = (m_curNorm < 0.0) ? d * -1 : d; }
 
+        // Axis inputs are treated as a vector that lies somewhere within a circle
+        //      - Vector start is at 0,0 and vector end is at m_curNorm, m_curDepNorm
+        // Objective is to map the point from a circle onto a square
+        //      - Find the difference in magnitude between a unit vector on the circle
+        //             and a vector with the same angle but that reaches the square
+        //      - Extend the original vector by this difference
+
+        // Find the vector length
+        double hyp = sqrt((m_curNorm * m_curNorm) + (m_curDepNorm * m_curDepNorm));
+        if (hyp != 0) {
+
+            // Find vector slope
+            //      - Prevent division by 0 errors
+            double slope    = (m_curNorm == 0.0 ? 0.0 : m_curDepNorm / m_curNorm);
+
+            // Find the point at which the vector extends to intersect the square
+            // If slope:
+            //      < 1.0   angle is toward vertical side of square
+            //     == 1.0   aiming exactly at corner
+            //      > 1.0   angle is toward horizontal side of square
+            double xSq = 1.0;
+            double ySq = 1.0;
+            if (slope < 1.0)    ySq = slope;
+            else if (slope > 1.0) xSq = slope;
+
+            // Calculate distance to the square at that point
+            double hypSq = sqrt((xSq * xSq) + (ySq * ySq));
+
+            // Extend relevant axis by this amount
+            m_curNorm *= hypSq; } }
     // Adjust norm: Dead zone and saturation
 
 
@@ -243,16 +304,33 @@ void mapAxis::SetInputValues(double rawIn, double depRawIn)
     // Map norm to output
     //m_curOutValue = m_outMin + ((interim + m_normMin) * (m_outMax - m_outMin) / (m_normMax - m_normMin));
     m_curOutValue = m_outMin + ((interim - m_normMin) * (m_outMax - m_outMin) / (m_normMax - m_normMin));
-    m_count++;
 }
 
 //               (d - inMin) x (2.0)
 // norm = -1.0 + ----------------------
 //                   (maxIn - minIn)
-double mapAxis::MapToNorm(double d)
+double mapRange::MapToNorm(double d)
 {
     return -1.0 + (d - m_inMin) * (2.0) / (m_inMax - m_inMin);
 }
+
+#ifdef ASYNCHRONOUS_CLIENT
+void mapRange::ConditionalPublish(MOOS::MOOSAsyncCommClient* mComms)
+#else
+void mapRange::ConditionalPublish(CMOOSCommClient* m_Comms)
+#endif
+{
+    m_bTriggered = true;
+
+    // Only publish when triggering allows
+    if (HasTrigger())
+        m_bTriggered = (m_triggerVal == m_curTriggerVal);
+
+    if (m_bTriggered) {
+        mComms->Notify(m_outName, m_curOutValue);
+        m_countOut++; }
+}
+
 
 
 

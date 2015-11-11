@@ -10,8 +10,8 @@
 
 #include "MOOS/libMOOS/MOOSLib.h"
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
-#include "mapAxis.h"
-#include "mapButton.h"
+#include "mapRange.h"
+#include "mapTrigger.h"
 
 class mapValues : public AppCastingMOOSApp
 {
@@ -28,11 +28,12 @@ protected:
     void    PublishOutput();
     bool    RegisterForMOOSMessages();
     bool    SetParam_RANGE(std::string sVal);
-    bool    SetParam_SWITCH(std::string sVal);
+    bool    SetParam_TRIGGER(std::string sVal);
     bool    SetParam_DEBUG_AXIS0(std::string sVal);
     bool    SetParam_DEBUG_AXIS1(std::string sVal);
-    std::map<std::string, mapAxis> m_axes;
-    std::map<std::string, mapButton> m_switches;
+    std::map<std::string, mapRange> m_ranges;
+    std::map<std::string, mapTrigger> m_triggers;
+    std::string m_appCastAxisTriggers;
 
     bool m_debugMode;
     std::string m_strDebug0;
