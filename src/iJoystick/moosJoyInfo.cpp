@@ -57,8 +57,10 @@ void showExampleConfigAndExit()
   blk("");
   blk("ProcessConfig = iJoystick");
   blk("{");
-  blk("  AppTick    = 10");
-  blk("  CommsTick  = 10");
+  blk("  // Higher tick values makes joystick more responsive");
+  blk("  // Lower tick values can result in response lag");
+  blk("  AppTick    = 20");
+  blk("  CommsTick  = 20");
   blk("");
   blk("  JoystickID    = 0       // If more than one joystick is connected, this is the");
   blk("                          //   0-based index ID of the joystick to report on.");
