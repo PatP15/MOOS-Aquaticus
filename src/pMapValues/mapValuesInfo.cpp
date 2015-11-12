@@ -95,11 +95,11 @@ void showExampleConfigAndExit()
   blk("  //      trig_msg (string, optional) Publish mapped value only when on this trigger message");
   blk("  //      trig_val (any,    required) Publish only when trig_msg has this value.");
   blk("  RANGE = in_msg=JOY_AXIS_0, in_min=-32768, in_max=32768, dead=5, sat=5, /");
-  blk("            out_msg=DESIRED_RUDDER, out_min=-40, out_max=40");
+  blk("            out_msg=DESIRED_RUDDER, out_min=-40, out_max=40, trig_msg=JOY_BUTTON_0, trig_val=DOWN");
   blk("  RANGE = in_msg=JOY_AXIS_1_DEP, in_min=-32768, in_max=32768, dead=5, sat=5, /");
   blk("            norm_min = 0.0, norm_max = -1.0, out_msg=DESIRED_THRUST, out_min=0, out_max=100");
   blk("");
-  blk("  // TRIGGER = in_msg=w, in_val=x, out_msg=y, out_val=z");
+  blk("  // TRIGGER = in_msg=w, trigger=x, out_msg=y, out_val=z");
   blk("  //      in_msg  (string, required) Message name for incoming switch value");
   blk("  //      trigger (any,    required) When in_msg contents change to match this trigger,");
   blk("  //                                   the out_msg will be published. String/numeric agnostic.");
@@ -109,8 +109,7 @@ void showExampleConfigAndExit()
   blk("  //                                   published message is a double. Otherwise, a");
   blk("  //                                   string is published. To publish a numeric as a");
   blk("  //                                   string, put the number in quotes.");
-  blk("   TRIGGER   = JOY_BUTTON_4, 1, ALL_STOP=true");
-  blk("   TRIGGER   = JOY_BUTTON_7, off, VEHICLE_NUMBER=\"3\"");
+  blk("   TRIGGER   = in_msg=JOY_BUTTON_4, trigger=DOWN, out_msg=ALL_STOP, out_val=true");
   blk("}");
   blk("");
   exit(0);
