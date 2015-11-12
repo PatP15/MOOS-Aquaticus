@@ -34,6 +34,7 @@ public:
 
 private:
 	void        PrepAppCastMsg();
+    bool ayTokParse(const std::string& str, const std::string& left, char gsep, char lsep, std::string& rstr);
 
 	std::string m_lastVal;
 	std::string m_inName;

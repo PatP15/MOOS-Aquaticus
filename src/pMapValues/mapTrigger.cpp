@@ -32,11 +32,11 @@ mapTrigger::mapTrigger(MOOS::MOOSAsyncCommClient* pComms, string sDef)
     string sVal = "";
     bool bGood = tokParse(line, "IN_MSG", ',', '=', m_inName);
     if (bGood)
-        bGood = tokParse(line, "TRIGGER", ',', '=', m_triggerValue);
+        bGood = ayTokParse(line, "TRIGGER", ',', '=', m_triggerValue);
     if (bGood)
         bGood = tokParse(line, "OUT_MSG", ',', '=', m_outName);
     if (bGood)
-        bGood = tokParse(line, "OUT_VAL", ',', '=', m_outString);
+        bGood = ayTokParse(line, "OUT_VAL", ',', '=', m_outString);
     if (bGood) {
         m_outDouble = strtod(m_outString.c_str(), 0);    // Always convert, even if string val will simply be 0.0
         // Is the outVal a string or a double?
@@ -107,6 +107,19 @@ string mapTrigger::GetAppCastStatusString()
     return ss.str();
 }
 
+bool mapTrigger::ayTokParse(const std::string& str, const std::string& left, char gsep, char lsep, std::string& rstr)
+{
+    rstr = "error";
+    vector<string> svector1 = parseStringQ(str, gsep);
+    for (vector<string>::size_type i = 0; i < svector1.size(); i++) {
+        vector<string> svector2 = parseStringQ(svector1[i], lsep);
+        if (svector2.size() != 2) return false;
+        svector2[0] = stripBlankEnds(svector2[0]);
+        if (svector2[0] == left) {
+            rstr = svector2[1];
+            return true; } }
+    return false ;
+}
 
 
 
