@@ -63,10 +63,10 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uSpeechRec Example MOOS Configuration                   ");
+  blu("uSpeechRec Example MOOS Configuration                           ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = uSpeechRec                              ");
+  blk("ProcessConfig = uSpeechRec                                      ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
@@ -84,7 +84,7 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uSpeechRec INTERFACE                                    ");
+  blu("uSpeechRec INTERFACE                                            ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();

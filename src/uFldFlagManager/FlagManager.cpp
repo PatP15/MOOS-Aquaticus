@@ -79,12 +79,10 @@ bool FlagManager::OnConnectToServer()
 
 //---------------------------------------------------------
 // Procedure: Iterate()
-//            happens AppTick times per second
 
 bool FlagManager::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  // Do your thing here!
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -143,7 +141,6 @@ void FlagManager::registerVariables()
 //---------------------------------------------------------
 // Procedure: handleConfigFlag
 //   Example: flag = x=2,y=3,range=10,label=one
-
 
 bool FlagManager::handleConfigFlag(string str)
 {

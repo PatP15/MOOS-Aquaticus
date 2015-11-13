@@ -1,5 +1,5 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for:                     uFldFlagMgr
+# The CMakeLists.txt for:                 uFldFlagManager
 # Author(s):                                Mike Benjamin
 #--------------------------------------------------------
 
@@ -9,9 +9,9 @@ SET(SRC
   main.cpp
 )
 
-ADD_EXECUTABLE(uFldFlagMgr ${SRC})
+ADD_EXECUTABLE(uFldFlagManager ${SRC})
 
-TARGET_LINK_LIBRARIES(uFldFlagMgr
+TARGET_LINK_LIBRARIES(uFldFlagManager
    ${MOOS_LIBRARIES}
    apputil
    contacts

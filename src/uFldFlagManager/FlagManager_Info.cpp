@@ -20,11 +20,13 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The uFldFlagMgr application is used for               ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
+  blk("  The uFldFlagManager is a shoreside manager used for marine    ");
+  blk("  autonomy competitions where flags are involved. Flags are     ");
+  blk("  declared at the outset each with a position and a unique      ");
+  blk("  label. Vehicles have the ability to grab a flag by posting a  ");
+  blk("  request. The flag may or not be granted, but if granted, then ");
+  blk("  the grabbing vehicle then owns the flag and it cannot be      ");
+  blk("  grabbed by other vehicles.                                    ");
 }
 
 //----------------------------------------------------------------
@@ -34,15 +36,15 @@ void showHelpAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("Usage: uFldFlagMgr file.moos [OPTIONS]                   ");
+  blu("Usage: uFldFlagManager file.moos [OPTIONS]                      ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("Options:                                                        ");
   mag("  --alias","=<ProcessName>                                      ");
-  blk("      Launch uFldFlagMgr with the given process name         ");
-  blk("      rather than uFldFlagMgr.                           ");
+  blk("      Launch uFldFlagManager with the given process name        ");
+  blk("      rather than uFldFlagManager.                              ");
   mag("  --example, -e                                                 ");
   blk("      Display example MOOS configuration block.                 ");
   mag("  --help, -h                                                    ");
@@ -50,7 +52,7 @@ void showHelpAndExit()
   mag("  --interface, -i                                               ");
   blk("      Display MOOS publications and subscriptions.              ");
   mag("  --version,-v                                                  ");
-  blk("      Display the release version of uFldFlagMgr.        ");
+  blk("      Display the release version of uFldFlagManager.           ");
   blk("                                                                ");
   blk("Note: If argv[2] does not otherwise match a known option,       ");
   blk("      then it will be interpreted as a run alias. This is       ");
@@ -66,14 +68,16 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uFldFlagMgr Example MOOS Configuration                   ");
+  blu("uFldFlagManager Example MOOS Configuration                      ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = uFldFlagMgr                              ");
+  blk("ProcessConfig = uFldFlagManager                                 ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
+  blk("  flag = x=60, y=-30,  label=one                                ");
+  blk("  flag = x=60, y=-170, label=two                                ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -87,19 +91,30 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uFldFlagMgr INTERFACE                                    ");
+  blu("uFldFlagManager INTERFACE                                       ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("       NODE_REPORT = NAME=alpha,TYPE=UUV,TIME=1252348077.59,   ");
+  blk("                      X=51.71,Y=-35.50, LAT=43.824981,          ");
+  blk("                      LON=-70.329755,SPD=2.0,HDG=118.8,         ");
+  blk("                      YAW=118.8,DEPTH=4.6,LENGTH=3.8,           ");
+  blk("                      MODE=MODE@ACTIVE:LOITERING,               ");
+  blk("                      THRUST_MODE_REVERSE=true                  ");
+  blk("         FLAG_RESET = vname=henry                               ");
+  blk("         FLAG_RESET = label=alpha                               ");
+  blk("  FLAG_GRAB_REQUEST = vname=henry                               ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  FLAG_GRAB_REPORT = grabbed=one,grabbed=two                    ");
+  blk("  FLAG_GRAB_REPORT = nothing_grabbed                            ");
+  blk("  VIEW_MARKER      = x=60,y=-30,width=2,range=10.00,            ");
+  blk("                     primary_color=red,secondary_color=black,   ");
+  blk("                     type=circle,label=one                      ");
   blk("                                                                ");
   exit(0);
 }
@@ -109,7 +124,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uFldFlagMgr", "gpl");
+  showReleaseInfo("uFldFlagManager", "gpl");
   exit(0);
 }
 

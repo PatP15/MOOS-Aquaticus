@@ -96,6 +96,11 @@ void showExampleConfigAndExit()
   blk("  miss_color = blue   // default                                ");
   blk("  hit_color  = red    // default                                ");
   blk("                                                                ");
+  blk("  team_one = red                                                ");
+  blk("  team_one = blue                                               ");
+  blk("                                                                ");
+  blk("  zone_one = pts={0,-20:120,-20:120,-100:0,-100}                ");
+  blk("  zone_one = pts={0,-100:120,-100:120,-180:0,-180}              ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
