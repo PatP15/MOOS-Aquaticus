@@ -18,25 +18,18 @@ void showSynopsis()
 {
   blk("SYNOPSIS:");
   blk("------------------------------------");
-  blk("   Publishes an actuation command based on subscribed values. The main purpose");
-  blk(" of this application is to provide a link between a joystick reading MOOS");
-  blk(" module and actuating a vessel. However, this workflow can be used to convert");
-  blk(" any numerical input range into any numerical output range.");
-  blk("");
-  blk("   Button presses can also be monitored. A numerical or string publication will");
-  blk(" trigger a publication. Triggering occurs when the published message switches to");
-  blk(" the specified trigger value.");
+  blk("   Publishes messages based on a range of input values or as a result of being");
+  blk(" triggered. For a RANGE, output values are mapped based on a definition of the");
+  blk(" input range, normalization parameters, and the output range. For a TRIGGER,");
+  blk(" output is a single defined value published whenever the input message changes");
+  blk(" to the defined trigger value.");
+  blk("   The main purpose of pMapValues is to provide convert raw joystick readings from");
+  blk(" the iJoystick application into values that are usable for actuating a vehicle.");
+  blk(" Joystick axes are the input RANGE and joystick buttons are the input TRIGGERs.");
+  blk(" This data flow can be used to convert any numerical input range into any");
+  blk(" numerical output range and any trigger, not just buttons.");
   blk("");
   blk(" Examples:");
-  blk("");
-  blk("    Joystick axis 1 is used to control the rudder angle:");
-  blk("         subscribe to: JOY_AXIS_1       range [-1000,1000]");
-  blk("         publish:      DESIRED_RUDDER   range[-40,40]");
-  blk("");
-  blk("    Button 1 is used to signify all-stop:");
-  blk("         subscribe to: JOY_BUTTON_1     possible values of 0 or 1");
-  blk("         trigger on:   JOY_BUTTON_1 = 1 (0 when not pressed, 1 when pressed)");
-  blk("         publish:      ALL_STOP = true when JOY_BUTTON_1 changes from 0 to 1");
   blk("");
 }
 
@@ -98,11 +91,11 @@ void showExampleConfigAndExit()
   blk("            norm_min = 0.0, norm_max = -1.0, out_msg=DESIRED_THRUST, out_min=0, out_max=100");
   blk("");
   blk("  // TRIGGER = in_msg=w, trigger=x, out_msg=y, out_val=z");
-  blk("  //      in_msg  (string, required) Message name for incoming switch value");
-  blk("  //      trigger (any,    required) When in_msg contents change to match this trigger,");
+  blk("  //      IN_MSG  (string, required) Message name for incoming switch value");
+  blk("  //      TRIGGER (any,    required) When in_msg contents change to match this trigger,");
   blk("  //                                   the out_msg will be published. String/numeric agnostic.");
-  blk("  //      out_msg (string, required) Message name for resulting publication.");
-  blk("  //      out_val (any,    required) Resulting publication posts this value.");
+  blk("  //      OUT_MSG (string, required) Message name for resulting publication.");
+  blk("  //      OUT_VAL (any,    required) Resulting publication posts this value.");
   blk("  //                                   If value is a numeric (within '+-.01234567889'),");
   blk("  //                                   published message is a double. Otherwise, a");
   blk("  //                                   string is published. To publish a numeric as a");
@@ -128,23 +121,8 @@ void showInterfaceAndExit()
   blk("");
   blk("PUBLICATIONS:                                                               ");
   blk("------------------------------------                                        ");
-  blk("  [prefix] is defined in the Output_predix mission file parameter");
-  blk("  [X]      is the channel number for the current joystick");
-  blk("  [prefix]_AXIS_COUNT       Number of valid axes current joystick reports");
-  blk("  [prefix]_AXIS_[X]         Axis position value published for each valid joystick axis.");
-  blk("                              ONLY PUBLISHED WHEN values change.");
-  blk("                              Leftmost:    -32768");
-  blk("                              Rightmost:    32767");
-  blk("                              Centered:         0");
-  blk("                              Example:      JOY0_AXIS_3 = 5162");
-  blk("  [prefix]_AXIS_[X]_DEP     If an axis has a dependency, a _DEP version of the");
-  blk("                              message is used that contains both values.");
-  blk("  [prefix]_BUTTON_COUNT     Number of valid buttons current joystick reports");
-  blk("  [prefix]_BUTTON_[X]       Binary button status published for each valid joystick button.");
-  blk("                              ONLY PUBLISHED WHEN the button status changes.");
-  blk("                              Pressed:      DOWN");
-  blk("                              Not pressed:  UP");
-  blk("                              Example:      JOY2_BUTTON_6 = ");
+  blk("  [out_msg]       The range or trigger out_val defined in the mission file");
+  blk("                    One publication per definition.");
   blk("");
   exit(0);
 }
