@@ -273,7 +273,9 @@ bool moosJoy::SetParam_DEPENDENT(string sVal)
         return true; }
     m_axisDep[depA] = depB;
     m_axisDep[depB] = depA;
-
+    stringstream ss;
+    ss << "Axes " << depA << " and " << depB << " are dependent";
+    m_depAppCast.push_back(ss.str());
     return true;
 }
 
@@ -290,6 +292,9 @@ bool moosJoy::buildReport()
     m_msgs <<                " --------" << endl;
     m_msgs <<                "    Joystick_ID:               " << m_joystickID << endl;
     m_msgs <<                "    Output_Prefix:             " << m_prefix << endl;
+    vector<string>::iterator it = m_depAppCast.begin();
+    for (; it != m_depAppCast.end(); ++it)
+        m_msgs <<            "    Dependency:                " << *it << endl;
     m_msgs << endl;
     m_msgs <<                " Joystick" << endl;
     m_msgs <<                " --------" << endl;

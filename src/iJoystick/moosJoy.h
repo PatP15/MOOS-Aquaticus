@@ -52,6 +52,7 @@ protected:
     int				m_countAxes;
     int				m_countButtons;
 
+    std::vector<std::string> m_depAppCast;
     std::vector<std::string> m_depDefs;
     std::map<int, int> m_joyAxisVal;
     std::map<int, int> m_axisDep;
