@@ -1,5 +1,5 @@
 ##############################################################################
-# FILE:        moos-ivp-speech/README
+# FILE:        moos-ivp-speech/README_SPEECH_DEPENDENCIES
 # DATE:        2015/11/06
 # DESCRIPTION: Contains important information regarding the moos-ivp-speech
 #              repository.
@@ -41,7 +41,6 @@ sudo port install julius portaudio
 
 Unfortunately, MacPorts is not properly adding the library path so please add:
 export LIBRARY_PATH=/opt/local/lib to either your .profile, .bash_profile, or .bashrc
-
 
 To build on Linux and Apple platforms, execute the build script within this
 directory:
