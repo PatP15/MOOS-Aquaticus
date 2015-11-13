@@ -29,8 +29,6 @@ void showSynopsis()
   blk(" This data flow can be used to convert any numerical input range into any");
   blk(" numerical output range and any trigger, not just buttons.");
   blk("");
-  blk(" Examples:");
-  blk("");
 }
 
 void showHelpAndExit()
