@@ -210,6 +210,8 @@ bool FlagManager::handleMailFlagReset(string str)
   bool some_flags_were_reset = false;
 
   string vname = tokStringParse(str, "vname", ',', '=');
+  if(vname == "")
+    vname = tokStringParse(str, "VNAME", ',', '=');
   if(vname != "")
     some_flags_were_reset = resetFlagsByVName(vname);
   
@@ -277,7 +279,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
     result = "nothing_grabbed";
   else {
     postFlagSummary();
-    postFlagMarkers();
+    //postFlagMarkers();
   }
 
   Notify("FLAG_GRAB_REPORT", result);
@@ -336,6 +338,7 @@ void FlagManager::postFlagMarkers()
 {
   for(unsigned int i=0; i<m_flags.size(); i++) {
     XYMarker marker = m_flags[i];
+    
     marker.set_width(2);
     marker.set_type("circle");
     if(m_flags[i].get_owner() == "")
