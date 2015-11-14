@@ -9,7 +9,6 @@ SET(SRC
   main.cpp
 )
 
-
 ADD_EXECUTABLE(uFldFlagManager ${SRC})
 
 TARGET_LINK_LIBRARIES(uFldFlagManager
