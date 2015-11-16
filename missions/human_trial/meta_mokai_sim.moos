@@ -29,9 +29,9 @@ ProcessConfig = ANTLER
   Run = iJoystick     @ NewConsole = false
   Run = pMapValues    @ NewConsole = false
 
-  Run = iSay @ NewConsole = true
-  Run = uSpeechRec @ NewConsole = true
-  Run = uDialogManager @ NewConsole = true
+  Run = iSay @ NewConsole = false
+  Run = uSpeechRec @ NewConsole = false
+  Run = uDialogManager @ NewConsole = false
 }
 
 ProcessConfig = iJoystick
