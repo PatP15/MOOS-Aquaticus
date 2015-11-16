@@ -20,7 +20,7 @@ Processconfig = ANTLER
   Run = pHostInfo       @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
   Run = uFldNodeComms   @ NewConsole = false
-	Run = uFldFlagMgr     @ NewConsole = false
+	Run = uFldFlagManager @ NewConsole = false
 	Run = uFldTagManager  @ NewConsole = false
 }
 
@@ -29,7 +29,7 @@ Processconfig = ANTLER
 //--------------------------------------------------
 // uFldFlagMgr Configuration Block
 
-ProcessConfig = uFldFlagMgr
+ProcessConfig = uFldFlagManager
 {
   AppTick       = 2
   CommsTick     = 2
