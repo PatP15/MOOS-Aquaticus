@@ -52,18 +52,9 @@ bool moosJoy::Iterate()
 
 void moosJoy::GetandPublishMostRecentJoystickValues()
 {
-    // Grab and store most recent joystick values
-    SDL_JoystickUpdate();
-    for (int i = 0; i < m_countAxes; i++)
-        m_joyAxisVal[i] = (int) SDL_JoystickGetAxis(m_joy, i);
-
-    // Once all the values are stored, then publish
-    for (int i = 0; i < m_countAxes; i++)
-        PublishJoystickAxisValue(i);
-
     // Deal with buttons
     SDL_Event event;
-    SDL_PollEvent(&event);
+    while (SDL_PollEvent(&event)) {
     switch (event.type) {
         case SDL_QUIT:
             cerr << "\nQuitting..." << endl;
@@ -84,7 +75,17 @@ void moosJoy::GetandPublishMostRecentJoystickValues()
                 PublishJoystickButtonValue(i); } }
             break;
         default:
-            break; }
+            break; } }
+
+    // Grab and store most recent joystick values
+    SDL_JoystickUpdate();
+    for (int i = 0; i < m_countAxes; i++)
+        m_joyAxisVal[i] = (int) SDL_JoystickGetAxis(m_joy, i);
+
+    // Once all the values are stored, then publish
+    for (int i = 0; i < m_countAxes; i++)
+        PublishJoystickAxisValue(i);
+
 }
 
 void moosJoy::PublishJoystickAxisValue(int axis)
