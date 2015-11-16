@@ -76,6 +76,7 @@ void moosJoy::GetandPublishMostRecentJoystickValues()
             break;
         default:
             break; } }
+    //
 
     // Grab and store most recent joystick values
     SDL_JoystickUpdate();
