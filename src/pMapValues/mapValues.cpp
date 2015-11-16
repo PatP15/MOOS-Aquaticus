@@ -22,10 +22,10 @@ bool mapValues::OnNewMail(MOOSMSG_LIST &NewMail)
 
     MOOSMSG_LIST::iterator p;
     for (p=NewMail.begin(); p!=NewMail.end(); ++p) {
-        CMOOSMsg & rMsg = *p;
-        string msgKey = rMsg.GetKey();
-
-        // Check if incoming RANGE message exists in the axis map
+      CMOOSMsg & rMsg = *p;
+      string msgKey = rMsg.GetKey();
+      
+      // Check if incoming RANGE message exists in the axis map
         //      - Double value means it's a single value
         //      - String value means it's a value and a dependent value
 		if (m_ranges.count(msgKey)) {
@@ -69,11 +69,11 @@ void mapValues::PublishOutput()
 
     if (m_debugMode) {
         stringstream strCircle;
-        strCircle << "x=0,y=0,radius=100.0,active=true,vertex_size=0,edge_color=white,edge_size=2";
+        strCircle << "x=0,y=0,radius=100.0,active=true,vertex_size=0,edge_color=white,edge_size=2,label=strcircle";
         m_Comms.Notify("VIEW_CIRCLE", strCircle.str());
 
         stringstream strFullBox;
-        strFullBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,vertex_size=0,edge_color=white,edge_size=2";
+        strFullBox << "pts={100,100:100,-100:-100,-100:-100,100},active=true,vertex_size=0,edge_color=white,edge_size=2,label=fullbox";
         m_Comms.Notify("VIEW_POLYGON", strFullBox.str());
 
         { stringstream strDeadBox;
