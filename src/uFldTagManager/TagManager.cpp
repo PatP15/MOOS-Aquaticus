@@ -42,7 +42,7 @@ TagManager::TagManager()
   m_post_color = "white";
   m_hit_color  = "red";
   m_miss_color = "green";
-  m_vtag_range = 50;
+  m_vtag_range = 25;
 }
 
 //---------------------------------------------------------
