@@ -34,14 +34,9 @@ public:
                 mapRange(const std::string sDef);
                 ~mapRange() {}
 
-    // Setup Methods
-    bool        SetRequiredDef(const std::string key, std::string& storeHere);
-    bool        SetRequiredDef(const std::string key, double& storeHere);
-    void        SetOptionalDef(const std::string key, std::string& storeHere);
-    void        SetOptionalDef(const std::string key, double& storeHere);
-
     void        SetInputValue(const double dIn);
     void        SetInputValues(const std::string sIn);
+
 
     bool        IsValid()                       { return m_errorStr.empty(); }
     std::string GetErrorString()                { return m_errorStr; }
@@ -74,6 +69,15 @@ private:
     double      ConstrainDouble(const double in);
     void        SetInputValues(const double rawIn, const double depRawIn);
     double      MapToNorm(const double d);
+    bool        findDef(const std::string key, std::string& storeHere);
+
+    // Setup Methods
+    bool        SetRequiredDef(const std::string key, std::string& storeHere);
+    bool        SetRequiredDef(const std::string key, double& storeHere);
+    void        SetOptionalDef(const std::string key, std::string& storeHere);
+    void        SetOptionalDef(const std::string key, double& storeHere);
+
+
 
     // Setup params
     std::string m_inDef;
@@ -89,6 +93,7 @@ private:
     double      m_outMax;               // Output maximum value output can be mapped to
     double      m_dead;                 // Percent of dead zone, stored in range [0, 100]. No dead zone = 0.0
     double      m_sat;                  // Percent of end saturation, stored in range [0, 100]. No saturation = 0.0
+    std::map<std::string, std::string> m_defMap;
 
     // Current values
     double      m_curInValue;           // Latest incoming value, BAD_DOUBLE before first input

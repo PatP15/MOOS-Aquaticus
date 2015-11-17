@@ -26,15 +26,16 @@ public:
 	bool StoreValueThenPublish(double dVal);
 	unsigned int CountPublished() { return m_countNotified; }
 	std::string GetAppCastMsg();
-	bool IsValid() { return m_error.empty(); }
-	std::string GetError() { return m_error; }
+	bool IsValid() { return m_errorStr.empty(); }
+	std::string GetError() { return m_errorStr; }
 	std::string GetKey() { return m_inName; }
 	std::string GetLastValue() { return m_lastVal; }
 	std::string GetAppCastStatusString();
 
 private:
 	void        PrepAppCastMsg();
-    bool ayTokParse(const std::string& str, const std::string& left, char gsep, char lsep, std::string& rstr);
+    bool        SetRequiredDef(const std::string key, std::string& storeHere);
+    bool        findDef(const std::string key, std::string& storeHere);
 
 	std::string m_lastVal;
 	std::string m_inName;
@@ -45,7 +46,9 @@ private:
 	bool        m_bOutIsDouble;
 	unsigned int m_countNotified;
 	std::string m_appCastPrep;
-	std::string m_error;
+	std::string m_errorStr;
+	std::map<std::string, std::string> m_defMap;
+
 
 	MOOS::MOOSAsyncCommClient* m_pComms;
 

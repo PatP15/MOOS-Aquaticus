@@ -68,10 +68,16 @@ mapRange::mapRange(const std::string sDef)
     if (sDef.empty()) {
         m_errorStr = "Mapping definition cannot be blank.";
         return; }
-
     m_normMin           = -1.0;
     m_normMax           = 1.0;
-    m_inDef             = toupper(sDef);
+
+    vector<string> keyValues = parseStringQ(sDef, ',');
+    vector<string>::iterator it = keyValues.begin();
+    for (; it != keyValues.end(); ++it) {
+        string keyVal = *it;
+        string key = toupper(MOOSChomp(keyVal, "=", true));
+        m_defMap[key] = keyVal; }
+
     bool bGood = true;
     bGood &= SetRequiredDef("IN_MSG",  m_inName);
     bGood &= SetRequiredDef("IN_MIN",  m_inMin);
@@ -101,7 +107,7 @@ mapRange::mapRange(const std::string sDef)
         return; }
     SetOptionalDef("DEP",       m_depName);
     m_hasDep = !m_depName.empty();
-    bool bHasTrigger = tokParse(m_inDef, "TRIG_MSG", ',', '=', m_trigger);
+    bool bHasTrigger = findDef("TRIG_MSG", m_trigger);
     if (bHasTrigger) {
         SetOptionalDef("TRIG_VAL",   m_triggerVal);
         bHasTrigger = !m_triggerVal.empty();
@@ -131,15 +137,23 @@ mapRange::mapRange(const std::string sDef)
     m_appcastStatic = ss.str();
 }
 
+bool mapRange::findDef(const string key, string& storeHere)
+{
+    unsigned long int found = m_defMap.count(key);
+    if (found)
+        storeHere = m_defMap[key];
+    return found;
+}
+
 void mapRange::SetOptionalDef(const string key, string& storeHere)
 {
-    tokParse(m_inDef, key, ',', '=', storeHere);
+    findDef(key, storeHere);
 }
 
 void mapRange::SetOptionalDef(const string key, double& storeHere)
 {
     string sVal;
-    bool bGood = tokParse(m_inDef, key, ',', '=', sVal);
+    bool bGood = findDef(key, sVal);
     if (bGood)
         storeHere = strtod(sVal.c_str(), 0);
 }
@@ -155,9 +169,9 @@ bool mapRange::SetRequiredDef(const string key, double& storeHere)
 
 bool mapRange::SetRequiredDef(const string key, string& storeHere)
 {
-    bool bGood = tokParse(m_inDef, key, ',', '=', storeHere);
+    bool bGood = findDef(key, storeHere);
     if (!bGood) {
-        m_errorStr = "Missing definition for required element ";
+        m_errorStr += "Missing definition for required element ";
         m_errorStr.append(key);
         m_errorStr.append(".");
         return false; }
@@ -330,7 +344,6 @@ void mapRange::ConditionalPublish(CMOOSCommClient* m_Comms)
         mComms->Notify(m_outName, m_curOutValue);
         m_countOut++; }
 }
-
 
 
 

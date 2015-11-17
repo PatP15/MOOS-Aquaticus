@@ -12,7 +12,7 @@ using namespace std;
 
 mapTrigger::mapTrigger()
 {
-	m_error = "No definition for this mapping.";
+    m_errorStr = "No definition for this mapping.";
 	m_countNotified = 0;
 	m_lastVal = "";
     m_inName = "";
@@ -26,32 +26,57 @@ mapTrigger::mapTrigger()
 
 mapTrigger::mapTrigger(MOOS::MOOSAsyncCommClient* pComms, string sDef)
 {
-    m_error = "";
+    m_errorStr = "";
     m_pComms = pComms;
-    string line = toupper(sDef);
     string sVal = "";
-    bool bGood = tokParse(line, "IN_MSG", ',', '=', m_inName);
-    if (bGood)
-        bGood = ayTokParse(line, "TRIGGER", ',', '=', m_triggerValue);
-    if (bGood)
-        bGood = tokParse(line, "OUT_MSG", ',', '=', m_outName);
-    if (bGood) {
-        bGood = ayTokParse(line, "OUT_VAL", ',', '=', m_outString); }
-    if (bGood) {
-        m_outDouble = strtod(m_outString.c_str(), 0);    // Always convert, even if string val will simply be 0.0
-        // Is the outVal a string or a double?
-        //      - If it has any quote characters, it's a string
-        //      - If it registers as a pure number, it's a double
-        if (m_outString.find('\"') != string::npos)
-            m_bOutIsDouble = false;
-        else
-            m_bOutIsDouble = isNumber(m_outString, true);
 
-        PrepAppCastMsg();
-        m_pComms->Register(m_inName, 0.0);
-        PrepAppCastMsg();
+    vector<string> keyValues = parseStringQ(sDef, ',');
+    vector<string>::iterator it = keyValues.begin();
+    for (; it != keyValues.end(); ++it) {
+        string keyVal = *it;
+        string key = toupper(MOOSChomp(keyVal, "=", true));
+        m_defMap[key] = keyVal; }
+
+    bool bGood = true;
+    bGood &= SetRequiredDef("IN_MSG",  m_inName);
+    bGood &= SetRequiredDef("TRIGGER",  m_triggerValue);
+    bGood &= SetRequiredDef("OUT_MSG", m_outName);
+    bGood &= SetRequiredDef("OUT_VAL", m_outString);
+    if (!bGood) {
+        m_errorStr = "Bad trigger definition: " + sDef;
         return; }
-    m_error = "Bad trigger definition: " + line;
+    m_outDouble = strtod(m_outString.c_str(), 0);    // Always convert, even if string val will simply be 0.0
+
+    // Is the outVal a string or a double?
+    //      - If it has any quote characters, it's a string
+    //      - If it registers as a pure number, it's a double
+    if (m_outString.find('\"') != string::npos)
+        m_bOutIsDouble = false;
+    else
+        m_bOutIsDouble = isNumber(m_outString, true);
+
+    PrepAppCastMsg();
+    m_pComms->Register(m_inName, 0.0);
+    PrepAppCastMsg();
+}
+
+bool mapTrigger::SetRequiredDef(const string key, string& storeHere)
+{
+    bool bGood = findDef(key, storeHere);
+    if (!bGood) {
+        m_errorStr += "Missing definition for required element ";
+        m_errorStr.append(key);
+        m_errorStr.append(".");
+        return false; }
+    return true;
+}
+
+bool mapTrigger::findDef(const string key, string& storeHere)
+{
+    unsigned long int found = m_defMap.count(key);
+    if (found)
+        storeHere = m_defMap[key];
+    return found;
 }
 
 bool mapTrigger::StoreValueThenPublish(double dVal)
@@ -105,22 +130,6 @@ string mapTrigger::GetAppCastStatusString()
     ss << "      Last in value: " << m_lastVal << endl;
     ss << "   Published: " << m_countNotified << "" << endl;
     return ss.str();
-}
-
-bool mapTrigger::ayTokParse(const std::string& str, const std::string& left, char gsep, char lsep, std::string& rstr)
-{
-    rstr = "error";
-    vector<string> svector1 = parseString(str, gsep);
-    for (vector<string>::size_type i = 0; i < svector1.size(); i++) {
-        cout << "svector1[" << i << "]: " << svector1[i] << endl;
-
-        unsigned long int pos = svector1[i].find(lsep);
-        if (pos != string::npos) {
-            string key = svector1[i].substr(0, pos);
-            if (key == left) {
-               rstr = svector1[i].substr(pos + 1);
-               return true; } } }
-        return false;
 }
 
 
