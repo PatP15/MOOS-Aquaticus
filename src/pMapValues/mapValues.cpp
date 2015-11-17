@@ -268,21 +268,21 @@ bool mapValues::buildReport()
     	m_msgs << endl << ma.GetAppCastSetupString() << endl; }
 
 	int numButtons = m_triggers.size();
-    m_msgs << "--- Button definitions ---" << endl;
+    m_msgs << "--- Trigger definitions ---" << endl;
     map<std::string, mapTrigger>::iterator itButtons = m_triggers.begin();
     for (; itButtons != m_triggers.end(); ++itButtons) {
         m_msgs << endl;
     	mapTrigger mb = itButtons->second;
     	m_msgs <<            " " << mb.GetAppCastMsg() << endl; }
 
-	m_msgs << "---  Live Range Data ---" << endl << endl;
+	m_msgs << "--- Live Range Data ---" << endl << endl;
 	itAxes = m_ranges.begin();
     for (; itAxes != m_ranges.end(); ++itAxes) {
         mapRange ma = itAxes->second;
         m_msgs << ma.GetAppCastStatusString() << endl; }
     m_msgs << endl;
 
-    m_msgs << "---  Live Trigger Data ---" << endl << endl;
+    m_msgs << "--- Live Trigger Data ---" << endl << endl;
     map<std::string, mapTrigger>::iterator itTrig = m_triggers.begin();
     for (; itTrig != m_triggers.end(); ++itTrig) {
         m_msgs << endl;
