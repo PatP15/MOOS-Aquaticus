@@ -60,9 +60,10 @@ class FlagManager : public AppCastingMOOSApp
    std::map<std::string, unsigned int> m_map_grab_count;
    std::map<std::string, unsigned int> m_map_flag_count;
    unsigned int m_total_node_reports_rcvd;
-
+   
    // Grab request state vars
    unsigned int m_total_grab_requests_rcvd;
+
 };
 
 #endif 

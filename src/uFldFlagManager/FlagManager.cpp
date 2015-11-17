@@ -55,7 +55,7 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
 #endif
 
     bool handled = false;
-    if(key == "NODE_REPORT") 
+    if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleMailNodeReport(sval);
     else if(key == "FLAG_RESET") 
       handled = handleMailFlagReset(sval);
@@ -110,6 +110,14 @@ bool FlagManager::OnStartUp()
     bool handled = false;
     if(param == "flag") 
       handled = handleConfigFlag(value);
+    else if((param == "grabbed_color") && isColor(value)) {
+      m_grabbed_color = value;
+      handled = true;
+    }
+    else if((param == "ungrabbed_color") && isColor(value)) {
+      m_ungrabbed_color = value;
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -135,6 +143,7 @@ void FlagManager::registerVariables()
   Register("FLAG_GRAB_REQUEST", 0);
   Register("FLAG_RESET", 0);
   Register("NODE_REPORT", 0);
+  Register("NODE_REPORT_LOCAL", 0);
 }
 
 
@@ -236,15 +245,17 @@ bool FlagManager::handleMailFlagReset(string str)
 
 bool FlagManager::handleMailFlagGrab(string str, string community)
 {
+  m_total_grab_requests_rcvd++;
+
   // Part 1: Parse the Grab Request
   string grabbing_vname = tokStringParse(str, "vname", ',', '=');
-
   
   // Part 2: Sanity check on the Grab Request
   // Check if grabbing vname is set and matches message community
-  if((grabbing_vname == "") || (grabbing_vname != community))
+  if((grabbing_vname == "") || (grabbing_vname != community)) {
     return(false);
-
+  }
+  
   // If no node records of the grabbing vehicle, return false
   string up_vname = toupper(grabbing_vname);
   if(m_map_record.count(up_vname) == 0)
@@ -252,7 +263,6 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 
   // Part 3: OK grab, so increment counters.
   m_map_grab_count[up_vname]++;
-  m_total_grab_requests_rcvd++;
   
   // Part 4: Get the grabbing vehicle's position from the record
   NodeRecord record = m_map_record[up_vname];
@@ -266,6 +276,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
       double x = m_flags[i].get_vx();
       double y = m_flags[i].get_vy();
       double dist = hypot(x-curr_vx, y-curr_vy);
+
       if(dist <= m_flags[i].get_range()) {
 	if(result != "")
 	  result += ",";
@@ -279,7 +290,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
     result = "nothing_grabbed";
   else {
     postFlagSummary();
-    //postFlagMarkers();
+    postFlagMarkers();
   }
 
   Notify("FLAG_GRAB_REPORT", result);
@@ -390,6 +401,8 @@ bool FlagManager::buildReport()
 
   m_msgs << endl << endl;
 
+  m_msgs << "Vehicle Summary" << endl;
+  m_msgs << "======================================" << endl;
   ACTable actab(3);
   actab << "VName | Grabs | Flags ";
   actab.addHeaderLines();
@@ -409,9 +422,24 @@ bool FlagManager::buildReport()
 
     actab << vname << s_grab_count << s_flag_count;
   }
-
   m_msgs << actab.getFormattedString();
+  m_msgs << endl << endl;
 
+  
+  m_msgs << "Flag Summary" << endl;
+  m_msgs << "======================================" << endl;
+  actab = ACTable(4);
+  actab << "Flag | Range | | Owner ";
+  actab.addHeaderLines();
+
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    string label = m_flags[i].get_label();
+    string vname = m_flags[i].get_owner();
+    string range = doubleToStringX(m_flags[i].get_range(), 2);
+    actab << label << range << " ---> " << vname;
+  }
+  m_msgs << actab.getFormattedString();
+  
   return(true);
 }
 

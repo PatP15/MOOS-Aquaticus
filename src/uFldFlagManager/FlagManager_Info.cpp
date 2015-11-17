@@ -76,8 +76,11 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
-  blk("  flag = x=60, y=-30,  label=one                                ");
+  blk("  flag = x=60, y=-30,  label=one, range=20                      ");
   blk("  flag = x=60, y=-170, label=two                                ");
+  blk("                                                                ");
+  blk("  ungrabbed_color = red        // Default is red                ");
+  blk("  grabbed_color   = white      // Default is white              ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
