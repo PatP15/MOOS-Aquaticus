@@ -460,6 +460,7 @@ void TagManager::processVTag(VTag vtag)
     result = "tagged=" + node_closest;
     m_map_node_vtags_succeeded[vname]++;
     m_map_node_vtags_beentagged[node_closest]++;
+    m_map_node_vtags_nowtagged[node_closest] = true;
   }
 
   postResult(event, vname, vteam, result);
@@ -629,11 +630,16 @@ bool TagManager::buildReport()
     set<string>::iterator qq;
     for(qq=team.begin(); qq!=team.end(); qq++) {
       string vname = *qq;
+
+      bool now_tagged = false;
+      if(m_map_node_vtags_nowtagged.count(vname))
+	now_tagged = m_map_node_vtags_nowtagged[vname];
+      
       string times = uintToString(m_map_node_vtags_beentagged[vname]);   // col2
-      string tamt  = "no";
+      string now_tagged_s  = boolToString(now_tagged);
       string trem  = "n/a";
-      string tgabl = "YES"; 
-      actabb << vname << times << tamt << trem << tgabl;
+      string tgabl = boolToString(!now_tagged);
+      actabb << vname << times << now_tagged_s << trem << tgabl;
     }
   }
 

@@ -75,11 +75,11 @@ class TagManager : public AppCastingMOOSApp
   
  protected: // State variables
 
-  // Node (postion) records: Map keyed on vehicle name
+  // Node (position) records: Map keyed on vehicle name
   std::map<std::string, NodeRecord>   m_map_node_records;
   std::map<std::string, unsigned int> m_map_node_reports_rcd;
 
-  // Perspective of vehicles doing tagging: Mapp keyed on vehicle name
+  // Perspective of vehicles doing tagging: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_requested;
   std::map<std::string, unsigned int> m_map_node_vtags_accepted;
   std::map<std::string, unsigned int> m_map_node_vtags_succeeded;
@@ -87,8 +87,9 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_vtags_rejzone;
   std::map<std::string, double>       m_map_node_vtags_last_tag;
 
-  // Perspective of vehicles being tagged: Mapp keyed on vehicle name
+  // Perspective of vehicles being tagged: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
+  std::map<std::string, bool>         m_map_node_vtags_nowtagged;
 
   // Other key states
   std::list<VTag>  m_pending_vtags;

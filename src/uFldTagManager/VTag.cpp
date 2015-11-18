@@ -57,7 +57,7 @@ VTag::VTag(string vname, double x, double y, double time_posted)
 
   m_x_set = true;
   m_y_set = true;
-  m_time_set = true;
+  m_time_set  = true;
   m_event_set = false;
 }
 
