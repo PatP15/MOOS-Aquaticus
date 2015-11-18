@@ -33,6 +33,7 @@ VTag::VTag()
   m_x      = 0;
   m_y      = 0;
   m_range  = -1;
+  m_event  = 0;
 
   m_time_posted = 0;
 
@@ -50,12 +51,13 @@ VTag::VTag(string vname, double x, double y, double time_posted)
   m_x      = x;
   m_y      = y;
   m_range  = -1;
+  m_event  = 0;
 
   m_time_posted = time_posted;
 
-  m_x_set = false;
-  m_y_set = false;
-  m_time_set = false;
+  m_x_set = true;
+  m_y_set = true;
+  m_time_set = true;
   m_event_set = false;
 }
 
@@ -67,8 +69,6 @@ bool VTag::valid() const
   if(!m_x_set || !m_y_set || !m_time_set || !m_event_set)
     return(false);
   if(m_time_posted <= 0)
-    return(false);
-  if(m_range <= 0)
     return(false);
   if(m_vname == "")
     return(false);
@@ -88,6 +88,7 @@ string VTag::str() const
   spec += ",x=" + doubleToString(m_x,2);
   spec += ",y=" + doubleToString(m_y,2);
   spec += ",time_posted=" + doubleToString(m_time_posted,2);
+  spec += ",event=" + uintToString(m_event);
   spec += ",range=" + doubleToString(m_range,2);
 
   return(spec);

@@ -43,6 +43,8 @@ TagManager::TagManager()
   m_hit_color  = "red";
   m_miss_color = "green";
   m_vtag_range = 25;
+
+  m_tag_events = 0;
 }
 
 //---------------------------------------------------------
@@ -194,7 +196,7 @@ bool TagManager::handleMailNodeReport(const string& node_report_str)
 bool TagManager::handleMailVTagPost(const string& launch_str)
 {
   // Part 1: Confirm request is coming from a known vehicle.
-  string vname = tokStringParse(launch_str, "name",  ',', '=');
+  string vname = tokStringParse(launch_str, "vname",  ',', '=');
   if((vname == "") || (m_map_node_records.count(vname) == 0)) {
     string msg = "Failed VTag Post: Unknown vehicle [" + vname + "]";
     Notify("TAG_RESULT_VERBOSE", msg);
@@ -370,7 +372,7 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
 void TagManager::processVTags()
 {
   list<VTag>::iterator p;
-  for(p=m_pending_vtags.begin(); p!=m_pending_vtags.end(); ) {
+  for(p=m_pending_vtags.begin(); p!=m_pending_vtags.end(); p++) {
     VTag vtag = *p;
     if(vtag.valid())
       processVTag(vtag);
