@@ -22,6 +22,8 @@ FlagManager::FlagManager()
 {
   // Default config values
   m_default_flag_range    = 10; // meters
+  m_default_flag_width    = 10; // meters
+  m_default_flag_type     = "circle";
   m_report_flags_on_start = true;
 
   // Default state values
@@ -100,7 +102,8 @@ bool FlagManager::OnStartUp()
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
-  STRING_LIST::iterator p;
+  STRING_LIST pass2params;
+  STRING_LIST::iterator p;  
   for(p=sParams.begin(); p!=sParams.end(); p++) {
     string orig  = *p;
     string line  = *p;
@@ -108,9 +111,7 @@ bool FlagManager::OnStartUp()
     string value = line;
 
     bool handled = false;
-    if(param == "flag") 
-      handled = handleConfigFlag(value);
-    else if((param == "grabbed_color") && isColor(value)) {
+    if((param == "grabbed_color") && isColor(value)) {
       m_grabbed_color = value;
       handled = true;
     }
@@ -118,10 +119,47 @@ bool FlagManager::OnStartUp()
       m_ungrabbed_color = value;
       handled = true;
     }
+    else if((param == "default_flag_range") && isNumber(value)) {
+      double dval = atof(value.c_str());
+      if(dval >= 0) {
+	m_default_flag_range = dval;
+	handled = true;
+      }
+    }
+    else if((param == "default_flag_width") && isNumber(value)) {
+      double dval = atof(value.c_str());
+      if(dval >= 0) {
+	m_default_flag_width = dval;
+	handled = true;
+      }
+    }
+    else if(param == "default_flag_type") {
+      value = tolower(value);
+      if((value == "circle")  || (value == "square") ||
+	 (value == "diamond") || (value == "efield") ||
+	 (value == "gateway") || (value == "triangle")) {
+	m_default_flag_type = value;
+	handled = true;
+      }
+    }
+    else
+      pass2params.push_back(orig);
+  }
+  
+  STRING_LIST::iterator p2;
+  for(p2=pass2params.begin(); p2!=pass2params.end(); p2++) {
+    string orig  = *p2;
+    string line  = *p2;
+    string param = tolower(biteStringX(line, '='));
+    string value = line;
+
+    bool handled = false;
+    if(param == "flag") 
+      handled = handleConfigFlag(value);
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
-  }
+  } 
   
   // Post a bunch of viewable artifacts
   postFlagMarkers();
@@ -166,7 +204,12 @@ bool FlagManager::handleConfigFlag(string str)
 
   if(!flag.is_set_range())
     flag.set_range(m_default_flag_range);
+  
+  if(!flag.is_set_width())
+    flag.set_width(m_default_flag_width);
 
+  if(!flag.is_set_type())
+    flag.set_type(m_default_flag_type);
 
   // Ensure that a unique label has been provided
   for(unsigned int i=0; i<m_flags.size(); i++) {
@@ -350,13 +393,14 @@ void FlagManager::postFlagMarkers()
   for(unsigned int i=0; i<m_flags.size(); i++) {
     XYMarker marker = m_flags[i];
     
-    marker.set_width(2);
-    marker.set_type("circle");
-    if(m_flags[i].get_owner() == "")
-      marker.set_color("primary_color", m_ungrabbed_color);
+    if(m_flags[i].get_owner() == "") {
+      if(!m_flags[i].color_set("primary_color"))
+	marker.set_color("primary_color", m_ungrabbed_color);
+    }
     else
-      marker.set_color("primary_color", m_grabbed_color);
+	marker.set_color("primary_color", m_grabbed_color);
     marker.set_color("secondary_color", "black");
+
     string spec = marker.get_spec();
     Notify("VIEW_MARKER", spec);
   }
@@ -428,17 +472,22 @@ bool FlagManager::buildReport()
   
   m_msgs << "Flag Summary" << endl;
   m_msgs << "======================================" << endl;
-  actab = ACTable(4);
-  actab << "Flag | Range | | Owner ";
+  actab = ACTable(5);
+  actab << "Flag | Range | | Owner | Spec";
   actab.addHeaderLines();
 
   for(unsigned int i=0; i<m_flags.size(); i++) {
     string label = m_flags[i].get_label();
     string vname = m_flags[i].get_owner();
     string range = doubleToStringX(m_flags[i].get_range(), 2);
-    actab << label << range << " ---> " << vname;
+    actab << label << range << " ---> " << vname << m_flags[i].get_spec();
   }
   m_msgs << actab.getFormattedString();
+
+  m_msgs << endl;
+  m_msgs << "default_flag_range: " << m_default_flag_range << endl;
+  m_msgs << "default_flag_width: " << m_default_flag_width << endl;
+  m_msgs << "default_flag_type:  " << m_default_flag_type  << endl;
   
   return(true);
 }

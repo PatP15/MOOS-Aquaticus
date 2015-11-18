@@ -47,6 +47,8 @@ class FlagManager : public AppCastingMOOSApp
    std::vector<XYMarker>  m_flags;
 
    double      m_default_flag_range;
+   double      m_default_flag_width;
+   std::string m_default_flag_type;
    bool        m_report_flags_on_start;
    std::string m_grabbed_color;
    std::string m_ungrabbed_color;
