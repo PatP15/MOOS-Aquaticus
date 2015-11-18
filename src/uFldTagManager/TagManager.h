@@ -32,6 +32,7 @@
 #include "XYRangePulse.h"
 #include "XYPolygon.h"
 #include "VTag.h"
+#include "VarDataPair.h"
 
 class TagManager : public AppCastingMOOSApp
 {
@@ -52,6 +53,8 @@ class TagManager : public AppCastingMOOSApp
   bool    handleConfigZone(int, std::string);
   bool    handleConfigTeamName(int, std::string);
   bool    handleConfigTagDuration(std::string);
+  bool    handleConfigTagPost(std::string);
+  bool    handleConfigUnTagPost(std::string);
 
  protected: // Incoming mail utilities
   bool    handleMailNodeReport(const std::string&);
@@ -59,11 +62,13 @@ class TagManager : public AppCastingMOOSApp
 
  protected: // Processing Utilities
   double  getTrueNodeRange(double, double, std::string);
-  double  getNoisyNodeRange(double true_range) const;
 
   void    processVTags();
   void    processVTag(VTag);  
   void    checkForExpiredTags();
+  void    postTagCircles();
+  void    postTagPairs();
+  void    postUnTagPairs();
   
  protected: // Outgoing mail utilities
   void    postRangePulse(double x, double y, std::string color,
@@ -112,6 +117,10 @@ class TagManager : public AppCastingMOOSApp
   std::string   m_team_two;
   
   unsigned int  m_tag_events;
+  bool          m_tag_circle;
+
+  std::vector<VarDataPair> m_tag_posts;
+  std::vector<VarDataPair> m_untag_posts;
 
   // Visual hints
   std::string   m_post_color;

@@ -29,6 +29,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "NodeRecordUtils.h"
+#include "XYCircle.h"
 #include "XYFormatUtilsPoly.h"
 
 using namespace std;
@@ -46,6 +47,8 @@ TagManager::TagManager()
 
   m_tag_events = 0;    // Counter for tag events
   m_tag_duration = 30; // seconds
+  m_tag_circle   = false;
+
 }
 
 //---------------------------------------------------------
@@ -112,6 +115,13 @@ bool TagManager::OnStartUp()
       handled = handleConfigTeamName(2, value);
     else if(param == "tag_duration") 
       handled = handleConfigTagDuration(value);
+    else if(param == "tag_circle") 
+      handled = setBooleanOnString(m_tag_circle, value);
+    else if(param == "tag_post")
+      handled = handleConfigTagPost(value);
+    else if(param == "untag_post")
+      handled = handleConfigUnTagPost(value);
+
 
     if(!handled)
       reportUnhandledConfigWarning("Unhandled config: " + orig);
@@ -130,6 +140,9 @@ bool TagManager::Iterate()
   AppCastingMOOSApp::Iterate();
   processVTags();
   checkForExpiredTags();
+
+  if(m_tag_circle)
+    postTagCircles();
   
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -232,7 +245,7 @@ bool TagManager::handleMailVTagPost(const string& launch_str)
     
   // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
-  double pulse_duration = 10;
+  double pulse_duration = 2;
   postRangePulse(vx, vy, m_post_color, vname+"_vtag", 
 		 pulse_duration, m_vtag_range);
   
@@ -388,6 +401,41 @@ bool TagManager::handleConfigTagDuration(string str)
 
 
 //------------------------------------------------------------
+// Procedure: handleConfigTagPost
+
+bool TagManager::handleConfigTagPost(string str)
+{
+  string moosvar = biteStringX(str, '=');
+  string moosval = str;
+
+  if((moosvar == "") || (moosval == ""))
+    return(false);
+
+  VarDataPair pair(moosvar, moosval, "auto");
+  m_tag_posts.push_back(pair);
+  return(true);
+}
+
+
+//------------------------------------------------------------
+// Procedure: handleConfigUnTagPost
+
+bool TagManager::handleConfigUnTagPost(string str)
+{
+  string moosvar = biteStringX(str, '=');
+  string moosval = str;
+
+  if((moosvar == "") || (moosval == ""))
+    return(false);
+
+  VarDataPair pair(moosvar, moosval, "auto");
+  m_untag_posts.push_back(pair);
+  return(true);
+}
+
+
+
+//------------------------------------------------------------
 // Procedure: processVTags
 
 void TagManager::processVTags()
@@ -506,7 +554,37 @@ void TagManager::checkForExpiredTags()
       if(remaining <= 0) {
 	m_map_node_vtags_nowtagged[vname]  = false;
 	m_map_node_vtags_timetagged[vname] = 0;
+
+	XYCircle circle;
+	circle.set_label(vname);
+	circle.set_active(false);
+	string spec = circle.get_spec();
+	Notify("VIEW_CIRCLE", spec);
       }
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: postTagCircles()
+
+void TagManager::postTagCircles()
+{
+  map<string, bool>::iterator p;
+  for(p=m_map_node_vtags_nowtagged.begin();
+      p!=m_map_node_vtags_nowtagged.end(); p++) {
+    string vname = p->first;
+    bool   now_tagged = p->second;
+    if(now_tagged) {
+      double x = m_map_node_records[vname].getX();
+      double y = m_map_node_records[vname].getY();
+      
+      XYCircle circle(x, y, 5);
+      circle.set_label(vname);
+      circle.set_color("fill", "white");
+      circle.set_transparency(0.2);
+      string spec = circle.get_spec();
+      Notify("VIEW_CIRCLE", spec);
     }
   }
 }
