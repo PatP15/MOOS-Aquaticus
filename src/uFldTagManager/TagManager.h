@@ -51,6 +51,7 @@ class TagManager : public AppCastingMOOSApp
   bool    handleConfigVTagRange(std::string);
   bool    handleConfigZone(int, std::string);
   bool    handleConfigTeamName(int, std::string);
+  bool    handleConfigTagDuration(std::string);
 
  protected: // Incoming mail utilities
   bool    handleMailNodeReport(const std::string&);
@@ -62,6 +63,7 @@ class TagManager : public AppCastingMOOSApp
 
   void    processVTags();
   void    processVTag(VTag);  
+  void    checkForExpiredTags();
   
  protected: // Outgoing mail utilities
   void    postRangePulse(double x, double y, std::string color,
@@ -90,6 +92,7 @@ class TagManager : public AppCastingMOOSApp
   // Perspective of vehicles being tagged: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
   std::map<std::string, bool>         m_map_node_vtags_nowtagged;
+  std::map<std::string, double>       m_map_node_vtags_timetagged;
 
   // Other key states
   std::list<VTag>  m_pending_vtags;
@@ -101,6 +104,8 @@ class TagManager : public AppCastingMOOSApp
   double        m_vtag_range;
   double        m_vtag_min_interval;
 
+  double        m_tag_duration;
+  
   XYPolygon     m_zone_one;
   XYPolygon     m_zone_two;
   std::string   m_team_one;

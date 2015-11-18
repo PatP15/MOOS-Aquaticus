@@ -44,7 +44,8 @@ TagManager::TagManager()
   m_miss_color = "green";
   m_vtag_range = 25;
 
-  m_tag_events = 0;
+  m_tag_events = 0;    // Counter for tag events
+  m_tag_duration = 30; // seconds
 }
 
 //---------------------------------------------------------
@@ -109,6 +110,8 @@ bool TagManager::OnStartUp()
       handled = handleConfigTeamName(1, value);
     else if(param == "team_two") 
       handled = handleConfigTeamName(2, value);
+    else if(param == "tag_duration") 
+      handled = handleConfigTagDuration(value);
 
     if(!handled)
       reportUnhandledConfigWarning("Unhandled config: " + orig);
@@ -126,7 +129,8 @@ bool TagManager::Iterate()
 {
   AppCastingMOOSApp::Iterate();
   processVTags();
-
+  checkForExpiredTags();
+  
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -367,6 +371,23 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
 
 
 //------------------------------------------------------------
+// Procedure: handleConfigTagDuration
+
+bool TagManager::handleConfigTagDuration(string str)
+{
+  if(!isNumber(str))
+    return(false);
+
+  double dval = atof(str.c_str());
+  if(dval < 0)
+    return(false);
+
+  m_tag_duration = dval;
+  return(true);
+}
+
+
+//------------------------------------------------------------
 // Procedure: processVTags
 
 void TagManager::processVTags()
@@ -461,11 +482,34 @@ void TagManager::processVTag(VTag vtag)
     m_map_node_vtags_succeeded[vname]++;
     m_map_node_vtags_beentagged[node_closest]++;
     m_map_node_vtags_nowtagged[node_closest] = true;
+    m_map_node_vtags_timetagged[node_closest] = m_curr_time;
   }
 
   postResult(event, vname, vteam, result);
 }
 
+
+//------------------------------------------------------------
+// Procedure: checkForExpiredTags()
+
+void TagManager::checkForExpiredTags()
+{
+  map<string, bool>::iterator p;
+  for(p=m_map_node_vtags_nowtagged.begin();
+      p!=m_map_node_vtags_nowtagged.end(); p++) {
+    string vname = p->first;
+    bool   now_tagged = p->second;
+    if(now_tagged) {
+      double time_tagged = m_map_node_vtags_timetagged[vname];
+      double elapsed = m_curr_time - time_tagged;
+      double remaining = m_tag_duration - elapsed;
+      if(remaining <= 0) {
+	m_map_node_vtags_nowtagged[vname]  = false;
+	m_map_node_vtags_timetagged[vname] = 0;
+      }
+    }
+  }
+}
 
 //------------------------------------------------------------
 // Procedure: postResult
@@ -622,7 +666,6 @@ bool TagManager::buildReport()
   actabb << "Name | Tagged | Tagged    | Remain | Taggable ";
   actabb.addHeaderLines();
 
-
   for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {
     if(pp!=m_map_teams.begin())
       actabb.addHeaderLines();
@@ -634,10 +677,18 @@ bool TagManager::buildReport()
       bool now_tagged = false;
       if(m_map_node_vtags_nowtagged.count(vname))
 	now_tagged = m_map_node_vtags_nowtagged[vname];
+
+      double time_remaining = 0;
+      if(m_map_node_vtags_timetagged.count(vname)) {
+	double elapsed = (m_curr_time - m_map_node_vtags_timetagged[vname]);
+	time_remaining = m_tag_duration - elapsed;
+	if(time_remaining < 0)
+	  time_remaining = 0;
+      }
       
       string times = uintToString(m_map_node_vtags_beentagged[vname]);   // col2
       string now_tagged_s  = boolToString(now_tagged);
-      string trem  = "n/a";
+      string trem  = doubleToString(time_remaining,2);
       string tgabl = boolToString(!now_tagged);
       actabb << vname << times << now_tagged_s << trem << tgabl;
     }
