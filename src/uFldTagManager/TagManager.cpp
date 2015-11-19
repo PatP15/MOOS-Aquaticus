@@ -128,7 +128,7 @@ bool TagManager::OnStartUp()
       handled = setColorOnString(m_zone_two_color, value);
     else if(param == "tag_circle_range") 
       handled = setNonNegDoubleOnString(m_tag_circle_range, value);
-
+ 
     if(!handled)
       reportUnhandledConfigWarning("Unhandled config: " + orig);
   }
@@ -576,10 +576,10 @@ void TagManager::postTagPairs(string src_vname, string tar_vname)
   for(unsigned int i=0; i<m_tag_posts.size(); i++) {
     VarDataPair pair = m_tag_posts[i];
     string moosvar = pair.get_var();
-    moosvar = findReplace(moosvar, "$[SOURCE]", src_vname);
-    moosvar = findReplace(moosvar, "$[TARGET]", tar_vname);
-    moosvar = findReplace(moosvar, "$[UP_SOURCE]", toupper(src_vname));
-    moosvar = findReplace(moosvar, "$[UP_TARGET]", toupper(tar_vname));
+    moosvar = findReplace(moosvar, "$SOURCE", src_vname);
+    moosvar = findReplace(moosvar, "$TARGET", tar_vname);
+    moosvar = findReplace(moosvar, "$UP_SOURCE", toupper(src_vname));
+    moosvar = findReplace(moosvar, "$UP_TARGET", toupper(tar_vname));
 
     if(!pair.is_string()) {
       double dval = pair.get_ddata();
@@ -587,13 +587,14 @@ void TagManager::postTagPairs(string src_vname, string tar_vname)
     }
     else {
       string sval = pair.get_sdata();
-      sval = findReplace(sval, "$[SOURCE]", src_vname);
-      sval = findReplace(sval, "$[TARGET]", tar_vname);
-      sval = findReplace(sval, "$[UP_SOURCE]", toupper(src_vname));
-      sval = findReplace(sval, "$[UP_TARGET]", toupper(tar_vname));
+      sval = findReplace(sval, "$SOURCE", src_vname);
+      sval = findReplace(sval, "$TARGET", tar_vname);
+      sval = findReplace(sval, "$UP_SOURCE", toupper(src_vname));
+      sval = findReplace(sval, "$UP_TARGET", toupper(tar_vname));
+
       if(strContains(sval, "TIME")) {
 	string stime = doubleToString(m_curr_time, 2);
-	sval = findReplace(sval, "$[TIME]", stime);
+	sval = findReplace(sval, "$TIME", stime);
       }
       Notify(moosvar, sval);
     }
@@ -609,8 +610,8 @@ void TagManager::postUnTagPairs(string tar_vname)
   for(unsigned int i=0; i<m_untag_posts.size(); i++) {
     VarDataPair pair = m_untag_posts[i];
     string moosvar = pair.get_var();
-    moosvar = findReplace(moosvar, "$[TARGET]", tar_vname);
-    moosvar = findReplace(moosvar, "$[UP_TARGET]", toupper(tar_vname));
+    moosvar = findReplace(moosvar, "$TARGET", tar_vname);
+    moosvar = findReplace(moosvar, "$UP_TARGET", toupper(tar_vname));
 
     if(!pair.is_string()) {
       double dval = pair.get_ddata();
@@ -618,11 +619,11 @@ void TagManager::postUnTagPairs(string tar_vname)
     }
     else {
       string sval = pair.get_sdata();
-      sval = findReplace(sval, "$[TARGET]", tar_vname);
-      sval = findReplace(sval, "$[UP_TARGET]", toupper(tar_vname));
+      sval = findReplace(sval, "$TARGET", tar_vname);
+      sval = findReplace(sval, "$UP_TARGET", toupper(tar_vname));
       if(strContains(sval, "TIME")) {
 	string stime = doubleToString(m_curr_time, 2);
-	sval = findReplace(sval, "$[TIME]", stime);
+	sval = findReplace(sval, "$TIME", stime);
       }
       Notify(moosvar, sval);
     }
