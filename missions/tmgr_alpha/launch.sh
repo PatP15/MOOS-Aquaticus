@@ -25,9 +25,10 @@ done
 #-------------------------------------------------------
 VNAME1="archie"      # The first   vehicle community
 VNAME2="betty"       # The second  vehicle community
-START_POS1="0,0"  
-START_POS2="30,0"  
-START_POS3="60,0"  
+START_POS1="0,0,180"  
+START_POS2="30,0,180"  
+#START_POS1="60,-40,180"  
+#START_POS2="60,-140,0"  
 SHORE="multicast_8"
 
 # What is nsplug? Type "nsplug --help" or "nsplug --manual"
