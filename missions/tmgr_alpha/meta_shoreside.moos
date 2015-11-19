@@ -57,6 +57,7 @@ ProcessConfig = uFldTagManager
 	tag_circle = true
 	tag_circle_range = 5
 	tag_circle_color = "green"
+	tag_min_interval = 2
 
 	tag_post   = MOOS_MANUAL_OVERRIDE_$[UP_TARGET]=true
 	tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
