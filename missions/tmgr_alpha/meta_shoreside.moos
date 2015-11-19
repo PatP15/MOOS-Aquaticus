@@ -44,7 +44,10 @@ ProcessConfig = uFldTagManager
   hit_color  = red    // default                                
 
 	tag_circle = true
-                                                                
+
+	tag_post   = MOOS_MANUAL_OVERRIDE_$[UP_TARGET]=true
+	untag_post = MOOS_MANUAL_OVERRIDE_$[UP_TARGET]=false
+	
   team_one = red                                                
   team_two = blue                                               
                                                                 
