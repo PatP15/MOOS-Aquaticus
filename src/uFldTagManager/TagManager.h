@@ -52,7 +52,6 @@ class TagManager : public AppCastingMOOSApp
   bool    handleConfigVTagRange(std::string);
   bool    handleConfigZone(int, std::string);
   bool    handleConfigTeamName(int, std::string);
-  bool    handleConfigTagDuration(std::string);
   bool    handleConfigTagPost(std::string);
   bool    handleConfigUnTagPost(std::string);
 
@@ -67,9 +66,10 @@ class TagManager : public AppCastingMOOSApp
   void    processVTag(VTag);  
   void    checkForExpiredTags();
   void    postTagCircles();
-  void    postTagPairs();
-  void    postUnTagPairs();
-  
+
+  void    postTagPairs(std::string src_vname, std::string tar_vname);
+  void    postUnTagPairs(std::string tar_vname);
+
  protected: // Outgoing mail utilities
   void    postRangePulse(double x, double y, std::string color,
 			 std::string label, double dur, double radius);
@@ -106,18 +106,22 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, std::set<std::string> > m_map_teams;
   
  protected: // Configuration variables
-  double        m_vtag_range;
-  double        m_vtag_min_interval;
+  double        m_tag_range;
+  double        m_tag_min_interval;
 
   double        m_tag_duration;
   
   XYPolygon     m_zone_one;
   XYPolygon     m_zone_two;
+  std::string   m_zone_one_color;
+  std::string   m_zone_two_color;
   std::string   m_team_one;
   std::string   m_team_two;
   
   unsigned int  m_tag_events;
   bool          m_tag_circle;
+  std::string   m_tag_circle_color;
+  double        m_tag_circle_range;
 
   std::vector<VarDataPair> m_tag_posts;
   std::vector<VarDataPair> m_untag_posts;

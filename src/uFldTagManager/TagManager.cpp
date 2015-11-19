@@ -41,14 +41,17 @@ TagManager::TagManager()
 {
   // Default visual hints
   m_post_color = "white";
-  m_hit_color  = "red";
-  m_miss_color = "green";
-  m_vtag_range = 25;
-
+  m_tag_range  = 25;
+  m_tag_min_interval = 10;
+  
   m_tag_events = 0;    // Counter for tag events
   m_tag_duration = 30; // seconds
-  m_tag_circle   = false;
+  m_tag_circle   = true;
+  m_tag_circle_color = "pink";
+  m_tag_circle_range = 5;
 
+  m_zone_one_color = "white";
+  m_zone_two_color = "green";
 }
 
 //---------------------------------------------------------
@@ -97,14 +100,12 @@ bool TagManager::OnStartUp()
     string value = line;
     
     bool handled = true;
-    if(param == "vtag_range")
-      handled = handleConfigVTagRange(value);    
-    if(param == "post_color")
+    if(param == "tag_range")
+      handled = setNonNegDoubleOnString(m_tag_range, value);
+    else if(param == "tag_min_interval")
+      handled = setNonNegDoubleOnString(m_tag_min_interval, value);
+    else if(param == "post_color")
       handled = setColorOnString(m_post_color, value);
-    else if(param == "hit_color")
-      handled = setColorOnString(m_hit_color, value);
-    else if(param == "miss_color") 
-      handled = setColorOnString(m_miss_color, value);
     else if(param == "zone_one") 
       handled = handleConfigZone(1, value);
     else if(param == "zone_two") 
@@ -114,14 +115,19 @@ bool TagManager::OnStartUp()
     else if(param == "team_two") 
       handled = handleConfigTeamName(2, value);
     else if(param == "tag_duration") 
-      handled = handleConfigTagDuration(value);
-    else if(param == "tag_circle") 
-      handled = setBooleanOnString(m_tag_circle, value);
+      handled = setNonNegDoubleOnString(m_tag_duration, value);
     else if(param == "tag_post")
       handled = handleConfigTagPost(value);
     else if(param == "untag_post")
       handled = handleConfigUnTagPost(value);
-
+    else if(param == "tag_circle_color") 
+      handled = setColorOnString(m_tag_circle_color, value);
+    else if(param == "zone_one_color") 
+      handled = setColorOnString(m_zone_one_color, value);
+    else if(param == "zone_two_color") 
+      handled = setColorOnString(m_zone_two_color, value);
+    else if(param == "tag_circle_range") 
+      handled = setNonNegDoubleOnString(m_tag_circle_range, value);
 
     if(!handled)
       reportUnhandledConfigWarning("Unhandled config: " + orig);
@@ -247,7 +253,7 @@ bool TagManager::handleMailVTagPost(const string& launch_str)
   // purely a visual artifact.
   double pulse_duration = 2;
   postRangePulse(vx, vy, m_post_color, vname+"_vtag", 
-		 pulse_duration, m_vtag_range);
+		 pulse_duration, m_tag_range);
   
   return(true);
 }
@@ -294,23 +300,6 @@ double TagManager::getTrueNodeRange(double x, double y, string node)
 
 
 //------------------------------------------------------------
-// Procedure: handleConfigVTagRange()
-
-bool TagManager::handleConfigVTagRange(string str)
-{
-  if(!isNumber(str))
-    return(false);
-
-  double range = atof(str.c_str());
-  if(range < 0)
-    return(false);
-
-  m_vtag_range = range;
-  return(true);
-}
-
-
-//------------------------------------------------------------
 // Procedure: handleConfigZone()
 //      Note: Zone number must be 1 or 2. Polygon must be convex
 //   Example: pts={0,-20:120,-20:120,-160:0,-160}
@@ -331,7 +320,7 @@ bool TagManager::handleConfigZone(int zone_number, string str)
   if(zone_number == 1) {
     poly.set_color("vertex", "gray50");
     poly.set_color("edge", "gray50");
-    poly.set_color("fill", "white");
+    poly.set_color("fill", m_zone_one_color);
     if(m_team_one != "")
       poly.set_label(m_team_one);
     else
@@ -341,7 +330,7 @@ bool TagManager::handleConfigZone(int zone_number, string str)
   else {
     poly.set_color("vertex", "gray50");
     poly.set_color("edge", "gray50");
-    poly.set_color("fill", "green");
+    poly.set_color("fill", m_zone_two_color);
     if(m_team_two != "")
       poly.set_label(m_team_two);
     else
@@ -379,23 +368,6 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
   else
     return(false);
   
-  return(true);
-}
-
-
-//------------------------------------------------------------
-// Procedure: handleConfigTagDuration
-
-bool TagManager::handleConfigTagDuration(string str)
-{
-  if(!isNumber(str))
-    return(false);
-
-  double dval = atof(str.c_str());
-  if(dval < 0)
-    return(false);
-
-  m_tag_duration = dval;
   return(true);
 }
 
@@ -465,7 +437,7 @@ void TagManager::processVTag(VTag vtag)
   // Part 1: Check if tag allowed based on frequency
   // based on the last time it posted a vtag.
   double elapsed = m_curr_time - m_map_node_vtags_last_tag[vname];
-  if(elapsed < m_vtag_min_interval) {
+  if(elapsed < m_tag_min_interval) {
     m_map_node_vtags_rejfreq[vname]++;
     string result = "rejected=freq";
     postResult(event, vname, vteam, result);
@@ -525,12 +497,14 @@ void TagManager::processVTag(VTag vtag)
   // Part 5: Examine the closest target, declare it tagged if in range
   double node_closest_dist = map_node_range[node_closest];
   string result = "tagged=none";
-  if(node_closest_dist <= m_vtag_range) {
+  if(node_closest_dist <= m_tag_range) {
     result = "tagged=" + node_closest;
     m_map_node_vtags_succeeded[vname]++;
     m_map_node_vtags_beentagged[node_closest]++;
     m_map_node_vtags_nowtagged[node_closest] = true;
     m_map_node_vtags_timetagged[node_closest] = m_curr_time;
+
+    postTagPairs(vname, node_closest);
   }
 
   postResult(event, vname, vteam, result);
@@ -555,6 +529,7 @@ void TagManager::checkForExpiredTags()
 	m_map_node_vtags_nowtagged[vname]  = false;
 	m_map_node_vtags_timetagged[vname] = 0;
 
+	postUnTagPairs(vname);
 	XYCircle circle;
 	circle.set_label(vname);
 	circle.set_active(false);
@@ -567,6 +542,8 @@ void TagManager::checkForExpiredTags()
 
 //------------------------------------------------------------
 // Procedure: postTagCircles()
+//      Note: Called on every iteration since the circles for tagged
+//            vehicles may need to move with the vehicle.
 
 void TagManager::postTagCircles()
 {
@@ -579,12 +556,75 @@ void TagManager::postTagCircles()
       double x = m_map_node_records[vname].getX();
       double y = m_map_node_records[vname].getY();
       
-      XYCircle circle(x, y, 5);
+      XYCircle circle(x, y, m_tag_circle_range);
       circle.set_label(vname);
-      circle.set_color("fill", "white");
+      circle.set_color("fill", m_tag_circle_color);
+      circle.set_color("edge", m_tag_circle_color);
       circle.set_transparency(0.2);
       string spec = circle.get_spec();
       Notify("VIEW_CIRCLE", spec);
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: postTagPairs
+//      Note: Called on only when a tag has been made.
+
+void TagManager::postTagPairs(string src_vname, string tar_vname)
+{
+  for(unsigned int i=0; i<m_tag_posts.size(); i++) {
+    VarDataPair pair = m_tag_posts[i];
+    string moosvar = pair.get_var();
+    moosvar = findReplace(moosvar, "$[SOURCE]", src_vname);
+    moosvar = findReplace(moosvar, "$[TARGET]", tar_vname);
+    moosvar = findReplace(moosvar, "$[UP_SOURCE]", toupper(src_vname));
+    moosvar = findReplace(moosvar, "$[UP_TARGET]", toupper(tar_vname));
+
+    if(!pair.is_string()) {
+      double dval = pair.get_ddata();
+      Notify(moosvar, dval);
+    }
+    else {
+      string sval = pair.get_sdata();
+      sval = findReplace(sval, "$[SOURCE]", src_vname);
+      sval = findReplace(sval, "$[TARGET]", tar_vname);
+      sval = findReplace(sval, "$[UP_SOURCE]", toupper(src_vname));
+      sval = findReplace(sval, "$[UP_TARGET]", toupper(tar_vname));
+      if(strContains(sval, "TIME")) {
+	string stime = doubleToString(m_curr_time, 2);
+	sval = findReplace(sval, "$[TIME]", stime);
+      }
+      Notify(moosvar, sval);
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: postUnTagPairs()
+//      Note: Called on only when a tag has expired
+
+void TagManager::postUnTagPairs(string tar_vname)
+{
+  for(unsigned int i=0; i<m_untag_posts.size(); i++) {
+    VarDataPair pair = m_untag_posts[i];
+    string moosvar = pair.get_var();
+    moosvar = findReplace(moosvar, "$[TARGET]", tar_vname);
+    moosvar = findReplace(moosvar, "$[UP_TARGET]", toupper(tar_vname));
+
+    if(!pair.is_string()) {
+      double dval = pair.get_ddata();
+      Notify(moosvar, dval);
+    }
+    else {
+      string sval = pair.get_sdata();
+      sval = findReplace(sval, "$[TARGET]", tar_vname);
+      sval = findReplace(sval, "$[UP_TARGET]", toupper(tar_vname));
+      if(strContains(sval, "TIME")) {
+	string stime = doubleToString(m_curr_time, 2);
+	sval = findReplace(sval, "$[TIME]", stime);
+      }
+      Notify(moosvar, sval);
     }
   }
 }
@@ -694,8 +734,8 @@ bool TagManager::buildReport()
   // Part 1: Build the easy global settings output
   m_msgs << "Global Settings            " << endl;
   m_msgs << "===========================" << endl;
-  m_msgs << "Tag Range:    " << doubleToStringX(m_vtag_range,1)   << endl;
-  m_msgs << "Tag Interval: " << doubleToStringX(m_vtag_min_interval,1) << endl;
+  m_msgs << "Tag Range:    " << doubleToStringX(m_tag_range,1)   << endl;
+  m_msgs << "Tag Interval: " << doubleToStringX(m_tag_min_interval,1) << endl;
 
   // Part 2: Produce the team structure
   map<string, set<string> >::iterator pp;
