@@ -535,6 +535,10 @@ void TagManager::checkForExpiredTags()
 	circle.set_active(false);
 	string spec = circle.get_spec();
 	Notify("VIEW_CIRCLE", spec);
+
+	string time_str = doubleToString(m_curr_time - m_start_time);
+	string msg = "vname=" + vname + ",time=" + time_str;
+	Notify("TAG_RELEASE_VERBOSE", msg);
       }
     }
   }
@@ -646,7 +650,7 @@ void TagManager::postResult(string event, string vname,
   msg += result;
   
   reportEvent(msg);
-  Notify("TAG_RESULT"+toupper(vname), msg);
+  Notify("TAG_RESULT_"+toupper(vname), msg);
 }
   
 
