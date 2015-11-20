@@ -632,6 +632,10 @@ void TagManager::postUnTagPairs(string tar_vname)
 
 //------------------------------------------------------------
 // Procedure: postResult
+//   Example: TAG_RESULT_ABE = "event=23,src=abe,team=red,rejected=freq"
+//   Example: TAG_RESULT_ABE = "event=23,src=abe,team=red,rejected=zone"
+//   Example: TAG_RESULT_ABE = "event=23,src=abe,team=red,tagged=none"
+//   Example: TAG_RESULT_ABE = "event=23,src=abe,team=red,tagged=gilda"
 
 void TagManager::postResult(string event, string vname,
 			    string vteam, string result)
@@ -648,6 +652,7 @@ void TagManager::postResult(string event, string vname,
 
 //------------------------------------------------------------
 // Procedure: postResult
+//   Example: TAG_RESULT_VERBOSE = "event=23,src=abe,ranges=hal:2.1#jeb:19
 
 void TagManager::postResult(string event, string vname,
 			    map<string, double> map_node_range)
