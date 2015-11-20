@@ -59,10 +59,10 @@ ProcessConfig = uFldTagManager
 	tag_circle_color = "green"
 	tag_min_interval = 2
 
-	tag_post   = MOOS_MANUAL_OVERRIDE_$[UP_TARGET]=true
+	tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
 	tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
 
-	untag_post = MOOS_MANUAL_OVERRIDE_$[UP_TARGET]=false
+	untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
 	untag_post = SAY_MOOS=file=sounds/shipbell.wav
 	
   team_one = red                                                

@@ -15,7 +15,7 @@ Behavior = BHV_Waypoint
   perpetual = true
 
 	#ifdef VNAME archie
-	wptflag   = TAG_POST=vname=archie 
+	wptflag   = TAG_REQUEST=vname=archie 
 	#endif
 	
 	          lead = 8
