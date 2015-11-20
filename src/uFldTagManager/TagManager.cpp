@@ -71,7 +71,7 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleMailNodeReport(sval);
-    else if(key == "TAG_POST")
+    else if(key == "TAG_REQUEST")
       handled = handleMailVTagPost(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
@@ -171,7 +171,7 @@ void TagManager::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
-  Register("TAG_POST", 0);
+  Register("TAG_REQUEST", 0);
   Register("TAG_STATUS_REQ", 0);
 }
 
