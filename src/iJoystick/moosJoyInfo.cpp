@@ -72,6 +72,12 @@ void showExampleConfigAndExit()
   blk("                          //   distance, this relates to two axes. Order is");
   blk("                          //   not important. If defined, axes will publish a");
   blk("                          //   second message including values for both axes.");
+  blk("  ID_by_Button  = 0       // Only relevant when more than one controller is present.");
+  blk("                          //   REQUIRED when more than one controller is present.");
+  blk("                          //   ID number of the button that identifies the controller");
+  blk("                          //   this instance of iJoystick will interface with.");
+  blk("                          //   On startup, the application will wait until the specified");
+  blk("                          //   button is pressed before publishing any output.");
   blk("}");
   blk("");
   exit(0);

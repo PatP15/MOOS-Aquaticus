@@ -5,6 +5,7 @@
  *      Author: Alon Yaari
  */
 
+#include "SDL.h"
 #include "MBUtils.h"
 #include "moosJoy.h"
 
@@ -13,13 +14,15 @@ using namespace std;
 moosJoy::moosJoy()
 {
     m_prefix                = "JOY_";
-    m_joystickID            = 0;
+    m_joystickID            = -1;               // -1 means no controller selected
     m_joystickCount         = 0;
     m_joy                   = 0;
     m_joyName               = "";
     m_goodJoy               = false;
     m_countAxes             = 0;
     m_countButtons          = 0;
+    m_idByButton			= -1;
+    m_jMode                 = JMODE_NO_CONNECTION;
 }
 
 moosJoy::~moosJoy()
@@ -44,7 +47,27 @@ bool moosJoy::Iterate()
 {
     AppCastingMOOSApp::Iterate();
 
-    GetandPublishMostRecentJoystickValues();
+    switch (m_jMode) {
+
+        case JMODE_NO_CONNECTION:
+            break;
+
+        case JMODE_ID_BY_BUTTON:
+            IDByButton();
+            break;
+
+        case JMODE_READY_TO_OPEN:
+            OpenConnection();
+            break;
+
+        case JMODE_GOOD:
+            GetandPublishMostRecentJoystickValues();
+            break;
+
+        case JMODE_0_CONTROLERS:
+        default:
+            break;
+    }
 
     AppCastingMOOSApp::PostReport();
     return true;
@@ -134,10 +157,13 @@ bool moosJoy::OnStartUp()
         string line     = *p;
         string param    = toupper(biteStringX(line, '='));
         string value    = line;
-        if (param == "JOYSTICK_ID" || param == "JOYSTICKID")
-            bHandled = SetParam_JOYSTICK_ID(value);
-        else if (param == "OUTPUT_PREFIX")
+
+//        if (param == "JOYSTICK_ID" || param == "JOYSTICKID")
+//            bHandled = SetParam_JOYSTICK_ID(value);
+        if (param == "OUTPUT_PREFIX")
             bHandled = SetParam_OUTPUT_PREFIX(value);
+        else if (param == "ID_BY_BUTTON")
+            bHandled = SetParam_ID_BY_BUTTON(value);
         else if (param == "DEPENDENT")
             m_depDefs.push_back(value);
         else
@@ -170,29 +196,74 @@ bool moosJoy::JoystickSetup()
         reportRunWarning("Could not connect with SDL to read joystick.");
         return false; }
     m_joystickCount = SDL_NumJoysticks();
-    stringstream ss;
-    ss << m_joystickCount;
+
+    // 0 controllers connected
     if (!m_joystickCount) {
-        reportRunWarning("No joysticks connected to the system " + ss.str());
+        reportRunWarning("Connect at least one joystick to the computer.");
+        m_jMode = JMODE_0_CONTROLERS;
         return false; }
-    if (m_joystickID > m_joystickCount) {
-        stringstream ss;
-        ss << "JOYSTICK_ID defined as ";
-        ss << m_joystickID;
-        ss << " but there are only ";
-        ss << m_joystickCount;
-        ss << " joysticks connected with a maximum JOYSTICK_ID of ";
-        ss << m_joystickCount - 1;
-        ss << ".";
-        reportRunWarning(ss.str());
-        return false; }
+
+    // 1 controller connected
+    if (m_joystickCount == 1) {
+        m_jMode = JMODE_READY_TO_OPEN;
+        m_joystickID = 0; }
+
+    // > 1 controllers connected
+    else {
+        if (m_idByButton == -1) {
+            stringstream ss;
+            ss << m_joystickCount << " controllers connected. Use mission file parameter ID_BY_BUTTON to select one.";
+            reportConfigWarning(ss.str());
+            return false; }
+        m_jMode = JMODE_ID_BY_BUTTON;
+
+        // Open all controllers
+        for (int i = 0; i < m_joystickCount; i++) {
+            SDL_Joystick* pJ = SDL_JoystickOpen(i);
+            m_idByButtons.push_back(pJ); } }
+    return true;
+}
+
+void moosJoy::IDByButton()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                cerr << "\nQuitting..." << endl;
+                RequestQuit();
+                break;
+            case SDL_JOYBUTTONDOWN:
+                if (event.jbutton.button == m_idByButton) {
+                    m_joystickID = event.jbutton.which;
+                    stringstream ss;
+                    ss << "Button press identifies controller " << m_joystickID << ".";
+                    reportEvent(ss.str());
+                    m_jMode = JMODE_READY_TO_OPEN; }
+                break;
+            default:
+                break; } }
+    if (m_jMode == JMODE_READY_TO_OPEN) {
+        vector<SDL_Joystick*>::iterator it = m_idByButtons.begin();
+        for (; it != m_idByButtons.end(); ++it)
+            SDL_JoystickClose(*it); }
+}
+
+void moosJoy::OpenConnection()
+{
+    stringstream ss;
+    ss << "Opening controller " << m_joystickID;
+    reportEvent(ss.str());
 
     // Open SDL connection with the joystick
     m_joy = SDL_JoystickOpen(m_joystickID);
 
     if (!JoystickConnected()) {
-        reportRunWarning("Could not connect with joystick.");
-        return false; }
+        stringstream ss;
+        ss << "Could not connect with joystick " << m_joystickID << ".";
+        reportRunWarning(ss.str());
+        m_jMode = JMODE_0_CONTROLERS;
+        return; }
 
     m_joyName               = SDL_JoystickName(m_joy);          // Get registration name for the joystick
     m_countAxes             = SDL_JoystickNumAxes(m_joy);       // Get number of axes
@@ -218,8 +289,9 @@ bool moosJoy::JoystickSetup()
             m_joyButtons[i] = BUTTON_UP_STR;
             PublishJoystickButtonValue(i); }
 
-        return true; }
-    return false;
+        m_jMode = JMODE_GOOD;
+        return; }
+    m_jMode = JMODE_NO_CONNECTION;
 }
 
 bool moosJoy::JoystickConnected()
@@ -228,18 +300,18 @@ bool moosJoy::JoystickConnected()
     return m_goodJoy;
 }
 
-bool moosJoy::SetParam_JOYSTICK_ID(string sVal)
-{
-    if (sVal.empty())
-        reportConfigWarning("JOYSTICK_ID must not be blank. Using default value.");
-    else {
-        int joyID = strtol(sVal.c_str(), 0, 10);
-        if (joyID < 0 || joyID > 63)
-            reportConfigWarning("JOYSTICK_ID must be 0 to 63, inclusive. Using default value.");
-        else
-            m_joystickID = joyID; }
-    return true;
-}
+// bool moosJoy::SetParam_JOYSTICK_ID(string sVal)
+// {
+//     if (sVal.empty())
+//         reportConfigWarning("JOYSTICK_ID must not be blank. Using default value.");
+//     else {
+//         int joyID = strtol(sVal.c_str(), 0, 10);
+//        if (joyID < 0 || joyID > 63)
+//            reportConfigWarning("JOYSTICK_ID must be 0 to 63, inclusive. Using default value.");
+//        else
+//            m_joystickID = joyID; }
+//    return true;
+// }
 
 bool moosJoy::SetParam_OUTPUT_PREFIX(string sVal)
 {
@@ -265,20 +337,26 @@ bool moosJoy::SetParam_DEPENDENT(string sVal)
     if (sVec.size() != 2) {
         reportConfigWarning("DEPENDENT should be two integers describing dependent axes. No dependency defined.");
         return true; }
-    int depA = strtol(sVec[0].c_str(), 0, 10);
-    int depB = strtol(sVec[1].c_str(), 0, 10);
-    if (depA > m_countAxes - 1 || depA < 0 || depB > m_countAxes -1 || depB < 0) {
-        string strVR = "[0, ";
-        strVR.append(intToString(m_countAxes - 1));
-        strVR.append("]");
-        reportConfigWarning("DEPENDENT is attempting to describe an axis outside the valid range of " + strVR);
-        return true; }
+    string strA = sVec[0];
+    string strB = sVec[1];
+    int depA = strtol(strA.c_str(), 0, 10);
+    int depB = strtol(strB.c_str(), 0, 10);
     m_axisDep[depA] = depB;
     m_axisDep[depB] = depA;
     stringstream ss;
     ss << "Axes " << depA << " and " << depB << " are dependent";
     m_depAppCast.push_back(ss.str());
     return true;
+}
+
+bool moosJoy::SetParam_ID_BY_BUTTON(string sVal)
+{
+	if (sVal.empty()) {
+		reportConfigWarning("ID_BY_BUTTON should not be blank. No ID button defined.");
+		return true; }
+	int joyID = strtol(sVal.c_str(), 0, 10);
+	m_idByButton = joyID;
+	return true;
 }
 
 int moosJoy::appCastBlanks(int val)
@@ -290,13 +368,68 @@ int moosJoy::appCastBlanks(int val)
 
 bool moosJoy::buildReport()
 {
-    m_msgs <<                " Settings" << endl;
-    m_msgs <<                " --------" << endl;
-    m_msgs <<                "    Joystick_ID:               " << m_joystickID << endl;
-    m_msgs <<                "    Output_Prefix:             " << m_prefix << endl;
+    switch(m_jMode) {
+        case JMODE_0_CONTROLERS:    return buildReport_JMODE_0_CONTROLERS();   break;
+        case JMODE_ID_BY_BUTTON:    return buildReport_JMODE_ID_BY_BUTTON();   break;
+        case JMODE_READY_TO_OPEN:   return buildReport_JMODE_READY_TO_OPEN();  break;
+        case JMODE_GOOD:            return buildReport_JMODE_GOOD();           break;
+        default:
+        case JMODE_NO_CONNECTION:   return buildReport_JMODE_NO_CONNECTION();  break; }
+}
+
+string moosJoy::buildReportSettings()
+{
+    stringstream ss;
+    ss <<                " Settings" << endl;
+    ss <<                " --------" << endl;
+    ss <<                "    Joystick_ID:               " << m_joystickID << endl;
+    ss <<                "    Output_Prefix:             " << m_prefix << endl;
     vector<string>::iterator it = m_depAppCast.begin();
     for (; it != m_depAppCast.end(); ++it)
-        m_msgs <<            "    Dependency:                " << *it << endl;
+        ss <<            "    Dependency:                " << *it << endl;
+    ss << endl;
+    return ss.str();
+}
+
+bool moosJoy::buildReport_JMODE_0_CONTROLERS()
+{
+    m_msgs << buildReportSettings();
+    m_msgs << endl;
+    m_msgs << "No controllers connected.";
+    return true;
+}
+
+bool moosJoy::buildReport_JMODE_ID_BY_BUTTON()
+{
+    m_msgs << buildReportSettings();
+    m_msgs << endl;
+    m_msgs << m_joystickCount << " joysticks connected" << endl;
+    m_msgs << "Waiting for identification by press of button " << m_idByButton << ".";
+    m_msgs << endl;
+
+    return true;
+}
+
+bool moosJoy::buildReport_JMODE_READY_TO_OPEN()
+{
+    m_msgs << buildReportSettings();
+    m_msgs << endl;
+    m_msgs << "Joystick ID " << m_joystickID;
+    m_msgs << " ready to be opened.";
+    return true;
+}
+
+bool moosJoy::buildReport_JMODE_NO_CONNECTION()
+{
+    m_msgs << buildReportSettings();
+    m_msgs << endl;
+    m_msgs << "Cannot connect to any joystick.";
+    return true;
+}
+
+bool moosJoy::buildReport_JMODE_GOOD()
+{
+    m_msgs << buildReportSettings();
     m_msgs << endl;
     m_msgs <<                " Joystick" << endl;
     m_msgs <<                " --------" << endl;

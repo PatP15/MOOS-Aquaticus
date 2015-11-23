@@ -19,27 +19,43 @@
 #define BUTTON_DOWN_STR     "DOWN"
 #define BLANK_LEN           10
 
+
+#define JMODE_NO_CONNECTION     -1
+#define JMODE_0_CONTROLERS       0
+#define JMODE_ID_BY_BUTTON       1
+#define JMODE_READY_TO_OPEN      2
+#define JMODE_GOOD               3
+
 class moosJoy : public AppCastingMOOSApp
 {
 public:
-			moosJoy();
-            ~moosJoy();
-    bool    OnNewMail(MOOSMSG_LIST &NewMail);
-    bool    Iterate();
-    bool    OnConnectToServer();
-    bool    OnStartUp();
-    bool    buildReport();
+			    moosJoy();
+                ~moosJoy();
+    bool        OnNewMail(MOOSMSG_LIST &NewMail);
+    bool        Iterate();
+    bool        OnConnectToServer();
+    bool        OnStartUp();
+    bool        buildReport();
+    std::string buildReportSettings();
+    bool        buildReport_JMODE_NO_CONNECTION();
+    bool        buildReport_JMODE_0_CONTROLERS();
+    bool        buildReport_JMODE_ID_BY_BUTTON();
+    bool        buildReport_JMODE_READY_TO_OPEN();
+    bool        buildReport_JMODE_GOOD();
 
 protected:
     bool    RegisterForMOOSMessages();
     bool    JoystickSetup();
-    bool    SetParam_JOYSTICK_ID(std::string sVal);
+    //bool    SetParam_JOYSTICK_ID(std::string sVal);
     bool    SetParam_OUTPUT_PREFIX(std::string sVal);
     bool    SetParam_DEPENDENT(std::string sVal);
+    bool    SetParam_ID_BY_BUTTON(std::string sVal);
     void	GetandPublishMostRecentJoystickValues();
     void	PublishJoystickAxisValue(int axis);
     void	PublishJoystickButtonValue(int button);
     bool	JoystickConnected();
+    void    IDByButton();
+    void    OpenConnection();
 
     int appCastBlanks(int val);
 
@@ -51,12 +67,15 @@ protected:
     bool			m_goodJoy;
     int				m_countAxes;
     int				m_countButtons;
+    int				m_idByButton;
+    int             m_jMode;
 
     std::vector<std::string> m_depAppCast;
     std::vector<std::string> m_depDefs;
     std::map<int, int> m_joyAxisVal;
     std::map<int, int> m_axisDep;
     std::map<int, std::string> m_joyButtons;
+    std::vector<SDL_Joystick*> m_idByButtons;
 };
 
 #endif
