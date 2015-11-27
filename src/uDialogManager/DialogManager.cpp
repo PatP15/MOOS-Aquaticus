@@ -55,7 +55,7 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool   mstr  = msg.IsString();
     //#endif
     
-    if(key == "SpeechRecognitionSentence") {
+    if(key == "SPEECH_RECOGNITION_SENTENCE") {
       //A Finite State Machine (FSM) is used to determine the mode
       if(m_state == WAIT_COMMAND) {
 	m_state = COMMAND_RECEIVED;
@@ -271,7 +271,7 @@ void DialogManager::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
-  m_Comms.Register("SpeechRecognitionSentence",0);
+  m_Comms.Register("SPEECH_RECOGNITION_SENTENCE",0);
 }
 
 

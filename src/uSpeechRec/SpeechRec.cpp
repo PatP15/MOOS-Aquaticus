@@ -93,7 +93,7 @@ bool SpeechRec::Iterate()
   while(!m_messages.empty()) {
     std::string curr = m_messages.front();
     m_messages.pop();
-    Notify("SpeechRecognitionSentence",curr);
+    Notify("SPEECH_RECOGNITION_SENTENCE",curr);
     reportEvent("JULIUS SENTENCE " + curr + " " + m_scores.front());
     m_scores.pop();
   }
@@ -249,6 +249,9 @@ bool SpeechRec::handleJuliusConf(std::string fileName)
     return false; 
   }
 
+  //keep file name for appcast output
+  m_julius_configuration = fileName;
+
   //Set the Microphone as input device
   m_jconf->input.speech_input = SP_MIC;
   //jconf->input.speech_input = SP_STDIN;
@@ -365,6 +368,7 @@ bool SpeechRec::OnStartUp()
     sLine = stripBlankEnds(sLine);
   
     bool handled = false;
+    sVarName = tolower(sVarName);
     if(MOOSStrCmp(sVarName, "JuliusConf")) {
       if(!strContains(sLine, " ")) {
 	string tmp = stripBlankEnds(sLine);
@@ -396,6 +400,8 @@ void SpeechRec::registerVariables()
 bool SpeechRec::buildReport() 
 {
   m_msgs << "============================================ \n";
+  m_msgs << "JuliusConf = " <<   m_julius_configuration << endl;
+
   //ACTable actab(4);
   //actab << "Alpha | Bravo | Charlie | Delta";
   //actab.addHeaderLines();
