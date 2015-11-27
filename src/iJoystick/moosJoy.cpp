@@ -78,6 +78,7 @@ void moosJoy::GetandPublishMostRecentJoystickValues()
     // Deal with buttons
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+      int j = event.jaxis.which;
     switch (event.type) {
         case SDL_QUIT:
             cerr << "\nQuitting..." << endl;
