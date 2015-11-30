@@ -95,7 +95,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  SpeechRecognitionSentence = string sentence produced by Julius");
+  blk("  SPEECH_RECOGNITION_SENTENCE = string sentence produced by Julius");
   blk("                                                                ");
   exit(0);
 }

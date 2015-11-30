@@ -95,7 +95,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  SpeechRecognitionSentence = produced by speech recognition    ");
+  blk("  SPEECH_RECOGNITION_SENTENCE = produced by speech recognition    ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
