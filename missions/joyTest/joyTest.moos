@@ -25,9 +25,9 @@ ProcessConfig = iJoystick
 {
   AppTick       = 20
   CommsTick     = 20
-  JoystickID    = 0
   Output_Prefix = JOY0
   Dependent     = 0,1
+  ID_By_Button	= 0
 }
 
 
