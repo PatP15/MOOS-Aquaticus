@@ -61,7 +61,8 @@ START_POS="20,-20,180"
 nsplug meta_mokai_sim.moos targ_human_1.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9302"              \
     VPORT="9002"           SHORE_LISTEN=$SHORE_LISTEN       \
-    VTEAM=$VTEAM1          START_POS=$START_POS JOY_ID="3"
+    VTEAM=$VTEAM1          START_POS=$START_POS JOY_ID="3"  \
+    BUTTON="1"
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
 #    START_POS=$START_POS 
@@ -79,7 +80,8 @@ START_POS="20,-20,180"
 nsplug meta_mokai_sim.moos targ_human_2.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9303"              \
     VPORT="9003"           SHORE_LISTEN=$SHORE_LISTEN       \
-    VTEAM=$VTEAM2          START_POS=$START_POS JOY_ID="0"
+    VTEAM=$VTEAM2          START_POS=$START_POS JOY_ID="0"  \
+    BUTTON="2"
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
 #    START_POS=$START_POS 
