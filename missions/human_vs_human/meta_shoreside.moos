@@ -43,18 +43,52 @@ ProcessConfig = uFldFlagManager
 
 ProcessConfig = uFldTagManager
 {
-  AppTick    = 2
-  CommsTick  = 2
+//  AppTick    = 2
+//  CommsTick  = 2
 
-  vtag_range = 30
-	post_color = white
-	miss_color = blue
-	hit_color  = red
+//  vtag_range = 30
+//	post_color = white
+//	miss_color = blue 
+//	hit_color  = red   
 
-	team_one   = $(VTEAM1)
-	team_two   = $(VTEAM2)
-	zone_one   = pts={0,-20:120,-20:120,-100:0,-100}
-	zone_two   = pts={0,-100:120,-100:120,-180:0,-180}
+//        tag_circle = true
+//	tag_circle_range = 5
+//	tag_circle_color = "green"
+//	tag_min_interval = 2
+
+//	team_one   = $(VTEAM1)
+//	team_two   = $(VTEAM2)
+//	zone_one   = pts={0,-20:120,-20:120,-100:0,-100}
+//	zone_two   = pts={0,-100:120,-100:120,-180:0,-180}
+
+  AppTick   = 4                                                 
+  CommsTick = 4                                                 
+                                                                
+  tag_range = 50     // default (meters)                       
+                                                                
+  post_color = white  // default                                
+  miss_color = blue   // default                                
+  hit_color  = red    // default                                
+
+	tag_circle = true
+	tag_circle_range = 5
+	tag_circle_color = "green"
+	tag_min_interval = 2
+
+	tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
+	tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
+
+	untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
+	untag_post = SAY_MOOS=file=sounds/shipbell.wav
+	
+  team_one = red                                                
+  team_two = blue                                               
+                                                                
+  zone_one = pts={0,-20:120,-20:120,-100:0,-100}                
+  zone_two = pts={0,-100:120,-100:120,-180:0,-180}              
+
+	zone_one_color = pink
+	zone_two_color = dodger_blue
 }
 
 //-------------------------------------------------- 

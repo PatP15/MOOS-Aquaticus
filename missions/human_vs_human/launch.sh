@@ -75,7 +75,7 @@ if [ ! -e targ_human_1.moos ]; then echo "no targ_human_1.moos"; exit; fi
 #  Part 3: Create the Mokai for human driver 2. 
 #-------------------------------------------------------
 VNAME="human2"   
-START_POS="20,-20,180"         
+START_POS="20,-180,0"         
 
 nsplug meta_mokai_sim.moos targ_human_2.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9303"              \
