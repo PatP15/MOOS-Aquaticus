@@ -29,6 +29,14 @@ ADD_SUBDIRECTORY(pFlagStrategy)
 ADD_SUBDIRECTORY(iJoyStick)
 ADD_SUBDIRECTORY(pMapValues)
 ADD_SUBDIRECTORY(iActuationMokai)
+ADD_SUBDIRECTORY(iGPSDevice)
+ADD_SUBDIRECTORY(iGPSSim)
+ADD_SUBDIRECTORY(iM200)
+ADD_SUBDIRECTORY(iOS5000AC)
+ADD_SUBDIRECTORY(iuModemMP)
+ADD_SUBDIRECTORY(uJSON)
+ADD_SUBDIRECTORY(uSimM200)
+
 
 ##############################################################################
 #                           END of CMakeLists.txt
