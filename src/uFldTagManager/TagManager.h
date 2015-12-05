@@ -128,8 +128,6 @@ class TagManager : public AppCastingMOOSApp
 
   // Visual hints
   std::string   m_post_color;
-  std::string   m_hit_color;
-  std::string   m_miss_color;
 };
 
 #endif 

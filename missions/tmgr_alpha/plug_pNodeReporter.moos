@@ -9,6 +9,6 @@ ProcessConfig = pNodeReporter
   vessel_type = KAYAK
 
 	#ifdef VGROUP
-	group = $(VGROUP)
+//	group = $(VGROUP)kkkk
 	#endif
 }

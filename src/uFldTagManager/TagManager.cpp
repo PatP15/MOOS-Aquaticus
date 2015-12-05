@@ -744,9 +744,11 @@ bool TagManager::buildReport()
   // Part 1: Build the easy global settings output
   m_msgs << "Global Settings            " << endl;
   m_msgs << "===========================" << endl;
-  m_msgs << "Tag Range:    " << doubleToStringX(m_tag_range,1)   << endl;
-  m_msgs << "Tag Interval: " << doubleToStringX(m_tag_min_interval,1) << endl;
-
+  m_msgs << "Tag Range    :      " << doubleToStringX(m_tag_range,1)   << endl;
+  m_msgs << "Tag Min Interval:   " << doubleToStringX(m_tag_min_interval,1) << endl;
+  m_msgs << "Tag Duration:       " << doubleToStringX(m_tag_duration,1) << endl;
+  m_msgs << "Tag Circle Enabled: " << boolToString(m_tag_circle) << endl;
+  
   // Part 2: Produce the team structure
   map<string, set<string> >::iterator pp;
   for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {

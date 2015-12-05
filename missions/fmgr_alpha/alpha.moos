@@ -34,15 +34,19 @@ ProcessConfig = uFldFlagManager
 {
   AppTick   = 4
   CommsTick	= 4
-	
-  flag = x=57,  y=-43,  label=one
+
+	default_flag_width = 5        // Default is 5 meters
+	default_flag_type  = circle   // Default is circle
+	default_flag_range = 10       // Default is 10 meters
+	grabbed_color      = white    // Default is white
+  ungrabbed_color    = red      // Default is red
+
+  flag = x=57,  y=-43,  label=one, type=square, width=10, color=pink
   flag = x=64,  y=-157, label=two
   flag = x=152, y=-164, label=three
   flag = x=183, y=-93,  label=four, range=40
   flag = x=147, y=-43,  label=five
 
-	grabbed_color = yellow
-  ungrabbed_color = blue	
 }
 
 //------------------------------------------

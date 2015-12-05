@@ -72,7 +72,7 @@ ProcessConfig = uFldTagManager
   zone_two = pts={0,-100:120,-100:120,-180:0,-180}              
 
 	zone_one_color = pink
-	zone_two_color = dodger_blue
+	zone_two_color = light_blue
 }                                                       
 	
 //---------------------------------------------------------

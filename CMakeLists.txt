@@ -111,4 +111,5 @@ ENDIF( ${WIN32} )
 #=============================================================================
 # Add Subdirectories
 #=============================================================================
-ADD_SUBDIRECTORY( src )
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(src_attic)
