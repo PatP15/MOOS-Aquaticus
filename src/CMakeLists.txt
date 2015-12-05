@@ -15,6 +15,10 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 # List the subdirectories to build...
 #============================================================================
 ADD_SUBDIRECTORY(lib_behaviors-test)
+ADD_SUBDIRECTORY(lib_NMEAParse)
+ADD_SUBDIRECTORY(lib_SimpleSerial)
+ADD_SUBDIRECTORY(lib_gpsParser)
+
 ADD_SUBDIRECTORY(uSpeechRec)
 ADD_SUBDIRECTORY(uDialogManager)
 ADD_SUBDIRECTORY(pXRelayTest)
