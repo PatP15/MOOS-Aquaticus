@@ -121,6 +121,20 @@ void DialogManager::triggerAckSequence(string sval)
 	  
 	local_message = "src_node=mokai,dest_node=" + recipient +",var_name=TRAIL,string_val=false";
       }
+      else if(commanded=="DEPLOY") {
+	unsigned int  secs = 1; 
+	matched = true;
+	  
+	local_message = "true";
+	 m_Comms.Notify("DEPLOY",local_message);
+
+	local_message = "false";
+	 m_Comms.Notify("MOOS_MANUAL_OVERRIDE",local_message);
+
+	local_message = "false";
+	 m_Comms.Notify("RETURN",local_message);
+
+      }
     }
   }
 
