@@ -11,6 +11,15 @@
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include <string>
 #include <map>
+#include <vector>
+#include <list>
+
+
+struct var_value {
+  std::string var_name;
+  std::string value;
+};
+
 
 class DialogManager : public AppCastingMOOSApp
 {
@@ -32,9 +41,11 @@ class DialogManager : public AppCastingMOOSApp
   void triggerCommandSequence(std::string sval);
   void triggerAckSequence(std::string sval);
   bool handleNickNameAssignments(std::string line);
+  bool handleActionAssignments(std::string line);
 
  private: // Configuration variables
   std::map<std::string,std::string> m_nicknames;
+  std::map<std::string,std::list<var_value> > m_actions;
 
  private: // State variables
   std::string m_commanded_string;

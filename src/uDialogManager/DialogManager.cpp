@@ -246,6 +246,9 @@ bool DialogManager::OnStartUp()
     else if(param == "NICKNAME") {
       handled = handleNickNameAssignments(line);
     }
+    else if(param == "ACTION") {
+      handled = handleActionAssignments(line);
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -268,14 +271,61 @@ bool DialogManager::handleNickNameAssignments(std::string line) {
   //find original vehicle entry
   int erased =   m_nicknames.erase(actualVehicleName);
 
-  if(erased > 0) { //safe to add a new pair
+
     m_nicknames[vehicleNickName] = actualVehicleName;
     return (true);
-  }
-  else{
-    return (false);
+}
+
+//-------------------------------------------------------
+// Procedure: handleActionAssignments
+
+bool DialogManager::handleActionAssignments(std::string line) {
+
+  //take human entered sentence and convert to uppercase
+  //because this is how speech does it
+  //spaces are key for sentence so make sure to keep them
+  std::string actualWholeSentence = toupper(biteString(line,':'));
+
+  if(line == "") { //config warning as missing proper Action format
+    return false;
   }
 
+  //Now contain whole list of var-value pairs
+  //make sure to enforce MOOS VARS are all caps
+  //but keep values as assigned
+  std::string totalListOfVarValuePairs = line;
+
+  //break them up by the ',' comma
+  //we will need to loop here on the ','s 
+  //if there was no new ',' then biteStringX assigns "" to original string
+  std::list<var_value> tmpList;
+  while(totalListOfVarValuePairs != "") {
+  std:string tempVarValuePair = biteStringX(totalListOfVarValuePairs,',');
+
+    //assume var_name = var_value is the variable
+    std::string varName = biteStringX(tempVarValuePair,'=');
+
+    if(tempVarValuePair == "") { //poor formating of var_name = var_value
+      return false;
+    }
+
+    var_value tmpVarValue;
+    tmpVarValue.var_name = varName;
+    tmpVarValue.value = tempVarValuePair;
+
+    //assign the var_value struct to the list 
+    tmpList.push_back(tmpVarValue);
+  }
+
+  m_actions[actualWholeSentence] = tmpList;
+  //var-value pairs delimited by '=' equal sign
+    
+  //find current vehicleName nickName pair
+  //find original vehicle entry
+  //  int erased =   m_nicknames.erase(actualVehicleName);
+
+  //m_nicknames[vehicleNickName] = actualVehicleName;
+    return (true);
 }
 
 //---------------------------------------------------------
@@ -307,6 +357,17 @@ bool DialogManager::buildReport()
     actab<< it->first << it->second; 
       
   m_msgs << actab.getFormattedString();
+
+  //List action of speech sentences to variables published
+  for(std::map<string,std::list<var_value> >::iterator it = m_actions.begin(); it!=m_actions.end(); ++it) {
+    m_msgs << endl << endl << "Action: " << it->first << " : ";
+    //how do we access the items of the list?
+    std::list<var_value>::iterator listIt = it->second.begin();
+    for( ; listIt != it->second.end(); ++listIt) {
+      m_msgs << " var " << listIt->var_name << " value " << listIt->value;
+    }
+  }
+
 
   m_msgs <<endl<<endl<<"CURRENT STATE: "<< endl;
   if(m_state == WAIT_COMMAND) {

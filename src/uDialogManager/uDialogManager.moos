@@ -8,5 +8,9 @@ ProcessConfig = uDialogManager
 
    //robot Betty's nickname is Arnold
    Nickname = betty:arnold
+
+   //list of vars and values to publish given speech sentence
+	 //var-value pairs are comma separated
+	 Action = Arnold Deploy : deploy = true , moos_manual_override = false
 }
 
