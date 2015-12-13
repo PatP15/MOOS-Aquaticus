@@ -39,19 +39,26 @@ using namespace std;
 
 TagManager::TagManager()
 {
-  // Default visual hints
+  // Initialize config variables
   m_post_color = "white";
   m_tag_range  = 25;
   m_tag_min_interval = 10;
+  m_human_platform = "mokai";
   
-  m_tag_events = 0;    // Counter for tag events
   m_tag_duration = 30; // seconds
   m_tag_circle   = true;
-  m_tag_circle_color = "pink";
+  m_tag_circle_color = "green";
   m_tag_circle_range = 5;
 
-  m_zone_one_color = "white";
-  m_zone_two_color = "green";
+  m_zone_one_color = "pink";
+  m_zone_two_color = "light_blue";
+
+  m_team_one = "red";
+  m_team_two = "blue";
+  
+  // Initialize state variables
+  m_tag_events = 0;    // Counter for tag events
+  
 }
 
 //---------------------------------------------------------
@@ -116,21 +123,31 @@ bool TagManager::OnStartUp()
       handled = handleConfigTeamName(2, value);
     else if(param == "tag_duration") 
       handled = setNonNegDoubleOnString(m_tag_duration, value);
-    else if(param == "tag_post")
-      handled = handleConfigTagPost(value);
-    else if(param == "untag_post")
-      handled = handleConfigUnTagPost(value);
+    else if(param == "human_tag_post")
+      handled = handleConfigHumanTagPost(value);
+    else if(param == "robot_tag_post")
+      handled = handleConfigRobotTagPost(value);
+    else if(param == "human_untag_post")
+      handled = handleConfigHumanUnTagPost(value);
+    else if(param == "robot_untag_post")
+      handled = handleConfigRobotUnTagPost(value);
     else if(param == "tag_circle_color") 
       handled = setColorOnString(m_tag_circle_color, value);
+    else if(param == "tag_circle") 
+      handled = setBooleanOnString(m_tag_circle, value);
     else if(param == "zone_one_color") 
       handled = setColorOnString(m_zone_one_color, value);
     else if(param == "zone_two_color") 
       handled = setColorOnString(m_zone_two_color, value);
     else if(param == "tag_circle_range") 
       handled = setNonNegDoubleOnString(m_tag_circle_range, value);
- 
+    else if((param == "human_platform") && isKnownVehicleType(value))
+      m_human_platform = value;
+    else
+      handled = false;
+    
     if(!handled)
-      reportUnhandledConfigWarning("Unhandled config: " + orig);
+      reportUnhandledConfigWarning(orig);
   }
 
   postZonePolys();
@@ -172,7 +189,6 @@ void TagManager::registerVariables()
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
   Register("TAG_REQUEST", 0);
-  Register("TAG_STATUS_REQ", 0);
 }
 
 //---------------------------------------------------------
@@ -373,9 +389,9 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
 
 
 //------------------------------------------------------------
-// Procedure: handleConfigTagPost
+// Procedure: handleConfigHumanTagPost
 
-bool TagManager::handleConfigTagPost(string str)
+bool TagManager::handleConfigHumanTagPost(string str)
 {
   string moosvar = biteStringX(str, '=');
   string moosval = str;
@@ -384,15 +400,31 @@ bool TagManager::handleConfigTagPost(string str)
     return(false);
 
   VarDataPair pair(moosvar, moosval, "auto");
-  m_tag_posts.push_back(pair);
+  m_human_tag_posts.push_back(pair);
+  return(true);
+}
+
+//------------------------------------------------------------
+// Procedure: handleConfigRobotTagPost
+
+bool TagManager::handleConfigRobotTagPost(string str)
+{
+  string moosvar = biteStringX(str, '=');
+  string moosval = str;
+
+  if((moosvar == "") || (moosval == ""))
+    return(false);
+
+  VarDataPair pair(moosvar, moosval, "auto");
+  m_robot_tag_posts.push_back(pair);
   return(true);
 }
 
 
 //------------------------------------------------------------
-// Procedure: handleConfigUnTagPost
+// Procedure: handleConfigHumanUnTagPost
 
-bool TagManager::handleConfigUnTagPost(string str)
+bool TagManager::handleConfigHumanUnTagPost(string str)
 {
   string moosvar = biteStringX(str, '=');
   string moosval = str;
@@ -401,7 +433,23 @@ bool TagManager::handleConfigUnTagPost(string str)
     return(false);
 
   VarDataPair pair(moosvar, moosval, "auto");
-  m_untag_posts.push_back(pair);
+  m_human_untag_posts.push_back(pair);
+  return(true);
+}
+
+//------------------------------------------------------------
+// Procedure: handleConfigRobotUnTagPost
+
+bool TagManager::handleConfigRobotUnTagPost(string str)
+{
+  string moosvar = biteStringX(str, '=');
+  string moosval = str;
+
+  if((moosvar == "") || (moosval == ""))
+    return(false);
+
+  VarDataPair pair(moosvar, moosval, "auto");
+  m_robot_untag_posts.push_back(pair);
   return(true);
 }
 
@@ -428,6 +476,7 @@ void TagManager::processVTags()
 
 void TagManager::processVTag(VTag vtag)
 {
+  // Part 0: Pull out the fields from vtag data structure
   double vx = vtag.getX();
   double vy = vtag.getY();
   string vname = vtag.getVName();
@@ -467,20 +516,22 @@ void TagManager::processVTag(VTag vtag)
   // Part 3: Measure and collect the range to each non-team member
   //         Taking note of the closest target.
   string node_closest;
+  string node_closest_type;
   map<string, double> map_node_range;
   map<string, NodeRecord>::iterator p;
   for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
     string targ_name = p->first;
     string targ_team = p->second.getGroup();
+    string targ_type = tolower(p->second.getType());
     
     // Disregard members of the same team
     if(targ_team != vteam) {
       double targ_range = getTrueNodeRange(vx, vy, targ_name);
       map_node_range[targ_name] = targ_range;
-      if(node_closest == "")
+      if((node_closest == "") || (targ_range < map_node_range[node_closest])) {
 	node_closest = targ_name;
-      else if(targ_range < map_node_range[node_closest])
-	node_closest = targ_name;
+	node_closest_type = targ_type;
+      }
     }
   }
   // Always post the full range results to the verbose variable
@@ -504,7 +555,10 @@ void TagManager::processVTag(VTag vtag)
     m_map_node_vtags_nowtagged[node_closest] = true;
     m_map_node_vtags_timetagged[node_closest] = m_curr_time;
 
-    postTagPairs(vname, node_closest);
+    if(node_closest_type != m_human_platform)
+      postRobotTagPairs(vname, node_closest);
+    else
+      postHumanTagPairs(vname, node_closest);
   }
 
   postResult(event, vname, vteam, result);
@@ -528,8 +582,13 @@ void TagManager::checkForExpiredTags()
       if(remaining <= 0) {
 	m_map_node_vtags_nowtagged[vname]  = false;
 	m_map_node_vtags_timetagged[vname] = 0;
+	
+	string vtype = tolower(m_map_node_records[vname].getType());
+	if(vtype == m_human_platform)
+	  postHumanUnTagPairs(vname);
+	else
+	  postRobotUnTagPairs(vname);
 
-	postUnTagPairs(vname);
 	XYCircle circle;
 	circle.set_label(vname);
 	circle.set_active(false);
@@ -572,13 +631,13 @@ void TagManager::postTagCircles()
 }
 
 //------------------------------------------------------------
-// Procedure: postTagPairs
+// Procedure: postHumanTagPairs
 //      Note: Called on only when a tag has been made.
 
-void TagManager::postTagPairs(string src_vname, string tar_vname)
+void TagManager::postHumanTagPairs(string src_vname, string tar_vname)
 {
-  for(unsigned int i=0; i<m_tag_posts.size(); i++) {
-    VarDataPair pair = m_tag_posts[i];
+  for(unsigned int i=0; i<m_human_tag_posts.size(); i++) {
+    VarDataPair pair = m_human_tag_posts[i];
     string moosvar = pair.get_var();
     moosvar = findReplace(moosvar, "$SOURCE", src_vname);
     moosvar = findReplace(moosvar, "$TARGET", tar_vname);
@@ -606,13 +665,76 @@ void TagManager::postTagPairs(string src_vname, string tar_vname)
 }
 
 //------------------------------------------------------------
-// Procedure: postUnTagPairs()
+// Procedure: postRobotTagPairs
+//      Note: Called on only when a tag has been made.
+
+void TagManager::postRobotTagPairs(string src_vname, string tar_vname)
+{
+  for(unsigned int i=0; i<m_robot_tag_posts.size(); i++) {
+    VarDataPair pair = m_robot_tag_posts[i];
+    string moosvar = pair.get_var();
+    moosvar = findReplace(moosvar, "$SOURCE", src_vname);
+    moosvar = findReplace(moosvar, "$TARGET", tar_vname);
+    moosvar = findReplace(moosvar, "$UP_SOURCE", toupper(src_vname));
+    moosvar = findReplace(moosvar, "$UP_TARGET", toupper(tar_vname));
+
+    if(!pair.is_string()) {
+      double dval = pair.get_ddata();
+      Notify(moosvar, dval);
+    }
+    else {
+      string sval = pair.get_sdata();
+      sval = findReplace(sval, "$SOURCE", src_vname);
+      sval = findReplace(sval, "$TARGET", tar_vname);
+      sval = findReplace(sval, "$UP_SOURCE", toupper(src_vname));
+      sval = findReplace(sval, "$UP_TARGET", toupper(tar_vname));
+
+      if(strContains(sval, "TIME")) {
+	string stime = doubleToString(m_curr_time, 2);
+	sval = findReplace(sval, "$TIME", stime);
+      }
+      Notify(moosvar, sval);
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: postHumanUnTagPairs()
 //      Note: Called on only when a tag has expired
 
-void TagManager::postUnTagPairs(string tar_vname)
+void TagManager::postHumanUnTagPairs(string tar_vname)
 {
-  for(unsigned int i=0; i<m_untag_posts.size(); i++) {
-    VarDataPair pair = m_untag_posts[i];
+  for(unsigned int i=0; i<m_human_untag_posts.size(); i++) {
+    VarDataPair pair = m_human_untag_posts[i];
+    string moosvar = pair.get_var();
+    moosvar = findReplace(moosvar, "$TARGET", tar_vname);
+    moosvar = findReplace(moosvar, "$UP_TARGET", toupper(tar_vname));
+
+    if(!pair.is_string()) {
+      double dval = pair.get_ddata();
+      Notify(moosvar, dval);
+    }
+    else {
+      string sval = pair.get_sdata();
+      sval = findReplace(sval, "$TARGET", tar_vname);
+      sval = findReplace(sval, "$UP_TARGET", toupper(tar_vname));
+      if(strContains(sval, "TIME")) {
+	string stime = doubleToString(m_curr_time, 2);
+	sval = findReplace(sval, "$TIME", stime);
+      }
+      Notify(moosvar, sval);
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: postRobotUnTagPairs()
+//      Note: Called on only when a tag has expired
+
+void TagManager::postRobotUnTagPairs(string tar_vname)
+{
+  for(unsigned int i=0; i<m_robot_untag_posts.size(); i++) {
+    VarDataPair pair = m_robot_untag_posts[i];
     string moosvar = pair.get_var();
     moosvar = findReplace(moosvar, "$TARGET", tar_vname);
     moosvar = findReplace(moosvar, "$UP_TARGET", toupper(tar_vname));

@@ -52,8 +52,10 @@ class TagManager : public AppCastingMOOSApp
   bool    handleConfigVTagRange(std::string);
   bool    handleConfigZone(int, std::string);
   bool    handleConfigTeamName(int, std::string);
-  bool    handleConfigTagPost(std::string);
-  bool    handleConfigUnTagPost(std::string);
+  bool    handleConfigHumanTagPost(std::string);
+  bool    handleConfigRobotTagPost(std::string);
+  bool    handleConfigHumanUnTagPost(std::string);
+  bool    handleConfigRobotUnTagPost(std::string);
 
  protected: // Incoming mail utilities
   bool    handleMailNodeReport(const std::string&);
@@ -67,8 +69,10 @@ class TagManager : public AppCastingMOOSApp
   void    checkForExpiredTags();
   void    postTagCircles();
 
-  void    postTagPairs(std::string src_vname, std::string tar_vname);
-  void    postUnTagPairs(std::string tar_vname);
+  void    postHumanTagPairs(std::string src_vname, std::string tar_vname);
+  void    postRobotTagPairs(std::string src_vname, std::string tar_vname);
+  void    postHumanUnTagPairs(std::string tar_vname);
+  void    postRobotUnTagPairs(std::string tar_vname);
 
  protected: // Outgoing mail utilities
   void    postRangePulse(double x, double y, std::string color,
@@ -117,14 +121,17 @@ class TagManager : public AppCastingMOOSApp
   std::string   m_zone_two_color;
   std::string   m_team_one;
   std::string   m_team_two;
+  std::string   m_human_platform;
   
   unsigned int  m_tag_events;
   bool          m_tag_circle;
   std::string   m_tag_circle_color;
   double        m_tag_circle_range;
 
-  std::vector<VarDataPair> m_tag_posts;
-  std::vector<VarDataPair> m_untag_posts;
+  std::vector<VarDataPair> m_robot_tag_posts;
+  std::vector<VarDataPair> m_human_tag_posts;
+  std::vector<VarDataPair> m_robot_untag_posts;
+  std::vector<VarDataPair> m_human_untag_posts;
 
   // Visual hints
   std::string   m_post_color;
