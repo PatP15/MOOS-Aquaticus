@@ -77,8 +77,8 @@ void showExampleConfigAndExit()
   blk("  AppTick        = 10");
   blk("  CommsTick      = 10");
   blk("");
-  blk("  PORT_NUMBER    = 29500");
-  blk("  IP_ADDRESS     = localhost // Default is 'localhost'");
+  blk("  IP_ADDRESS     = localhost // Address of front-seat, default is 'localhost'");
+  blk("  PORT_NUMBER    = 29500     // Port number at IP address, default is 29500");
   blk("  GPS_PREFIX     = NAV_      // Prepended to GPS position messages.");
   blk("  DIRECT_THRUST  = false     // Default is false.        ");
   blk("                             // When true, vehicle is in direct-thrust mode.");

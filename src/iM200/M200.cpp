@@ -60,6 +60,7 @@ iM200::iM200()
   m_bValidIPConn          = false;
   m_socketfd              = 0.0;
   m_strInBuff             = "";
+  m_host_IL               = 0;
 
   //    The man page of getaddrinfo() states:
   //        "All the other fields in the structure pointed to by hints must
@@ -79,6 +80,7 @@ iM200::iM200()
   m_swap_pitch_roll       = false;                // When true, swap pitch and roll values
   m_trigger_key           = "GPRMC";              // Always triggered by GPRMC message
   m_gps_heading_source    = HEADING_SOURCE_NONE;  // Heading is handled outside of GPS messages
+  m_parser                = 0;
 
   // Clearpath details not related to GPS
   m_batt_voltage          = 0.0;
@@ -101,6 +103,8 @@ iM200::iM200()
   m_des_count_thrust      = 0;
   m_des_count_rudder      = 0;
   m_ivpAllstop            = true;
+
+  server                  = 0;
 }
 
 bool iM200::OnNewMail(MOOSMSG_LIST &NewMail)
@@ -477,7 +481,7 @@ bool iM200::SetParam_HEADING_OFFSET(string sVal)
   else
     m_heading_offset = strtod(sVal.c_str(), 0);
   if (m_heading_offset < 0.0 || m_heading_offset >= 180.0) {
-    ssMsg << "Param HEADING_OFFSET cannot be " << m_dMaxRudder << ". Must be in range [0.0, 180.0). Defaulting to 0.0.";
+    ssMsg << "Param HEADING_OFFSET cannot be " << m_heading_offset << ". Must be in range [0.0, 180.0). Defaulting to 0.0.";
     m_heading_offset = 0.0; }
   string msg = ssMsg.str();
   if (!msg.empty())
