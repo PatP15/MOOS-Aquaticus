@@ -123,7 +123,6 @@ void showInterfaceAndExit()
   blk("  [gps_prefix]_SPEED   double 0 or positive number; speed in m/s     ");
   blk("  [gps_prefix]_HEADING double [0, 360) Vehicle heading from true N,  ");
   blk("                              offset by HEADING_OFFSET               ");
-  blk("  NAV_HEADING          double Vehicle heading in degrees from N      ");
   blk("  NMEA_MSG             double Sentences from the GPS                 ");
   blk("  M200_BATT_VOLTAGE    double Battery voltage from front seat        ");
   blk("  M200_RAW_NMEA        string All front seat sentences, published    ");
