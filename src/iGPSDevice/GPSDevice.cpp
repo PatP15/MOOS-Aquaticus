@@ -315,6 +315,7 @@ bool GPSDevice::SetParam_BAUDRATE(std::string sVal)
     reportConfigWarning("Mission file parameter BAUDRATE may not be blank.");
   else if (sVal ==   "2400") m_baudrate = 2400;
   else if (sVal ==   "4800") m_baudrate = 4800;
+  else if (sVal ==  "19200") m_baudrate = 9600;
   else if (sVal ==  "19200") m_baudrate = 19200;
   else if (sVal ==  "38400") m_baudrate = 38400;
   else if (sVal ==  "57600") m_baudrate = 57600;
