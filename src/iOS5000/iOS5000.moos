@@ -3,7 +3,7 @@
 ServerHost = localhost
 ServerPort = 9000
 
-ProcessConfig = iOS5000AC
+ProcessConfig = iOS5000
 {
 	AppTick   = 4
 	CommsTick = 4

@@ -1,12 +1,12 @@
 // NAME: Michael "Misha" Novitzky
 // BASED ON: .......
 // (c) 2004 
-// CiOS5000AC.h: interface for the CiOS5000 class.
+// CiOS5000.h: interface for the CiOS5000 class.
 ////////////////////////////////////////////////
 
 /*
-#ifndef __CiOS5000AC_h__
-#define __CiOS5000AC_h__
+#ifndef __CiOS5000_h__
+#define __CiOS5000_h__
 
 
 
@@ -22,11 +22,11 @@
 #include "CSerialPort.h"
 
 
-class CiOS5000AC : public AppCastingMOOSApp
+class CiOS5000 : public AppCastingMOOSApp
 {
 public:
-	CiOS5000AC();
-	virtual ~CiOS5000AC() {};
+	CiOS5000();
+	virtual ~CiOS5000() {}
 
 	bool OnNewMail(MOOSMSG_LIST &NewMail);
 	bool Iterate();
@@ -42,7 +42,7 @@ protected:
 
 	pthread_t thr;
 	static void *trampoline(void *arg) {
-		((CiOS5000AC *)arg)->thread();
+		((CiOS5000 *)arg)->thread();
 		return NULL; }
 
 	void thread(void);

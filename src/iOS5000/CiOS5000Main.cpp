@@ -1,5 +1,5 @@
 /*
- * iGPSMain.cpp
+ * CiOS5000Main.cpp
  *
  *  Completely Revised on: July 22, 2014
  *      Author: Alon Yaari
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         showHelpAndExit();
 
     cout << termColor("green");
-    cout << "iGPS_KFAC running as: " << run_command << endl;
+    cout << "iOS5000 running as: " << run_command << endl;
     cout << termColor() << endl;
 
     os5000 gps;

@@ -3,7 +3,7 @@
 // 
 // (c) 2004
 
-// CiOS5000AC.cpp: implementation of the CiOS5000AC class.
+// CiOS5000.cpp: implementation of the CiOS5000 class.
 ////////////////////////////////////////////////////////
 
 /*
@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <math.h>
-#include "CiOS5000AC.h"
+#include "CiOS5000.h"
 #include "MBUtils.h"
 #include "tokenize.h"
 #include "sutil.h"
@@ -23,7 +23,7 @@
 
 using namespace std;
 
-CiOS5000AC::CiOS5000AC()
+CiOS5000::CiOS5000()
 {
 	m_headingMsgName = "COMPASS_HEADING";
 	m_yawMsgName     = "COMPASS_YAW";
@@ -33,7 +33,7 @@ CiOS5000AC::CiOS5000AC()
 	pt               = NULL;
 }
 
-bool CiOS5000AC::OnNewMail(MOOSMSG_LIST &NewMail)
+bool CiOS5000::OnNewMail(MOOSMSG_LIST &NewMail)
 {
 	AppCastingMOOSApp::OnNewMail(NewMail);
 	MOOSMSG_LIST::iterator it;
@@ -44,7 +44,7 @@ bool CiOS5000AC::OnNewMail(MOOSMSG_LIST &NewMail)
 	return true;
 }
 
-bool CiOS5000AC::OnConnectToServer()
+bool CiOS5000::OnConnectToServer()
 {
 	AppCastingMOOSApp::RegisterVariables();
 	string port;
@@ -82,7 +82,7 @@ bool CiOS5000AC::OnConnectToServer()
 	return true;
 }
 
-void CiOS5000AC::thread(void)
+void CiOS5000::thread(void)
 {
 	while (1) {
 		int st, en;
@@ -146,14 +146,14 @@ void CiOS5000AC::thread(void)
 		free(s); }
 }
 
-bool CiOS5000AC::Iterate()
+bool CiOS5000::Iterate()
 {
 	AppCastingMOOSApp::Iterate();
 	AppCastingMOOSApp::PostReport();
 	return true;
 }
 
-bool CiOS5000AC::OnStartUp()
+bool CiOS5000::OnStartUp()
 {
 	AppCastingMOOSApp::OnStartUp();
 	// happens after connection is completely usable
@@ -161,7 +161,7 @@ bool CiOS5000AC::OnStartUp()
 	return true;
 }
 
-bool CiOS5000AC::buildReport()
+bool CiOS5000::buildReport()
 {
 	ACTable actab(3);
 	actab << "Variable | Time | Value";
