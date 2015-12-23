@@ -38,6 +38,7 @@ class FlagManager : public AppCastingMOOSApp
 
    bool resetFlagsByLabel(std::string);
    bool resetFlagsByVName(std::string);
+   bool resetFlagsAll();
    void postFlagMarkers();
    void postFlagSummary();
    
@@ -45,6 +46,7 @@ class FlagManager : public AppCastingMOOSApp
 
    // Flag Configurations
    std::vector<XYMarker>  m_flags;
+   std::vector<bool>      m_flags_changed;
 
    double      m_default_flag_range;
    double      m_default_flag_width;

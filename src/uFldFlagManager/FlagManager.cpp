@@ -22,7 +22,7 @@ FlagManager::FlagManager()
 {
   // Default config values
   m_default_flag_range    = 10; // meters
-  m_default_flag_width    = 10; // meters
+  m_default_flag_width    = 3;  // meters
   m_default_flag_type     = "circle";
   m_report_flags_on_start = true;
 
@@ -220,6 +220,7 @@ bool FlagManager::handleConfigFlag(string str)
   }
 
   m_flags.push_back(flag);
+  m_flags_changed.push_back(true);
   
   return(true);
 }
@@ -261,18 +262,23 @@ bool FlagManager::handleMailFlagReset(string str)
 {
   bool some_flags_were_reset = false;
 
-  string vname = tokStringParse(str, "vname", ',', '=');
-  if(vname == "")
-    vname = tokStringParse(str, "VNAME", ',', '=');
-  if(vname != "")
-    some_flags_were_reset = resetFlagsByVName(vname);
-  
-  string label = tokStringParse(str, "label", ',', '=');
-  if(label != "")
-    some_flags_were_reset = resetFlagsByLabel(label);
-
-  if((label == "") && (vname == ""))
-    return(false);
+  if(tolower(str) == "all") {
+    some_flags_were_reset = resetFlagsAll();
+  }
+  else {
+    string vname = tokStringParse(str, "vname", ',', '=');
+    if(vname == "")
+      vname = tokStringParse(str, "VNAME", ',', '=');
+    if(vname != "")
+      some_flags_were_reset = resetFlagsByVName(vname);
+    
+    string label = tokStringParse(str, "label", ',', '=');
+    if(label != "")
+      some_flags_were_reset = resetFlagsByLabel(label);
+    
+    if((label == "") && (vname == ""))
+      return(false);
+  }
 
   if(some_flags_were_reset) {
     postFlagMarkers();
@@ -325,6 +331,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 	  result += ",";
 	result += "grabbed=" + m_flags[i].get_label();
 	m_flags[i].set_owner(grabbing_vname);
+	m_flags_changed[i] = true;
 	m_map_flag_count[up_vname]++;
       }
     }
@@ -357,8 +364,29 @@ bool FlagManager::resetFlagsByLabel(string label)
     if(m_flags[i].get_label() == label) {
       if(m_flags[i].get_owner() != "") {
 	m_flags[i].set_owner("");
+	m_flags_changed[i] = true;
 	some_flags_were_reset = true;
       }
+    }
+  }
+  return(some_flags_were_reset);
+}
+
+//------------------------------------------------------------ 
+// Procedure: resetFlagsAll
+//      Note: Resets all flags regardless of who owned them
+//   Returns: true if a flag was indeed reset, possibly visuals
+//            then need updating
+
+bool FlagManager::resetFlagsAll()
+{
+  bool some_flags_were_reset = false;
+  
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    if(m_flags[i].get_owner() != "") {
+      m_flags[i].set_owner("");
+      m_flags_changed[i] = true;
+      some_flags_were_reset = true;
     }
   }
   return(some_flags_were_reset);
@@ -377,6 +405,7 @@ bool FlagManager::resetFlagsByVName(string vname)
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_owner() == vname) {
       m_flags[i].set_owner("");
+      m_flags_changed[i] = true;
       some_flags_were_reset = true;
     }
   }
@@ -391,21 +420,23 @@ bool FlagManager::resetFlagsByVName(string vname)
 void FlagManager::postFlagMarkers()
 {
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    XYMarker marker = m_flags[i];
-    
-    if(m_flags[i].get_owner() == "") {
-      if(!m_flags[i].color_set("primary_color"))
-	marker.set_color("primary_color", m_ungrabbed_color);
-    }
-    else
+    if(m_flags_changed[i]) {
+      XYMarker marker = m_flags[i];
+      if(m_flags[i].get_owner() == "") {
+	if(!m_flags[i].color_set("primary_color"))
+	  marker.set_color("primary_color", m_ungrabbed_color);
+      }
+      else
 	marker.set_color("primary_color", m_grabbed_color);
-    marker.set_color("secondary_color", "black");
+      marker.set_color("secondary_color", "black");
 
-    string spec = marker.get_spec();
-    Notify("VIEW_MARKER", spec);
+      string spec = marker.get_spec();
+      Notify("VIEW_MARKER", spec);
+      m_flags_changed[i] = false;
+    }
   }
 }
-
+  
 //------------------------------------------------------------ 
 // Procedure: postFlagSummary
 
@@ -426,6 +457,14 @@ void FlagManager::postFlagSummary()
 
 bool FlagManager::buildReport() 
 {
+
+  m_msgs << "Configuration Summary: " << endl;
+  m_msgs << "======================================" << endl;
+  m_msgs << "  default_flag_range: " << m_default_flag_range << endl;
+  m_msgs << "  default_flag_width: " << m_default_flag_width << endl;
+  m_msgs << "  default_flag_type:  " << m_default_flag_type  << endl;
+  m_msgs << endl;
+
   m_msgs << "Node Report Summary"                    << endl;
   m_msgs << "======================================" << endl;
   m_msgs << "        Total Received: " << m_total_node_reports_rcvd << endl;
@@ -443,7 +482,7 @@ bool FlagManager::buildReport()
     m_msgs << stime << endl;
   }
 
-  m_msgs << endl << endl;
+  m_msgs << endl;
 
   m_msgs << "Vehicle Summary" << endl;
   m_msgs << "======================================" << endl;
@@ -468,27 +507,21 @@ bool FlagManager::buildReport()
   }
   m_msgs << actab.getFormattedString();
   m_msgs << endl << endl;
-
   
   m_msgs << "Flag Summary" << endl;
   m_msgs << "======================================" << endl;
-  actab = ACTable(5);
-  actab << "Flag | Range | | Owner | Spec";
+  actab = ACTable(4);
+  actab << "Flag | Range | Owner | Spec";
   actab.addHeaderLines();
 
   for(unsigned int i=0; i<m_flags.size(); i++) {
     string label = m_flags[i].get_label();
     string vname = m_flags[i].get_owner();
     string range = doubleToStringX(m_flags[i].get_range(), 2);
-    actab << label << range << " ---> " << vname << m_flags[i].get_spec();
+    actab << label << range << vname << m_flags[i].get_spec();
   }
   m_msgs << actab.getFormattedString();
 
-  m_msgs << endl;
-  m_msgs << "default_flag_range: " << m_default_flag_range << endl;
-  m_msgs << "default_flag_width: " << m_default_flag_width << endl;
-  m_msgs << "default_flag_type:  " << m_default_flag_type  << endl;
-  
   return(true);
 }
 

@@ -38,9 +38,9 @@ void showSynopsis()
   blk("  Typically run in a shoreside community. Takes reports from ");
   blk("  remote vehicles, notes their position. Takes a tag request ");
   blk("  from a vehicle and (a) notes whether it currently          ");
-  blk("  has remaining tags (b) notes the launch point with         ");
-  blk("  with requested target. The manager will apply the tag      ");
-  blk("  and notify the tagged and tagging vehicles.                ");
+  blk("  has remaining tags (b) notes the launch point with with    ");
+  blk("  requested target. The manager will apply the tag and       ");
+  blk("  notify the tagged and tagging vehicles.                    ");
 }
 
 //----------------------------------------------------------------
