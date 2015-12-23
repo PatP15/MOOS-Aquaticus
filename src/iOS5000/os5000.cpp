@@ -201,11 +201,11 @@ bool os5000::ParseNMEAString(string osData)
     if (!rValStr.empty()) {
         double dVal = strtod(rValStr.c_str(), 0);
         curRoll = dVal;
-        m_Comms.Notify(namePitch, dVal); }
+        m_Comms.Notify(nameRoll, dVal); }
     if (!tValStr.empty()) {
         double dVal = strtod(tValStr.c_str(), 0);
         curTempC = dVal;
-        m_Comms.Notify(namePitch, dVal); }
+        m_Comms.Notify(nameTempC, dVal); }
     return true;
 }
 
