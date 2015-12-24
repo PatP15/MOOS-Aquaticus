@@ -22,16 +22,15 @@ void showSynopsis()
     blk("  Receives sentences from an Ocean-Server OS5000 digital compass over a");
     blk("  serial connection. Sentences are parsed and extracted data is published.");
     blk("  This application assumes that the OS5000 unit was preconfigured to output");
-    blk("  Format Type 0x01, '$C' messages. See the user manual for details.");
-    blk("  Note that the unit can be preconfigured and retains configuration data");
-    blk("  when not powered. Therefore once the unit is configured it does not require");
-    blk("  reconfiguration.");
+    blk("  Format Type 0x01, '$C' messages. See the user manual for details. Onboard");
+    blk("  non-volatile RAM retains configuration data when device is powered off.");
+    blk("  Therefore once the unit is configured it does not require reconfiguration.");
     blk("  $C messages are parsed and published into the following MOOS messages:");
     blk("     prefix_HEADING     Heading in degrees from magnetic north (plus offset)");
     blk("     prefix_PITCH       Pitch angle in degrees from horizontal");
     blk("     prefix_ROLL        Roll angle in degrees from horizontal");
     blk("     prefix_TEMPERATURE Temperature reading if the compass circuitry in C");
-    blk("  where prefix is user-defined in the mission file, defaulting to 'COMPASS_'.");
+    blk("  where prefix is user-defined in the mission file, default prefix='COMPASS_'.");
 }
 
 void showHelpAndExit()
@@ -98,24 +97,10 @@ void showInterfaceAndExit()
   blk("");
   blk("PUBLICATIONS:");
   blk("------------------------------------");
-  blk("  [prefix]_HEADING double  Heading in degrees from magnetic north");
-  blk("  [prefix]_LAT     double  Latitude parsed from recent NMEA sentence");
-  blk("  [prefix]_LON     double  Longitude parsed from recent NMEA sentence");
-  blk("  [prefix]_X       double  X position in meters relative to the local origin");
-  blk("  [prefix]_Y       double  Y position in meters relative to the local origin");
-  blk("  [prefix]_SPEED   double  Speed in meters per second, provided by GPS");
-  blk("  [prefix]_YAW     double  Direction bow points in degrees CW from true N");
+  blk("  [prefix]_HEADING double  Heading in degrees from magnetic north, plus offset");
   blk("  [prefix]_PITCH   double  Degrees of tilt left or right");
   blk("  [prefix]_ROLL    double  Degrees of tilt forward or back");
-  blk("  [prefix]_SAT     double  Number of satellites GPS can make use of");
-  blk("  [prefix]_HDOP    double  Horizontal dilution of precision value from GPS");
-  blk("  [prefix]_QUALITY string  DIFF Differential fix (provides best position)");
-  blk("                           NO_D Fix, but without differential input");
-  blk("                           EST  Position is estimated");
-  blk("                           BAD  No position can be calculated");
-  blk("  [prefix]_MAGVAR  double  If available, local compass magnetic variation");
-  blk("  [prefix]_HPE     double  If available, horizontal position error");
-  blk("  [prefix]_RAW     string  Received NMEA sentences");
+  blk("  [prefix]_TEMPERATURE double  Temp in Celsius at the device.");
   blk("");
   exit(0);
 }
