@@ -81,8 +81,10 @@ void showExampleConfigAndExit()
   blk("  BaudRate         = 19200         // Serial port baud rate");
   blk("  Src_ID           = 1             // uModem ID number (should be unique among");
   blk("                                   //   active modems");
-  blk("  Soundspeed       = 1465          // Soundspeed in water, in meters per sec");
-  blk("                                   //   1465 = fresh water, 15C");
+  blk("  Soundspeed       = 1478          // Sound speed in meters per second. Sample");
+  blk("                                   //   value of 1478 is in fresh water at 15 C");
+  blk("                                   //   No default; if omitted range will not");
+  blk("                                   //   be calculated.");
   blk("  Show_View_Circle = TRUE          // True: publish VIEW_CIRCLE (def.= TRUE)");
   blk("                                   // False: do not publish");
   blk("}                                                                           ");
