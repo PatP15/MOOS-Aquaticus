@@ -80,7 +80,7 @@ void showExampleConfigAndExit()
   blk("  Port             = /dev/ttyACM1  // Fully-qualified path to the serial port");
   blk("  BaudRate         = 19200         // Serial port baud rate");
   blk("  Src_ID           = 1             // uModem ID number (should be unique among");
-  blk("                                   //   active modems");
+  blk("                                   //   active modems)");
   blk("  Soundspeed       = 1478          // Sound speed in meters per second. Sample");
   blk("                                   //   value of 1478 is in fresh water at 15 C");
   blk("                                   //   No default; if omitted range will not");
