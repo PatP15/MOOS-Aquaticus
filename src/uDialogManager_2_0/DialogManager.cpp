@@ -117,6 +117,12 @@ void DialogManager::triggerAckSequence(string sval)
     else { //we have found the Speech Sentence defined in the .moos file
       matched = true;
       //now go through and publish MOOS vars 
+    //access the list
+    std::list<var_value> tmpList=    m_actions.find(m_commanded_string)->second;
+    std::list<var_value>::iterator il;
+    for(il = tmpList.begin(); il != tmpList.end(); ++il) {
+      m_Comms.Notify(il->var_name,il->value);
+    }
       /*	  
 	local_message = "true";
 	 m_Comms.Notify("DEPLOY",local_message);
