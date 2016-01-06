@@ -1,0 +1,16 @@
+//------------------------------------------------
+// uDialogManager config block
+
+ProcessConfig = uDialogManager_2_0
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   //robot Betty's nickname is Arnold
+   Nickname = betty:arnold
+
+   //list of vars and values to publish given speech sentence
+	 //var-value pairs are comma separated
+	 sentence = Arnold_Deploy : deploy = true , moos_manual_override = false
+}
+
