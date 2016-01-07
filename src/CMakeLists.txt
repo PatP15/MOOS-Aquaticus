@@ -34,6 +34,7 @@ ADD_SUBDIRECTORY(iOS5000)
 ADD_SUBDIRECTORY(iuModemMP)
 ADD_SUBDIRECTORY(uJSON)
 ADD_SUBDIRECTORY(uSimM200)
+ADD_SUBDIRECTORY(iBlinkstick)
 
 
 ##############################################################################

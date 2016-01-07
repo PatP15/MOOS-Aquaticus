@@ -1,0 +1,9 @@
+//------------------------------------------------
+// iBlinkstick config block
+
+ProcessConfig = iBlinkstick
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
