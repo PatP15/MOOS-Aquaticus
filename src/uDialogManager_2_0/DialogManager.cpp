@@ -123,19 +123,8 @@ void DialogManager::triggerAckSequence(string sval)
     for(il = tmpList.begin(); il != tmpList.end(); ++il) {
       m_Comms.Notify(il->var_name,il->value);
     }
-      /*	  
-	local_message = "true";
-	 m_Comms.Notify("DEPLOY",local_message);
-
-	local_message = "false";
-	 m_Comms.Notify("MOOS_MANUAL_OVERRIDE",local_message);
-
-	local_message = "false";
-	 m_Comms.Notify("RETURN",local_message);
-      */
     }
   }
-
 
   //Here we check to see if the person answered No for an Ack which cancels everything and we wait for another command
   //If the person answers yes, we must check whether
@@ -145,23 +134,22 @@ void DialogManager::triggerAckSequence(string sval)
  
     ackStatement = "Command Canceled";
   }
-  else  if(nameMatched == false) { //name provided does not match any defined
+  /*  else  if(nameMatched == false) { //name provided does not match any defined
     ackStatement = "Incorrect Ack Or Wrong Name";
-  }
+    } */
 
-  else if(matched == true) { //Name and command matched
+  else if(matched == true) { //command matched
 	  
     ackStatement = "Command Sent";
   }
   else {
-    ackStatement = "Command Not Sent Not Yet Defined";
+    ackStatement = "Error Wrong Ack or Command Not Defined";
   }
 
   m_Comms.Notify("SAY_MOOS",ackStatement);
    
   if(matched == true) {
     m_Comms.Notify("SPEECH_COMMANDED", m_commanded_string);
-    //    m_Comms.Notify("NODE_MESSAGE_LOCAL",local_message);
   }
   m_state = WAIT_COMMAND;
 }
