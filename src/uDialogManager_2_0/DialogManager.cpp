@@ -290,18 +290,23 @@ bool DialogManager::handleActionAssignments(std::string line) {
     //check again for _'s that should be changed to a space
     found = actualWholeSentence.find('_');
   }
-
+  /*
+  //Julius speech sentences in quotation marks
+  if(isQuoted(actualWholeSentence)) {//means sentence is quoted
+    actualWholeSentence = stripQuotes(actualWholeSentence); //remove the quotes
+  }
+  */
   //Now contain whole list of var-value pairs
   //make sure to enforce MOOS VARS are all caps
   //but keep values as assigned
   std::string totalListOfVarValuePairs = line;
 
-  //break them up by the ',' comma
-  //we will need to loop here on the ','s 
-  //if there was no new ',' then biteStringX assigns "" to original string
+  //break them up by the '+' plus sign
+  //we will need to loop here on the '+'s 
+  //if there was no new '+' then biteStringX assigns "" to original string
   std::list<var_value> tmpList;
   while(totalListOfVarValuePairs != "") {
-    std::string tempVarValuePair = biteStringX(totalListOfVarValuePairs,',');
+    std::string tempVarValuePair = biteStringX(totalListOfVarValuePairs,'+');
 
     //assume var_name = var_value is the variable
     std::string varName = biteStringX(tempVarValuePair,'=');
@@ -312,6 +317,12 @@ bool DialogManager::handleActionAssignments(std::string line) {
 
     var_value tmpVarValue;
     tmpVarValue.var_name = varName;
+
+    //remove quotes if needed
+    if(isQuoted(tempVarValuePair)) { //found quotes
+      tempVarValuePair = stripQuotes(tempVarValuePair);
+    }
+
     tmpVarValue.value = tempVarValuePair;
 
     //assign the var_value struct to the list 
