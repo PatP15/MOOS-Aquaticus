@@ -65,7 +65,6 @@ EvalLoiter::EvalLoiter()
 
 bool EvalLoiter::OnNewMail(MOOSMSG_LIST &NewMail)
 {
-  cout << "Got here 1111" << endl;
   AppCastingMOOSApp::OnNewMail(NewMail);
 
   MOOSMSG_LIST::iterator p;
@@ -101,7 +100,6 @@ bool EvalLoiter::OnNewMail(MOOSMSG_LIST &NewMail)
       reportRunWarning("Unhandled Mail: " + key);
   }
   
-  cout << "Got here 2222" << endl;
   return(true);
 }
 
@@ -119,17 +117,14 @@ bool EvalLoiter::OnConnectToServer()
 
 bool EvalLoiter::Iterate()
 {
-  cout << "Got here AAAA" << endl;
   AppCastingMOOSApp::Iterate();
 
-  cout << "Got here BBBB" << endl;
   // Part 1: Check if minimal info on ownship and poly is valid.
   if((m_records.size() == 0) || !m_loiter_poly.is_convex()) {
     AppCastingMOOSApp::PostReport();
     return(true);
   }
   
-  cout << "Got here CCCC" << endl;
   m_conditions_ok = checkConditions();
   if(!m_conditions_ok) {
     m_point_evals.clear();
@@ -140,29 +135,23 @@ bool EvalLoiter::Iterate()
     return(true);
   }
   
-  cout << "Got here DDDD" << endl;
   // Part 2: Always need curr_dist_to_poly. If no node records, done.
   double curr_osx  = m_records.front().getX();
   double curr_osy  = m_records.front().getY();
   m_curr_dist_to_poly = m_loiter_poly.dist_to_poly(curr_osx, curr_osy);
 
-  cout << "Got here EEEE" << endl;
   // Part 3: Always re-assess loiter mode before calculating point eval.
   checkLoiterMode();
   
-  cout << "Got here FFFF" << endl;
   // Part 4: Always evaluate efficiency rating for this point in time.
   performPointEval();
 
-  cout << "Got here GGGG" << endl;
   // Part 5: Check pending eval requests. Requests need to be old
   // enough before it is processed and removed. So this invocation
   // may result in nothing. But we need to check on every iteration.
   processEvalRequests();
   
-  cout << "Got here HHHH" << endl;
   AppCastingMOOSApp::PostReport();
-  cout << "Got here ZZZZ" << endl;
   return(true);
 }
 
@@ -580,10 +569,9 @@ bool EvalLoiter::updateInfoBuffer(CMOOSMsg &msg)
 
 //---------------------------------------------------------
 // Procedure: processEvalRquests
-//   Purpose: Check all pending eval requests and check each
-//            to see if it's been in the queue long enough.
-//            If so, perform the summary eval and remove it
-//            from the queue.
+//   Purpose: Check all pending eval requests and check each to see
+//            if it's been in the queue long enough. If so, perform
+//            the summary eval and remove it from the queue.
 
 void EvalLoiter::processEvalRequests()
 {
@@ -599,12 +587,12 @@ void EvalLoiter::processEvalRequests()
       // Part 1: build the summary 
       double eval_summary = getEvalSummary();
       string msg = key + ",eff=" + doubleToString(eval_summary,2);
-      msg += ",v1=" + m_host_community;
+      msg += ",v1=" + m_host_community + ",type=eval_loiter";
       
       // Part 2: post the message
       reportEvent("EVAL_SUMMARY: " + msg);
-      Notify("EVAL_LOITER_SUMMARY", msg);
-      Notify("EVAL_LOITER_SUMMVAL", eval_summary);
+      Notify("ENCOUNTER_SUMMARY", msg);
+      Notify("ENCOUNTER_SUMMVAL", eval_summary);
       m_cnt_evals_posted++;
       
       // Part 3: remove the pending request for an eval

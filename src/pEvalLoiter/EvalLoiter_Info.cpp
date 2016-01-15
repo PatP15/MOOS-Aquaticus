@@ -97,13 +97,18 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("  NODE_REPORT_LOCAL =                                           ");
+  blk("  EVAL_LOITER_REQ   =                                           ");
+  blk("  BHV_SETTINGS      =                                           ");
+  blk("                                                                ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  ENCOUNTER_SUMMVAL = 87.66                                     ");
+  blk("  ENCOUNTER_SUMMARY = id=4,cpa=11.832,v2=deb,eff=87.31,v1=abe,  ");
+  blk("                      type=eval_loiter                          ");
   blk("                                                                ");
+  blk("  EVAL_LOITER_PT_EVAL = 98.23                                   ");
   exit(0);
 }
 
