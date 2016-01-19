@@ -275,13 +275,6 @@ void EvalLoiter::performPointEval()
     double expect_dist_closed = secs_ago * m_transit_speed;
     double actual_dist_closed = prev_dist - m_curr_dist_to_poly;
     
-    double delta = expect_dist_closed - actual_dist_closed;
-
-    if(delta < (-expect_dist_closed))
-       delta = -expect_dist_closed;
-    if(delta > (expect_dist_closed))
-       delta = expect_dist_closed;
-       
     // value range is twice the expected closing distance since
     // it's possible the vehicle may have been force on a trajectory
     // opening range during this whole time. The range coulde be
@@ -289,12 +282,6 @@ void EvalLoiter::performPointEval()
     // work with this value range.
     double value_range = 2 * expect_dist_closed;
 
-    //cout << "curr_dist_to_poly: " << m_curr_dist_to_poly << endl;
-    //cout << "expect_dist_closed: " << expect_dist_closed << endl;
-    //cout << "actual_dist_closed: " << actual_dist_closed << endl;
-    //cout << "delta:              " << delta << endl;
-    //cout << "value_range:        " << value_range << endl;
-    
     // As an edge case we'll say we were 100% efficient if the
     // transit speed is for some reason zero. We check for this as
     // a special case also since it would result in div by zero
@@ -302,6 +289,7 @@ void EvalLoiter::performPointEval()
     if(value_range > 0) {
       double pct = (actual_dist_closed + expect_dist_closed) / value_range;
       //cout << "pct                 " << pct << endl << endl;
+      pct = vclip(pct, 0, 100);
       efficiency_score = pct * 100;
     }
     addPointEval(efficiency_score);
