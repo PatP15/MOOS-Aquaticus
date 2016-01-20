@@ -139,7 +139,9 @@ bool EvalLoiter::Iterate()
   double curr_osx  = m_records.front().getX();
   double curr_osy  = m_records.front().getY();
   m_curr_dist_to_poly = m_loiter_poly.dist_to_poly(curr_osx, curr_osy);
-
+  if(m_curr_dist_to_poly < 0)
+    m_curr_dist_to_poly *= -1;
+  
   // Part 3: Always re-assess loiter mode before calculating point eval.
   checkLoiterMode();
   
@@ -253,10 +255,11 @@ void EvalLoiter::performPointEval()
     // percentage guaranteed to be in the range [0,1]. Zero
     // when super efficient, and 1 when super inefficient. 
     double pct = m_curr_dist_to_poly / m_range_max_ineff;
-
+    
     // Efficiency score in the range of [0,100]. 100 when we are
     // super efficient
     double efficiency_score = (1-pct) * 100;
+    efficiency_score = vclip(efficiency_score, 0, 100);
     addPointEval(efficiency_score);
   }
   // Part 4: Handle case where we're in the transit_mode
@@ -292,6 +295,7 @@ void EvalLoiter::performPointEval()
       pct = vclip(pct, 0, 100);
       efficiency_score = pct * 100;
     }
+    efficiency_score = vclip(efficiency_score, 0, 100);
     addPointEval(efficiency_score);
   }
 }
