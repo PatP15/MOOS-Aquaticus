@@ -355,6 +355,7 @@ bool DialogManager::buildReport()
   //m_msgs << "File:                                        \n";
   //m_msgs << "============================================ \n";
 
+  /* NICKNAMES ARE CURRENTLY NOT AVAILABLE IN V2.0
   //Let's output the nickname to vehicle pairings
   ACTable actab(2);
   actab << "Nickname | Vehicle Name";
@@ -363,14 +364,22 @@ bool DialogManager::buildReport()
     actab<< it->first << it->second; 
       
   m_msgs << actab.getFormattedString();
+  */
 
   //List action of speech sentences to variables published
   for(std::map<string,std::list<var_value> >::iterator it = m_actions.begin(); it!=m_actions.end(); ++it) {
-    m_msgs << endl << endl << "Action: " << it->first << " : ";
+    m_msgs << endl << endl << "Sentence Action: " << it->first << " : ";
     //how do we access the items of the list?
     std::list<var_value>::iterator listIt = it->second.begin();
     for( ; listIt != it->second.end(); ++listIt) {
-      m_msgs << " var " << listIt->var_name << " value " << listIt->value;
+      m_msgs << listIt->var_name << "=" << listIt->value;
+      if(std::next(listIt,1)==it->second.end()) {
+	}
+      else {
+	m_msgs <<" + ";
+
+	}
+
     }
   }
 
