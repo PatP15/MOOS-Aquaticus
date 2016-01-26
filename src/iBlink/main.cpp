@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
   cout << "iBlinkstick launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  Blinkstick Blinkstick;
-  std::string cmd ="blinkstick --pulse green";
-  int result;
-  result = system(cmd.c_str());
-  //Blinkstick.Run(run_command.c_str(), mission_file.c_str());
+  Blinkstick blinkstick;
+  //  std::string cmd ="blinkstick --pulse green";
+  //int result;
+  //result = system(cmd.c_str());
+  blinkstick.Run(run_command.c_str(), mission_file.c_str());
   
   return(0);
 }
