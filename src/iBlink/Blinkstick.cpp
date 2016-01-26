@@ -38,9 +38,8 @@ bool Blinkstick::OnNewMail(MOOSMSG_LIST &NewMail)
    
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
+    string key    = msg.GetKey();
 
-#if 0 // Keep these around just for template
-    string key   = msg.GetKey();
     string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
     string sval  = msg.GetString(); 
@@ -48,13 +47,18 @@ bool Blinkstick::OnNewMail(MOOSMSG_LIST &NewMail)
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
-#endif
 
-//iBlink C++ for MOOS                                                      
-  string test;
-  test = "blinkstick --pulse red --repeats=5";
-    system(test.c_str());
-    return 0;
+
+  //iBlink C++ for MOOS                                                      
+    if (key == "BLINK")
+      {
+	string test;
+	//	test = "blinkstick --pulse red --repeats=5";
+		test = "blinkstick ";
+		test = test + sval;
+	system(test.c_str());
+	return 0;
+      }
    }
 	
    return(true);
