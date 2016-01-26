@@ -8,6 +8,8 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "Blinkstick.h"
+#include <stdlib.h>
+#include <string>
 
 using namespace std;
 
@@ -47,6 +49,12 @@ bool Blinkstick::OnNewMail(MOOSMSG_LIST &NewMail)
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
 #endif
+
+//iBlink C++ for MOOS                                                      
+  string test;
+  test = "blinkstick --pulse red --repeats=5";
+    system(test.c_str());
+    return 0;
    }
 	
    return(true);
@@ -111,5 +119,7 @@ bool Blinkstick::OnStartUp()
 
 void Blinkstick::RegisterVariables()
 {
+  // AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
+  Register("BLINK", 0);
 }
