@@ -182,7 +182,7 @@ void DialogManager::triggerCommandSequence(string sval)
     string newSVal = "say={Did you mean " + svalLowered +"}, rate=200";
     //Send verification question
     m_Comms.Notify("SAY_MOOS",newSVal);
-    string toKeepConversation = "DM: " + newSVal;
+    string toKeepConversation = "DM: Did you mean " + svalLowered;
     m_conversation.push_back(toKeepConversation);
 
     m_commanded_string = sval;
