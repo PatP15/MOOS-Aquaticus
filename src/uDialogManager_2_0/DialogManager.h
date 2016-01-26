@@ -49,6 +49,7 @@ class DialogManager : public AppCastingMOOSApp
 
  private: // State variables
   std::string m_commanded_string;
+  std::vector<std::string> m_conversation;
   enum type_name {
     WAIT_COMMAND,
     COMMAND_RECEIVED,

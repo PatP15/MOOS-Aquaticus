@@ -57,6 +57,10 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     
     if(key == "SPEECH_RECOGNITION_SENTENCE") {
       //A Finite State Machine (FSM) is used to determine the mode
+      string keepConversation;
+      keepConversation = "User: " + sval;
+      m_conversation.push_back(keepConversation);
+
       if(m_state == WAIT_COMMAND) {
 	m_state = COMMAND_RECEIVED;
 	triggerCommandSequence(sval);
@@ -147,6 +151,9 @@ void DialogManager::triggerAckSequence(string sval)
   }
 
   m_Comms.Notify("SAY_MOOS",ackStatement);
+  string keepConversation;
+  keepConversation = "DM: " + ackStatement;
+  m_conversation.push_back(keepConversation);
    
   if(matched == true) {
     m_Comms.Notify("SPEECH_COMMANDED", m_commanded_string);
@@ -175,6 +182,8 @@ void DialogManager::triggerCommandSequence(string sval)
     string newSVal = "say={Did you mean " + svalLowered +"}, rate=200";
     //Send verification question
     m_Comms.Notify("SAY_MOOS",newSVal);
+    string toKeepConversation = "DM: " + newSVal;
+    m_conversation.push_back(toKeepConversation);
 
     m_commanded_string = sval;
     //Place FSM into wait for acknowledgement state
@@ -398,5 +407,19 @@ bool DialogManager::buildReport()
     m_msgs << "ACK Received" << endl;
   }
 
+  //Let's keep the coversation down to 10 elements (no need to grow unbounded)
+ int sizeVec = m_conversation.size();
+ if(sizeVec > 10) {
+    //greater than 10 so let's delete the first set to make it 10 elements
+   int difference = sizeVec - 10;
+   m_conversation.erase(m_conversation.begin(),m_conversation.begin()+difference);
+  }
+
+  //Let's list the last 10 conversation sentences
+ m_msgs << endl << "CONVERSATIONS:" << endl << endl;
+  for(std::vector<std::string>::reverse_iterator it = m_conversation.rbegin(); it!=m_conversation.rend(); ++it) {
+    m_msgs << *it << endl;
+  }
+  
   return(true);
 }

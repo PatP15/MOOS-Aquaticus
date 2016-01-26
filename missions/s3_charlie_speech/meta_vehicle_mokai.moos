@@ -33,11 +33,11 @@ Processconfig = ANTLER
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay @ NewConsole = true
   Run = uSpeechRec @ NewConsole = true
-  Run = uDialogManager @ NewConsole = true
+  Run = uDialogManager_2_0 @ NewConsole = true
 }
 #include plug_iSay.moos
 #include plug_uSpeechRec.moos
-#include plug_uDialogManager.moos
+#include plug_uDialogManager_2_0.moos
 #include plug_pDeadManPost.moos
 #include plug_pShare.moos
 #include plug_pLogger.moos

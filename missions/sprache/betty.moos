@@ -33,7 +33,7 @@ ProcessConfig = ANTLER
   Run = pNodeReporter	  @ NewConsole = false
   Run = uSpeechRec      @ NewConsole = false
   Run = iSay            @ NewConsole = false
-  Run = uDialogManager  @ NewConsole = false
+  Run = uDialogManager_2_0  @ NewConsole = false
 }
 
 //------------------------------------------
@@ -50,10 +50,12 @@ ProcessConfig = uSpeechRec
 //------------------------------------------------
 // uDialogManager config block
 
-ProcessConfig = uDialogManager
+ProcessConfig = uDialogManager_2_0
 {
    AppTick   = 4
    CommsTick = 4
+
+	 sentence = Betty_Deploy : DEPLOY = true + MOOS_MANUAL_OVERRIDE = false + RETURN = false
 }
 
 //------------------------------------------
