@@ -20,7 +20,7 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The uDialogManager application is used for controlling the    "); 
+  blk("  The uDialogManager_2_0 application is used for controlling the    "); 
   blk("  dialog between speech recognition and the user.  It's main    ");
   blk("  function is to correct for errors in speech.              ");
   blk("                                                                ");
@@ -73,8 +73,12 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("  ");
-  blk("  //robot Betty's nickname is arnold                            ");
-  blk("  Nickname = betty:arnold                                       ");
+  blk("  //list of vars and values to publish given speech sentence    ");
+  blk("  //var-value pairs are '+' separated                           ");
+  blk("  sentence = Arnold_Deploy : DEPLOY = true + MOOS_MANUAL_OVERRIDE = false + RETURN = false");
+  blk("  ");
+  blk("  //quotes around a string for a value can be used              ");
+  blk("  sentence = Arnold_Follow : NODE_MESSAGE_LOCAL = \"src_node=mokai,dest_node=betty,var_name=TRAIL,string_val=true\" ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -101,8 +105,8 @@ void showInterfaceAndExit()
   blk("------------------------------------                            ");
   blk("  SPEECH_COMMANDED   = an acknowledged command                    ");
   blk("  SAY_MOOS           = sent to iSay for spoken dialogue to user                  ");
-  blk("  NODE_MESSAGE_LOCAL = commands are sent to robots through       "); 
-  blk("                       node messages");
+  blk(" ");
+  blk("  any other var value pair publications can be defined per speech rec sentence in the .moos file ");
   exit(0);
 }
 

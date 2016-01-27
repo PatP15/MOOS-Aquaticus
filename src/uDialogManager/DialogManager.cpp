@@ -57,6 +57,10 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     
     if(key == "SPEECH_RECOGNITION_SENTENCE") {
       //A Finite State Machine (FSM) is used to determine the mode
+      string keepConversation;
+      keepConversation = "User: " + sval;
+      m_conversation.push_back(keepConversation);
+
       if(m_state == WAIT_COMMAND) {
 	m_state = COMMAND_RECEIVED;
 	triggerCommandSequence(sval);
@@ -90,7 +94,8 @@ void DialogManager::triggerAckSequence(string sval)
   bool nameMatched = false;
   
   if(sval == "YES") {
-    //chop up m_commanded_string on space
+    /*  Legacy Code From When Used Nicknames Only - Prior to defining .moos speech - var pairs
+   //chop up m_commanded_string on space
     std::string nickNameCapitalized = biteString(m_commanded_string,' ');
     std::string nickName = tolower(nickNameCapitalized);
     std::string commanded = m_commanded_string;
@@ -105,36 +110,23 @@ void DialogManager::triggerAckSequence(string sval)
     else {
       nameMatched = true;
       recipient = m_nicknames.find(nickName)->second;
-	
-      if(commanded=="RETURN") {
-	matched = true;
-	local_message = "src_node=mokai,dest_node=" + recipient+",var_name=RETURN,string_val=true";
-      }
-      else if(commanded=="FOLLOW") { //implemented as trailing
-	unsigned int  secs = 1; 
-	matched = true;	 
-	local_message = "src_node=mokai,dest_node=" + recipient + ",var_name=TRAIL,string_val=true";
-      }
-      else if(commanded=="STATION") {
-	unsigned int  secs = 1; 
-	matched = true;
-	  
-	local_message = "src_node=mokai,dest_node=" + recipient +",var_name=TRAIL,string_val=false";
-      }
-      else if(commanded=="DEPLOY") {
-	unsigned int  secs = 1; 
-	matched = true;
-	  
-	local_message = "true";
-	 m_Comms.Notify("DEPLOY",local_message);
+    */	
 
-	local_message = "false";
-	 m_Comms.Notify("MOOS_MANUAL_OVERRIDE",local_message);
-
-	local_message = "false";
-	 m_Comms.Notify("RETURN",local_message);
-
-      }
+    //search through possible speech sentences defined in .moos file
+    std::map<string,list<var_value> >::iterator it;
+    it = m_actions.find(m_commanded_string);
+    if(it == m_actions.end()) {
+      //Speech Sentence to Variable Assignment not defined!
+    }
+    else { //we have found the Speech Sentence defined in the .moos file
+      matched = true;
+      //now go through and publish MOOS vars 
+    //access the list
+    std::list<var_value> tmpList=    m_actions.find(m_commanded_string)->second;
+    std::list<var_value>::iterator il;
+    for(il = tmpList.begin(); il != tmpList.end(); ++il) {
+      m_Comms.Notify(il->var_name,il->value);
+    }
     }
   }
 
@@ -146,23 +138,25 @@ void DialogManager::triggerAckSequence(string sval)
  
     ackStatement = "Command Canceled";
   }
-  else  if(nameMatched == false) { //name provided does not match any defined
+  /*  else  if(nameMatched == false) { //name provided does not match any defined
     ackStatement = "Incorrect Ack Or Wrong Name";
-  }
+    } */
 
-  else if(matched == true) { //Name and command matched
+  else if(matched == true) { //command matched
 	  
     ackStatement = "Command Sent";
   }
   else {
-    ackStatement = "Command Not Sent Not Yet Defined";
+    ackStatement = "Error Wrong Ack or Command Not Defined";
   }
 
   m_Comms.Notify("SAY_MOOS",ackStatement);
+  string keepConversation;
+  keepConversation = "DM: " + ackStatement;
+  m_conversation.push_back(keepConversation);
    
   if(matched == true) {
     m_Comms.Notify("SPEECH_COMMANDED", m_commanded_string);
-    m_Comms.Notify("NODE_MESSAGE_LOCAL",local_message);
   }
   m_state = WAIT_COMMAND;
 }
@@ -188,6 +182,8 @@ void DialogManager::triggerCommandSequence(string sval)
     string newSVal = "say={Did you mean " + svalLowered +"}, rate=200";
     //Send verification question
     m_Comms.Notify("SAY_MOOS",newSVal);
+    string toKeepConversation = "DM: Did you mean " + svalLowered;
+    m_conversation.push_back(toKeepConversation);
 
     m_commanded_string = sval;
     //Place FSM into wait for acknowledgement state
@@ -225,7 +221,7 @@ bool DialogManager::OnStartUp()
   AppCastingMOOSApp::OnStartUp();
 
   STRING_LIST sParams;
-  m_MissionReader.EnableVerbatimQuoting(false);
+  //  m_MissionReader.EnableVerbatimQuoting(true);
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -246,7 +242,7 @@ bool DialogManager::OnStartUp()
     else if(param == "NICKNAME") {
       handled = handleNickNameAssignments(line);
     }
-    else if(param == "ACTION") {
+    else if(param == "SENTENCE") {
       handled = handleActionAssignments(line);
     }
 
@@ -284,23 +280,42 @@ bool DialogManager::handleActionAssignments(std::string line) {
   //take human entered sentence and convert to uppercase
   //because this is how speech does it
   //spaces are key for sentence so make sure to keep them
-  std::string actualWholeSentence = toupper(biteString(line,':'));
+  std::string actualWholeSentence = toupper(biteStringX(line,':'));
 
   if(line == "") { //config warning as missing proper Action format
     return false;
   }
 
+  //Before assigning speech to map we must make sure it is
+  // All caps and keeps the spaces between the words
+  std::string speechAdaptedSentence;
+
+  //search for _'s until we find more elegant way of
+  //including spaces maybe with quotes
+  std::size_t found = actualWholeSentence.find('_');
+  while(found!=std::string::npos) {
+    actualWholeSentence.replace(found,1," ");
+
+    //check again for _'s that should be changed to a space
+    found = actualWholeSentence.find('_');
+  }
+  /*
+  //Julius speech sentences in quotation marks
+  if(isQuoted(actualWholeSentence)) {//means sentence is quoted
+    actualWholeSentence = stripQuotes(actualWholeSentence); //remove the quotes
+  }
+  */
   //Now contain whole list of var-value pairs
   //make sure to enforce MOOS VARS are all caps
   //but keep values as assigned
   std::string totalListOfVarValuePairs = line;
 
-  //break them up by the ',' comma
-  //we will need to loop here on the ','s 
-  //if there was no new ',' then biteStringX assigns "" to original string
+  //break them up by the '+' plus sign
+  //we will need to loop here on the '+'s 
+  //if there was no new '+' then biteStringX assigns "" to original string
   std::list<var_value> tmpList;
   while(totalListOfVarValuePairs != "") {
-  std:string tempVarValuePair = biteStringX(totalListOfVarValuePairs,',');
+    std::string tempVarValuePair = biteStringX(totalListOfVarValuePairs,'+');
 
     //assume var_name = var_value is the variable
     std::string varName = biteStringX(tempVarValuePair,'=');
@@ -311,6 +326,12 @@ bool DialogManager::handleActionAssignments(std::string line) {
 
     var_value tmpVarValue;
     tmpVarValue.var_name = varName;
+
+    //remove quotes if needed
+    if(isQuoted(tempVarValuePair)) { //found quotes
+      tempVarValuePair = stripQuotes(tempVarValuePair);
+    }
+
     tmpVarValue.value = tempVarValuePair;
 
     //assign the var_value struct to the list 
@@ -318,13 +339,7 @@ bool DialogManager::handleActionAssignments(std::string line) {
   }
 
   m_actions[actualWholeSentence] = tmpList;
-  //var-value pairs delimited by '=' equal sign
-    
-  //find current vehicleName nickName pair
-  //find original vehicle entry
-  //  int erased =   m_nicknames.erase(actualVehicleName);
 
-  //m_nicknames[vehicleNickName] = actualVehicleName;
     return (true);
 }
 
@@ -349,6 +364,7 @@ bool DialogManager::buildReport()
   //m_msgs << "File:                                        \n";
   //m_msgs << "============================================ \n";
 
+  /* NICKNAMES ARE CURRENTLY NOT AVAILABLE IN V2.0
   //Let's output the nickname to vehicle pairings
   ACTable actab(2);
   actab << "Nickname | Vehicle Name";
@@ -357,14 +373,22 @@ bool DialogManager::buildReport()
     actab<< it->first << it->second; 
       
   m_msgs << actab.getFormattedString();
+  */
 
   //List action of speech sentences to variables published
   for(std::map<string,std::list<var_value> >::iterator it = m_actions.begin(); it!=m_actions.end(); ++it) {
-    m_msgs << endl << endl << "Action: " << it->first << " : ";
+    m_msgs << endl << endl << "Sentence Action: " << it->first << " : ";
     //how do we access the items of the list?
     std::list<var_value>::iterator listIt = it->second.begin();
     for( ; listIt != it->second.end(); ++listIt) {
-      m_msgs << " var " << listIt->var_name << " value " << listIt->value;
+      m_msgs << listIt->var_name << "=" << listIt->value;
+      if(std::next(listIt,1)==it->second.end()) {
+	}
+      else {
+	m_msgs <<" + ";
+
+	}
+
     }
   }
 
@@ -383,5 +407,19 @@ bool DialogManager::buildReport()
     m_msgs << "ACK Received" << endl;
   }
 
+  //Let's keep the coversation down to 10 elements (no need to grow unbounded)
+ int sizeVec = m_conversation.size();
+ if(sizeVec > 10) {
+    //greater than 10 so let's delete the first set to make it 10 elements
+   int difference = sizeVec - 10;
+   m_conversation.erase(m_conversation.begin(),m_conversation.begin()+difference);
+  }
+
+  //Let's list the last 10 conversation sentences
+ m_msgs << endl << "CONVERSATIONS:" << endl << endl;
+  for(std::vector<std::string>::reverse_iterator it = m_conversation.rbegin(); it!=m_conversation.rend(); ++it) {
+    m_msgs << *it << endl;
+  }
+  
   return(true);
 }

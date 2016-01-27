@@ -33,7 +33,7 @@ ProcessConfig = ANTLER
   Run = pNodeReporter	  @ NewConsole = false
   Run = uSpeechRec      @ NewConsole = false
   Run = iSay            @ NewConsole = false
-  Run = uDialogManager_2_0  @ NewConsole = false
+  Run = uDialogManager  @ NewConsole = false
   
   one = --size=1200x1000
 }
@@ -52,7 +52,7 @@ ProcessConfig = uSpeechRec
 //------------------------------------------------
 // uDialogManager config block
 
-ProcessConfig = uDialogManager_2_0
+ProcessConfig = uDialogManager
 {
    AppTick   = 4
    CommsTick = 4
