@@ -172,12 +172,17 @@ bool moosJoy::OnStartUp()
     RegisterForMOOSMessages();
     RegisterVariables();
 
-    JoystickSetup();
+    // Mission file MUST specify the activation button
+    if (m_idByButton == -1) {
+        reportConfigWarning("Mission file parameter ID_BY_BUTTON must be set with an integer value 0 or greater."); }
 
-    // Configure dependent axes (after setting up the joystick)
-    vector<string>::iterator it = m_depDefs.begin();
-    for (;it !=m_depDefs.end(); ++it)
-        SetParam_DEPENDENT(*it);
+    else {
+        JoystickSetup();
+
+        // Configure dependent axes (after setting up the joystick)
+        vector<string>::iterator it = m_depDefs.begin();
+        for (;it !=m_depDefs.end(); ++it)
+            SetParam_DEPENDENT(*it); }
 
     // OnStartup() must always return true
     //    - Or else it will quit during launch and appCast info will be unavailable
@@ -204,24 +209,14 @@ bool moosJoy::JoystickSetup()
         m_jMode = JMODE_0_CONTROLERS;
         return false; }
 
-    // 1 controller connected
-    if (m_joystickCount == 1) {
-        m_jMode = JMODE_READY_TO_OPEN;
-        m_joystickID = 0; }
+    // 1 or more controllers connected
+    m_jMode = JMODE_ID_BY_BUTTON;
 
-    // > 1 controllers connected
-    else {
-        if (m_idByButton == -1) {
-            stringstream ss;
-            ss << m_joystickCount << " controllers connected. Use mission file parameter ID_BY_BUTTON to select one.";
-            reportConfigWarning(ss.str());
-            return false; }
-        m_jMode = JMODE_ID_BY_BUTTON;
+    // Open all controllers
+    for (int i = 0; i < m_joystickCount; i++) {
+        SDL_Joystick* pJ = SDL_JoystickOpen(i);
+        m_idByButtons.push_back(pJ); }
 
-        // Open all controllers
-        for (int i = 0; i < m_joystickCount; i++) {
-            SDL_Joystick* pJ = SDL_JoystickOpen(i);
-            m_idByButtons.push_back(pJ); } }
     return true;
 }
 

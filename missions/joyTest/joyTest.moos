@@ -27,7 +27,7 @@ ProcessConfig = iJoystick
   CommsTick     = 20
   Output_Prefix = JOY0
   Dependent     = 0,1
-  ID_By_Button	= 0
+  ID_By_Button	= 3
 }
 
 
