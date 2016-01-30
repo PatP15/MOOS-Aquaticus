@@ -42,6 +42,9 @@ sudo port install julius portaudio
 Unfortunately, MacPorts is not properly adding the library path so please add:
 export LIBRARY_PATH=/opt/local/lib to either your .profile, .bash_profile, or .bashrc
 
+Ubuntu Dependencies:
+sudo apt-get install julius julius-dev libportaudio-dev libpulse-dev libasound2-dev
+
 To build on Linux and Apple platforms, execute the build script within this
 directory:
 

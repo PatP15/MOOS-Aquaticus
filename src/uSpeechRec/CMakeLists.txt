@@ -9,30 +9,30 @@ SET(SRC
   main.cpp
 )
 
-if (NOT ${APPLE})
-  SET(SPEECH_LIBS  asound pulse pulse-simple)
-#else
-#  SET(SPEECH_LIBS )
-endif (NOT ${APPLE})
+#To support compiling on OS X and Ubuntu
+#We check if not OS X which means we are on a Linux machine
+#and will use those libraries
+if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  MESSAGE( STATUS "NOT ON AN APPLE OS! Assuming Linux")
+  SET(SPEECH_LIBS pulse pulse-simple asound)
+endif (NOT ${APPLE}NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ADD_EXECUTABLE(uSpeechRec ${SRC})
 
 include_directories(/opt/local/include/)
-#link_directories(~/Documents/git-repo/julius/julius-4.3.1/libjulius/src ~Documents/git-repo/julius/julius-4.3.1/libsent/src)
 
 TARGET_LINK_LIBRARIES(uSpeechRec
    ${MOOS_LIBRARIES}
-
    apputil
    mbutil
    m
    pthread
-   portaudio
-   sent
-   ${SPEECH_LIBS}   
-   dl
    julius
    sent
-   z)
+   dl
+   portaudio
+   z
+   ${SPEECH_LIBS})
+
 
 
