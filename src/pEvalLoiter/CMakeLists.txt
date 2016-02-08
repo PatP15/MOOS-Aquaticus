@@ -13,11 +13,11 @@ ADD_EXECUTABLE(pEvalLoiter ${SRC})
 
 TARGET_LINK_LIBRARIES(pEvalLoiter
    ${MOOS_LIBRARIES}
+   geometry
    apputil
    mbutil
    logic
    contacts
-   geometry
    m
    pthread)
 
