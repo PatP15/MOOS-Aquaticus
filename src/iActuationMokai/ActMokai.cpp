@@ -263,7 +263,7 @@ bool ActMokai::OnStartUp()
 
         if (MOOSStrCmp(sVarName, "MAX_THRUST")) {
             if (!sLine.empty())
-                maxThrust = stod(sLine.c_str(), NULL); }
+                maxThrust = strtod(sLine.c_str(), NULL); }
         if (maxThrust > 100.0)
             maxThrust = 100.0;
         if (maxThrust <= 0.0) {
@@ -273,7 +273,7 @@ bool ActMokai::OnStartUp()
 
         if (MOOSStrCmp(sVarName, "FULL_RUDDER")) {
             if (!sLine.empty())
-                fullRudder = stod(sLine.c_str(), NULL); }
+                fullRudder = strtod(sLine.c_str(), NULL); }
         if (fullRudder > 180.0 || fullRudder <= 0.0) {
             MOOSTrace("%s: ERROR- FULL_RUDDER must be greater than 0.0 and less than or equal to 180.0. Quitting.",
                     GetAppName().c_str());
@@ -281,15 +281,15 @@ bool ActMokai::OnStartUp()
 
         if (MOOSStrCmp(sVarName, "HBEAT_TO_MOKAI")) {
             if (!sLine.empty())
-                heartbeatToMokai = stod(sLine.c_str(), NULL); }
+                heartbeatToMokai = strtod(sLine.c_str(), NULL); }
 
         if (MOOSStrCmp(sVarName, "WDOG_LOCAL_HELM")) {
             if (!sLine.empty())
-                watchdogLocalHelm = stod(sLine.c_str(), NULL); }
+                watchdogLocalHelm = strtod(sLine.c_str(), NULL); }
 
         if (MOOSStrCmp(sVarName, "WDOG_FROM_MOKAI")) {
             if (!sLine.empty())
-                watchdogFromMokai = stod(sLine.c_str(), NULL); } }
+                watchdogFromMokai = strtod(sLine.c_str(), NULL); } }
 
     MOOSTrace("%s: Verbose mode is %s.\n",
             GetAppName().c_str(), (bVerbose ? "ON" : "OFF"));
