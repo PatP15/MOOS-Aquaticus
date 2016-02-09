@@ -382,12 +382,14 @@ bool DialogManager::buildReport()
     std::list<var_value>::iterator listIt = it->second.begin();
     for( ; listIt != it->second.end(); ++listIt) {
       m_msgs << listIt->var_name << "=" << listIt->value;
-      if(std::next(listIt,1)==it->second.end()) {
+      std::advance(listIt,1);
+      if(listIt==it->second.end()) {
 	}
       else {
 	m_msgs <<" + ";
 
 	}
+      std::advance(listIt,-1);
 
     }
   }
