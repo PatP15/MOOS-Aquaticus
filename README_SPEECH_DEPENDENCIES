@@ -37,10 +37,14 @@ src              - Directory for source code
 #--------------------
 
 MAC Dependencies:
+YOU MUST FIRST ADD THIS TO YOUR .profile or corresponding library path:
+export LIBRARY_PATH=/opt/local/lib to either your .profile, .bash_profile, or .bashrc
+
+It is necessary because unfortunately MacPorts is not properly adding the library path.
+
+And then add the packages for juliues and portaudio:
 sudo port install julius portaudio
 
-Unfortunately, MacPorts is not properly adding the library path so please add:
-export LIBRARY_PATH=/opt/local/lib to either your .profile, .bash_profile, or .bashrc
 
 Ubuntu Dependencies:
 sudo apt-get install julius julius-dev libportaudio-dev libpulse-dev libasound2-dev
