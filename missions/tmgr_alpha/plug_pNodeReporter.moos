@@ -6,9 +6,10 @@ ProcessConfig = pNodeReporter
   AppTick     = 2
   CommsTick   = 2
   
-  vessel_type = KAYAK
+  vessel_type = mokai
+  //vessel_type = KAYAK
 
 	#ifdef VGROUP
-//	group = $(VGROUP)kkkk
+	group = $(VGROUP)
 	#endif
 }
