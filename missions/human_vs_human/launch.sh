@@ -9,6 +9,8 @@ GOOD_GUYS="yes"
 BAD_GUYS="yes"
 VTEAM1="red"
 VTEAM2="blue"
+SHORE_IP="localhost"
+
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
 	printf "%s [SWITCHES] [time_warp]   \n" $0
@@ -47,7 +49,7 @@ SHORE_LISTEN="9300"
 
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
-       VTEAM1=$VTEAM1 VTEAM2=$VTEAM2
+       VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP
 
 if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit; fi
 
@@ -62,7 +64,7 @@ nsplug meta_mokai_sim.moos targ_human_1.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9302"              \
     VPORT="9002"           SHORE_LISTEN=$SHORE_LISTEN       \
     VTEAM=$VTEAM1          START_POS=$START_POS JOY_ID="3"  \
-    BUTTON="1"
+    BUTTON="1"             SHORE_IP=$SHORE_IP
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
 #    START_POS=$START_POS 
@@ -81,7 +83,7 @@ nsplug meta_mokai_sim.moos targ_human_2.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9303"              \
     VPORT="9003"           SHORE_LISTEN=$SHORE_LISTEN       \
     VTEAM=$VTEAM2          START_POS=$START_POS JOY_ID="0"  \
-    BUTTON="2"
+    BUTTON="2"             SHORE_IP=$SHORE_IP
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
 #    START_POS=$START_POS 

@@ -9,6 +9,8 @@ GOOD_GUYS="yes"
 BAD_GUYS="yes"
 VTEAM1="red"
 VTEAM2="blue"
+SHORE_IP=128.30.31.217
+
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
 	printf "%s [SWITCHES] [time_warp]   \n" $0
@@ -47,7 +49,7 @@ SHORE_LISTEN="9300"
 
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
-       VTEAM1=$VTEAM1 VTEAM2=$VTEAM2
+       VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP
 
 if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit; fi
 

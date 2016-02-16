@@ -13,7 +13,7 @@ VTEAM1="red"
 VTEAM2="blue"
 BAD_ARGS=""
 HELP="no"
-
+SHORE_IP=128.30.31.217
 
 printf "Initiate launch vehicle script\n"
 
@@ -80,7 +80,7 @@ nsplug meta_mokai_sim.moos targ_red_human.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9302"              \
     VPORT="9002"           SHORE_LISTEN=$SHORE_LISTEN       \
     VTEAM=$VTEAM1          START_POS=$START_POS JOY_ID="3"  \
-    BUTTON="1"
+    BUTTON="1"             SHORE_IP=$SHORE_IP
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
 #    START_POS=$START_POS 
@@ -99,7 +99,7 @@ nsplug meta_mokai_sim.moos targ_blue_human.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9303"              \
     VPORT="9003"           SHORE_LISTEN=$SHORE_LISTEN       \
     VTEAM=$VTEAM2          START_POS=$START_POS JOY_ID="0"  \
-    BUTTON="2"
+    BUTTON="2"             SHORE_IP=$SHORE_IP
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
 #    START_POS=$START_POS 
