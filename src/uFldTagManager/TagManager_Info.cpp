@@ -38,7 +38,7 @@ void showSynopsis()
   blk("  Typically run in a shoreside community. Takes reports from ");
   blk("  remote vehicles, notes their position. Takes a tag request ");
   blk("  from a vehicle and (a) notes whether it currently          ");
-  blk("  has remaining tags (b) notes the launch point with with    ");
+  blk("  has remaining tags (b) notes the launch point with         ");
   blk("  requested target. The manager will apply the tag and       ");
   blk("  notify the tagged and tagging vehicles.                    ");
 }
@@ -150,12 +150,21 @@ void showInterfaceAndExit()
   blk("  TAG_REQUEST = vname=henry                                     ");
   blk("  APPCAST_REQ                                                   ");
   blk("                                                                ");
+  blk("PUBLICATIONS (configurable):                                    ");
+  blk("------------------------------------                            ");
+  blk("  The user may configure posts to occur upon certain events.    ");
+  blk("  Such events include when:                                     ");
+  blk("                                                                ");
+  blk("    robot_tag_post                                              ");
+  blk("    human_tag_post                                              ");
+  blk("    robot_untag_post                                            ");
+  blk("    human_untag_post                                            ");
+  blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("                                                                ");
-  blk("  TAG_RESULT_VNAME       = event=23,source=abe,                 ");
-  blk("                     result=rejected_toofreq                    ");
-  blk("  TAG_RESULT_VNAME       = event=23,source=abe, tagged=gus      ");
+  blk("  TAG_RESULT_VNAME    = event=23,source=abe,                    ");
+  blk("                        result=rejected_toofreq                 ");
+  blk("  TAG_RESULT_VNAME    = event=23,source=abe, tagged=gus         ");
   blk("                                                                ");
   blk("  TAG_RESULT_VERBOSE  = event=1,src=archie,ranges=betty:20.2    ");
   blk("  TAG_RELEASE_VERBOSE = vname=betty,time=85.86929               ");
