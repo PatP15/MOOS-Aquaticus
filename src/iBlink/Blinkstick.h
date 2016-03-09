@@ -8,9 +8,9 @@
 #ifndef Blinkstick_HEADER
 #define Blinkstick_HEADER
 
-#include "MOOS/libMOOS/MOOSLib.h"
+#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
-class Blinkstick : public CMOOSApp
+class Blinkstick : public AppCastingMOOSApp
 {
  public:
    Blinkstick();
@@ -22,6 +22,7 @@ class Blinkstick : public CMOOSApp
    bool OnConnectToServer();
    bool OnStartUp();
    void RegisterVariables();
+   bool buildReport();
 
  private: // Configuration variables
 

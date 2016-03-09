@@ -34,6 +34,8 @@ Blinkstick::~Blinkstick()
 
 bool Blinkstick::OnNewMail(MOOSMSG_LIST &NewMail)
 {
+  AppCastingMOOSApp::OnNewMail(NewMail);
+
   MOOSMSG_LIST::iterator p;
    
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
@@ -84,7 +86,10 @@ bool Blinkstick::OnConnectToServer()
 
 bool Blinkstick::Iterate()
 {
+  AppCastingMOOSApp::Iterate();
+
   m_iterations++;
+  AppCastingMOOSApp::PostReport();
   return(true);
 }
 
@@ -94,6 +99,8 @@ bool Blinkstick::Iterate()
 
 bool Blinkstick::OnStartUp()
 {
+  AppCastingMOOSApp::OnStartUp();
+
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   if(m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
@@ -123,7 +130,38 @@ bool Blinkstick::OnStartUp()
 
 void Blinkstick::RegisterVariables()
 {
-  // AppCastingMOOSApp::RegisterVariables();
+  AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
   Register("BLINK", 0);
+}
+
+
+//------------------------------------------------------------
+// Procedure: buildReport()
+//   Example:
+// 
+// Configuration Parameters:
+// -------------------------
+//     Default Voice: alex
+//      Default Rate: 200
+//   Max Utter Queue: 1000
+//   Min Utter Inter: 1
+//
+// Status:
+// -------------------------
+//   Utter Queue Size: 0
+//             Filter: none    (ignore, hold)
+//
+// Source           Time  Time  Utterance
+//                  Recd  Post  Utterance
+// --------         ----  ----------------------------------
+// archie:pHelmIvP  3.22  15.1  Returning
+// betty:pHelmIvP   14.2  14.1  Deployed
+
+bool Blinkstick::buildReport()
+{
+//  m_msgs << "# of good messages: " << m_good_message_count << endl;
+//  m_msgs << "# of bad  messages: " << m_bad_message_count  << endl;
+  
+  return(true);
 }
