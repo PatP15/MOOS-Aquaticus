@@ -6,13 +6,13 @@ ProcessConfig = uFldZoneEvent
   AppTick   = 4
   CommsTick = 4
 
-  zone = pts={ 55.00 , 25.00 : -15.50 , -8.00 : 16.30 , -75.93 }
+  zone = pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21:-64.14,-61.21:-69.14,-64.84:-71.05,-70.72:-69.14,-76.60:-64.14,-80.23:-57.96,-80.23:-52.96,-76.60}
 
   // dynamic values ($vname, $group, $time, $vx, $vy)
   post_var = UNTAG_REQUEST=vname=$vname
+  post_var = IN_ZONE=$time // TODO : not considered dynamic
+  post_var = ZONE_PING=blue
 
   // zone_name should correspond tp the vehicle's group name
-  zone_name = red
-
-  // vehicle_name = optional
+  zone_name = blue
 }

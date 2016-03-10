@@ -182,20 +182,24 @@ bool ZoneEvent::handleConfigPostVar(string var_name)
   if (var_name == "")
     return(false);
 
-  // UNTAG_REQUEST=vname=$vname
-  string val = var_name;
-  string var = biteStringX(val, '='); // var = UNTAG_REQUEST & val=vname=$vname
+  // var_name="UNTAG_REQUEST=vname=$vname"
+  string val = var_name; // val="vname=$vname" (cf. next line)
+  string var = biteStringX(val, '='); // var="UNTAG_REQUEST"
+
+  // val="vname=$vname"
+  string static_val = val; // static_val="$vname"
+  string static_var = biteStringX(static_val, '='); // static_var="vname"
 
   ZoneEvent::ReturnPostVal returnPost;
-  if(val == "$vname")
+  if(static_val == "$vname")
     returnPost = rvname;
-  else if (val == "$group")
+  else if (static_val == "$group")
     returnPost = rgroup;
-  else if (val == "$time")
+  else if (static_val == "$time")
     returnPost = rtime;
-  else if (val == "$vx")
+  else if (static_val == "$vx")
     returnPost = rvx;
-  else if (val == "$vy")
+  else if (static_val == "$vy")
     returnPost = rvy;
   else
     returnPost = rstatic;
@@ -203,6 +207,8 @@ bool ZoneEvent::handleConfigPostVar(string var_name)
   m_map_var_val[var] = returnPost;
   if(returnPost==rstatic)
     m_map_static_var_val[var] = val;
+  else
+    m_map_static_var_val[var] = static_var + '=';
 
   AddMOOSVariable(var, "", var, 0);
   return(true);
@@ -261,16 +267,16 @@ bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
     switch (rpv)
     {
       case rvname: //, rgroup, rtime, rvx, rvy, rstatic:
-        SetMOOSVar(var_name, vname, m_curr_time);
+        SetMOOSVar(var_name, m_map_static_var_val[var_name] + vname, m_curr_time);
         break;
       case rtime:
-        SetMOOSVar(var_name, m_curr_time, m_curr_time);
+        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(m_curr_time), m_curr_time);
         break;
       case rvx:
-        SetMOOSVar(var_name, vx, m_curr_time);
+        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(vx), m_curr_time);
         break;
       case rvy:
-        SetMOOSVar(var_name, vy, m_curr_time);
+        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(vy), m_curr_time);
         break;
       case rstatic:
       default:

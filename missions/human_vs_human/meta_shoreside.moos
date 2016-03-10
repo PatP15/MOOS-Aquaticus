@@ -39,6 +39,8 @@ ProcessConfig = UFZEred
 
   // dynamic values ($vname, $group, $time, $vx, $vy)
   post_var = UNTAG_REQUEST=vname=$vname
+  post_var = IN_ZONE=$time //TODO : not considered dynamic
+  post_var = ZONE_PING = red
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = red
@@ -53,6 +55,8 @@ ProcessConfig = UFZEblue
 
   // dynamic values ($vname, $group, $time, $vx, $vy)
   post_var = UNTAG_REQUEST=vname=$vname
+  post_var = IN_ZONE=$time // TODO : not considered dynamic
+  post_var = ZONE_PING=blue
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = blue
