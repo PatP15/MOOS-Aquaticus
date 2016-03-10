@@ -1,0 +1,18 @@
+//------------------------------------------------
+// uFldZoneEvent config block
+
+ProcessConfig = uFldZoneEvent
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  zone = pts={ 55.00 , 25.00 : -15.50 , -8.00 : 16.30 , -75.93 }
+
+  // dynamic values ($vname, $group, $time, $vx, $vy)
+  post_var = UNTAG_REQUEST=vname=$vname
+
+  // zone_name should correspond tp the vehicle's group name
+  zone_name = red
+
+  // vehicle_name = optional
+}

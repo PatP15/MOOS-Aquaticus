@@ -22,6 +22,40 @@ Processconfig = ANTLER
   Run = uFldNodeComms   @ NewConsole = false
 	Run = uFldFlagManager @ NewConsole = false
 	Run = uFldTagManager  @ NewConsole = false
+
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEred
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEblue
+}
+
+//------------------------------------------------
+// uFldZoneEvent config block
+
+ProcessConfig = UFZEred
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  zone = pts={71.84,-13.20:69.93,-7.32:64.93,-3.69:58.75,-3.69:53.75,-7.32:51.84,-13.20:53.75,-19.08:58.75,-22.71:64.93,-22.71:69.93,-19.08}
+
+  // dynamic values ($vname, $group, $time, $vx, $vy)
+  post_var = UNTAG_REQUEST=vname=$vname
+
+  // zone_name should correspond tp the vehicle's group name
+  zone_name = red
+}
+
+ProcessConfig = UFZEblue
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  zone = pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21:-64.14,-61.21:-69.14,-64.84:-71.05,-70.72:-69.14,-76.60:-64.14,-80.23:-57.96,-80.23:-52.96,-76.60}
+
+  // dynamic values ($vname, $group, $time, $vx, $vy)
+  post_var = UNTAG_REQUEST=vname=$vname
+
+  // zone_name should correspond tp the vehicle's group name
+  zone_name = blue
 }
 
 #include plug_pShare.moos
@@ -74,6 +108,8 @@ ProcessConfig = uFldTagManager
 	tag_circle_range = 5
 	tag_circle_color = "green"
 	tag_min_interval = 2
+
+  tag_duration = 10000
 
 	tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
 	tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav

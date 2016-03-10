@@ -22,6 +22,7 @@ ADD_SUBDIRECTORY(uSpeechRec)
 ADD_SUBDIRECTORY(uDialogManager)
 ADD_SUBDIRECTORY(uFldFlagManager)
 ADD_SUBDIRECTORY(uFldTagManager)
+ADD_SUBDIRECTORY(uFldZoneEvent)
 ADD_SUBDIRECTORY(pFlagStrategy)
 ADD_SUBDIRECTORY(pEvalLoiter)
 ADD_SUBDIRECTORY(iJoystick)
@@ -40,4 +41,3 @@ ADD_SUBDIRECTORY(iBlink)
 ##############################################################################
 #                           END of CMakeLists.txt
 ##############################################################################
-

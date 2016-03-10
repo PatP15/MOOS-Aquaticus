@@ -57,20 +57,30 @@ X12 = np.median((X1, X2), axis=0)
 X34 = np.median((X3, X4), axis=0)
 
 print("The first half field coordinates (formated for MOOS config):")
-print('{', '{0:.2f}'.format(float(X1[0])), ',', '{0:.2f}'.format(float(X1[1])),
-      ':', '{0:.2f}'.format(float(X12[0])), ',', '{0:.2f}'.format(float(X12[1])),
-      ':', '{0:.2f}'.format(float(X34[0])), ',', '{0:.2f}'.format(float(X34[1])),
-      ':', '{0:.2f}'.format(float(X4[0])), ',', '{0:.2f}'.format(float(X4[1])),
+print('{', '{0:.2f}'.format(float(X1[0])), ',',
+      '{0:.2f}'.format(float(X1[1])),
+      ':', '{0:.2f}'.format(float(X12[0])), ',',
+      '{0:.2f}'.format(float(X12[1])),
+      ':', '{0:.2f}'.format(float(X34[0])), ',',
+      '{0:.2f}'.format(float(X34[1])),
+      ':', '{0:.2f}'.format(float(X4[0])), ',',
+      '{0:.2f}'.format(float(X4[1])),
       '}')
 
 print("The second half field coordinates (formated for MOOS config):")
-print('{', '{0:.2f}'.format(float(X12[0])), ',', '{0:.2f}'.format(float(X12[1])),
-      ':', '{0:.2f}'.format(float(X2[0])), ',', '{0:.2f}'.format(float(X2[1])),
-      ':', '{0:.2f}'.format(float(X3[0])), ',', '{0:.2f}'.format(float(X3[1])),
-      ':', '{0:.2f}'.format(float(X34[0])), ',', '{0:.2f}'.format(float(X34[1])),
+print('{', '{0:.2f}'.format(float(X12[0])), ',',
+      '{0:.2f}'.format(float(X12[1])),
+      ':', '{0:.2f}'.format(float(X2[0])), ',',
+      '{0:.2f}'.format(float(X2[1])),
+      ':', '{0:.2f}'.format(float(X3[0])), ',',
+      '{0:.2f}'.format(float(X3[1])),
+      ':', '{0:.2f}'.format(float(X34[0])), ',',
+      '{0:.2f}'.format(float(X34[1])),
       '}')
 
 print("The first flag coordinates are: "
-      "{", '{0:.2f}'.format(float(F1[0])), ',', '{0:.2f}'.format(float(F1[1])), "}")
+      "{", '{0:.2f}'.format(float(F1[0])), ',',
+      '{0:.2f}'.format(float(F1[1])), "}")
 print("The second flag coordinates are: "
-      "{", '{0:.2f}'.format(float(F2[0])), ',', '{0:.2f}'.format(float(F2[1])), "}")
+      "{", '{0:.2f}'.format(float(F2[0])), ',',
+      '{0:.2f}'.format(float(F2[1])), "}")
