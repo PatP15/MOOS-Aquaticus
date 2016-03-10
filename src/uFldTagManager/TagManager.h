@@ -60,12 +60,13 @@ class TagManager : public AppCastingMOOSApp
  protected: // Incoming mail utilities
   bool    handleMailNodeReport(const std::string&);
   bool    handleMailVTagPost(const std::string&);
+  bool    handleMailVUnTagPost(const std::string&);
 
  protected: // Processing Utilities
   double  getTrueNodeRange(double, double, std::string);
 
   void    processVTags();
-  void    processVTag(VTag);  
+  void    processVTag(VTag);
   void    checkForExpiredTags();
   void    postTagCircles();
 
@@ -83,7 +84,7 @@ class TagManager : public AppCastingMOOSApp
   void    postResult(std::string event, std::string vname,
 		     std::map<std::string, double>);
   void    postZonePolys();
-  
+
  protected: // State variables
 
   // Node (position) records: Map keyed on vehicle name
@@ -108,13 +109,13 @@ class TagManager : public AppCastingMOOSApp
 
   // Map from team name to members of the team (team name == zone name)
   std::map<std::string, std::set<std::string> > m_map_teams;
-  
+
  protected: // Configuration variables
   double        m_tag_range;
   double        m_tag_min_interval;
 
   double        m_tag_duration;
-  
+
   XYPolygon     m_zone_one;
   XYPolygon     m_zone_two;
   std::string   m_zone_one_color;
@@ -122,7 +123,7 @@ class TagManager : public AppCastingMOOSApp
   std::string   m_team_one;
   std::string   m_team_two;
   std::string   m_human_platform;
-  
+
   unsigned int  m_tag_events;
   bool          m_tag_circle;
   std::string   m_tag_circle_color;
@@ -137,5 +138,4 @@ class TagManager : public AppCastingMOOSApp
   std::string   m_post_color;
 };
 
-#endif 
-
+#endif

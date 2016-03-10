@@ -44,7 +44,7 @@ TagManager::TagManager()
   m_tag_range  = 25;
   m_tag_min_interval = 10;
   m_human_platform = "mokai";
-  
+
   m_tag_duration = 30; // seconds
   m_tag_circle   = true;
   m_tag_circle_color = "green";
@@ -55,10 +55,10 @@ TagManager::TagManager()
 
   m_team_one = "red";
   m_team_two = "blue";
-  
+
   // Initialize state variables
   m_tag_events = 0;    // Counter for tag events
-  
+
 }
 
 //---------------------------------------------------------
@@ -71,7 +71,7 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
   MOOSMSG_LIST::iterator p;
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
-    
+
     string key  = msg.GetKey();
     string sval = msg.GetString();
 
@@ -80,6 +80,8 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
       handled = handleMailNodeReport(sval);
     else if(key == "TAG_REQUEST")
       handled = handleMailVTagPost(sval);
+    else if(key == "UNTAG_REQUEST")
+      handled = handleMailVUnTagPost(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
 
@@ -98,14 +100,14 @@ bool TagManager::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.GetConfiguration(GetAppName(), sParams);
-  
+
   STRING_LIST::iterator p;
   for(p = sParams.begin(); p!=sParams.end(); p++) {
     string line  = *p;
     string orig  = line;
     string param = tolower(biteStringX(line, '='));
     string value = line;
-    
+
     bool handled = true;
     if(param == "tag_range")
       handled = setNonNegDoubleOnString(m_tag_range, value);
@@ -113,15 +115,15 @@ bool TagManager::OnStartUp()
       handled = setNonNegDoubleOnString(m_tag_min_interval, value);
     else if(param == "post_color")
       handled = setColorOnString(m_post_color, value);
-    else if(param == "zone_one") 
+    else if(param == "zone_one")
       handled = handleConfigZone(1, value);
-    else if(param == "zone_two") 
+    else if(param == "zone_two")
       handled = handleConfigZone(2, value);
-    else if(param == "team_one") 
+    else if(param == "team_one")
       handled = handleConfigTeamName(1, value);
-    else if(param == "team_two") 
+    else if(param == "team_two")
       handled = handleConfigTeamName(2, value);
-    else if(param == "tag_duration") 
+    else if(param == "tag_duration")
       handled = setNonNegDoubleOnString(m_tag_duration, value);
     else if(param == "human_tag_post")
       handled = handleConfigHumanTagPost(value);
@@ -131,21 +133,21 @@ bool TagManager::OnStartUp()
       handled = handleConfigHumanUnTagPost(value);
     else if(param == "robot_untag_post")
       handled = handleConfigRobotUnTagPost(value);
-    else if(param == "tag_circle_color") 
+    else if(param == "tag_circle_color")
       handled = setColorOnString(m_tag_circle_color, value);
-    else if(param == "tag_circle") 
+    else if(param == "tag_circle")
       handled = setBooleanOnString(m_tag_circle, value);
-    else if(param == "zone_one_color") 
+    else if(param == "zone_one_color")
       handled = setColorOnString(m_zone_one_color, value);
-    else if(param == "zone_two_color") 
+    else if(param == "zone_two_color")
       handled = setColorOnString(m_zone_two_color, value);
-    else if(param == "tag_circle_range") 
+    else if(param == "tag_circle_range")
       handled = setNonNegDoubleOnString(m_tag_circle_range, value);
     else if((param == "human_platform") && isKnownVehicleType(value))
       m_human_platform = value;
     else
       handled = false;
-    
+
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -166,7 +168,7 @@ bool TagManager::Iterate()
 
   if(m_tag_circle)
     postTagCircles();
-  
+
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -176,7 +178,7 @@ bool TagManager::Iterate()
 
 bool TagManager::OnConnectToServer()
 {
-  registerVariables();  
+  registerVariables();
   return(true);
 }
 
@@ -189,6 +191,7 @@ void TagManager::registerVariables()
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
   Register("TAG_REQUEST", 0);
+  Register("UNTAG_REQUEST", 0);
 }
 
 //---------------------------------------------------------
@@ -222,9 +225,9 @@ bool TagManager::handleMailNodeReport(const string& node_report_str)
     reportRunWarning(msg);
     return(false);
   }
-  
+
   m_map_teams[vteam].insert(vname);
-  
+
   return(true);
 }
 
@@ -264,13 +267,13 @@ bool TagManager::handleMailVTagPost(const string& launch_str)
   vtag.setEvent(m_tag_events);
   vtag.setVTeam(group);
   m_pending_vtags.push_back(vtag);
-    
+
   // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
   double pulse_duration = 2;
-  postRangePulse(vx, vy, m_post_color, vname+"_vtag", 
+  postRangePulse(vx, vy, m_post_color, vname+"_vtag",
 		 pulse_duration, m_tag_range);
-  
+
   return(true);
 }
 
@@ -284,7 +287,7 @@ void TagManager::postRangePulse(double x, double y, string color,
   pulse.set_x(x);
   pulse.set_y(y);
   pulse.set_label(label);
-  pulse.set_rad(radius);  
+  pulse.set_rad(radius);
   pulse.set_fill(0.60);
   pulse.set_fill_invariant(true);
   pulse.set_duration(duration);
@@ -368,7 +371,7 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
     return(false);
   if(team_name == "")
     return(false);
-  
+
   // Set the m_team_one member variable and apply the label to the
   // polygon representing the zone. Even if the polygon has not been
   // set yet. Now that m_team_one is set, it will be applied when/if
@@ -383,7 +386,7 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
   }
   else
     return(false);
-  
+
   return(true);
 }
 
@@ -482,7 +485,7 @@ void TagManager::processVTag(VTag vtag)
   string vname = vtag.getVName();
   string vteam = vtag.getVTeam();
   string event = uintToString(vtag.getEvent());
-  
+
   // Part 1: Check if tag allowed based on frequency
   // based on the last time it posted a vtag.
   double elapsed = m_curr_time - m_map_node_vtags_last_tag[vname];
@@ -492,7 +495,7 @@ void TagManager::processVTag(VTag vtag)
     postResult(event, vname, vteam, result);
     return;
   }
-  
+
   // Part 2: Check if tag-target vehicle in zone for tagging
   bool in_own_zone = false;
   if((vteam == m_team_one) && (m_zone_one.contains(vx, vy)))
@@ -506,13 +509,13 @@ void TagManager::processVTag(VTag vtag)
     postResult(event, vname, vteam, result);
     return;
   }
-  
-  
+
+
   // Tag request ok in terms of frequency, zone etc, so declare the
   // tag to be accepted and increment the counter.
   m_map_node_vtags_accepted[vname]++;
   m_map_node_vtags_last_tag[vname] = m_curr_time;
-  
+
   // Part 3: Measure and collect the range to each non-team member
   //         Taking note of the closest target.
   string node_closest;
@@ -523,7 +526,7 @@ void TagManager::processVTag(VTag vtag)
     string targ_name = p->first;
     string targ_team = p->second.getGroup();
     string targ_type = tolower(p->second.getType());
-    
+
     // Disregard members of the same team
     if(targ_team != vteam) {
       double targ_range = getTrueNodeRange(vx, vy, targ_name);
@@ -537,14 +540,14 @@ void TagManager::processVTag(VTag vtag)
   // Always post the full range results to the verbose variable
   postResult(event, vname, map_node_range);
 
-  // Part 4: Sanity checks. 
+  // Part 4: Sanity checks.
   if(map_node_range.size() == 0)
     return;
   if(node_closest == "")
     return;
   if(map_node_range.count(node_closest) == 0)
     return;
-  
+
   // Part 5: Examine the closest target, declare it tagged if in range
   double node_closest_dist = map_node_range[node_closest];
   string result = "tagged=none";
@@ -580,27 +583,59 @@ void TagManager::checkForExpiredTags()
       double elapsed = m_curr_time - time_tagged;
       double remaining = m_tag_duration - elapsed;
       if(remaining <= 0) {
-	m_map_node_vtags_nowtagged[vname]  = false;
-	m_map_node_vtags_timetagged[vname] = 0;
-	
-	string vtype = tolower(m_map_node_records[vname].getType());
-	if(vtype == m_human_platform)
-	  postHumanUnTagPairs(vname);
-	else
-	  postRobotUnTagPairs(vname);
+        m_map_node_vtags_nowtagged[vname]  = false;
+        m_map_node_vtags_timetagged[vname] = 0;
 
-	XYCircle circle;
-	circle.set_label(vname);
-	circle.set_active(false);
-	string spec = circle.get_spec();
-	Notify("VIEW_CIRCLE", spec);
+        string vtype = tolower(m_map_node_records[vname].getType());
+        if(vtype == m_human_platform)
+          postHumanUnTagPairs(vname);
+        else
+          postRobotUnTagPairs(vname);
 
-	string time_str = doubleToString(m_curr_time - m_start_time);
-	string msg = "vname=" + vname + ",time=" + time_str;
-	Notify("TAG_RELEASE_VERBOSE", msg);
+        XYCircle circle;
+        circle.set_label(vname);
+        circle.set_active(false);
+        string spec = circle.get_spec();
+        Notify("VIEW_CIRCLE", spec);
+
+        string time_str = doubleToString(m_curr_time - m_start_time);
+        string msg = "vname=" + vname + ",time=" + time_str;
+        Notify("TAG_RELEASE_VERBOSE", msg);
       }
     }
   }
+}
+
+bool TagManager::handleMailVUnTagPost(const string& launch_str)
+{
+    // Part 1: Confirm request is coming from a known vehicle.
+  string vname = tokStringParse(launch_str, "vname",  ',', '=');
+  if((vname == "") || (m_map_node_records.count(vname) == 0)) {
+    string msg = "Failed VUntag Post: Unknown vehicle [" + vname + "]";
+    Notify("UNTAG_RESULT_VERBOSE", msg);
+    reportRunWarning(msg);
+    reportEvent(msg);
+    return(false);
+  }
+
+  stringstream ss;
+  ss << "Untag requested for " << vname ;
+  reportEvent(ss.str());
+
+  m_map_node_vtags_nowtagged[vname]  = false;
+  m_map_node_vtags_timetagged[vname] = 0;
+
+  string vtype = tolower(m_map_node_records[vname].getType());
+  if(vtype == m_human_platform)
+    postHumanUnTagPairs(vname);
+  else
+    postRobotUnTagPairs(vname);
+
+  string time_str = doubleToString(m_curr_time - m_start_time);
+  string msg = "vname=" + vname + ",time=" + time_str;
+  Notify("TAG_RELEASE_VERBOSE", msg);
+
+  return(true);
 }
 
 //------------------------------------------------------------
@@ -618,7 +653,7 @@ void TagManager::postTagCircles()
     if(now_tagged) {
       double x = m_map_node_records[vname].getX();
       double y = m_map_node_records[vname].getY();
-      
+
       XYCircle circle(x, y, m_tag_circle_range);
       circle.set_label(vname);
       circle.set_color("fill", m_tag_circle_color);
@@ -770,11 +805,11 @@ void TagManager::postResult(string event, string vname,
   msg += ",src=" + vname;
   msg += ",team=" + vteam;
   msg += result;
-  
+
   reportEvent(msg);
   Notify("TAG_RESULT_"+toupper(vname), msg);
 }
-  
+
 
 //------------------------------------------------------------
 // Procedure: postResult
@@ -786,7 +821,7 @@ void TagManager::postResult(string event, string vname,
   string msg = "event=" + event;
   msg += ",src=" + vname;
   msg += ",ranges=";
-  
+
   map<string,double>::iterator p;
   for(p=map_node_range.begin(); p!=map_node_range.end(); p++) {
     string targ = p->first;
@@ -797,7 +832,7 @@ void TagManager::postResult(string event, string vname,
   }
   Notify("TAG_RESULT_VERBOSE", msg);
 }
-  
+
 //------------------------------------------------------------
 // Procedure: postZonePolys
 
@@ -809,12 +844,12 @@ void TagManager::postZonePolys()
   Notify("VIEW_POLYGON", spec_one);
   Notify("VIEW_POLYGON", spec_two);
 }
-  
+
 
 
 //------------------------------------------------------------
 // Procedure: buildReport()
-//   
+//
 //   Global Settings
 //   ======================================================
 //   Tag Range: 35
@@ -825,7 +860,7 @@ void TagManager::postZonePolys()
 //   Tag Application Stats
 //   ======================================================
 //             ReQ   Rejec  Rejec            Applied  Time
-//   Name      Tags  Zone   Freq   Accepted     Tags  Next 
+//   Name      Tags  Zone   Freq   Accepted     Tags  Next
 //   --------  ----  -----  -----  --------   ------   ----
 //   lou        5        1      3        1         1   n/a
 //   mal        8        2      1        5         0    23
@@ -839,18 +874,18 @@ void TagManager::postZonePolys()
 //
 //   Tag Receiver Stats
 //   ======================================================
-//             Times   Currently  Time    
+//             Times   Currently  Time
 //   Name      Tagged  Tagged     Remain   Taggable
-//   --------  ------  ---------  ------   ---------   
-//   lou            2         no     n/a       no 
-//   mal            1        YES      14      YES 
-//   ned            1         no     n/a      YES 
-//   opi            0         no     n/a      YES 
-//   --------  ------  ---------  ------   ---------   
-//   lima           0         no     n/a       no 
-//   mesa           1        YES      58      YES 
-//   nuuk           1        YES       7      YES 
-//   oslo           2         no     n/a      YES 
+//   --------  ------  ---------  ------   ---------
+//   lou            2         no     n/a       no
+//   mal            1        YES      14      YES
+//   ned            1         no     n/a      YES
+//   opi            0         no     n/a      YES
+//   --------  ------  ---------  ------   ---------
+//   lima           0         no     n/a       no
+//   mesa           1        YES      58      YES
+//   nuuk           1        YES       7      YES
+//   oslo           2         no     n/a      YES
 //
 //   Events (Last 8):
 //   ====================================================
@@ -870,7 +905,7 @@ bool TagManager::buildReport()
   m_msgs << "Tag Min Interval:   " << doubleToStringX(m_tag_min_interval,1) << endl;
   m_msgs << "Tag Duration:       " << doubleToStringX(m_tag_duration,1) << endl;
   m_msgs << "Tag Circle Enabled: " << boolToString(m_tag_circle) << endl;
-  
+
   // Part 2: Produce the team structure
   map<string, set<string> >::iterator pp;
   for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {
@@ -904,7 +939,7 @@ bool TagManager::buildReport()
     string accp = uintToString(m_map_node_vtags_accepted[vname]);    // col5
     string hits = uintToString(m_map_node_vtags_succeeded[vname]);   // col6
     string next = "n/a";  // col7
-    
+
     actab << vname << tags << zone << freq << accp << hits << next;
   }
   m_msgs << actab.getFormattedString();
@@ -937,7 +972,7 @@ bool TagManager::buildReport()
 	if(time_remaining < 0)
 	  time_remaining = 0;
       }
-      
+
       string times = uintToString(m_map_node_vtags_beentagged[vname]);   // col2
       string now_tagged_s  = boolToString(now_tagged);
       string trem  = doubleToString(time_remaining,2);
@@ -949,4 +984,3 @@ bool TagManager::buildReport()
   m_msgs << actabb.getFormattedString();
   return(true);
 }
-
