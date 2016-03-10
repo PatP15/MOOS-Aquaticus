@@ -14,16 +14,16 @@ ProcessConfig = ANTLER
 
   Run = uProcessWatch     @ NewConsole = false
   Run = pShare             @ NewConsole = false
- 
- 
- 
+
+
+
 //  Run = pMarinePID        @ NewConsole = false
- 
+
   Run = pBasicContactMgr  @ NewConsole = false
   Run = pHostInfo          @ NewConsole = false
   Run = uFldNodeBroker     @ NewConsole = false
-  Run = uTimerScript    @ NewConsole = false ~UTS_Jackal_timer	
-  
+  Run = uTimerScript    @ NewConsole = false ~UTS_Jackal_timer
+
   Run = uFldMessageHandler @ NewConsole = false
 
   Run = iJoystick     @ NewConsole = false
@@ -49,13 +49,13 @@ ProcessConfig = pMapValues
   AppTick       = 10
   CommsTick     = 10
   RANGE = in_msg=JOY$(JOY_ID)_AXIS_0, in_min=-32768, in_max=32767, dead=10, sat=40, out_msg=DESIRED_RUDDER, out_min=-40, out_max=40
-  RANGE = in_msg=JOY$(JOY_ID)_AXIS_1, in_min=-32768, in_max=32767, dead=10, sat=40, norm_min=-1.0, norm_max=0, out_msg=DESIRED_THRUST, out_min=100, out_max=5
+  RANGE = in_msg=JOY$(JOY_ID)_AXIS_5, in_min=-32768, in_max=32767, dead=10, sat=40, norm_min=-1.0, norm_max=0, out_msg=DESIRED_THRUST, out_min=20, out_max=100
   //SWITCH = in_msg=JOY0_BUTTON_1, trigger=1, out_msg=VIEW_POINT, out_val=x=5,y=25,label=home,vertex_size=3
   TRIGGER = in_msg=JOY$(JOY_ID)_BUTTON_0, trigger=DOWN, out_msg=FLAG_GRAB_REQUEST, out_val=vname=$(VNAME)
   TRIGGER = in_msg=JOY$(JOY_ID)_BUTTON_1, trigger=DOWN, out_msg=TAG_REQUEST, out_val=vname=$(VNAME)
   DEBUG_MODE = TRUE
   DEBUG_AXIS0 = JOY$(JOY_ID)_AXIS_0
-  DEBUG_AXIS1 = JOY$(JOY_ID)_AXIS_1
+  DEBUG_AXIS1 = JOY$(JOY_ID)_AXIS_5
 }
 
 
@@ -73,4 +73,3 @@ ProcessConfig = pMapValues
 #include plug_uProcessWatch_Mokai.moos
 #include plug_pBasicContactMgr.moos
 #include plug_uFldMessageHandler.moos
-

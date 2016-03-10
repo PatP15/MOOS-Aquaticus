@@ -3,9 +3,9 @@
 
 ProcessConfig = pNodeReporter
 {
-  AppTick     = 2
-  CommsTick   = 2
-  
+  AppTick     = 10
+  CommsTick   = 10
+
   vessel_type = KAYAK
 	group       = $(VTEAM)
 }
