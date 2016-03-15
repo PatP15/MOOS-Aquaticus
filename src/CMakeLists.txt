@@ -36,6 +36,7 @@ ADD_SUBDIRECTORY(iuModemMP)
 ADD_SUBDIRECTORY(uJSON)
 ADD_SUBDIRECTORY(uSimM200)
 ADD_SUBDIRECTORY(iBlink)
+ADD_SUBDIRECTORY(pRangeEvent)
 
 
 ##############################################################################
