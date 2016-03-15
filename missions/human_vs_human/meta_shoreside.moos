@@ -39,8 +39,12 @@ ProcessConfig = UFZEred
 
   // dynamic values ($vname, $group, $time, $vx, $vy)
   post_var = UNTAG_REQUEST=vname=$vname
-  post_var = IN_ZONE=$time //TODO : not considered dynamic
-  post_var = ZONE_PING = red
+  post_var = DBG_UFZE_GROUP=group=$group
+  post_var = DBG_UFZE_POS_X=vx=$vx
+  post_var = DBG_UFZE_POS_Y=vy=$vy
+  post_var = DBG_UFZE_TIME=time=$time
+  post_var = DBG_IN_ZONE=$time //TODO : not considered dynamic
+  post_var = DBG_ZONE_PING = red
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = red
@@ -55,8 +59,8 @@ ProcessConfig = UFZEblue
 
   // dynamic values ($vname, $group, $time, $vx, $vy)
   post_var = UNTAG_REQUEST=vname=$vname
-  post_var = IN_ZONE=$time // TODO : not considered dynamic
-  post_var = ZONE_PING=blue
+  post_var = DBG_IN_ZONE=$time // TODO : not considered dynamic
+  post_var = DBG_ZONE_PING=blue
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = blue
@@ -72,8 +76,8 @@ ProcessConfig = uFldFlagManager
   AppTick       = 2
   CommsTick     = 2
 
-  flag = x=61.84, y=-13.2,  label=one
-  flag = x=-61.05, y=-70.72, label=two
+  flag = x=61.84, y=-13.2,  label=red
+  flag = x=-61.05, y=-70.72, label=blue
 }
 
 //--------------------------------------------------

@@ -23,10 +23,14 @@ using namespace std;
 
 ZoneEvent::ZoneEvent()
 {
+  p_events_w_lock = new CMOOSLock();
+
   m_zone_color = "white";
 
   m_zone_name = "";
   m_vname = "";
+
+  m_dbtime = 0.;
 }
 
 //---------------------------------------------------------
@@ -59,6 +63,7 @@ void ZoneEvent::registerVariables()
 
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
+  Register("DB_UPTIME", 0);
 
   RegisterMOOSVariables();
 }
@@ -124,6 +129,9 @@ bool ZoneEvent::OnStartUp()
   AddActiveQueue("node_reports", this, &ZoneEvent::onNodeReport);
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT_LOCAL");
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT");
+
+  AddActiveQueue("db_time", this, &ZoneEvent::onDBUPTIME);
+  AddMessageRouteToActiveQueue("db_time", "DB_UPTIME");
 
   postZonePoly();
 
@@ -214,15 +222,17 @@ bool ZoneEvent::handleConfigPostVar(string var_name)
   return(true);
 }
 
-bool ZoneEvent::onNodeReport(CMOOSMsg& node_report_str)
+bool ZoneEvent::onNodeReport(CMOOSMsg& node_report_msg)
 {
-  NodeRecord new_node_record = string2NodeRecord(node_report_str.GetString());
+  NodeRecord new_node_record = string2NodeRecord(node_report_msg.GetString());
 
   string vname = new_node_record.getName();
   string vgroup = new_node_record.getGroup();
   if(vgroup == "") {
     string msg = "Node report for " + vname + " w/ no group.";
-    reportRunWarning(msg);
+    p_events_w_lock->Lock();
+    m_events.push_back(msg);
+    p_events_w_lock->UnLock();
     return(false);
   }
   if((vname != m_vname) && (m_vname!="")) {
@@ -234,7 +244,9 @@ bool ZoneEvent::onNodeReport(CMOOSMsg& node_report_str)
     checkNodeInZone(new_node_record);
   } else {
     string msg = "Node report for " + vname + " w/ different group: " + vgroup;
-    reportRunWarning(msg);
+    p_events_w_lock->Lock();
+    m_events.push_back(msg);
+    p_events_w_lock->UnLock();
     return(false);
   }
 
@@ -254,8 +266,11 @@ bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
   double vx = node_record.getX();
   double vy = node_record.getY();
 
-  //TODO
   if(!m_zone.contains(vx, vy)){
+    //  delete element from map: erase needs a iterator returned by find
+    map<string, NodeRecord>::iterator p = m_map_node_records.find(vname);
+    if (p != m_map_node_records.end())
+      m_map_node_records.erase(p);
     return(false);
   }
 
@@ -269,8 +284,11 @@ bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
       case rvname: //, rgroup, rtime, rvx, rvy, rstatic:
         SetMOOSVar(var_name, m_map_static_var_val[var_name] + vname, m_curr_time);
         break;
+      case rgroup:
+        SetMOOSVar(var_name, m_map_static_var_val[var_name] + vgroup, m_curr_time);
+        break;
       case rtime:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(m_curr_time), m_curr_time);
+        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(m_dbtime), m_curr_time);
         break;
       case rvx:
         SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(vx), m_curr_time);
@@ -284,6 +302,8 @@ bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
         break;
     }
   }
+
+  m_map_node_records[vname] = node_record;
 
   return(true);
 }
@@ -317,16 +337,42 @@ bool ZoneEvent::buildReport()
     m_msgs << endl;
   }
 
-  //TODO
+  m_msgs << endl;
+  m_msgs << endl;
+
+  ACTable actab(5);
+  actab << "Time | Vehicle Name | Group | POS_X | POS_Y";
+  actab.addHeaderLines();
+
+  map<string, NodeRecord>::iterator pNR;
+  for (pNR = m_map_node_records.begin(); pNR != m_map_node_records.end(); ++pNR){
+    actab << m_dbtime << pNR->second.getName() << pNR->second.getGroup();
+    actab << pNR->second.getX() << pNR->second.getY();
+  }
+  m_msgs << actab.getFormattedString();
+
+  m_msgs << endl;
+  m_msgs << endl;
   m_msgs << endl;
   m_msgs << "Events:\n";
   m_msgs << "============================================\n";
 
-  // ACTable actab(4);
-  // actab << "Time | Bravo | Charlie | Delta";
-  // actab.addHeaderLines();
-  // actab << "one" << "two" << "three" << "four";
-  // m_msgs << actab.getFormattedString();
+  p_events_w_lock->Lock();
+  vector<string>::iterator it;
+  for (it = m_events.begin() ; it != m_events.end(); ++it)
+    m_msgs << doubleToString(MOOSLocalTime()) << ": " << *it << endl;
+  m_events.clear();
+  p_events_w_lock->UnLock();
+
+
+  return(true);
+}
+
+bool ZoneEvent::onDBUPTIME(CMOOSMsg& dbuptime_msg)
+{
+  double dbtime = dbuptime_msg.GetDouble();
+
+  m_dbtime = dbtime;
 
   return(true);
 }

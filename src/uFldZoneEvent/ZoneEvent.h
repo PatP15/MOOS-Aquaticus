@@ -39,6 +39,7 @@ class ZoneEvent : public AppCastingMOOSApp
  protected:
   bool onNodeReport(CMOOSMsg&);
   bool checkNodeInZone(NodeRecord&);
+  bool onDBUPTIME(CMOOSMsg&);
 
  protected:  // Standard AppCastingMOOSApp function to overload
   bool buildReport();
@@ -56,6 +57,13 @@ class ZoneEvent : public AppCastingMOOSApp
   enum ReturnPostVal { rvname, rgroup, rtime, rvx, rvy, rstatic };
   std::map<std::string, ZoneEvent::ReturnPostVal> m_map_var_val;
   std::map<std::string, std::string> m_map_static_var_val;
+
+  std::map<std::string, NodeRecord> m_map_node_records;
+
+  CMOOSLock* p_events_w_lock;
+  std::vector<std::string> m_events;
+
+  double m_dbtime;
 };
 
 #endif
