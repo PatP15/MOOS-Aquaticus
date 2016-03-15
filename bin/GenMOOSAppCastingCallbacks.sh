@@ -222,8 +222,6 @@ void ${1}::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
 
-  // Register("FOOBAR", 0);
-
   RegisterMOOSVariables();
 }
 
