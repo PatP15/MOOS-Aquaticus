@@ -289,6 +289,8 @@ bool ${1}:onMessageFoo(CMOOSMsg& foo)
 
   // update outgoing message (FOO_OUT in this case)
   // SetMOOSVar("foo_msg", new_value, m_curr_time);
+
+  return(true);
 }
 #endif
 
