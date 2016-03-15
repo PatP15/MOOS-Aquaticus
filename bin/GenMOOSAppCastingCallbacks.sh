@@ -108,10 +108,10 @@ cat > ${2}${1}.moos <<EOF
 
 ProcessConfig = ${2}${1}
 {
-   AppTick   = 4
-   CommsTick = 4
+  AppTick   = 4
+  CommsTick = 4
 
-   // ${2}${1} configuration here
+  // ${2}${1} configuration here
 }
 
 EOF
