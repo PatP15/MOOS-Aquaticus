@@ -63,7 +63,7 @@ START_POS="55,25,240"
 nsplug meta_mokai_sim.moos targ_human_1.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9302"              \
     VPORT="9002"           SHORE_LISTEN=$SHORE_LISTEN       \
-    VTEAM=$VTEAM1          START_POS=$START_POS JOY_ID="3"  \
+    VTEAM=$VTEAM1          START_POS=$START_POS JOY_ID="0"  \
     BUTTON="5"             SHORE_IP=$SHORE_IP
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
@@ -72,6 +72,24 @@ nsplug meta_mokai_sim.moos targ_human_1.moos -f WARP=$TIME_WARP \
 if [ ! -e targ_human_1.moos ]; then echo "no targ_human_1.moos"; exit; fi
 #if [ ! -e targ_mokai.bhv  ]; then echo "no targ_mokai.bhv "; exit; fi
 
+#-------------------------------------------------------
+#  Part 2.1: Create the Chaser 1.
+#-------------------------------------------------------
+VNAME="chaser1"
+START_POS="86,-42,240"
+LOITER_POS="x=23,y=-31"
+
+nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
+    VNAME=$VNAME           SHARE_LISTEN="9304"              \
+    VPORT="9004"           SHORE_LISTEN=$SHORE_LISTEN       \
+    VTEAM=$VTEAM1          START_POS=$START_POS             \
+    SHORE_IP=$SHORE_IP
+
+nsplug meta_chaser.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
+   START_POS=$START_POS LOITER_POS=$LOITER_POS
+
+if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi
+#if [ ! -e targ_mokai.bhv  ]; then echo "no targ_mokai.bhv "; exit; fi
 
 #-------------------------------------------------------
 #  Part 3: Create the Mokai for human driver 2.
@@ -82,7 +100,7 @@ START_POS="-54,-108,60"
 nsplug meta_mokai_sim.moos targ_human_2.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9303"              \
     VPORT="9003"           SHORE_LISTEN=$SHORE_LISTEN       \
-    VTEAM=$VTEAM2          START_POS=$START_POS JOY_ID="0"  \
+    VTEAM=$VTEAM2          START_POS=$START_POS JOY_ID="1"  \
     BUTTON="4"             SHORE_IP=$SHORE_IP
 
 #nsplug meta_.bhv targ_mokai.bhv -f VNAME=$VNAME     \
@@ -91,6 +109,24 @@ nsplug meta_mokai_sim.moos targ_human_2.moos -f WARP=$TIME_WARP \
 if [ ! -e targ_human_2.moos ]; then echo "no targ_human_2.moos"; exit; fi
 #if [ ! -e targ_mokai.bhv  ]; then echo "no targ_mokai.bhv "; exit; fi
 
+#-------------------------------------------------------
+#  Part 3.1: Create the Chaser 2.
+#-------------------------------------------------------
+VNAME="chaser2"
+START_POS="-86,-41,60"
+LOITER_POS="x=-23,y=-53"
+
+nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
+    VNAME=$VNAME           SHARE_LISTEN="9305"              \
+    VPORT="9005"           SHORE_LISTEN=$SHORE_LISTEN       \
+    VTEAM=$VTEAM2          START_POS=$START_POS             \
+    SHORE_IP=$SHORE_IP
+
+nsplug meta_chaser.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
+   START_POS=$START_POS LOITER_POS=$LOITER_POS
+
+if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi
+#if [ ! -e targ_mokai.bhv  ]; then echo "no targ_mokai.bhv "; exit; fi
 
 #-------------------------------------------------------
 #  Part 4: Possibly exit now if we're just building targ files
@@ -119,6 +155,7 @@ printf "Done Launching Shoreside \n"
 if [ ${GOOD_GUYS} = "yes" ] ; then
     printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
     pAntler targ_human_1.moos >& /dev/null &
+    pAntler targ_chaser1.moos >& /dev/null &
     printf "Done Launching Good Guys \n"
 fi
 
@@ -128,6 +165,7 @@ fi
 if [ ${GOOD_GUYS} = "yes" ] ; then
     printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
     pAntler targ_human_2.moos >& /dev/null &
+    pAntler targ_chaser2.moos >& /dev/null &
     printf "Done Launching Good Guys \n"
 fi
 
