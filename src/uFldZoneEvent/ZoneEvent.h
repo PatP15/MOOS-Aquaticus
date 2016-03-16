@@ -39,7 +39,6 @@ class ZoneEvent : public AppCastingMOOSApp
  protected:
   bool onNodeReport(CMOOSMsg&);
   bool checkNodeInZone(NodeRecord&);
-  bool onDBUPTIME(CMOOSMsg&);
 
  protected:  // Standard AppCastingMOOSApp function to overload
   bool buildReport();
@@ -61,8 +60,6 @@ class ZoneEvent : public AppCastingMOOSApp
 
   CMOOSLock* p_events_w_lock;
   std::vector<std::string> m_events;
-
-  double m_dbtime;
 };
 
 #endif
