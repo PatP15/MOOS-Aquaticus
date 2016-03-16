@@ -37,13 +37,14 @@ ProcessConfig = UFZEred
 
   zone = pts={71.84,-13.20:69.93,-7.32:64.93,-3.69:58.75,-3.69:53.75,-7.32:51.84,-13.20:53.75,-19.08:58.75,-22.71:64.93,-22.71:69.93,-19.08}
 
-  // dynamic values ($vname, $group, $time, $vx, $vy)
-  post_var = UNTAG_REQUEST=vname=$vname
-  post_var = DBG_UFZE_GROUP=group=$group
-  post_var = DBG_UFZE_POS_X=vx=$vx
-  post_var = DBG_UFZE_POS_Y=vy=$vy
-  post_var = DBG_UFZE_TIME=time=$time
-  post_var = DBG_IN_ZONE=$time //TODO : not considered dynamic
+  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
+  post_var = UNTAG_REQUEST=vname=$[VNAME]
+  post_var = DBG_UFZE_GROUP=group=$[GROUP]
+  post_var = DBG_UFZE_POS_X=vx=$[VX]
+  post_var = DBG_UFZE_POS_Y=vy=$[VY]
+  post_var = DBG_UFZE_POS=vx=$[VX],vy=$[VY]
+  post_var = DBG_UFZE_TIME=time=$[TIME]
+  post_var = DBG_IN_ZONE=$[TIME]
   post_var = DBG_ZONE_PING = red
 
   // zone_name should correspond tp the vehicle's group name
@@ -57,9 +58,9 @@ ProcessConfig = UFZEblue
 
   zone = pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21:-64.14,-61.21:-69.14,-64.84:-71.05,-70.72:-69.14,-76.60:-64.14,-80.23:-57.96,-80.23:-52.96,-76.60}
 
-  // dynamic values ($vname, $group, $time, $vx, $vy)
-  post_var = UNTAG_REQUEST=vname=$vname
-  post_var = DBG_IN_ZONE=$time // TODO : not considered dynamic
+  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
+  post_var = UNTAG_REQUEST=vname=$[VNAME]
+  post_var = DBG_IN_ZONE=$[TIME]
   post_var = DBG_ZONE_PING=blue
 
   // zone_name should correspond tp the vehicle's group name

@@ -30,10 +30,10 @@ class ZoneEvent : public AppCastingMOOSApp
   bool OnStartUp();
 
  protected:  // Config utilities
-  bool handleConfigZone(std::string);
-  bool handleConfigPostVar(std::string);
-  bool handleConfigGroupName(std::string);
-  bool handleConfigVehicleName(std::string);
+  bool handleConfigZone(const std::string&);
+  bool handleConfigPostVar(const std::string&);
+  bool handleConfigGroupName(const std::string&);
+  bool handleConfigVehicleName(const std::string&);
   bool postZonePoly();
 
  protected:
@@ -54,8 +54,7 @@ class ZoneEvent : public AppCastingMOOSApp
   std::string m_zone_color;
   std::string m_vname;
 
-  enum ReturnPostVal { rvname, rgroup, rtime, rvx, rvy, rstatic };
-  std::map<std::string, ZoneEvent::ReturnPostVal> m_map_var_val;
+  std::map<std::string, std::string> m_map_var_val;
   std::map<std::string, std::string> m_map_static_var_val;
 
   std::map<std::string, NodeRecord> m_map_node_records;

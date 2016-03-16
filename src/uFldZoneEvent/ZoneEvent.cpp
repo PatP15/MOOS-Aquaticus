@@ -25,7 +25,7 @@ ZoneEvent::ZoneEvent()
 {
   p_events_w_lock = new CMOOSLock();
 
-  m_zone_color = "white";
+  m_zone_color = "orange";
 
   m_zone_name = "";
   m_vname = "";
@@ -135,10 +135,12 @@ bool ZoneEvent::OnStartUp()
 
   postZonePoly();
 
+  registerVariables();
+
   return(true);
 }
 
-bool ZoneEvent::handleConfigZone(string str)
+bool ZoneEvent::handleConfigZone(const string& str)
 {
   XYPolygon poly = string2Poly(str);
   if(poly.size() == 0)
@@ -148,8 +150,8 @@ bool ZoneEvent::handleConfigZone(string str)
   poly.set_vertex_size(1);
   poly.set_transparency(0.5);
 
-  poly.set_color("vertex", "white");
-  poly.set_color("edge", "white");
+  poly.set_color("vertex", "pink");
+  poly.set_color("edge", "pink");
   poly.set_color("fill", m_zone_color);
   if(m_zone_name != "")
     poly.set_label("uFldZoneEvent_" + m_zone_name);
@@ -160,7 +162,7 @@ bool ZoneEvent::handleConfigZone(string str)
   return(true);
 }
 
-bool ZoneEvent::handleConfigGroupName(string zone_name)
+bool ZoneEvent::handleConfigGroupName(const string& zone_name)
 {
   // Sanity check - this app only handles TWO zones
   if(zone_name == "")
@@ -176,7 +178,7 @@ bool ZoneEvent::handleConfigGroupName(string zone_name)
   return(true);
 }
 
-bool ZoneEvent::handleConfigVehicleName(string vname)
+bool ZoneEvent::handleConfigVehicleName(const string& vname)
 {
   if(vname == "")
     return(false);
@@ -185,38 +187,16 @@ bool ZoneEvent::handleConfigVehicleName(string vname)
   return(true);
 }
 
-bool ZoneEvent::handleConfigPostVar(string var_name)
+bool ZoneEvent::handleConfigPostVar(const string& var_name)
 {
   if (var_name == "")
     return(false);
 
-  // var_name="UNTAG_REQUEST=vname=$vname"
-  string val = var_name; // val="vname=$vname" (cf. next line)
+  // var_name="UNTAG_REQUEST=vname=$[VNAME]"
+  string val = var_name; // val="vname=$[VNAME]" (cf. next line)
   string var = biteStringX(val, '='); // var="UNTAG_REQUEST"
 
-  // val="vname=$vname"
-  string static_val = val; // static_val="$vname"
-  string static_var = biteStringX(static_val, '='); // static_var="vname"
-
-  ZoneEvent::ReturnPostVal returnPost;
-  if(static_val == "$vname")
-    returnPost = rvname;
-  else if (static_val == "$group")
-    returnPost = rgroup;
-  else if (static_val == "$time")
-    returnPost = rtime;
-  else if (static_val == "$vx")
-    returnPost = rvx;
-  else if (static_val == "$vy")
-    returnPost = rvy;
-  else
-    returnPost = rstatic;
-
-  m_map_var_val[var] = returnPost;
-  if(returnPost==rstatic)
-    m_map_static_var_val[var] = val;
-  else
-    m_map_static_var_val[var] = static_var + '=';
+  m_map_var_val[var] = val;
 
   AddMOOSVariable(var, "", var, 0);
   return(true);
@@ -274,33 +254,18 @@ bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
     return(false);
   }
 
-  map<string, ZoneEvent::ReturnPostVal>::iterator p;
+  map<string, string>::iterator p;
   for (p = m_map_var_val.begin(); p != m_map_var_val.end(); ++p){
     string var_name = p->first;
-    ZoneEvent::ReturnPostVal rpv = p->second;
+    string val = p->second;
 
-    switch (rpv)
-    {
-      case rvname: //, rgroup, rtime, rvx, rvy, rstatic:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name] + vname, m_curr_time);
-        break;
-      case rgroup:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name] + vgroup, m_curr_time);
-        break;
-      case rtime:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(m_dbtime), m_curr_time);
-        break;
-      case rvx:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(vx), m_curr_time);
-        break;
-      case rvy:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name] + doubleToString(vy), m_curr_time);
-        break;
-      case rstatic:
-      default:
-        SetMOOSVar(var_name, m_map_static_var_val[var_name], m_curr_time);
-        break;
-    }
+    val = findReplace(val, "$[VNAME]", vname);
+    val = findReplace(val, "$[GROUP]", vgroup);
+    val = findReplace(val, "$[TIME]", doubleToString(m_dbtime));
+    val = findReplace(val, "$[VX]", doubleToString(vx));
+    val = findReplace(val, "$[VY]", doubleToString(vy));
+
+    SetMOOSVar(var_name, val, m_curr_time);
   }
 
   m_map_node_records[vname] = node_record;
@@ -320,21 +285,12 @@ bool ZoneEvent::buildReport()
   m_msgs << "Vehicle's Name = " << m_vname << endl;
 
   m_msgs << "Registred variables to be published:" << endl;
-  map<string, ZoneEvent::ReturnPostVal>::iterator p;
+  map<string, string>::iterator p;
   for (p = m_map_var_val.begin(); p != m_map_var_val.end(); ++p){
     m_msgs << "\t";
     string var_name = p->first;
-    ZoneEvent::ReturnPostVal rpv = p->second;
-    switch (rpv)
-    {
-      case rstatic:
-        m_msgs << p->first << " (static)";
-        break;
-      default:
-        m_msgs << p->first << " (dynamic)";
-        break;
-    }
-    m_msgs << endl;
+    string val = p->second;
+    m_msgs << var_name << " : " << val << endl;
   }
 
   m_msgs << endl;
@@ -360,7 +316,7 @@ bool ZoneEvent::buildReport()
   p_events_w_lock->Lock();
   vector<string>::iterator it;
   for (it = m_events.begin() ; it != m_events.end(); ++it)
-    m_msgs << doubleToString(MOOSLocalTime()) << ": " << *it << endl;
+    m_msgs << doubleToString(m_dbtime) << ": " << *it << endl;
   m_events.clear();
   p_events_w_lock->UnLock();
 
