@@ -29,6 +29,9 @@ class Blinkstick : public AppCastingMOOSApp
  private: // State variables
    unsigned int m_iterations;
    double       m_timewarp;
+   int          m_good_message_count;
+   int          m_bad_message_count;
+   std::string  m_cmd;
 };
 
 #endif 
