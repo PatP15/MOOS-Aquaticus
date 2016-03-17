@@ -486,8 +486,8 @@ void TagManager::processVTag(VTag vtag)
   string vteam = vtag.getVTeam();
   string event = uintToString(vtag.getEvent());
 
-  // Part 1: Check if tag allowed based on frequency
-  // based on the last time it posted a vtag.
+  // Part 1: Check if tag allowed based on frequency based on the last
+  // time it posted a vtag.
   double elapsed = m_curr_time - m_map_node_vtags_last_tag[vname];
   if(elapsed < m_tag_min_interval) {
     m_map_node_vtags_rejfreq[vname]++;
@@ -526,9 +526,18 @@ void TagManager::processVTag(VTag vtag)
     string targ_name = p->first;
     string targ_team = p->second.getGroup();
     string targ_type = tolower(p->second.getType());
-
+    double targ_x    = p->second.getX();
+    double targ_y    = p->second.getY();
+    
+    // Check if target is in enemy territory
+    bool targ_in_enemy_zone = false;
+    if((vteam == m_team_one) && (m_zone_one.contains(targ_x, targ_y)))
+      targ_in_enemy_zone = true;
+    if((vteam == m_team_two) && (m_zone_two.contains(targ_x, targ_y)))
+      targ_in_enemy_zone = true;
+      
     // Disregard members of the same team
-    if(targ_team != vteam) {
+    if((targ_team != vteam) && targ_in_enemy_zone) {
       double targ_range = getTrueNodeRange(vx, vy, targ_name);
       map_node_range[targ_name] = targ_range;
       if((node_closest == "") || (targ_range < map_node_range[node_closest])) {
