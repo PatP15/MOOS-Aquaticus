@@ -674,6 +674,8 @@ bool TagManager::handleMailVUnTagPost(const string& launch_str)
     return(false);
   }
 
+  
+  
   stringstream ss;
   ss << "Untag requested for " << vname ;
   reportEvent(ss.str());
@@ -690,6 +692,14 @@ bool TagManager::handleMailVUnTagPost(const string& launch_str)
   string time_str = doubleToString(m_curr_time - m_start_time);
   string msg = "vname=" + vname + ",time=" + time_str;
   Notify("TAG_RELEASE_VERBOSE", msg);
+
+  // Part 3: Post an inactive circle for this vehicle to erase
+  XYCircle circle;
+  circle.set_label(vname);
+  circle.set_active(false);
+  string spec = circle.get_spec();
+  Notify("VIEW_CIRCLE", spec);
+
 
   return(true);
 }
@@ -720,6 +730,7 @@ void TagManager::postTagCircles()
     }
   }
 }
+
 
 //------------------------------------------------------------
 // Procedure: postHumanTagPairs
