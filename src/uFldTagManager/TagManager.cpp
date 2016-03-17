@@ -520,7 +520,16 @@ void TagManager::processVTag(VTag vtag)
   string vteam = vtag.getVTeam();
   string event = uintToString(vtag.getEvent());
 
-  // Part 1: Check if tag allowed based on frequency based on the last
+  // Part 1A: Check if the tagging vehicle is currently itself tagged
+  bool self_currently_tagged = m_map_node_vtags_nowtagged[vname]; 
+  if(self_currently_tagged) {
+    string result = "rejected=selftagged";
+    postResult(event, vname, vteam, result);
+    return;
+  }
+
+  
+  // Part 1B: Check if tag allowed based on frequency based on the last
   // time it posted a vtag.
   double elapsed = m_curr_time - m_map_node_vtags_last_tag[vname];
   if(elapsed < m_tag_min_interval) {
