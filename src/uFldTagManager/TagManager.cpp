@@ -268,11 +268,13 @@ bool TagManager::handleMailVTagPost(const string& launch_str)
   vtag.setVTeam(group);
   m_pending_vtags.push_back(vtag);
 
+#if 0 // Disabled by mikerb, moved to be in processVTag() after criteria met
   // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
   double pulse_duration = 2;
   postRangePulse(vx, vy, m_post_color, vname+"_vtag",
 		 pulse_duration, m_tag_range);
+#endif
 
   return(true);
 }
@@ -510,12 +512,14 @@ void TagManager::processVTag(VTag vtag)
     return;
   }
 
-
   // Tag request ok in terms of frequency, zone etc, so declare the
   // tag to be accepted and increment the counter.
   m_map_node_vtags_accepted[vname]++;
   m_map_node_vtags_last_tag[vname] = m_curr_time;
-
+  double pulse_duration = 2;
+  postRangePulse(vx, vy, m_post_color, vname+"_vtag",
+		 pulse_duration, m_tag_range);
+  
   // Part 3: Measure and collect the range to each non-team member
   //         Taking note of the closest target.
   string node_closest;
@@ -528,6 +532,9 @@ void TagManager::processVTag(VTag vtag)
     string targ_type = tolower(p->second.getType());
     double targ_x    = p->second.getX();
     double targ_y    = p->second.getY();
+
+    // Check if target is currently untagged
+    bool targ_currently_tagged = m_map_node_vtags_nowtagged[targ_name]; 
     
     // Check if target is in enemy territory
     bool targ_in_enemy_zone = false;
@@ -537,7 +544,7 @@ void TagManager::processVTag(VTag vtag)
       targ_in_enemy_zone = true;
       
     // Disregard members of the same team
-    if((targ_team != vteam) && targ_in_enemy_zone) {
+    if((targ_team != vteam) && targ_in_enemy_zone && !targ_currently_tagged) {
       double targ_range = getTrueNodeRange(vx, vy, targ_name);
       map_node_range[targ_name] = targ_range;
       if((node_closest == "") || (targ_range < map_node_range[node_closest])) {
@@ -614,6 +621,9 @@ void TagManager::checkForExpiredTags()
     }
   }
 }
+
+//------------------------------------------------------------
+// Procedure: handleMailVUnTagPost()
 
 bool TagManager::handleMailVUnTagPost(const string& launch_str)
 {
