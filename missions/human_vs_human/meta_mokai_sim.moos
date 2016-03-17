@@ -53,7 +53,7 @@ ProcessConfig = pMapValues
   //SWITCH = in_msg=JOY0_BUTTON_1, trigger=1, out_msg=VIEW_POINT, out_val=x=5,y=25,label=home,vertex_size=3
   TRIGGER = in_msg=JOY$(JOY_ID)_BUTTON_0, trigger=DOWN, out_msg=FLAG_GRAB_REQUEST, out_val=vname=$(VNAME)
   TRIGGER = in_msg=JOY$(JOY_ID)_BUTTON_1, trigger=DOWN, out_msg=TAG_REQUEST, out_val=vname=$(VNAME)
-  DEBUG_MODE = TRUE
+  DEBUG_MODE = FALSE
   DEBUG_AXIS0 = JOY$(JOY_ID)_AXIS_0
   DEBUG_AXIS1 = JOY$(JOY_ID)_AXIS_5
 }
