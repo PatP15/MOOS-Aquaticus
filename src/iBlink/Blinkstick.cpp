@@ -160,8 +160,8 @@ void Blinkstick::RegisterVariables()
 
 bool Blinkstick::buildReport()
 {
-  m_msgs << "# of good messages: " << m_good_message_count       << endl;
-  m_msgs << "# of bad  messages: " << m_bad_message_count        << endl;
+  m_msgs << "The # of good messages: " << m_good_message_count       << endl;
+  m_msgs << "The # of bad  messages: " << m_bad_message_count        << endl;
 
   m_msgs << "Usage: blinkstick [options] [color]" << endl;
   m_msgs << "Your Command: " << m_cmd                            << endl; 
