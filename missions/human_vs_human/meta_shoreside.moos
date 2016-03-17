@@ -116,7 +116,7 @@ ProcessConfig = uFldTagManager
 	tag_circle = true
 	tag_circle_range = 5
 	tag_circle_color = "green"
-	tag_min_interval = 2
+	tag_min_interval = 10
 
   tag_duration = 10000
 
@@ -153,7 +153,7 @@ ProcessConfig = uFldNodeComms
   max_msg_length   = 1000
   groups           = false
 
-  view_node_rpt_pulses = true
+  view_node_rpt_pulses = false
 }
 
 
@@ -224,7 +224,7 @@ ProcessConfig = pMarineViewer
   vehicles_shape_scale = 1.5
   vehicles_name_mode   = names
 
-  circle_viewable_all = false
+  circle_viewable_all = true
 
   appcast_viewable = true
   appcast_color_scheme = indigo
