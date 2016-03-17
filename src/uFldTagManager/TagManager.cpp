@@ -589,8 +589,10 @@ void TagManager::processVTag(VTag vtag)
   double pulse_duration = 4;
   
   // Part 4: Sanity checks.
-  if(map_node_range.size() == 0)
+  if(map_node_range.size() == 0) {
+    postRangePulse(vx, vy, m_post_color, vname+"_vtag", pulse_duration, m_tag_range);
     return;
+  }
   if(node_closest == "") {
     postRangePulse(vx, vy, m_post_color, vname+"_vtag", pulse_duration, m_tag_range);
     return;
