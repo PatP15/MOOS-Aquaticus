@@ -586,16 +586,18 @@ void TagManager::processVTag(VTag vtag)
   // Always post the full range results to the verbose variable
   postResult(event, vname, map_node_range);
 
+  double pulse_duration = 4;
+  
   // Part 4: Sanity checks.
   if(map_node_range.size() == 0)
     return;
-  if(node_closest == "")
+  if(node_closest == "") {
+    postRangePulse(vx, vy, m_post_color, vname+"_vtag", pulse_duration, m_tag_range);
     return;
+  }
   if(map_node_range.count(node_closest) == 0)
     return;
 
-  double pulse_duration = 4;
-  
   // Part 5: Examine the closest target, declare it tagged if in range
   double node_closest_dist = map_node_range[node_closest];
   string result = "tagged=none";
@@ -858,7 +860,7 @@ void TagManager::postResult(string event, string vname,
   string msg = "event=" + event;
   msg += ",src=" + vname;
   msg += ",team=" + vteam;
-  msg += result;
+  msg += "," + result;
 
   reportEvent(msg);
   Notify("TAG_RESULT_"+toupper(vname), msg);
