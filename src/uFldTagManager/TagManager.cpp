@@ -327,7 +327,7 @@ void TagManager::postCommsPulse(string vname1, string vname2,
   pulse.set_label(vname1 + "2" + vname2);
   pulse.set_duration(duration);
   pulse.set_beam_width(7);
-  pulse.set_fill(0.3);
+  pulse.set_fill(0.6);
   pulse.set_time(m_curr_time);
   pulse.set_color("fill", color);
   
@@ -594,7 +594,7 @@ void TagManager::processVTag(VTag vtag)
   if(map_node_range.count(node_closest) == 0)
     return;
 
-  double pulse_duration = 2;
+  double pulse_duration = 4;
   
   // Part 5: Examine the closest target, declare it tagged if in range
   double node_closest_dist = map_node_range[node_closest];
@@ -605,7 +605,7 @@ void TagManager::processVTag(VTag vtag)
     m_map_node_vtags_beentagged[node_closest]++;
     m_map_node_vtags_nowtagged[node_closest] = true;
     m_map_node_vtags_timetagged[node_closest] = m_curr_time;
-
+    
     if(node_closest_type != m_human_platform)
       postRobotTagPairs(vname, node_closest);
     else
