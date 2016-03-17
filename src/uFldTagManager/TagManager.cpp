@@ -31,6 +31,7 @@
 #include "NodeRecordUtils.h"
 #include "XYCircle.h"
 #include "XYFormatUtilsPoly.h"
+#include "XYCommsPulse.h"
 
 using namespace std;
 
@@ -283,7 +284,7 @@ bool TagManager::handleMailVTagPost(const string& launch_str)
 // Procedure: postRangePulse
 
 void TagManager::postRangePulse(double x, double y, string color,
-				string label, double duration, double radius)
+                                string label, double duration, double radius)
 {
   XYRangePulse pulse;
   pulse.set_x(x);
@@ -301,6 +302,37 @@ void TagManager::postRangePulse(double x, double y, string color,
   }
   string spec = pulse.get_spec();
   Notify("VIEW_RANGE_PULSE", spec);
+}
+
+//------------------------------------------------------------
+// Procedure: postCommsPulse
+ 
+void TagManager::postCommsPulse(string vname1, string vname2,
+				string color, double duration)
+{
+  // Sanity check: make sure we know about both vehicles.
+  if((m_map_node_records.count(vname1) == 0) ||
+     (m_map_node_records.count(vname2) == 0))
+    return;
+
+  // Get each vehicle's record and position
+  NodeRecord record1 = m_map_node_records[vname1];
+  NodeRecord record2 = m_map_node_records[vname2];
+  double osx = record1.getX();
+  double osy = record1.getY();
+  double cnx = record2.getX();
+  double cny = record2.getY();
+  
+  XYCommsPulse pulse(osx, osy, cnx, cny);
+  pulse.set_label(vname1 + "2" + vname2);
+  pulse.set_duration(duration);
+  pulse.set_beam_width(7);
+  pulse.set_fill(0.3);
+  pulse.set_time(m_curr_time);
+  pulse.set_color("fill", color);
+  
+  string spec = pulse.get_spec();
+  Notify("VIEW_COMMS_PULSE", spec);
 }
 
 
@@ -516,10 +548,8 @@ void TagManager::processVTag(VTag vtag)
   // tag to be accepted and increment the counter.
   m_map_node_vtags_accepted[vname]++;
   m_map_node_vtags_last_tag[vname] = m_curr_time;
-  double pulse_duration = 2;
-  postRangePulse(vx, vy, m_post_color, vname+"_vtag",
-		 pulse_duration, m_tag_range);
-  
+
+
   // Part 3: Measure and collect the range to each non-team member
   //         Taking note of the closest target.
   string node_closest;
@@ -564,6 +594,8 @@ void TagManager::processVTag(VTag vtag)
   if(map_node_range.count(node_closest) == 0)
     return;
 
+  double pulse_duration = 2;
+  
   // Part 5: Examine the closest target, declare it tagged if in range
   double node_closest_dist = map_node_range[node_closest];
   string result = "tagged=none";
@@ -578,8 +610,11 @@ void TagManager::processVTag(VTag vtag)
       postRobotTagPairs(vname, node_closest);
     else
       postHumanTagPairs(vname, node_closest);
+    postCommsPulse(vname, node_closest, "white", pulse_duration);
   }
-
+  else
+    postRangePulse(vx, vy, m_post_color, vname+"_vtag", pulse_duration, m_tag_range);
+  
   postResult(event, vname, vteam, result);
 }
 

@@ -78,6 +78,8 @@ class TagManager : public AppCastingMOOSApp
  protected: // Outgoing mail utilities
   void    postRangePulse(double x, double y, std::string color,
 			 std::string label, double dur, double radius);
+  void    postCommsPulse(std::string vname1, std::string vname2,
+			 std::string color, double duration);
 
   void    postResult(std::string event, std::string vname,
 		     std::string vteam, std::string result);
