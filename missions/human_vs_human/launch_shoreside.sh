@@ -13,23 +13,23 @@ SHORE_IP=128.30.31.217
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	printf "%s [SWITCHES] [time_warp]   \n" $0
-	printf "  --just_make, -j    \n" 
-	printf "  --help, -h         \n" 
-	exit 0;
-    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then 
+        printf "%s [SWITCHES] [time_warp]   \n" $0
+        printf "  --just_make, -j    \n"
+        printf "  --help, -h         \n"
+        exit 0;
+    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
-	JUST_MAKE="yes"
+        JUST_MAKE="yes"
     elif [ "${ARGI}" = "--bad_guys_no" -o "${ARGI}" = "-b" ] ; then
-	BAD_GUYS="no"
+        BAD_GUYS="no"
     elif [ "${ARGI}" = "--good_guys_no" -o "${ARGI}" = "-g" ] ; then
-	GOOD_GUYS="no"
+        GOOD_GUYS="no"
     elif [ "${ARGI:0:6}" = "--amt=" ] ; then
         AMT="${ARGI#--amt=*}"
-    else 
-	printf "Bad Argument: %s \n" $ARGI
-	exit 0
+    else
+      printf "Bad Argument: %s \n" $ARGI
+      exit 0
     fi
 done
 
@@ -73,5 +73,5 @@ printf "Done Launching Shoreside \n"
 uMAC targ_shoreside.moos
 
 printf "Killing all processes ... \n"
-mykill
+kill -- -$$
 printf "Done killing processes.   \n"
