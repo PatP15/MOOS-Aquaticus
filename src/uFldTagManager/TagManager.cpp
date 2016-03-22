@@ -410,11 +410,11 @@ bool TagManager::handleConfigTeamName(int zone_number, string team_name)
   // polygon representing the zone. Even if the polygon has not been
   // set yet. Now that m_team_one is set, it will be applied when/if
   // the polygon/zone is later configured.
-  if((zone_number == 1) && (m_team_one == "")) {
+  if((zone_number == 1) && ((m_team_one=="") || (m_team_one=="red"))) {
     m_team_one = team_name;
     m_zone_one.set_label(team_name);
   }
-  else if((zone_number == 2) && (m_team_two == "")) {
+  else if((zone_number == 2) && ((m_team_two=="") || (m_team_two=="blue"))) {
     m_team_two = team_name;
     m_zone_two.set_label(team_name);
   }
