@@ -110,8 +110,6 @@ ProcessConfig = uFldTagManager
   tag_range = 50     // default (meters)
 
   post_color = white  // default
-  miss_color = blue   // default
-  hit_color  = red    // default
 
 	tag_circle = true
 	tag_circle_range = 5
@@ -120,14 +118,14 @@ ProcessConfig = uFldTagManager
 
   tag_duration = 10000
 
-	tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
-	tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
+	//robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
+	human_tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
 
-	untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
-	untag_post = SAY_MOOS=file=sounds/shipbell.wav
+	//robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
+	human_untag_post = SAY_MOOS=file=sounds/shipbell.wav
 
-  team_one = red
-  team_two = blue
+  team_one=red
+  team_two=blue
 
   zone_one = pts={ 55.00 , 25.00 : -15.50 , -8.00 : 16.30 , -75.93 : 86.80 , -42.93 }
   // {0,-20:120,-20:120,-100:0,-100}
