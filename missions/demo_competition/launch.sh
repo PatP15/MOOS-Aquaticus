@@ -137,7 +137,7 @@ if [ ${JUST_MAKE} = "yes" ] ; then
     exit 0
 fi
 
-if [ ${BAD_GUYS} = "no" -a ${GOOD_GUYS} = "no"] ; then
+if [ ${BAD_GUYS} = "no" -a ${GOOD_GUYS} = "no" ] ; then
     printf "targ files built. Nothing launched.\n"
     exit 0
 fi
@@ -145,7 +145,7 @@ fi
 #-------------------------------------------------------
 #  Part 5: Launch the Shoreside
 #-------------------------------------------------------
-printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
+printf "Launching shoreside MOOS Community (WARP=%s) \n"  $TIME_WARP
 pAntler targ_shoreside.moos >& /dev/null &
 printf "Done Launching Shoreside \n"
 
