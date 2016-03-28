@@ -20,10 +20,10 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The pRangeEvent application is used for               ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
+  blk("  The pRangeEvent application is used to publishes a variable   ");
+  blk("  defined under \"event_var\" in the configuration file         ");
+  blk("  whenever another vehicle (based on NODE_REPORT) is whitin     ");
+  blk("  the predefined range.                                         ");
   blk("                                                                ");
 }
 
@@ -74,6 +74,18 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
+  blk("  // Range within which the event is triggered");
+  blk("  min_range = 0 // default");
+  blk("  max_range = 10 // default");
+  blk("                                                                ");
+  blk("  // Event variables:");
+  blk("  // Dynamic values options");
+  blk("  //          ($[SELFVNAME], $[SELFVX], $[SELFVY],");
+  blk("  //          $[SELFSPEED], $[SELFHEADING],");
+  blk("  //          $[TARGVNAME], $[TARGVX], $[TARGVY],");
+  blk("  //          $[TARGSPEED], $[TARGHEADING],");
+  blk("  //          $[RANGE], $[TIME])");
+  blk("  event_var = TAG_REQUEST=vname=$[TARGVNAME]");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -94,13 +106,16 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("  NODE_REPORT ");
+  blk("              ");
+  blk("  NODE_REPORT_LOCAL ");
+  blk("              ");
+  blk("  DB_UPTIME ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
-  blk("                                                                ");
+  blk("  Publishes the a message under the name given by event_var in  ");
+  blk("  the configuration file. (more info with the option -e)");
   exit(0);
 }
 
@@ -112,4 +127,3 @@ void showReleaseInfoAndExit()
   showReleaseInfo("pRangeEvent", "mit");
   exit(0);
 }
-

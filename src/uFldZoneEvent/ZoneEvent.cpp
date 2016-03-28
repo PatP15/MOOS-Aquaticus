@@ -128,9 +128,6 @@ bool ZoneEvent::OnStartUp()
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT_LOCAL");
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT");
 
-  // AddActiveQueue("db_time", this, &ZoneEvent::onDBUPTIME);
-  // AddMessageRouteToActiveQueue("db_time", "DB_UPTIME");
-
   postZonePoly();
 
   registerVariables();

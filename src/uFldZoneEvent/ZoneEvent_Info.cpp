@@ -20,8 +20,8 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The uFldZoneEvent application is used for               ");
-  blk("                                                                ");
+  blk("  The uFldZoneEvent application is used for broadcasting a      ");
+  blk("  variable each time a vehicle enters the predefined area.      ");
   blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");
@@ -73,6 +73,15 @@ void showExampleConfigAndExit()
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
+  blk("  zone = pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21}");
+  blk("");
+  blk("  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])");
+  blk("  post_var = UNTAG_REQUEST=vname=$[VNAME]");
+  blk("  post_var = IN_ZONE=$[TIME]");
+  blk("  post_var = ZONE_PING=blue");
+  blk("");
+  blk("  // zone_name should correspond tp the vehicle's group name");
+  blk("  zone_name = blue");
   blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
@@ -94,12 +103,16 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("  NODE_REPORT   ");
+  blk("                                                                ");
+  blk("  NODE_REPORT_LOCAL   ");
+  blk("                                                                ");
+  blk("  DB_UPTIME   ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  Publishes the a message under the name given by post_var in  ");
+  blk("  the configuration file. (more info with the option -e)");
   blk("                                                                ");
   exit(0);
 }
@@ -109,7 +122,6 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uFldZoneEvent", "gpl");
+  showReleaseInfo("uFldZoneEvent", "mit");
   exit(0);
 }
-
