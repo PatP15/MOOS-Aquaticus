@@ -53,8 +53,6 @@ ProcessConfig = UFZEblue
 
   // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
   post_var = UNTAG_REQUEST=vname=$[VNAME]
-  post_var = DBG_IN_ZONE=$[TIME]
-  post_var = DBG_ZONE_PING=blue
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = blue
@@ -79,24 +77,6 @@ ProcessConfig = uFldFlagManager
 
 ProcessConfig = uFldTagManager
 {
-//  AppTick    = 2
-//  CommsTick  = 2
-
-//  vtag_range = 30
-//  post_color = white
-//  miss_color = blue
-//  hit_color  = red
-
-//        tag_circle = true
-//  tag_circle_range = 5
-//  tag_circle_color = "green"
-//  tag_min_interval = 2
-
-//  team_one   = $(VTEAM1)
-//  team_two   = $(VTEAM2)
-//  zone_one   = pts={0,-20:120,-20:120,-100:0,-100}
-//  zone_two   = pts={0,-100:120,-100:120,-180:0,-180}
-
   AppTick   = 4
   CommsTick = 4
 
@@ -125,9 +105,7 @@ ProcessConfig = uFldTagManager
   team_two=blue
 
   zone_one = pts={ 55.00 , 25.00 : -15.50 , -8.00 : 16.30 , -75.93 : 86.80 , -42.93 }
-  // {0,-20:120,-20:120,-100:0,-100}
   zone_two = pts={ -15.50 , -8.00 : -86.00 , -41.00 : -54.20 , -108.93 : 16.30 , -75.93 }
-  // {0,-100:120,-100:120,-180:0,-180}
 
   zone_one_color = pink
   zone_two_color = dodger_blue
@@ -241,10 +219,6 @@ ProcessConfig = pMarineViewer
   button_three = CHASE   # CHASE_ALL=true
   button_four  = STATION   # STATION_KEEP_ALL=true
 
-  // op_vertex = x=0,   y=-20,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  // op_vertex = x=120, y=-20,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  // op_vertex = x=120, y=-180, lwidth=1,lcolor=yellow,looped=true,group=moa
-  // op_vertex = x=0,   y=-180, lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=55.0,   y=25,  lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-86, y=-41,  lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-54.2, y=-108.93, lwidth=1,lcolor=yellow,looped=true,group=moa

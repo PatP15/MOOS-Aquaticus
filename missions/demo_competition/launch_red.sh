@@ -63,7 +63,6 @@ if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi
 #-------------------------------------------------------
 VNAME="chaser1"
 START_POS="86,-42,240"
-LOITER_POS="x=23,y=-31"
 
 nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME           SHARE_LISTEN="9304"              \
@@ -71,8 +70,8 @@ nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
     VTEAM=$VTEAM           START_POS=$START_POS             \
     SHORE_IP=$SHORE_IP
 
-nsplug meta_chaser.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
-   START_POS=$START_POS LOITER_POS=$LOITER_POS
+nsplug meta_chaser_attack.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
+   START_POS=$START_POS
 
 if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi
 
