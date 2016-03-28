@@ -5,6 +5,8 @@
 TIME_WARP=1
 JUST_MAKE="no"
 AMT=1
+RED_GUYS="yes"
+VTEAM="red"
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
 
@@ -21,7 +23,7 @@ for ARGI; do
     elif [ "${ARGI}" = "--blue_guys_no" -o "${ARGI}" = "-b" ] ; then
         continue
     elif [ "${ARGI}" = "--red_guys_no" -o "${ARGI}" = "-r" ] ; then
-        continue
+        RED_GUYS="no"
     elif [ "${ARGI:0:11}" = "--shore-ip=" ] ; then
         SHORE_IP="${ARGI#--shore-ip=*}"
     elif [ "${ARGI:0:13}" = "--shore-port=" ] ; then
@@ -29,13 +31,10 @@ for ARGI; do
     elif [ "${ARGI:0:6}" = "--amt=" ] ; then
         AMT="${ARGI#--amt=*}"
     else
-        printf "Bad Argument: %s \n" $ARGI
-        exit 0
+      printf "Bad Argument: %s \n" $ARGI
+      exit 0
     fi
 done
-
-
-echo "Shoreside setting = $SHORE_IP:$SHORE_LISTEN"
 
 # Ensure AMT is in the range of [1,26]
 if [ $AMT -gt 26 ] ; then
@@ -46,25 +45,51 @@ if [ $AMT -lt 1 ] ; then
 fi
 
 #-------------------------------------------------------
-#  Part 1: Launch Blue Team
+#  Part 2: Create the Mokai for Human
 #-------------------------------------------------------
-bash ./launch_blue.sh "$@"
+VNAME="human1"
+START_POS="55,25,240"
+
+nsplug meta_mokai_sim.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
+    VNAME=$VNAME           SHARE_LISTEN="9302"              \
+    VPORT="9002"           SHORE_LISTEN=$SHORE_LISTEN       \
+    VTEAM=$VTEAM           START_POS=$START_POS JOY_ID="0"  \
+    BUTTON="5"             SHORE_IP=$SHORE_IP
+
+if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi
 
 #-------------------------------------------------------
-#  Part 2: Launch Red Team
+#  Part 3: Create the Chaser
 #-------------------------------------------------------
-bash ./launch_red.sh "$@"
+VNAME="chaser1"
+START_POS="86,-42,240"
+LOITER_POS="x=23,y=-31"
+
+nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
+    VNAME=$VNAME           SHARE_LISTEN="9304"              \
+    VPORT="9004"           SHORE_LISTEN=$SHORE_LISTEN       \
+    VTEAM=$VTEAM           START_POS=$START_POS             \
+    SHORE_IP=$SHORE_IP
+
+nsplug meta_chaser.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
+   START_POS=$START_POS LOITER_POS=$LOITER_POS
+
+if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi
 
 #-------------------------------------------------------
-#  Part 3: Launch Shoreside
+#  Part 4: Exit if just make.
 #-------------------------------------------------------
-bash ./launch_shoreside.sh "$@"
-
 if [ ${JUST_MAKE} = "yes" ] ; then
-    printf "Nothing else to do. ./launch.sh out!\n"
-    exit 0
+  printf "Red Team targ files built. Nothing launched.\n"
+  exit 0
 fi
 
-printf "Killing all processes ... \n"
-kill -- -$$
-printf "Done killing processes.   \n"
+#-------------------------------------------------------
+#  Part 5: Launch the GoodGuy processes
+#-------------------------------------------------------
+if [ ${RED_GUYS} = "yes" ] ; then
+    printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
+    pAntler targ_human1.moos >& /dev/null &
+    pAntler targ_chaser1.moos >& /dev/null &
+    printf "Done Launching Red Guys \n"
+fi

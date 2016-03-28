@@ -5,11 +5,12 @@
 TIME_WARP=1
 JUST_MAKE="no"
 AMT=1
-GOOD_GUYS="yes"
-BAD_GUYS="yes"
 VTEAM1="red"
 VTEAM2="blue"
-SHORE_IP=128.30.31.217
+RED_GUYS="yes"
+BLUE_GUYS="yes"
+SHORE_IP="localhost"
+SHORE_LISTEN="9300"
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -21,10 +22,14 @@ for ARGI; do
         TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_MAKE="yes"
-    elif [ "${ARGI}" = "--bad_guys_no" -o "${ARGI}" = "-b" ] ; then
-        BAD_GUYS="no"
-    elif [ "${ARGI}" = "--good_guys_no" -o "${ARGI}" = "-g" ] ; then
-        GOOD_GUYS="no"
+    elif [ "${ARGI}" = "--blue_guys_no" -o "${ARGI}" = "-b" ] ; then
+        BLUE_GUYS="no"
+    elif [ "${ARGI}" = "--red_guys_no" -o "${ARGI}" = "-r" ] ; then
+        RED_GUYS="no"
+    elif [ "${ARGI:0:11}" = "--shore-ip=" ] ; then
+        SHORE_IP="${ARGI#--shore-ip=*}"
+    elif [ "${ARGI:0:13}" = "--shore-port=" ] ; then
+        SHORE_LISTEN=${ARGI#--shore-port=*}
     elif [ "${ARGI:0:6}" = "--amt=" ] ; then
         AMT="${ARGI#--amt=*}"
     else
@@ -41,7 +46,6 @@ if [ $AMT -lt 1 ] ; then
     AMT=1
 fi
 
-
 #-------------------------------------------------------
 #  Part 1: Create the Shoreside MOOS file
 #-------------------------------------------------------
@@ -53,18 +57,26 @@ nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
 
 if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit; fi
 
-
 #-------------------------------------------------------
 #  Part 2: Possibly exit now if we're just building targ files
 #-------------------------------------------------------
 
 if [ ${JUST_MAKE} = "yes" ] ; then
-    printf "targ files built. Nothing launched.\n"
+    printf "Shoreside targ files built. Nothing launched.\n"
     exit 0
 fi
 
 #-------------------------------------------------------
-#  Part 3: Launch the Shoreside
+#  Part 3: Possibly exit now if we're just building targ files
+#-------------------------------------------------------
+
+if [ ${BLUE_GUYS} = "no" -a ${RED_GUYS} = "no" ] ; then
+  printf "No team launched. Nothing launched.\n"
+  exit 0
+fi
+
+#-------------------------------------------------------
+#  Part 4: Launch the Shoreside
 #-------------------------------------------------------
 printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
 pAntler targ_shoreside.moos >& /dev/null &
