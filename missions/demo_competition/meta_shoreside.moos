@@ -20,8 +20,8 @@ Processconfig = ANTLER
   Run = pHostInfo       @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
   Run = uFldNodeComms   @ NewConsole = false
-	Run = uFldFlagManager @ NewConsole = false
-	Run = uFldTagManager  @ NewConsole = false
+  Run = uFldFlagManager @ NewConsole = false
+  Run = uFldTagManager  @ NewConsole = false
 
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZEred
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZEblue
@@ -39,13 +39,6 @@ ProcessConfig = UFZEred
 
   // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
   post_var = UNTAG_REQUEST=vname=$[VNAME]
-  post_var = DBG_UFZE_GROUP=group=$[GROUP]
-  post_var = DBG_UFZE_POS_X=vx=$[VX]
-  post_var = DBG_UFZE_POS_Y=vy=$[VY]
-  post_var = DBG_UFZE_POS=vx=$[VX],vy=$[VY]
-  post_var = DBG_UFZE_TIME=time=$[TIME]
-  post_var = DBG_IN_ZONE=$[TIME]
-  post_var = DBG_ZONE_PING = red
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = red
@@ -90,19 +83,19 @@ ProcessConfig = uFldTagManager
 //  CommsTick  = 2
 
 //  vtag_range = 30
-//	post_color = white
-//	miss_color = blue
-//	hit_color  = red
+//  post_color = white
+//  miss_color = blue
+//  hit_color  = red
 
 //        tag_circle = true
-//	tag_circle_range = 5
-//	tag_circle_color = "green"
-//	tag_min_interval = 2
+//  tag_circle_range = 5
+//  tag_circle_color = "green"
+//  tag_min_interval = 2
 
-//	team_one   = $(VTEAM1)
-//	team_two   = $(VTEAM2)
-//	zone_one   = pts={0,-20:120,-20:120,-100:0,-100}
-//	zone_two   = pts={0,-100:120,-100:120,-180:0,-180}
+//  team_one   = $(VTEAM1)
+//  team_two   = $(VTEAM2)
+//  zone_one   = pts={0,-20:120,-20:120,-100:0,-100}
+//  zone_two   = pts={0,-100:120,-100:120,-180:0,-180}
 
   AppTick   = 4
   CommsTick = 4
@@ -111,18 +104,22 @@ ProcessConfig = uFldTagManager
 
   post_color = white  // default
 
-	tag_circle = true
-	tag_circle_range = 5
-	tag_circle_color = "green"
-	tag_min_interval = 10
+  tag_circle = true
+  tag_circle_range = 5
+  tag_circle_color = "green"
+  tag_min_interval = 10
 
   tag_duration = 10000
 
-	//robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
-	human_tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
+  //robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
+  human_tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav
 
-	//robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
-	human_untag_post = SAY_MOOS=file=sounds/shipbell.wav
+  // Return Flag
+  human_tag_post   = FLAG_RESET=vname=$TARGET
+  robot_tag_post   = FLAG_RESET=vname=$TARGET
+
+  //robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
+  human_untag_post = SAY_MOOS=file=sounds/shipbell.wav
 
   team_one=red
   team_two=blue
@@ -132,8 +129,8 @@ ProcessConfig = uFldTagManager
   zone_two = pts={ -15.50 , -8.00 : -86.00 , -41.00 : -54.20 , -108.93 : 16.30 , -75.93 }
   // {0,-100:120,-100:120,-180:0,-180}
 
-	zone_one_color = pink
-	zone_two_color = dodger_blue
+  zone_one_color = pink
+  zone_two_color = dodger_blue
 }
 
 //--------------------------------------------------
@@ -180,7 +177,7 @@ ProcessConfig = uFldShoreBroker
 
 ProcessConfig = pHostInfo
 {
-  AppTick 	= 1
+  AppTick   = 1
   CommsTick = 1
 }
 
@@ -198,7 +195,7 @@ ProcessConfig = pLogger
   AsyncLog      = true
   FileTimeStamp = true
 
-	LogAuxSrc     = true
+  LogAuxSrc     = true
 
   // Log it all!!!!!
   WildCardLogging = true

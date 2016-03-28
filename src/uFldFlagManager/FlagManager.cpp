@@ -45,7 +45,7 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
     string key   = msg.GetKey();
-    string sval  = msg.GetString(); 
+    string sval  = msg.GetString();
     string comm  = msg.GetCommunity();
 
 #if 0 // Keep these around just for template
@@ -59,14 +59,14 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool handled = false;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleMailNodeReport(sval);
-    else if(key == "FLAG_RESET") 
+    else if(key == "FLAG_RESET")
       handled = handleMailFlagReset(sval);
-    else if(key == "FLAG_GRAB_REQUEST") 
+    else if(key == "FLAG_GRAB_REQUEST")
       handled = handleMailFlagGrab(sval, comm);
-    else 
+    else
       reportRunWarning("Unhandled Mail: " + key);
   }
-	
+
   return(true);
 }
 
@@ -75,8 +75,8 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool FlagManager::OnConnectToServer()
 {
-   registerVariables();
-   return(true);
+  registerVariables();
+  return(true);
 }
 
 //---------------------------------------------------------
@@ -103,7 +103,7 @@ bool FlagManager::OnStartUp()
     reportConfigWarning("No config block found for " + GetAppName());
 
   STRING_LIST pass2params;
-  STRING_LIST::iterator p;  
+  STRING_LIST::iterator p;
   for(p=sParams.begin(); p!=sParams.end(); p++) {
     string orig  = *p;
     string line  = *p;
@@ -122,30 +122,30 @@ bool FlagManager::OnStartUp()
     else if((param == "default_flag_range") && isNumber(value)) {
       double dval = atof(value.c_str());
       if(dval >= 0) {
-	m_default_flag_range = dval;
-	handled = true;
+        m_default_flag_range = dval;
+        handled = true;
       }
     }
     else if((param == "default_flag_width") && isNumber(value)) {
       double dval = atof(value.c_str());
       if(dval >= 0) {
-	m_default_flag_width = dval;
-	handled = true;
+        m_default_flag_width = dval;
+        handled = true;
       }
     }
     else if(param == "default_flag_type") {
       value = tolower(value);
       if((value == "circle")  || (value == "square") ||
-	 (value == "diamond") || (value == "efield") ||
-	 (value == "gateway") || (value == "triangle")) {
-	m_default_flag_type = value;
-	handled = true;
+         (value == "diamond") || (value == "efield") ||
+         (value == "gateway") || (value == "triangle")) {
+        m_default_flag_type = value;
+        handled = true;
       }
     }
     else
       pass2params.push_back(orig);
   }
-  
+
   STRING_LIST::iterator p2;
   for(p2=pass2params.begin(); p2!=pass2params.end(); p2++) {
     string orig  = *p2;
@@ -154,13 +154,13 @@ bool FlagManager::OnStartUp()
     string value = line;
 
     bool handled = false;
-    if(param == "flag") 
+    if(param == "flag")
       handled = handleConfigFlag(value);
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
-  } 
-  
+  }
+
   // Post a bunch of viewable artifacts
   postFlagMarkers();
 
@@ -168,7 +168,7 @@ bool FlagManager::OnStartUp()
   if(m_report_flags_on_start)
     postFlagSummary();
 
-  registerVariables();	
+  registerVariables();
   return(true);
 }
 
@@ -204,7 +204,7 @@ bool FlagManager::handleConfigFlag(string str)
 
   if(!flag.is_set_range())
     flag.set_range(m_default_flag_range);
-  
+
   if(!flag.is_set_width())
     flag.set_width(m_default_flag_width);
 
@@ -221,12 +221,12 @@ bool FlagManager::handleConfigFlag(string str)
 
   m_flags.push_back(flag);
   m_flags_changed.push_back(true);
-  
+
   return(true);
 }
 
-//------------------------------------------------------------ 
-// Procedure: handleMailNodeReport      
+//------------------------------------------------------------
+// Procedure: handleMailNodeReport
 
 bool FlagManager::handleMailNodeReport(string str)
 {
@@ -253,7 +253,7 @@ bool FlagManager::handleMailNodeReport(string str)
   return(true);
 }
 
-//------------------------------------------------------------ 
+//------------------------------------------------------------
 // Procedure: handleMailFlagReset
 //   Example: FLAG_RESET = vname=henry
 //   Example: FLAG_RESET = label=alpha
@@ -271,11 +271,11 @@ bool FlagManager::handleMailFlagReset(string str)
       vname = tokStringParse(str, "VNAME", ',', '=');
     if(vname != "")
       some_flags_were_reset = resetFlagsByVName(vname);
-    
+
     string label = tokStringParse(str, "label", ',', '=');
     if(label != "")
       some_flags_were_reset = resetFlagsByLabel(label);
-    
+
     if((label == "") && (vname == ""))
       return(false);
   }
@@ -284,11 +284,11 @@ bool FlagManager::handleMailFlagReset(string str)
     postFlagMarkers();
     postFlagSummary();
   }
-  
+
   return(true);
 }
 
-//------------------------------------------------------------ 
+//------------------------------------------------------------
 // Procedure: handleMailFlagGrab
 //   Example: GRAB_FLAG_REQUEST = "vname=henry"
 
@@ -298,41 +298,43 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 
   // Part 1: Parse the Grab Request
   string grabbing_vname = tokStringParse(str, "vname", ',', '=');
-  
+
   // Part 2: Sanity check on the Grab Request
   // Check if grabbing vname is set and matches message community
   if((grabbing_vname == "") || (grabbing_vname != community)) {
     return(false);
   }
-  
+
   // If no node records of the grabbing vehicle, return false
   string up_vname = toupper(grabbing_vname);
   if(m_map_record.count(up_vname) == 0)
     return(false);
 
+
   // Part 3: OK grab, so increment counters.
   m_map_grab_count[up_vname]++;
-  
+
   // Part 4: Get the grabbing vehicle's position from the record
   NodeRecord record = m_map_record[up_vname];
   double curr_vx = record.getX();
   double curr_vy = record.getY();
+  string group = record.getGroup();
 
   // Part 5: For each flag with the grab_dist of the vehicle, GRAB
   string result;
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    if(m_flags[i].get_owner() == "") {
+    if((m_flags[i].get_owner() == "") && (m_flags[i].get_label() != group)) {
       double x = m_flags[i].get_vx();
       double y = m_flags[i].get_vy();
       double dist = hypot(x-curr_vx, y-curr_vy);
 
       if(dist <= m_flags[i].get_range()) {
-	if(result != "")
-	  result += ",";
-	result += "grabbed=" + m_flags[i].get_label();
-	m_flags[i].set_owner(grabbing_vname);
-	m_flags_changed[i] = true;
-	m_map_flag_count[up_vname]++;
+        if(result != "")
+          result += ",";
+        result += "grabbed=" + m_flags[i].get_label();
+        m_flags[i].set_owner(grabbing_vname);
+        m_flags_changed[i] = true;
+        m_map_flag_count[up_vname]++;
       }
     }
   }
@@ -349,7 +351,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 }
 
 
-//------------------------------------------------------------ 
+//------------------------------------------------------------
 // Procedure: resetFlagsByLabel
 //      Note: Resets any flag with the given label to be not
 //            ownedby anyone.
@@ -359,20 +361,20 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 bool FlagManager::resetFlagsByLabel(string label)
 {
   bool some_flags_were_reset = false;
-  
+
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_label() == label) {
       if(m_flags[i].get_owner() != "") {
-	m_flags[i].set_owner("");
-	m_flags_changed[i] = true;
-	some_flags_were_reset = true;
+        m_flags[i].set_owner("");
+        m_flags_changed[i] = true;
+        some_flags_were_reset = true;
       }
     }
   }
   return(some_flags_were_reset);
 }
 
-//------------------------------------------------------------ 
+//------------------------------------------------------------
 // Procedure: resetFlagsAll
 //      Note: Resets all flags regardless of who owned them
 //   Returns: true if a flag was indeed reset, possibly visuals
@@ -381,7 +383,7 @@ bool FlagManager::resetFlagsByLabel(string label)
 bool FlagManager::resetFlagsAll()
 {
   bool some_flags_were_reset = false;
-  
+
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_owner() != "") {
       m_flags[i].set_owner("");
@@ -392,7 +394,7 @@ bool FlagManager::resetFlagsAll()
   return(some_flags_were_reset);
 }
 
-//------------------------------------------------------------ 
+//------------------------------------------------------------
 // Procedure: resetFlagsByVName
 //      Note: Resets any flag presently owned by the given vehicle
 //   Returns: true if a flag was indeed reset, possibly visuals
@@ -401,7 +403,7 @@ bool FlagManager::resetFlagsAll()
 bool FlagManager::resetFlagsByVName(string vname)
 {
   bool some_flags_were_reset = false;
-  
+
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_owner() == vname) {
       m_flags[i].set_owner("");
@@ -412,9 +414,9 @@ bool FlagManager::resetFlagsByVName(string vname)
   return(some_flags_were_reset);
 }
 
-//------------------------------------------------------------ 
+//------------------------------------------------------------
 // Procedure: postFlagMarkers
-//      Note: Typically JUST called on startup unless marker 
+//      Note: Typically JUST called on startup unless marker
 //            positions or colors are allowed to change.
 
 void FlagManager::postFlagMarkers()
@@ -423,11 +425,11 @@ void FlagManager::postFlagMarkers()
     if(m_flags_changed[i]) {
       XYMarker marker = m_flags[i];
       if(m_flags[i].get_owner() == "") {
-	if(!m_flags[i].color_set("primary_color"))
-	  marker.set_color("primary_color", m_ungrabbed_color);
+        if(!m_flags[i].color_set("primary_color"))
+          marker.set_color("primary_color", m_ungrabbed_color);
       }
       else
-	marker.set_color("primary_color", m_grabbed_color);
+        marker.set_color("primary_color", m_grabbed_color);
       marker.set_color("secondary_color", "black");
 
       string spec = marker.get_spec();
@@ -436,8 +438,8 @@ void FlagManager::postFlagMarkers()
     }
   }
 }
-  
-//------------------------------------------------------------ 
+
+//------------------------------------------------------------
 // Procedure: postFlagSummary
 
 void FlagManager::postFlagSummary()
@@ -455,7 +457,7 @@ void FlagManager::postFlagSummary()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool FlagManager::buildReport() 
+bool FlagManager::buildReport()
 {
 
   m_msgs << "Configuration Summary: " << endl;
@@ -507,7 +509,7 @@ bool FlagManager::buildReport()
   }
   m_msgs << actab.getFormattedString();
   m_msgs << endl << endl;
-  
+
   m_msgs << "Flag Summary" << endl;
   m_msgs << "======================================" << endl;
   actab = ACTable(4);
@@ -524,7 +526,3 @@ bool FlagManager::buildReport()
 
   return(true);
 }
-
-
-
-

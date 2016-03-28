@@ -20,13 +20,13 @@ class FlagManager : public AppCastingMOOSApp
    FlagManager();
    ~FlagManager() {};
 
- protected: // Standard MOOSApp functions to overload  
+ protected: // Standard MOOSApp functions to overload
    bool OnNewMail(MOOSMSG_LIST &NewMail);
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
 
- protected: // Standard AppCastingMOOSApp function to overload 
+ protected: // Standard AppCastingMOOSApp function to overload
    bool buildReport();
 
  protected:
@@ -41,7 +41,7 @@ class FlagManager : public AppCastingMOOSApp
    bool resetFlagsAll();
    void postFlagMarkers();
    void postFlagSummary();
-   
+
  private: // Config variables
 
    // Flag Configurations
@@ -54,9 +54,9 @@ class FlagManager : public AppCastingMOOSApp
    bool        m_report_flags_on_start;
    std::string m_grabbed_color;
    std::string m_ungrabbed_color;
-  
+
  private: // State variables
- 
+
    // Vehicle node report state vars. Each map keyed on vname.
    std::map<std::string, NodeRecord>   m_map_record;
    std::map<std::string, double>       m_map_tstamp;
@@ -64,10 +64,10 @@ class FlagManager : public AppCastingMOOSApp
    std::map<std::string, unsigned int> m_map_grab_count;
    std::map<std::string, unsigned int> m_map_flag_count;
    unsigned int m_total_node_reports_rcvd;
-   
+
    // Grab request state vars
    unsigned int m_total_grab_requests_rcvd;
 
 };
 
-#endif 
+#endif
