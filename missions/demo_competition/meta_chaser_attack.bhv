@@ -32,7 +32,7 @@ Behavior = BHV_Waypoint
   perpetual = true
 
                speed = 5   // meters per second
-        capture_line = true
+        capture_line = false
       capture_radius = 5.0
          slip_radius = 5.0
 
@@ -54,6 +54,7 @@ Behavior = BHV_AvoidCollision
 
   //behavior specific configuration
   condition = MODE==ACTIVE
+  condition = ENEMY_TERITORY==true
   updates   = CONTACT_INFO
   endflag   = CONTACT_AVOIDED=chaser2
   perpetual = true
@@ -63,14 +64,14 @@ Behavior = BHV_AvoidCollision
 
              contact = chaser2
     on_no_contact_ok = true
-         extrapolate = true
+         extrapolate = false
                decay = 30,60
 
-        pwt_outer_dist = 20
-        pwt_inner_dist = 15
-        completed_dist = 17
-     min_util_cpa_dist = 25
-     max_util_cpa_dist = 15
+        pwt_outer_dist = 30
+        pwt_inner_dist = 20
+        completed_dist = 22
+     min_util_cpa_dist = 50
+     max_util_cpa_dist = 20
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
@@ -83,6 +84,7 @@ Behavior = BHV_AvoidCollision
 
   //behavior specific configuration
   condition = MODE==ACTIVE
+  condition = ENEMY_TERITORY==true
   updates   = CONTACT_INFO
   endflag   = CONTACT_AVOIDED=human2
   perpetual = true
@@ -92,14 +94,14 @@ Behavior = BHV_AvoidCollision
 
              contact = human2
     on_no_contact_ok = true
-         extrapolate = true
+         extrapolate = false
                decay = 30,60
 
-        pwt_outer_dist = 20
-        pwt_inner_dist = 15
-        completed_dist = 17
-     min_util_cpa_dist = 25
-     max_util_cpa_dist = 15
+        pwt_outer_dist = 30
+        pwt_inner_dist = 20
+        completed_dist = 22
+     min_util_cpa_dist = 50
+     max_util_cpa_dist = 20
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
