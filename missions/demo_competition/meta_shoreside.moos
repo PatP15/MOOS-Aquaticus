@@ -80,7 +80,7 @@ ProcessConfig = uFldTagManager
   AppTick   = 4
   CommsTick = 4
 
-  tag_range = 50     // default (meters)
+  tag_range = 10     // default (meters)
 
   post_color = white  // default
 
@@ -97,9 +97,13 @@ ProcessConfig = uFldTagManager
   // Return Flag
   human_tag_post   = FLAG_RESET=vname=$TARGET
   robot_tag_post   = FLAG_RESET=vname=$TARGET
+  human_tag_post   = TAGGED_$UP_TARGET=true
+  robot_tag_post   = TAGGED_$UP_TARGET=true
 
   //robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
   human_untag_post = SAY_MOOS=file=sounds/shipbell.wav
+  human_untag_post = TAGGED_$UP_TARGET=false
+  robot_untag_post = TAGGED_$UP_TARGET=false
 
   team_one=red
   team_two=blue
@@ -143,7 +147,7 @@ ProcessConfig = uFldShoreBroker
   //       [BRIDGE = src=FOO_ALL, alias=FOO]
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
-  qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
+  qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE, TAGGED
 
   bridge   = src=UP_LOITER_$N, alias=UP_LOITER
   bridge   = src=HELM_MAP_CLEAR, alias=HELM_MAP_CLEAR

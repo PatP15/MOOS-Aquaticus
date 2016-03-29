@@ -3,8 +3,7 @@
 
 initialize   DEPLOY  = false
 initialize   RETURN  = false
-initialize   ATTACKING = true
-initialize   AVOID   = true
+initialize   TAGGED  = false
 
 set MODE = ACTIVE {
   DEPLOY = true
@@ -13,14 +12,20 @@ set MODE = ACTIVE {
 set MODE = RETURNING {
   MODE = ACTIVE
   RETURN = true
+  TAGGED = false
 } ATTACKING
+
+set MODE = TAGGED {
+  MODE = ACTIVE:ATTACKING
+  TAGGED != false
+} UNTAGGED
 
 //----------------------------------------------
 Behavior = BHV_Waypoint
 {
-  name      = waypt_grab_flag
+  name      = waypt_grab
   pwt       = 50
-  condition = MODE==ATTACKING
+  condition = MODE==UNTAGGED
   endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag   = RETURN=true
   updates   = WPT_UPDATE
@@ -62,11 +67,11 @@ Behavior = BHV_AvoidCollision
          extrapolate = true
                decay = 30,60
 
-        pwt_outer_dist = 60
-        pwt_inner_dist = 50
-        completed_dist = 51
-     min_util_cpa_dist = 50
-     max_util_cpa_dist = 45
+        pwt_outer_dist = 6
+        pwt_inner_dist = 5
+        completed_dist = 5
+     min_util_cpa_dist = 5
+     max_util_cpa_dist = 4.5
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
@@ -91,19 +96,20 @@ Behavior = BHV_AvoidCollision
          extrapolate = true
                decay = 30,60
 
-        pwt_outer_dist = 60
-        pwt_inner_dist = 50
-        completed_dist = 51
-     min_util_cpa_dist = 50
-     max_util_cpa_dist = 45
+        pwt_outer_dist = 6
+        pwt_inner_dist = 5
+        completed_dist = 5
+     min_util_cpa_dist = 5
+     max_util_cpa_dist = 4.5
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
 
 Behavior = BHV_Confines
 {
-  name = stayIN
+  name = stay_in_area
   pwt = 300
+  perpetual = true
 
   //behavior specific configuration
   condition = MODE==ACTIVE
@@ -114,6 +120,23 @@ Behavior = BHV_Confines
   should_normalize = true
 }
 
+Behavior = BHV_Waypoint
+{
+  name = waypt_untag
+  pwt = 100
+
+  condition = MODE==TAGGED
+  endflag   = TAGGED = false
+	perpetual = true
+
+  activeflag = RETURN = false
+
+              speed = 5
+     capture_radius = 10.0
+        slip_radius = 10.0
+             points = 61.84,-13.2
+}
+
 //----------------------------------------------
 Behavior = BHV_Waypoint
 {
@@ -121,7 +144,6 @@ Behavior = BHV_Waypoint
   pwt       = 100
   updates   = RETURN_UPDATES
   condition = MODE==RETURNING
-  endflag   = STATION_KEEP = true
   endflag   = DEPLOY = false
 	perpetual = true
 
