@@ -71,7 +71,7 @@ nsplug meta_chaser.moos targ_$VNAME.moos -f WARP=$TIME_WARP \
     VTEAM=$VTEAM           START_POS=$START_POS             \
     SHORE_IP=$SHORE_IP
 
-nsplug meta_chaser.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
+nsplug meta_chaser_def_saad.bhv targ_$VNAME.bhv -f VNAME=$VNAME     \
    START_POS=$START_POS LOITER_POS=$LOITER_POS
 
 if [ ! -e targ_$VNAME.moos ]; then echo "no targ_$VNAME.moos"; exit; fi

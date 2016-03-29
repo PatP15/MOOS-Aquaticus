@@ -33,11 +33,10 @@ Behavior = BHV_Waypoint
 
                speed = 5   // meters per second
         capture_line = true
-      capture_radius = 7.0
-         slip_radius = 7.0
+      capture_radius = 5.0
+         slip_radius = 5.0
 
              points = -61.05,-70.72
-             repeat = 0
 
     visual_hints = nextpt_color=gray20
     visual_hints = nextpt_vertex_size=2
@@ -67,11 +66,11 @@ Behavior = BHV_AvoidCollision
          extrapolate = true
                decay = 30,60
 
-        pwt_outer_dist = 6
-        pwt_inner_dist = 5
-        completed_dist = 5
-     min_util_cpa_dist = 5
-     max_util_cpa_dist = 4.5
+        pwt_outer_dist = 20
+        pwt_inner_dist = 15
+        completed_dist = 17
+     min_util_cpa_dist = 25
+     max_util_cpa_dist = 15
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
@@ -96,11 +95,11 @@ Behavior = BHV_AvoidCollision
          extrapolate = true
                decay = 30,60
 
-        pwt_outer_dist = 6
-        pwt_inner_dist = 5
-        completed_dist = 5
-     min_util_cpa_dist = 5
-     max_util_cpa_dist = 4.5
+        pwt_outer_dist = 20
+        pwt_inner_dist = 15
+        completed_dist = 17
+     min_util_cpa_dist = 25
+     max_util_cpa_dist = 15
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
@@ -114,7 +113,7 @@ Behavior = BHV_Confines
   //behavior specific configuration
   condition = MODE==ACTIVE
   polygon         = 51,21 : -81,-41 : -51,-105 : 81,-42 : label,stayIN
-  lookahead_secs  = 10.0
+  lookahead_secs  = 3.0
   show_closest_pt = true
   use_zero_cone   = true
   should_normalize = true
