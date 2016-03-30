@@ -23,19 +23,23 @@ Processconfig = ANTLER
   Run = uFldFlagManager @ NewConsole = false
   Run = uFldTagManager  @ NewConsole = false
 
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEred
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEblue
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueEnemy
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedUntag
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueUntag
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedEnemy
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueEnemy
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedOwn
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueOwn
 }
 
 //------------------------------------------------
 // uFldZoneEvent config block
 
-ProcessConfig = UFZEred
+ProcessConfig = UFZERedUntag
 {
   AppTick   = 4
   CommsTick = 4
+
+  view_zone = true
 
   zone = pts={71.84,-13.20:69.93,-7.32:64.93,-3.69:58.75,-3.69:53.75,-7.32:51.84,-13.20:53.75,-19.08:58.75,-22.71:64.93,-22.71:69.93,-19.08}
 
@@ -46,10 +50,12 @@ ProcessConfig = UFZEred
   zone_name = red
 }
 
-ProcessConfig = UFZEblue
+ProcessConfig = UFZEBlueUntag
 {
   AppTick   = 4
   CommsTick = 4
+
+  view_zone = true
 
   zone = pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21:-64.14,-61.21:-69.14,-64.84:-71.05,-70.72:-69.14,-76.60:-64.14,-80.23:-57.96,-80.23:-52.96,-76.60}
 
@@ -68,38 +74,10 @@ ProcessConfig = UFZEBlueEnemy
   zone = pts={55.00,25.00 : -15.50,-8.00 : 16.30,-75.93 : 86.80,-42.93 }
 
   // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = ENEMY_TERITORY_$[VNAME]=true
+  post_var = IN_ENEMY_TERRITORY=$[VNAME]
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = blue
-}
-
-ProcessConfig = UFZERedEnemy
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  zone = pts={-15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93}
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = ENEMY_TERITORY_$[VNAME]=true
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = red
-}
-
-ProcessConfig = UFZERedOwn
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  zone = pts={55.00,25.00 : -15.50,-8.00 : 16.30,-75.93 : 86.80,-42.93 }
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = ENEMY_TERITORY_$[VNAME]=false
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = red
 }
 
 ProcessConfig = UFZEBlueOwn
@@ -110,10 +88,38 @@ ProcessConfig = UFZEBlueOwn
   zone = pts={-15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93}
 
   // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = ENEMY_TERITORY_$[VNAME]=false
+  post_var = IN_OWN_TERRITORY=$[VNAME]
 
   // zone_name should correspond tp the vehicle's group name
   zone_name = blue
+}
+
+ProcessConfig = UFZERedOwn
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  zone = pts={55.00,25.00 : -15.50,-8.00 : 16.30,-75.93 : 86.80,-42.93 }
+
+  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
+  post_var = IN_OWN_TERRITORY=$[VNAME]
+
+  // zone_name should correspond tp the vehicle's group name
+  zone_name = red
+}
+
+ProcessConfig = UFZERedEnemy
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  zone = pts={-15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93}
+
+  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
+  post_var = IN_ENEMY_TERRITORY=$[VNAME]
+
+  // zone_name should correspond tp the vehicle's group name
+  zone_name = red
 }
 
 #include plug_pShare.moos
@@ -206,7 +212,10 @@ ProcessConfig = uFldShoreBroker
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
-  qbridge  = TAGGED, ENEMY_TERITORY
+  qbridge  = TAGGED
+
+  bridge   = src=IN_OWN_TERRITORY
+  bridge   = src=IN_ENEMY_TERRITORY
 
   bridge   = src=UP_LOITER_$N, alias=UP_LOITER
   bridge   = src=HELM_MAP_CLEAR, alias=HELM_MAP_CLEAR

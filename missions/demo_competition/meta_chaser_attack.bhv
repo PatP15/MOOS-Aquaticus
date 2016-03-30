@@ -4,6 +4,7 @@
 initialize   DEPLOY  = false
 initialize   RETURN  = false
 initialize   TAGGED  = false
+initialize ENEMY_TERRITORY = false
 
 set MODE = ACTIVE {
   DEPLOY = true
@@ -54,7 +55,7 @@ Behavior = BHV_AvoidCollision
 
   //behavior specific configuration
   condition = MODE==ACTIVE
-  condition = ENEMY_TERITORY==true
+  condition = ENEMY_TERRITORY==true
   updates   = CONTACT_INFO
   endflag   = CONTACT_AVOIDED=chaser2
   perpetual = true
@@ -84,7 +85,7 @@ Behavior = BHV_AvoidCollision
 
   //behavior specific configuration
   condition = MODE==ACTIVE
-  condition = ENEMY_TERITORY==true
+  condition = ENEMY_TERRITORY==true
   updates   = CONTACT_INFO
   endflag   = CONTACT_AVOIDED=human2
   perpetual = true

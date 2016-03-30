@@ -80,6 +80,8 @@ void showExampleConfigAndExit()
   blk("  post_var = IN_ZONE=$[TIME]");
   blk("  post_var = ZONE_PING=blue");
   blk("");
+  blk("  view_zone = false // default");
+  blk("");
   blk("  // zone_name should correspond tp the vehicle's group name");
   blk("  zone_name = blue");
   blk("                                                                ");

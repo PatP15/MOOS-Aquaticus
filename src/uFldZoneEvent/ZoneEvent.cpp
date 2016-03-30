@@ -25,6 +25,7 @@ ZoneEvent::ZoneEvent()
 {
   p_events_w_lock = new CMOOSLock();
 
+  m_view_zone = false;
   m_zone_color = "orange";
 
   m_zone_name = "";
@@ -117,6 +118,8 @@ bool ZoneEvent::OnStartUp()
         handled = handleConfigVehicleName(value);
       else if (param == "post_var")
         handled = handleConfigPostVar(value);
+      else if (param == "view_zone")
+        handled = handleConfigViewZone(value);
 
       if (!handled)
         reportUnhandledConfigWarning(orig);
@@ -128,11 +131,27 @@ bool ZoneEvent::OnStartUp()
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT_LOCAL");
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT");
 
-  postZonePoly();
+  if(m_view_zone)
+    postZonePoly();
 
   registerVariables();
 
   return(true);
+}
+
+bool ZoneEvent::handleConfigViewZone(const string& str)
+{
+  string s = tolower(str);
+  if(s=="false") {
+    m_view_zone = false;
+    return true;
+  }
+  else if (s=="true"){
+    m_view_zone = true;
+    return true;
+  }
+
+  return false;
 }
 
 bool ZoneEvent::handleConfigZone(const string& str)

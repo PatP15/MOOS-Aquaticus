@@ -21,6 +21,16 @@ Processconfig = ANTLER
   Run = uFldNodeBroker   @ NewConsole = false
   Run = pBasicContactMgr @ NewConsole = false
   Run = pRangeEvent      @ NewConsole = false
+  Run = pMapValues       @ NewConsole = false
+}
+
+ProcessConfig = pMapValues
+{
+  AppTick       = 10
+  CommsTick     = 10
+  TRIGGER = in_msg=IN_ENEMY_TERRITORY, trigger=$(VNAME), out_msg=ENEMY_TERRITORY, out_val=true
+  TRIGGER = in_msg=IN_OWN_TERRITORY, trigger=$(VNAME), out_msg=ENEMY_TERRITORY, out_val=false
+  DEBUG_MODE = FALSE
 }
 
 #include plug_pShare.moos

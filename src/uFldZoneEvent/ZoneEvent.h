@@ -34,6 +34,7 @@ class ZoneEvent : public AppCastingMOOSApp
   bool handleConfigPostVar(const std::string&);
   bool handleConfigGroupName(const std::string&);
   bool handleConfigVehicleName(const std::string&);
+  bool handleConfigViewZone(const std::string&);
   bool postZonePoly();
 
  protected:
@@ -48,6 +49,8 @@ class ZoneEvent : public AppCastingMOOSApp
 
  protected:  // Configuration variables
   XYPolygon   m_zone;
+
+  bool m_view_zone;
 
   std::string m_zone_name;
   std::string m_zone_color;
