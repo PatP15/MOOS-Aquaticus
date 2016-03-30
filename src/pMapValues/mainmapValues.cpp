@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
   if (mission_file == "")
     showHelpAndExit();
   cout << termColor("green");
-  cout << "iJoystick running as: " << run_command << endl;
+  cout << "pMapValues running as: " << run_command << endl;
   cout << termColor() << endl;
   mapValues control;
   control.Run(run_command.c_str(), mission_file.c_str());

@@ -36,26 +36,47 @@ Behavior = BHV_Confines
 }
 
 //----------------------------------------------
-Behavior = BHV_Loiter
+Behavior = BHV_Waypoint
 {
-  name      = loiter
+  name      = waypt_survey
   pwt       = 100
   condition = MODE==LOITERING
-  updates   = UP_LOITER
-  runflag   = VEHICLE_UNDERWAY = TRUE
-  endflag   = VEHICLE_UNDERWAY = FALSE
   perpetual = true
 
-   post_suffix = A
-         speed = 5
-     clockwise = best
-        radius = 4.0
-     nm_radius = 8.0
-       polygon = radial:: $(LOITER_POS), radius=20, pts=8, snap=1, label=$(VNAME)_LOITER
-  visual_hints = nextpt_color=white, nextpt_lcolor=khaki
-  visual_hints = edge_color=orange, vertex_color=white
-  visual_hints = edge_size=1, vertex_size=2
+         speed = 3   // meters per second
+        radius = 5.0
+   slip_radius = 15.0
+          lead = 10
+
+
+	points = format=lawnmower,label=patrol,x=-40,y=-60,height=50,width=30,lane_width=5,rows=sn,degs=45
+  visual_hints = vertex_color=yellow, edge_color=green
+
+  visual_hints = nextpt_color=red, nextpt_lcolor=green
+  visual_hints = vertex_size=1, edge_size=1
 }
+
+//----------------------------------------------
+// Behavior = BHV_Loiter
+// {
+//   name      = loiter
+//   pwt       = 100
+//   condition = MODE==LOITERING
+//   updates   = UP_LOITER
+//   runflag   = VEHICLE_UNDERWAY = TRUE
+//   endflag   = VEHICLE_UNDERWAY = FALSE
+//   perpetual = true
+//
+//    post_suffix = A
+//          speed = 5
+//      clockwise = best
+//         radius = 4.0
+//      nm_radius = 8.0
+//        polygon = radial:: $(LOITER_POS), radius=20, pts=8, snap=1, label=$(VNAME)_LOITER
+//   visual_hints = nextpt_color=white, nextpt_lcolor=khaki
+//   visual_hints = edge_color=orange, vertex_color=white
+//   visual_hints = edge_size=1, vertex_size=2
+// }
 
 Behavior = BHV_CutRange
 {
@@ -65,8 +86,8 @@ Behavior = BHV_CutRange
   pwt          = 100                               // example
   updates      = CONTACT_INFO                      // example
   condition = MODE==CHASING
-  endflag = LOITER=true
-  idleflag = LOITER=fasle
+  // endflag = LOITER=true
+  // idleflag = LOITER=fasle
   perpetual = true
 
 
