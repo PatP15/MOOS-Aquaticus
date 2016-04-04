@@ -10,4 +10,3 @@ ProcessConfig = uDialogManager
    sentence = tag : TAG_REQUEST = "vname=$(VNAME)"
    sentence = grab : FLAG_GRAB_REQUEST = "vname=$(VNAME)"
 }
-

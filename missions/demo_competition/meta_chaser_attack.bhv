@@ -129,7 +129,7 @@ Behavior = BHV_Waypoint
 
   condition = MODE==TAGGED
   endflag   = TAGGED = false
-	perpetual = true
+  perpetual = true
 
   activeflag = RETURN = false
 
@@ -147,7 +147,7 @@ Behavior = BHV_Waypoint
   updates   = RETURN_UPDATES
   condition = MODE==RETURNING
   endflag   = DEPLOY = false
-	perpetual = true
+  perpetual = true
 
               speed = 5
      capture_radius = 10.0

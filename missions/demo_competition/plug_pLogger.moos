@@ -3,12 +3,12 @@
 
 ProcessConfig = pLogger
 {
-  AppTick 	= 5
+  AppTick   = 5
   CommsTick = 5
-  
+
   File          = LOG_%(VNAME)
-  PATH	        = ./
-  AsyncLog 	    = true
+  PATH          = ./
+  AsyncLog      = true
   FileTimeStamp = true
 
 
@@ -17,7 +17,7 @@ ProcessConfig = pLogger
   LogAuxSrc = true
 
   // Log it all!!!!!
-  WildCardLogging = true 
+  WildCardLogging = true
   WildCardOmitPattern = *_STATUS
   WildCardOmitPattern = APPCAST
   WildCardOmitPattern = DB_VARSUMMARY

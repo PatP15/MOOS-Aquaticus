@@ -1,5 +1,5 @@
 //-------------------------------------------------------- 
-// pBasicContactMgr Configuration Block (Created from Plugin) 
+// pBasicContactMgr Configuration Block (Created from Plugin)
 
 ProcessConfig = pBasicContactMgr
 {
@@ -7,7 +7,7 @@ ProcessConfig = pBasicContactMgr
   CommsTick = 2
 
   decay = 30,60
-  //decay = 2,5  // Don't really want extrapolation here 
+  //decay = 2,5  // Don't really want extrapolation here
 
   alert_verbose = true
 
