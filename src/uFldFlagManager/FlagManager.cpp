@@ -450,8 +450,17 @@ void FlagManager::postFlagSummary()
     if(summary != "")
       summary += " # ";
     summary += spec;
+
+    string var_label = toupper(m_flags[i].get_label());
+    var_label += "_FLAG_GRABBED";
+    if (m_flags[i].get_owner() == "")
+      Notify(var_label, "false");
+    else
+      Notify(var_label, "true");
   }
   Notify("FLAG_SUMMARY", summary);
+
+
 }
 
 //------------------------------------------------------------
