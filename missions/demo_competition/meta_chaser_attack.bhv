@@ -21,6 +21,11 @@ set MODE = TAGGED {
   TAGGED != false
 } UNTAGGED
 
+set MODE = AVOIDING {
+  MODE = ACTIVE:ATTACKING:UNTAGGED
+  ENEMY_TERRITORY = true
+}
+
 //----------------------------------------------
 Behavior = BHV_Waypoint
 {
@@ -76,12 +81,9 @@ Behavior = BHV_AvoidCollision
 
   //behavior specific configuration
   condition = MODE==ACTIVE
-  condition = ENEMY_TERRITORY==true
 
   updates   = CONTACT_INFO
 
-  activeflag   = AVOIDING=true
-  inactiveflag = AVOIDING=false
   endflag      = CONTACT_AVOIDED=chaser2
 
              contact = chaser2
@@ -107,12 +109,9 @@ Behavior = BHV_AvoidCollision
 
   //behavior specific configuration
   condition = MODE==ACTIVE
-  condition = ENEMY_TERRITORY==true
 
   updates   = CONTACT_INFO
 
-  activeflag   = AVOIDING=true
-  inactiveflag = AVOIDING=false
   endflag      = CONTACT_AVOIDED=human2
 
              contact = human2
