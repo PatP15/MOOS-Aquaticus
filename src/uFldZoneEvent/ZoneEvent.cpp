@@ -115,6 +115,11 @@ bool ZoneEvent::OnStartUp()
     }
   }
 
+  if(m_zones_group.size() == 0){
+    reportConfigWarning("No group was set for the zones! Going down...");
+    return(false);
+  }
+
   AddActiveQueue("node_reports", this, &ZoneEvent::onNodeReport);
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT_LOCAL");
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT");
@@ -164,6 +169,13 @@ bool ZoneEvent::handleConfigZone(const string& str)
   if (color != "")
     if (!handleConfigColorZone(name, color)) {
       reportConfigWarning("failed to read \"color\"");
+      return(false);
+    }
+
+  string group = tokStringParse(str, "group", '#', '=');
+  if (group != "")
+    if (!handleConfigGroupZone(name, group)) {
+      reportConfigWarning("failed to read \"group\"");
       return(false);
     }
 
@@ -234,6 +246,16 @@ bool ZoneEvent::handleConfigColorZone(const string& name, const string& color)
   return(true);
 }
 
+bool ZoneEvent::handleConfigGroupZone(const string& name, const string& group)
+{
+  if (group == "")
+    return(false);
+
+  m_zones_group[name] = group;
+
+  return(true);
+}
+
 bool ZoneEvent::handleConfigPostVarZone(const string& name, const string& varval)
 {
   if (varval == "")
@@ -258,19 +280,12 @@ bool ZoneEvent::onNodeReport(CMOOSMsg& node_report_msg)
     return(false);
   }
 
-  // sanity check in case unregistered group
-  map<string, XYPolygon>::iterator p = m_zones.find(vgroup);
-  if (p == m_zones.end()) {
-    string msg = "Node report for " + vname;
-    msg += " with unregistered group " + vgroup + " .";
-    p_events_w_lock->Lock();
-    m_events.push_back(msg);
-    p_events_w_lock->UnLock();
-
-    return(false);
+  map<string, string>::iterator p;
+  for(p = m_zones_group.begin(); p != m_zones_group.end(); ++p){
+    if(p->second == vgroup) {
+      checkNodeInZone(p->first, new_node_record);
+    }
   }
-
-  checkNodeInZone(vgroup, new_node_record);
 
   return(true);
 }
@@ -322,15 +337,15 @@ bool ZoneEvent::buildReport()
 
   m_msgs << endl;
 
-  ACTable zones_varval(2);
-  zones_varval << "Zone | VAR=VAL";
+  ACTable zones_varval(3);
+  zones_varval << "Zone | Group | VAR=VAL";
   zones_varval.addHeaderLines();
   map<string, XYPolygon>::iterator p;
   for (p = m_zones.begin(); p != m_zones.end(); ++p) {
     vector<string>::iterator itvarval;
     for (itvarval = m_zones_varval[p->first].begin();
           itvarval != m_zones_varval[p->first].end(); ++itvarval) {
-      zones_varval << p->first << *itvarval;
+      zones_varval << p->first << m_zones_group[p->first] << *itvarval;
     }
   }
   m_msgs << zones_varval.getFormattedString();
