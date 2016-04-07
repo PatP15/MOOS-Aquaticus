@@ -28,6 +28,7 @@ Behavior = BHV_Confines
 
   //behavior specific configuration
   condition = MODE==ACTIVE
+
   polygon         = -15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93: label,defenseIN
   lookahead_secs  = 3.0
   show_closest_pt = true
@@ -40,8 +41,9 @@ Behavior = BHV_Waypoint
 {
   name      = waypt_survey
   pwt       = 100
-  condition = MODE==LOITERING
   perpetual = true
+
+  condition = MODE==LOITERING
 
          speed = 3   // meters per second
         radius = 5.0
@@ -49,34 +51,12 @@ Behavior = BHV_Waypoint
           lead = 10
 
 
-	points = format=lawnmower,label=patrol,x=-40,y=-60,height=50,width=30,lane_width=5,rows=sn,degs=45
+	points = format=lawnmower,label=patrol,x=-40,y=-60,height=30,width=30,lane_width=5,rows=sn,degs=45
   visual_hints = vertex_color=yellow, edge_color=green
 
   visual_hints = nextpt_color=red, nextpt_lcolor=green
   visual_hints = vertex_size=1, edge_size=1
 }
-
-//----------------------------------------------
-// Behavior = BHV_Loiter
-// {
-//   name      = loiter
-//   pwt       = 100
-//   condition = MODE==LOITERING
-//   updates   = UP_LOITER
-//   runflag   = VEHICLE_UNDERWAY = TRUE
-//   endflag   = VEHICLE_UNDERWAY = FALSE
-//   perpetual = true
-//
-//    post_suffix = A
-//          speed = 5
-//      clockwise = best
-//         radius = 4.0
-//      nm_radius = 8.0
-//        polygon = radial:: $(LOITER_POS), radius=20, pts=8, snap=1, label=$(VNAME)_LOITER
-//   visual_hints = nextpt_color=white, nextpt_lcolor=khaki
-//   visual_hints = edge_color=orange, vertex_color=white
-//   visual_hints = edge_size=1, vertex_size=2
-// }
 
 Behavior = BHV_CutRange
 {
@@ -84,11 +64,13 @@ Behavior = BHV_CutRange
   // ---------------------------
   name         = cutrange_chaser                         // example
   pwt          = 100                               // example
-  updates      = CONTACT_INFO                      // example
+  perpetual = true
+
   condition = MODE==CHASING
+  updates      = CONTACT_INFO                      // example
+
   // endflag = LOITER=true
   // idleflag = LOITER=fasle
-  perpetual = true
 
 
   // General Contact Behavior Parameters
@@ -115,10 +97,12 @@ Behavior = BHV_Waypoint
 {
   name      = waypt_return
   pwt       = 100
-  updates   = RETURN_UPDATES
+  perpetual = true
+
   condition = MODE==RETURNING
+  updates   = RETURN_UPDATES
+
   endflag   = DEPLOY = false
-	perpetual = true
 
               speed = 5
      capture_radius = 10.0

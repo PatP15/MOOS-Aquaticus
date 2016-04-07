@@ -22,5 +22,4 @@ ProcessConfig = uFldZoneEvent
   zone_info = name=red_in_own    # post_var = ENEMY_TERRITORY=false
   zone_info = name=red_in_enemy  # post_var = ENEMY_TERRITORY=true
 #endif
-
 }

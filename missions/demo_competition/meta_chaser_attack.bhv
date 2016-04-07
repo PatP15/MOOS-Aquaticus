@@ -26,11 +26,13 @@ Behavior = BHV_Waypoint
 {
   name      = waypt_grab
   pwt       = 50
+  perpetual = true
+
   condition = MODE==UNTAGGED
+  updates   = WPT_UPDATE
+
   endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag   = RETURN=true
-  updates   = WPT_UPDATE
-  perpetual = true
 
                speed = 5   // meters per second
         capture_line = false
@@ -48,20 +50,39 @@ Behavior = BHV_Waypoint
 }
 
 //----------------------------------------------
+Behavior = BHV_Waypoint
+{
+  name = waypt_untag
+  pwt = 100
+  perpetual = true
+
+  condition = MODE==TAGGED
+
+  activeflag = RETURN = false
+  endflag   = TAGGED = false
+
+              speed = 5
+     capture_radius = 10.0
+        slip_radius = 10.0
+             points = 61.84,-13.2
+}
+
+//----------------------------------------------
 Behavior = BHV_AvoidCollision
 {
   name = avdc_chaser2
   pwt = 150
+  perpetual = true
 
   //behavior specific configuration
   condition = MODE==ACTIVE
   condition = ENEMY_TERRITORY==true
-  updates   = CONTACT_INFO
-  endflag   = CONTACT_AVOIDED=chaser2
-  perpetual = true
 
-  activeflag = AVOIDING=true
+  updates   = CONTACT_INFO
+
+  activeflag   = AVOIDING=true
   inactiveflag = AVOIDING=false
+  endflag      = CONTACT_AVOIDED=chaser2
 
              contact = chaser2
     on_no_contact_ok = true
@@ -82,16 +103,17 @@ Behavior = BHV_AvoidCollision
 {
   name = avdc_human2
   pwt = 150
+  perpetual = true
 
   //behavior specific configuration
   condition = MODE==ACTIVE
   condition = ENEMY_TERRITORY==true
-  updates   = CONTACT_INFO
-  endflag   = CONTACT_AVOIDED=human2
-  perpetual = true
 
-  activeflag = AVOIDING=true
+  updates   = CONTACT_INFO
+
+  activeflag   = AVOIDING=true
   inactiveflag = AVOIDING=false
+  endflag      = CONTACT_AVOIDED=human2
 
              contact = human2
     on_no_contact_ok = true
@@ -115,6 +137,7 @@ Behavior = BHV_Confines
 
   //behavior specific configuration
   condition = MODE==ACTIVE
+
   polygon         = 51,21 : -81,-41 : -51,-105 : 81,-42 : label,stayIN
   lookahead_secs  = 3.0
   show_closest_pt = true
@@ -122,32 +145,18 @@ Behavior = BHV_Confines
   should_normalize = true
 }
 
-Behavior = BHV_Waypoint
-{
-  name = waypt_untag
-  pwt = 100
-
-  condition = MODE==TAGGED
-  endflag   = TAGGED = false
-  perpetual = true
-
-  activeflag = RETURN = false
-
-              speed = 5
-     capture_radius = 10.0
-        slip_radius = 10.0
-             points = 61.84,-13.2
-}
-
 //----------------------------------------------
 Behavior = BHV_Waypoint
 {
   name      = waypt_return
   pwt       = 100
-  updates   = RETURN_UPDATES
-  condition = MODE==RETURNING
-  endflag   = DEPLOY = false
   perpetual = true
+
+  condition = MODE==RETURNING
+
+  updates   = RETURN_UPDATES
+
+  endflag   = DEPLOY = false
 
               speed = 5
      capture_radius = 10.0
