@@ -171,6 +171,25 @@ bool ZoneEvent::handleConfigZone(const string& str)
   return(true);
 }
 
+string ZoneEvent::tokStringParse(const string& str, const string& left,
+                                  char gsep, char lsep)
+{
+  vector<string> svector1 = parseStringQ(str, gsep);
+  for(vector<string>::size_type i=0; i<svector1.size(); i++) {
+    vector<string> svector2 = parseString(svector1[i], lsep);
+    if(svector2.size() < 2)
+      return("");
+    svector2[0] = stripBlankEnds(svector2[0]);
+    if(svector2[0] == left){
+      vector<string> subvector2(svector2.begin()+1,svector2.end());
+      string rstr = svectorToString(subvector2, '=');
+
+      return(stripBlankEnds(rstr));
+    }
+  }
+  return("");
+}
+
 bool ZoneEvent::handleConfigViewZone(const string& name, const string& str)
 {
   string s = tolower(str);
@@ -196,9 +215,9 @@ bool ZoneEvent::handleConfigPolyZone(const string& name, const string& str)
   m_zones[name].set_vertex_size(1);
   m_zones[name].set_transparency(0.5);
 
-  m_zones[name].set_color("vertex", "orange"); // default
-  m_zones[name].set_color("edge", "orange"); // default
-  m_zones[name].set_color("fill", "orange"); // default
+  // m_zones[name].set_color("vertex", "orange"); // default
+  // m_zones[name].set_color("edge", "orange"); // default
+  // m_zones[name].set_color("fill", "orange"); // default
   m_zones[name].set_label("uFldZoneEvent_" + name);
 
   return(true);

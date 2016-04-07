@@ -56,6 +56,9 @@ class ZoneEvent : public AppCastingMOOSApp
 
   CMOOSLock* p_events_w_lock;
   std::vector<std::string> m_events;
+
+private:
+  std::string tokStringParse(const std::string&, const std::string&, char, char);
 };
 
 #endif
