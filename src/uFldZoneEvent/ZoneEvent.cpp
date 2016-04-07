@@ -225,6 +225,8 @@ bool ZoneEvent::handleConfigPolyZone(const string& name, const string& str)
 
 bool ZoneEvent::handleConfigColorZone(const string& name, const string& color)
 {
+  reportConfigWarning("Setting \"color\" is still experimental and might not work all time.");
+
   m_zones[name].set_color("vertex", color);
   m_zones[name].set_color("edge", color);
   m_zones[name].set_color("fill", color);
@@ -318,7 +320,8 @@ bool ZoneEvent::buildReport()
 {
   double dbtime = GetMOOSVar("dbtime")->GetDoubleVal();
 
-  m_msgs << "Registred variables to be published:" << endl;
+  m_msgs << endl;
+
   ACTable zones_varval(2);
   zones_varval << "Zone | VAR=VAL";
   zones_varval.addHeaderLines();
