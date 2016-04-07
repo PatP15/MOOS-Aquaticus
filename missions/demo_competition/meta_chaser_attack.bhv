@@ -86,14 +86,14 @@ Behavior = BHV_AvoidCollision
 
              contact = chaser2
     on_no_contact_ok = true
-         extrapolate = false
-               decay = 30,60
+         extrapolate = true
+               decay = 15,30
 
-        pwt_outer_dist = 30
-        pwt_inner_dist = 20
         completed_dist = 22
-     min_util_cpa_dist = 50
-     max_util_cpa_dist = 20
+        pwt_outer_dist = 200
+        pwt_inner_dist = 50
+     min_util_cpa_dist = 10
+     max_util_cpa_dist = 75
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
@@ -117,14 +117,14 @@ Behavior = BHV_AvoidCollision
 
              contact = human2
     on_no_contact_ok = true
-         extrapolate = false
-               decay = 30,60
+         extrapolate = true
+               decay = 15,30
 
-        pwt_outer_dist = 30
-        pwt_inner_dist = 20
         completed_dist = 22
-     min_util_cpa_dist = 50
-     max_util_cpa_dist = 20
+        pwt_outer_dist = 200
+        pwt_inner_dist = 50
+     min_util_cpa_dist = 10
+     max_util_cpa_dist = 75
              pwt_grade = linear
    bearing_line_config = white:0, green:0.65, yellow:0.8, red:1.0
 }
