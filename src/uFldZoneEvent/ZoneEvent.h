@@ -1,7 +1,7 @@
 /************************************************************/
-/*    NAME:                                               */
+/*    NAME: Mohamed Saad Ibn Seddik                         */
 /*    ORGN: MIT                                             */
-/*    FILE: ZoneEvent.h                                          */
+/*    FILE: ZoneEvent.h                                     */
 /*    DATE: December 29th, 1963                             */
 /************************************************************/
 
@@ -31,15 +31,15 @@ class ZoneEvent : public AppCastingMOOSApp
 
  protected:  // Config utilities
   bool handleConfigZone(const std::string&);
-  bool handleConfigPostVar(const std::string&);
-  bool handleConfigGroupName(const std::string&);
-  bool handleConfigVehicleName(const std::string&);
-  bool handleConfigViewZone(const std::string&);
-  bool postZonePoly();
+  bool handleConfigViewZone(const std::string&, const std::string&);
+  bool handleConfigPostVarZone(const std::string&, const std::string&);
+  bool handleConfigColorZone(const std::string&, const std::string&);
+  bool handleConfigPolyZone(const std::string&, const std::string&);
+  bool postZonesPoly();
 
  protected:
   bool onNodeReport(CMOOSMsg&);
-  bool checkNodeInZone(NodeRecord&);
+  bool checkNodeInZone(const std::string&, NodeRecord&);
 
  protected:  // Standard AppCastingMOOSApp function to overload
   bool buildReport();
@@ -48,18 +48,11 @@ class ZoneEvent : public AppCastingMOOSApp
   void registerVariables();
 
  protected:  // Configuration variables
-  XYPolygon   m_zone;
+  std::map<std::string, XYPolygon> m_zones;
+  std::map<std::string, bool> m_zones_view;
+  std::map<std::string, std::vector<std::string> > m_zones_varval;
 
-  bool m_view_zone;
-
-  std::string m_zone_name;
-  std::string m_zone_color;
-  std::string m_vname;
-
-  std::map<std::string, std::string> m_map_var_val;
-  std::map<std::string, std::string> m_map_static_var_val;
-
-  std::map<std::string, NodeRecord> m_map_node_records;
+  std::map<std::string, NodeRecord> m_all_noderecords;
 
   CMOOSLock* p_events_w_lock;
   std::vector<std::string> m_events;

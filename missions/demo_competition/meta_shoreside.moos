@@ -23,8 +23,7 @@ Processconfig = ANTLER
   Run = uFldFlagManager @ NewConsole = false
   Run = uFldTagManager  @ NewConsole = false
 
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedUntag
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueUntag
+  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedEnemy
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueEnemy
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedOwn
@@ -34,36 +33,20 @@ Processconfig = ANTLER
 //------------------------------------------------
 // uFldZoneEvent config block
 
-ProcessConfig = UFZERedUntag
+ProcessConfig = UFZEUntag
 {
   AppTick   = 4
   CommsTick = 4
 
-  view_zone = true
-
-  zone = pts={71.84,-13.20:69.93,-7.32:64.93,-3.69:58.75,-3.69:53.75,-7.32:51.84,-13.20:53.75,-19.08:58.75,-22.71:64.93,-22.71:69.93,-19.08}
-
   // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = UNTAG_REQUEST=vname=$[VNAME]
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = red
-}
-
-ProcessConfig = UFZEBlueUntag
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  view_zone = true
-
-  zone = pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21:-64.14,-61.21:-69.14,-64.84:-71.05,-70.72:-69.14,-76.60:-64.14,-80.23:-57.96,-80.23:-52.96,-76.60}
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = UNTAG_REQUEST=vname=$[VNAME]
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = blue
+  // zone name should correspond to the vehicle's group name to be active
+  zone_info = name=blue # pts={-51.05,-70.72:-52.96,-64.84:-57.96,-61.21:-64.14,-61.21:-69.14,-64.84:-71.05,-70.72:-69.14,-76.60:-64.14,-80.23:-57.96,-80.23:-52.96,-76.60}
+  zone_info = name=blue # post_var = UNTAG_REQUEST=vname=$[VNAME]
+  zone_info = name=blue # viewable=true  // default is true
+  zone_info = name=blue # color=blue  // default is orange
+  zone_info = name=red  # pts={71.84,-13.20:69.93,-7.32:64.93,-3.69:58.75,-3.69:53.75,-7.32:51.84,-13.20:53.75,-19.08:58.75,-22.71:64.93,-22.71:69.93,-19.08}
+  zone_info = name=red  # post_var = UNTAG_REQUEST=vname=$[VNAME]
+  zone_info = name=red  # viewable=true # color=red
 }
 
 ProcessConfig = UFZEBlueEnemy

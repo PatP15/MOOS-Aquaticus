@@ -1,7 +1,7 @@
 /************************************************************/
-/*    NAME:                                               */
+/*    NAME: Mohamed Saad Ibn Seddik                         */
 /*    ORGN: MIT                                             */
-/*    FILE: ZoneEvent.cpp                                        */
+/*    FILE: ZoneEvent.cpp                                   */
 /*    DATE:                                                 */
 /************************************************************/
 
@@ -24,12 +24,6 @@ using namespace std;
 ZoneEvent::ZoneEvent()
 {
   p_events_w_lock = new CMOOSLock();
-
-  m_view_zone = false;
-  m_zone_color = "orange";
-
-  m_zone_name = "";
-  m_vname = "";
 }
 
 //---------------------------------------------------------
@@ -49,7 +43,6 @@ bool ZoneEvent::OnConnectToServer()
 {
   registerVariables();
 
-
   return(true);
 }
 
@@ -67,11 +60,16 @@ void ZoneEvent::registerVariables()
   RegisterMOOSVariables();
 }
 
-bool ZoneEvent::postZonePoly()
+bool ZoneEvent::postZonesPoly()
 {
-  string spec = m_zone.get_spec();
+  map<string, XYPolygon>::iterator p;
+  for (p = m_zones.begin(); p != m_zones.end(); ++p){
+    string var_name = p->first;
+    XYPolygon poly = p->second;
 
-  Notify("VIEW_POLYGON", spec);
+    string spec = poly.get_spec();
+    Notify("VIEW_POLYGON", spec);
+  }
 }
 
 //---------------------------------------------------------
@@ -110,109 +108,118 @@ bool ZoneEvent::OnStartUp()
       string value = line;
       bool handled = false;
 
-      if (param == "zone")
+      if (param == "zone_info")
         handled = handleConfigZone(value);
-      else if (param == "zone_name")
-        handled = handleConfigGroupName(value);
-      else if (param == "vehicle_name")
-        handled = handleConfigVehicleName(value);
-      else if (param == "post_var")
-        handled = handleConfigPostVar(value);
-      else if (param == "view_zone")
-        handled = handleConfigViewZone(value);
-
       if (!handled)
         reportUnhandledConfigWarning(orig);
     }
   }
 
-
   AddActiveQueue("node_reports", this, &ZoneEvent::onNodeReport);
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT_LOCAL");
   AddMessageRouteToActiveQueue("node_reports", "NODE_REPORT");
 
-  if(m_view_zone)
-    postZonePoly();
+  postZonesPoly();
 
   registerVariables();
 
   return(true);
 }
 
-bool ZoneEvent::handleConfigViewZone(const string& str)
+bool ZoneEvent::handleConfigZone(const string& str)
+{
+  string name = tokStringParse(str, "name", '#', '=');
+  if (name == ""){
+    reportConfigWarning("\"zone_info\" declared w/o name!");
+    return(false);
+  }
+
+  // creation of inputs in different maps
+  m_zones[name];
+  m_zones_view[name]=true; // default value
+  m_zones_varval[name];
+
+  string poly = tokStringParse(str, "pts", '#', '=');
+  if (poly != "")
+    if (!handleConfigPolyZone(name, "pts="+poly)) {
+      reportConfigWarning("failed to read \"pts\"");
+      return(false);
+    }
+
+  string varval = tokStringParse(str, "post_var", '#', '=');
+  if (varval != "")
+    if (!handleConfigPostVarZone(name, varval)) {
+      reportConfigWarning("failed to read \"post_var\"");
+      return(false);
+    }
+
+  string view = tokStringParse(str, "viewable", '#', '=');
+  if (view != "")
+    if (!handleConfigViewZone(name, view)) {
+      reportConfigWarning("failed to read \"viewable\"");
+      return(false);
+    }
+
+  string color = tokStringParse(str, "color", '#', '=');
+  if (color != "")
+    if (!handleConfigColorZone(name, color)) {
+      reportConfigWarning("failed to read \"color\"");
+      return(false);
+    }
+
+
+  return(true);
+}
+
+bool ZoneEvent::handleConfigViewZone(const string& name, const string& str)
 {
   string s = tolower(str);
   if(s=="false") {
-    m_view_zone = false;
-    return true;
+    m_zones_view[name] = false;
+    return(true);
   }
   else if (s=="true"){
-    m_view_zone = true;
-    return true;
+    m_zones_view[name] = true;
+    return(true);
   }
 
-  return false;
+  return(false);
 }
 
-bool ZoneEvent::handleConfigZone(const string& str)
+bool ZoneEvent::handleConfigPolyZone(const string& name, const string& str)
 {
-  XYPolygon poly = string2Poly(str);
-  if(poly.size() == 0)
+  m_zones[name] = string2Poly(str);
+  if(m_zones[name].size() == 0)
     return(false);
 
-  poly.set_edge_size(1);
-  poly.set_vertex_size(1);
-  poly.set_transparency(0.5);
+  m_zones[name].set_edge_size(1);
+  m_zones[name].set_vertex_size(1);
+  m_zones[name].set_transparency(0.5);
 
-  poly.set_color("vertex", "pink");
-  poly.set_color("edge", "pink");
-  poly.set_color("fill", m_zone_color);
-  if(m_zone_name != "")
-    poly.set_label("uFldZoneEvent_" + m_zone_name);
-  else
-    poly.set_label("uFldZoneEvent_zone");
-  m_zone = poly;
+  m_zones[name].set_color("vertex", "orange"); // default
+  m_zones[name].set_color("edge", "orange"); // default
+  m_zones[name].set_color("fill", "orange"); // default
+  m_zones[name].set_label("uFldZoneEvent_" + name);
 
   return(true);
 }
 
-bool ZoneEvent::handleConfigGroupName(const string& zone_name)
+bool ZoneEvent::handleConfigColorZone(const string& name, const string& color)
 {
-  // Sanity check - this app only handles TWO zones
-  if(zone_name == "")
-    return(false);
-
-  if(m_zone_name == "") {
-    m_zone_name = zone_name;
-    m_zone.set_label("uFldZoneEvent_" + zone_name);
-  }
-  else
-    return(false);
+  m_zones[name].set_color("vertex", color);
+  m_zones[name].set_color("edge", color);
+  m_zones[name].set_color("fill", color);
 
   return(true);
 }
 
-bool ZoneEvent::handleConfigVehicleName(const string& vname)
+bool ZoneEvent::handleConfigPostVarZone(const string& name, const string& varval)
 {
-  if(vname == "")
+  if (varval == "")
     return(false);
 
-  m_vname = vname;
-  return(true);
-}
+  m_zones_varval[name].push_back(varval);
 
-bool ZoneEvent::handleConfigPostVar(const string& var_name)
-{
-  if (var_name == "")
-    return(false);
-
-  // var_name="UNTAG_REQUEST=vname=$[VNAME]"
-  string val = var_name; // val="vname=$[VNAME]" (cf. next line)
-  string var = biteStringX(val, '='); // var="UNTAG_REQUEST"
-
-  m_map_var_val[var] = val;
-
-  AddMOOSVariable(var, "", var, 0);
   return(true);
 }
 
@@ -229,62 +236,57 @@ bool ZoneEvent::onNodeReport(CMOOSMsg& node_report_msg)
     p_events_w_lock->UnLock();
     return(false);
   }
-  if((vname != m_vname) && (m_vname!="")) {
-    string msg = "Node report for " + vname + " but zone registered for " + m_vname;
-    return(false);
-  }
 
-  if(vgroup == m_zone_name || vname == m_vname){
-    checkNodeInZone(new_node_record);
-  } else {
-    string msg = "Node report for " + vname + " w/ different group: " + vgroup;
+  // sanity check in case unregistered group
+  map<string, XYPolygon>::iterator p = m_zones.find(vgroup);
+  if (p == m_zones.end()) {
+    string msg = "Node report for " + vname;
+    msg += " with unregistered group " + vgroup + " .";
     p_events_w_lock->Lock();
     m_events.push_back(msg);
     p_events_w_lock->UnLock();
+
     return(false);
   }
+
+  checkNodeInZone(vgroup, new_node_record);
 
   return(true);
 }
 
-bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
+bool ZoneEvent::checkNodeInZone(const string& name, NodeRecord& node_record)
 {
   double dbtime = GetMOOSVar("dbtime")->GetDoubleVal();
 
   string vname = node_record.getName();
   string vgroup = node_record.getGroup();
-
-  // Sanity check (DeMorgan Rule)
-  if ((vgroup != m_zone_name) && (vname != m_vname)){
-    return(false);
-  }
-
   double vx = node_record.getX();
   double vy = node_record.getY();
 
-  if(!m_zone.contains(vx, vy)){
+  if(!m_zones[name].contains(vx, vy)){
     //  delete element from map: erase needs a iterator returned by find
-    map<string, NodeRecord>::iterator p = m_map_node_records.find(vname);
-    if (p != m_map_node_records.end())
-      m_map_node_records.erase(p);
+    map<string, NodeRecord>::iterator p = m_all_noderecords.find(vname);
+    if (p != m_all_noderecords.end())
+      m_all_noderecords.erase(p);
     return(false);
   }
 
-  map<string, string>::iterator p;
-  for (p = m_map_var_val.begin(); p != m_map_var_val.end(); ++p){
-    string var_name = p->first;
-    string val = p->second;
+  vector<string>::iterator p;
+  for (p = m_zones_varval[name].begin(); p != m_zones_varval[name].end(); ++p){
+    string varval = *p;
 
-    val = findReplace(val, "$[VNAME]", vname);
-    val = findReplace(val, "$[GROUP]", vgroup);
-    val = findReplace(val, "$[TIME]", doubleToString(dbtime));
-    val = findReplace(val, "$[VX]", doubleToString(vx));
-    val = findReplace(val, "$[VY]", doubleToString(vy));
+    varval = findReplace(varval, "$[VNAME]", vname);
+    varval = findReplace(varval, "$[GROUP]", vgroup);
+    varval = findReplace(varval, "$[TIME]", doubleToString(dbtime));
+    varval = findReplace(varval, "$[VX]", doubleToString(vx));
+    varval = findReplace(varval, "$[VY]", doubleToString(vy));
 
-    SetMOOSVar(var_name, val, m_curr_time);
+    string var = biteStringX(varval, '=');
+
+    Notify(var, varval);
   }
 
-  m_map_node_records[vname] = node_record;
+  m_all_noderecords[vname] = node_record;
 
   return(true);
 }
@@ -296,19 +298,20 @@ bool ZoneEvent::checkNodeInZone(NodeRecord& node_record)
 bool ZoneEvent::buildReport()
 {
   double dbtime = GetMOOSVar("dbtime")->GetDoubleVal();
-  m_msgs << "Global Settings\n";
-  m_msgs << "============================================\n";
-  m_msgs << "Zone (Group) Name = " << m_zone_name << endl;
-  m_msgs << "Vehicle's Name = " << m_vname << endl;
 
   m_msgs << "Registred variables to be published:" << endl;
-  map<string, string>::iterator p;
-  for (p = m_map_var_val.begin(); p != m_map_var_val.end(); ++p){
-    m_msgs << "\t";
-    string var_name = p->first;
-    string val = p->second;
-    m_msgs << var_name << " : " << val << endl;
+  ACTable zones_varval(2);
+  zones_varval << "Zone | VAR=VAL";
+  zones_varval.addHeaderLines();
+  map<string, XYPolygon>::iterator p;
+  for (p = m_zones.begin(); p != m_zones.end(); ++p) {
+    vector<string>::iterator itvarval;
+    for (itvarval = m_zones_varval[p->first].begin();
+          itvarval != m_zones_varval[p->first].end(); ++itvarval) {
+      zones_varval << p->first << *itvarval;
+    }
   }
+  m_msgs << zones_varval.getFormattedString();
 
   m_msgs << endl;
   m_msgs << endl;
@@ -318,7 +321,7 @@ bool ZoneEvent::buildReport()
   actab.addHeaderLines();
 
   map<string, NodeRecord>::iterator pNR;
-  for (pNR = m_map_node_records.begin(); pNR != m_map_node_records.end(); ++pNR){
+  for (pNR = m_all_noderecords.begin(); pNR != m_all_noderecords.end(); ++pNR){
     actab << dbtime << pNR->second.getName() << pNR->second.getGroup();
     actab << pNR->second.getX() << pNR->second.getY();
   }
