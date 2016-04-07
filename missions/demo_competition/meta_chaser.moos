@@ -21,30 +21,10 @@ Processconfig = ANTLER
   Run = uFldNodeBroker   @ NewConsole = false
   Run = pBasicContactMgr @ NewConsole = false
   Run = pRangeEvent      @ NewConsole = false
-  Run = pMapValues       @ NewConsole = false
-  Run = pMapValues       @ NewConsole = false ~ pMVDefend
+  Run = uFldZoneEvent    @ NewConsole = false
 }
 
-ProcessConfig = pMapValues
-{
-  AppTick       = 10
-  CommsTick     = 10
-  // for the attacker
-  TRIGGER = in_msg=IN_ENEMY_TERRITORY, trigger=$(VNAME), out_msg=ENEMY_TERRITORY, out_val=true
-  TRIGGER = in_msg=IN_OWN_TERRITORY, trigger=$(VNAME), out_msg=ENEMY_TERRITORY, out_val=false
-  DEBUG_MODE = FALSE
-}
-
-ProcessConfig = pMVDefend
-{
-  AppTick       = 10
-  CommsTick     = 10
-  // for the defender
-  TRIGGER = in_msg=IN_ENEMY_TERRITORY, trigger=chaser1, out_msg=LOITER, out_val=false
-  TRIGGER = in_msg=IN_OWN_TERRITORY, trigger=chaser1, out_msg=LOITER, out_val=true
-  DEBUG_MODE = FALSE
-}
-
+#include plug_uFldZoneEvent.moos
 #include plug_pShare.moos
 #include plug_pHostInfo.moos
 #include plug_uFldNodeBroker.moos

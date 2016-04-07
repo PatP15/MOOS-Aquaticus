@@ -3,7 +3,7 @@
 
 initialize   DEPLOY  = false
 initialize   RETURN  = false
-initialize   LOITER  = false
+initialize   LOITER  = true
 
 set MODE = ACTIVE {
   DEPLOY = true

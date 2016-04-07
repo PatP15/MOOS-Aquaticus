@@ -24,10 +24,6 @@ Processconfig = ANTLER
   Run = uFldTagManager  @ NewConsole = false
 
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedEnemy
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueEnemy
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZERedOwn
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEBlueOwn
 }
 
 //------------------------------------------------
@@ -48,62 +44,6 @@ ProcessConfig = UFZEUntag
   zone_info = name=red_untag  # pts={71.84,-13.20:69.93,-7.32:64.93,-3.69:58.75,-3.69:53.75,-7.32:51.84,-13.20:53.75,-19.08:58.75,-22.71:64.93,-22.71:69.93,-19.08}
   zone_info = name=red_untag  # post_var = UNTAG_REQUEST=vname=$[VNAME]
   zone_info = name=red_untag  # viewable=true # color=red # group = red
-}
-
-ProcessConfig = UFZEBlueEnemy
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  zone = pts={55.00,25.00 : -15.50,-8.00 : 16.30,-75.93 : 86.80,-42.93 }
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = IN_ENEMY_TERRITORY=$[VNAME]
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = blue
-}
-
-ProcessConfig = UFZEBlueOwn
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  zone = pts={-15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93}
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = IN_OWN_TERRITORY=$[VNAME]
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = blue
-}
-
-ProcessConfig = UFZERedOwn
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  zone = pts={55.00,25.00 : -15.50,-8.00 : 16.30,-75.93 : 86.80,-42.93 }
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = IN_OWN_TERRITORY=$[VNAME]
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = red
-}
-
-ProcessConfig = UFZERedEnemy
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  zone = pts={-15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93}
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  post_var = IN_ENEMY_TERRITORY=$[VNAME]
-
-  // zone_name should correspond tp the vehicle's group name
-  zone_name = red
 }
 
 #include plug_pShare.moos
