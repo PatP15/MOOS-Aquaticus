@@ -1,4 +1,4 @@
-ProcessConfig = iOS5000AC
+ProcessConfig = iOS5000
 {
   AppTick                       = 5
   CommsTick                     = 5

@@ -26,7 +26,7 @@ Processconfig = ANTLER
   Run = uFldMessageHandler @ NewConsole = false
   //Run = iActuationKFAC       @ NewConsole = false
   //Run = iGPS_KF            @ NewConsole = false
-  Run = iOS5000AC            @ NewConsole = false
+  Run = iOS5000            @ NewConsole = false
   Run = uProcessWatch      @ NewConsole = false
  // Run = iHealth_KF100 @NewConsole = false
   Run = iGPSDevice          @ NewConsole = false
@@ -51,8 +51,8 @@ Processconfig = ANTLER
 #include plug_uFldMessageHandler.moos
 //#include plug_iGPS_KF.moos
 #include plug_iGPSDevice.moos
-#include plug_iOS5000AC.moos
-#include plug_uProcessWatch_fld.moos
+#include plug_iOS5000.moos
+#include plug_uProcessWatch_fld_mokai.moos
 #include plug_iHealthKF100.moos
 
 #ifdef VNAME archie
