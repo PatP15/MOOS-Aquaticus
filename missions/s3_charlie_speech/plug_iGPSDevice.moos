@@ -8,7 +8,7 @@ ProcessConfig = iGPSDevice
 
   BaudRate        = 19200      // Serial port baud rate                     
   PREFIX          = NAV_       // Prepends this to all GPS publications     
-  HEADING_SOURCE  = gprmc      // none or blank: no published GPS heading   
+  HEADING_SOURCE  = compass    // none or blank: no published GPS heading   
                                // gprmc: heading is published from $GPRMC   
                                // compass: heading is published, source is  
                                //            from COMPASS_HEADING message   
