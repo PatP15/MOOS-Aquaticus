@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # M200_IP
 #  Emulator running on same machine as vehicle:     localhost
@@ -23,6 +23,7 @@ ARCHIE="no"
 BETTY="no"
 EVAN="no"
 FELIX="no"
+GUS="no"
 MOKAI="no"
 BAD_ARGS=""
 MOOS_FILE=""
@@ -104,11 +105,11 @@ printf "Initiate launch vehicle script\n"
 for ARGI; do
     UNDEFINED_ARG=$ARGI
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	HELP="yes"
-	UNDEFINED_ARG=""
+      HELP="yes"
+      UNDEFINED_ARG=""
     fi
- if [ "${ARGI}" = "--archie" -o "${ARGI}" = "-a" ] ; then
-	M200_IP=192.168.1.171 #archie
+    if [ "${ARGI}" = "--archie" -o "${ARGI}" = "-a" ] ; then
+        M200_IP=192.168.1.171 #archie
         ARCHIE="yes"
         UNDEFINED_ARG=""
         VNAME="archie"
@@ -117,16 +118,16 @@ for ARGI; do
         LOITER_PT="x=50,y=10"
         MOOS_FILE="targ_archie.moos"
         BHV_FILE="targ_archie.bhv"
-	DOT_MOOS="meta_vehicle_m100.moos"
+        DOT_MOOS="meta_vehicle_m100.moos"
         printf "ARCHIE vehicle selected.\n"
         WPT_ORDERV=${WPT_ORDERA}
         SPEEDV=$SPEEDA
         LOITER_POSV=$LOITER_POSA
         WPT_PTSV=$WPT_PTSA
-	RETURN_POSV=$RETURN_POSA
- fi
- if [ "${ARGI}" = "--mokai" -o "${ARGI}" = "-m" ] ; then
-	M200_IP=192.168.1.206 #mokai
+        RETURN_POSV=$RETURN_POSA
+    fi
+    if [ "${ARGI}" = "--mokai" -o "${ARGI}" = "-m" ] ; then
+        M200_IP=192.168.1.206 #mokai
         MOKAI="yes"
         UNDEFINED_ARG=""
         VNAME="mokai"
@@ -135,16 +136,16 @@ for ARGI; do
         LOITER_PT="x=50,y=10"
         MOOS_FILE="targ_mokai.moos"
         BHV_FILE="targ_mokai.bhv"
-	DOT_MOOS="meta_vehicle_mokai.moos"
+        DOT_MOOS="meta_vehicle_mokai.moos"
         printf "MOKAI vehicle selected.\n"
         WPT_ORDERV=${WPT_ORDERA}
         SPEEDV=$SPEEDA
         LOITER_POSV=$LOITER_POSA
         WPT_PTSV=$WPT_PTSA
-	RETURN_POSV=$RETURN_POSA
- fi
- if [ "${ARGI}" = "--betty" -o "${ARGI}" = "-b" ] ; then
-	M200_IP=192.168.1.172 #betty
+        RETURN_POSV=$RETURN_POSA
+    fi
+    if [ "${ARGI}" = "--betty" -o "${ARGI}" = "-b" ] ; then
+        M200_IP=192.168.1.172 #betty
         BETTY="yes"
         UNDEFINED_ARG=""
         VNAME="betty"
@@ -153,17 +154,17 @@ for ARGI; do
         LOITER_PT="x=50,y=10"
         MOOS_FILE="targ_betty.moos"
         BHV_FILE="targ_betty.bhv"
-	DOT_MOOS="meta_vehicle_m100.moos"
+        DOT_MOOS="meta_vehicle_m100.moos"
         printf "BETTY vehicle selected.\n"
         WPT_ORDERV=${WPT_ORDERB}
         SPEEDV=$SPEEDB
         LOITER_POSV=$LOITER_POSB
         WPT_PTSV=$WPT_PTSB
-	RETURN_POSV=$RETURN_POSB
+        RETURN_POSV=$RETURN_POSB
     fi
 
     if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
-	M200_IP=192.168.6.1 #felix
+        M200_IP=192.168.6.1 #felix
         FELIX="yes"
         UNDEFINED_ARG=""
         VNAME="felix"
@@ -177,10 +178,10 @@ for ARGI; do
         SPEEDV=$SPEEDF
         LOITER_POSV=$LOITER_POSF
         WPT_PTSV=$WPT_PTSF
-	RETURN_POSV=$RETURN_POSF
+        RETURN_POSV=$RETURN_POSF
     fi
     if [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
-	M200_IP=192.168.5.1 #evan
+        M200_IP=192.168.5.1 #evan
         EVAN="yes"
         UNDEFINED_ARG=""
         VNAME="evan"
@@ -194,15 +195,32 @@ for ARGI; do
         SPEEDV=$SPEEDE
         LOITER_POSV=$LOITER_POSE
         WPT_PTSV=$WPT_PTSE
-	RETURN_POSV=$RETURN_POSE
+        RETURN_POSV=$RETURN_POSE
+    fi
+    if [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
+        M200_IP=192.168.7.1 #gus
+        GUS="yes"
+        UNDEFINED_ARG=""
+        VNAME="gus"
+        VPORT="9007"
+        SHARE_LISTEN="9307"
+        LOITER_PT="x=50,y=0"
+        MOOS_FILE="targ_gus.moos"
+        BHV_FILE="targ_gus.bhv"
+        printf "GUS vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERE}
+        SPEEDV=$SPEEDE
+        LOITER_POSV=$LOITER_POSE
+        WPT_PTSV=$WPT_PTSE
+        RETURN_POSV=$RETURN_POSE
     fi
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
-	JUST_BUILD="yes"
-	UNDEFINED_ARG=""
+        JUST_BUILD="yes"
+        UNDEFINED_ARG=""
         printf "Just building files; no vehicle launch.\n"
     fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
-	BAD_ARGS=$UNDEFINED_ARG
+        BAD_ARGS=$UNDEFINED_ARG
     fi
 done
 
@@ -230,15 +248,15 @@ if [ "${HELP}" = "yes" ]; then
     printf "Switches:                \n"
     printf "  --evan, -e             evan vehicle only                     \n"
     printf "  --felix, -f            felix vehicle only                    \n"
-    printf "  --just_build, -j       \n" 
-    printf "  --help, -h             \n" 
+    printf "  --just_build, -j       \n"
+    printf "  --help, -h             \n"
     exit 0;
 fi
 
 
 
 #-------------------------------------------------------
-#  Part 3: Create the .moos and .bhv files. 
+#  Part 3: Create the .moos and .bhv files.
 #-------------------------------------------------------
 
 printf "Assembling MOOS file ${MOOS_FILE}\n"
@@ -257,7 +275,7 @@ nsplug ${DOT_MOOS} ${MOOS_FILE} -f \
        HOSTIP_FORCE="localhost"   \
        LOITER_POS=$LOITER_POSV \
        VARIATION=$VARIATION   \
-       VTYPE="kayak"   
+       VTYPE="kayak"
 
 printf "Assembling BHV file $BHV_FILE\n"
 nsplug meta_vehicle.bhv $BHV_FILE -f   \
@@ -268,7 +286,7 @@ nsplug meta_vehicle.bhv $BHV_FILE -f   \
        WPT_ORDER=$WPT_ORDERV           \
        WPT_PTS=$WPT_PTSV               \
 
-       
+
 if [ ${JUST_BUILD} = "yes" ] ; then
     printf "Files assembled; vehicle not launched; exiting per request.\n"
     exit 0
@@ -282,11 +300,10 @@ printf "Launching $VNAME MOOS Community \n"
 pAntler $MOOS_FILE >& /dev/null &
 uMAC $MOOS_FILE
 
-# %1 matches the PID of the first job in the active jobs list, 
+# %1 matches the PID of the first job in the active jobs list,
 # namely the pAntler job launched in Part 4.
 if [ "${ANSWER}" = "2" ]; then
     printf "Killing all processes ... \n "
-    kill %1 
+    kill %1
     printf "Done killing processes.   \n "
 fi
-
