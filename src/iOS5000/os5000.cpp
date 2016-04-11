@@ -193,6 +193,7 @@ bool os5000::ParseNMEAString(string osData)
             dVal += 360.0;
         curHeading = dVal;
         m_Comms.Notify(nameHeading, dVal);
+        m_Comms.Notify("DEBUG_0S5000", osData);
         msgCounter++; }
     if (!pValStr.empty()) {
         double dVal = strtod(pValStr.c_str(), 0);
