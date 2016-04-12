@@ -31,7 +31,7 @@ ProcessConfig = ANTLER
   //  Run = uTimerScript       @ NewConsole = false
 
 //  Run = uSimMarine        @ NewConsole = false
-//  Run = uFldMessageHandler @ NewConsole = false
+  Run = uFldMessageHandler @ NewConsole = false
 }
 
   #include plug_iM200.moos
@@ -45,7 +45,7 @@ ProcessConfig = ANTLER
   #include plug_pHostInfo.moos
   #include plug_uFldNodeBroker.moos
 
-  //#include plug_uFldMessageHandler.moos
+  #include plug_uFldMessageHandler.moos
 
   // #include plug_uSimMarine.moos
 

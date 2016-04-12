@@ -14,7 +14,7 @@
 #  Emulation, shoreside running on a different machine:     IP address of that machine (often 192.168.2.1)
 #  Actual vehicle:                                          IP address of the shoreside computer
 #SHORE_IP="localhost"
-SHORE_IP=192.168.1.153
+SHORE_IP=192.168.1.155
 TRAIL_ANGLE1="330"
 WARP=1
 HELP="no"
@@ -23,6 +23,7 @@ ARCHIE="no"
 BETTY="no"
 EVAN="no"
 FELIX="no"
+GUS="no"
 BAD_ARGS=""
 MOOS_FILE=""
 BHV_FILE=""
@@ -178,6 +179,25 @@ for ARGI; do
         WPT_PTSV=$WPT_PTSE
 	RETURN_POSV=$RETURN_POSE
     fi
+    if [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
+	M200_IP=192.168.7.1 #gus
+        GUS="yes"
+        UNDEFINED_ARG=""
+        VNAME="gus"
+        VPORT="9007"
+        SHARE_LISTEN="9307"
+        LOITER_PT="x=50,y=0"
+	META_FILE="meta_vehicle_fld.moos"
+        MOOS_FILE="targ_gus.moos"
+        BHV_FILE="targ_gus.bhv"
+        printf "GUS vehicle selected as HUNTER.\n"
+        WPT_ORDERV=${WPT_ORDERE}
+        SPEEDV=$SPEEDE
+        LOITER_POSV=$LOITER_POSE
+        WPT_PTSV=$WPT_PTSE
+	RETURN_POSV=$RETURN_POSE
+    fi
+
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
 	JUST_BUILD="yes"
 	UNDEFINED_ARG=""
