@@ -33,8 +33,8 @@ for ARGI; do
     elif [ "${ARGI:0:6}" = "--amt=" ] ; then
         AMT="${ARGI#--amt=*}"
     else
-      printf "Bad Argument: %s \n" $ARGI
-      exit 0
+        printf "Bad Argument: %s \n" $ARGI
+        exit 0
     fi
 done
 
@@ -49,13 +49,11 @@ fi
 #-------------------------------------------------------
 #  Part 1: Create the Shoreside MOOS file
 #-------------------------------------------------------
-SHORE_LISTEN="9300"
-
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
        VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP
 
-if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit; fi
+if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit 1; fi
 
 #-------------------------------------------------------
 #  Part 2: Possibly exit now if we're just building targ files
@@ -67,16 +65,7 @@ if [ ${JUST_MAKE} = "yes" ] ; then
 fi
 
 #-------------------------------------------------------
-#  Part 3: Possibly exit now if we're just building targ files
-#-------------------------------------------------------
-
-if [ ${BLUE_GUYS} = "no" -a ${RED_GUYS} = "no" ] ; then
-  printf "No team launched. Nothing launched.\n"
-  exit 0
-fi
-
-#-------------------------------------------------------
-#  Part 4: Launch the Shoreside
+#  Part 3: Launch the Shoreside
 #-------------------------------------------------------
 printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
 pAntler targ_shoreside.moos >& /dev/null &
