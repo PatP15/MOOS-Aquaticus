@@ -28,7 +28,22 @@ ProcessConfig = ANTLER
   }
 
 #include plug_pShare.moos
-#include plug_pHostInfo.moos
+
+
+
+//--------------------------------------------------
+// pHostInfo configuration block from plugin
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick 	= 1
+
+  DEFAULT_HOSTIP = 192.168.1.155
+}
+
+
+
 //#include plug_uTimerScript.moos
   #include plug_uTS_deploy_timer.moos
 
@@ -82,11 +97,11 @@ ProcessConfig = uFldNodeComms
   AppTick       = 2
   CommsTick     = 2
 
-           comms_range = 250
+           comms_range = 9999
         critical_range = 25
-      min_msg_interval = 20
+      min_msg_interval = 0
         max_msg_length = 1000
-                groups = true
+                groups = false
   view_node_rpt_pulses = true
 }
 
