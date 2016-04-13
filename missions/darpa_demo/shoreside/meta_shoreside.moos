@@ -13,16 +13,18 @@ Processconfig = ANTLER
   MSBetweenLaunches = 100
 
   Run = MOOSDB          @ NewConsole = false
-  Run = pMarineViewer   @ NewConsole = false
   Run = pLogger         @ NewConsole = false
   Run = uProcessWatch   @ NewConsole = false
-  Run = pShare          @ NewConsole = false
+
+  Run = pMarineViewer   @ NewConsole = false
+
   Run = pHostInfo       @ NewConsole = false
+  Run = pShare          @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
   Run = uFldNodeComms   @ NewConsole = false
+
   Run = uFldFlagManager @ NewConsole = false
   Run = uFldTagManager  @ NewConsole = false
-
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
 }
 
