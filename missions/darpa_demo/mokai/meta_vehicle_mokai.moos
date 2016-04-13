@@ -29,7 +29,7 @@ Processconfig = ANTLER
 #include plug_uSpeechRec.moos
 #include plug_uDialogManager.moos
 #include plug_pDeadManPost.moos
-#include ../plug_pShare.moos
+#include plug_pShare.moos
 #include plug_pLogger.moos
 #include plug_pNodeReporter.moos
 #include plug_pHostInfo.moos
