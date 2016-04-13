@@ -37,6 +37,12 @@ set MODE = LOITERING {
   #include plug_BHV_AvdColregs.bhv
   #include plug_BHV_OpRegion.bhv
 
+Behavior = BHV_HSLine
+{
+  name        = hsline
+  time_on_leg = 20
+}
+
 //-----------TRANSIT-------------------------------
 Behavior = BHV_Waypoint
 {
