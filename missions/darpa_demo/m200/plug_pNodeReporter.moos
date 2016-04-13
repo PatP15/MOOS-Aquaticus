@@ -3,6 +3,7 @@ ProcessConfig = pNodeReporter
 {
   AppTick     = 2
   CommsTick   = 2
-  
-  VESSEL_TYPE = $(VTYPE)
+
+  vessel_type = $(VTYPE)
+  group = $(VTEAM)
 }

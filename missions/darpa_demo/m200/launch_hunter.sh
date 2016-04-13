@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # M200_IP
 #  Emulator running on same machine as vehicle:     localhost
@@ -217,30 +217,20 @@ if [ "${BAD_ARGS}" != "" ] ; then
     exit 0
 fi
 
-#if [ "${EVAN}" = "no" -a "${FELIX}" = "no" ] ; then
-#    printf "ONE vehicle MUST be selected!!!!!!!!!!!! \n"
-#    HELP="yes"
-#fi
-
-#if [ "${EVAN}" = "yes" -a "${FELIX}" = "yes" ] ; then
-#    printf "ONE vehicle MUST be selected!!!!!!!!!!!! \n"
-#    HELP="yes"
-#fi
-
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
     printf "Switches:                \n"
     printf "  --evan, -e             evan vehicle only                     \n"
     printf "  --felix, -f            felix vehicle only                    \n"
-    printf "  --just_build, -j       \n" 
-    printf "  --help, -h             \n" 
+    printf "  --just_build, -j       \n"
+    printf "  --help, -h             \n"
     exit 0;
 fi
 
 
 
 #-------------------------------------------------------
-#  Part 3: Create the .moos and .bhv files. 
+#  Part 3: Create the .moos and .bhv files.
 #-------------------------------------------------------
 
 printf "Assembling MOOS file ${MOOS_FILE}\n"
@@ -259,7 +249,8 @@ nsplug ${META_FILE} ${MOOS_FILE} -f \
        HOSTIP_FORCE="localhost"   \
        LOITER_POS=$LOITER_POSV \
        VARIATION=$VARIATION   \
-       VTYPE="kayak"   
+       VTYPE="kayak"          \
+       VTEAM="red"
 
 printf "Assembling BHV file $BHV_FILE\n"
 nsplug meta_hunter.bhv $BHV_FILE -f   \
@@ -273,7 +264,7 @@ nsplug meta_hunter.bhv $BHV_FILE -f   \
     TRAIL_RANGE=$TRAIL_RANGE1  \
     TRAIL_ANGLE=$TRAIL_ANGLE1 \
 
-       
+
 if [ ${JUST_BUILD} = "yes" ] ; then
     printf "Files assembled; vehicle not launched; exiting per request.\n"
     exit 0
@@ -287,11 +278,8 @@ printf "Launching $VNAME MOOS Community \n"
 pAntler $MOOS_FILE >& /dev/null &
 uMAC $MOOS_FILE
 
-# %1 matches the PID of the first job in the active jobs list, 
+# %1 matches the PID of the first job in the active jobs list,
 # namely the pAntler job launched in Part 4.
-if [ "${ANSWER}" = "2" ]; then
-    printf "Killing all processes ... \n "
-    kill %1 
-    printf "Done killing processes.   \n "
-fi
-
+printf "Killing all processes ... \n "
+kill -- -$$
+printf "Done killing processes.   \n "
