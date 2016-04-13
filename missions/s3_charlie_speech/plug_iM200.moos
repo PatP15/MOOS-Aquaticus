@@ -13,7 +13,7 @@ ProcessConfig = iM200
   PUBLISH_RAW    = true          // When true, publish all messages from
                                  // front seat to M200_RAW_NMEA
   MAX_RUDDER     = 50.0          // Rudder value will be capped to this, +/-
-  MAX_THRUST     = 100.0         // Thrust value to each motor will be
+  MAX_THRUST     =  84.0         // Thrust value to each motor will be
                                  // capped to this value, +/-
 }
 
