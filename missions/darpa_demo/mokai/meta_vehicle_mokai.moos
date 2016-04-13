@@ -1,18 +1,14 @@
-// Lab7
-
 ServerHost = localhost
 ServerPort = $(VPORT)
-
-// Community name IS the vehicle name
 Community  = $(VNAME)
 
 #include ../plug_origin_warp.moos
-  
+
 //------------------------------------------------------------
 Processconfig = ANTLER
 {
   MSBetweenLaunches = 100
-   
+
   Run = MOOSDB             @ NewConsole = false
   Run = pShare             @ NewConsole = false
   Run = pLogger            @ NewConsole = false
@@ -33,7 +29,7 @@ Processconfig = ANTLER
 #include plug_uSpeechRec.moos
 #include plug_uDialogManager.moos
 #include plug_pDeadManPost.moos
-#include plug_pShare.moos
+#include ../plug_pShare.moos
 #include plug_pLogger.moos
 #include plug_pNodeReporter.moos
 #include plug_pHostInfo.moos
