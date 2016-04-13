@@ -15,5 +15,7 @@ ProcessConfig = uDialogManager
    sentence = Arnold_Follow : NODE_MESSAGE_LOCAL = "src_node=mokai,dest_node=gus,var_name=TRAIL,string_val=true"
    sentence = Arnold_Station : NODE_MESSAGE_LOCAL = "src_node=mokai,dest_node=gus,var_name=TRAIL,string_val=false"
    sentence = Arnold_Return : NODE_MESSAGE_LOCAL = "src_node=mokai,dest_node=gus,var_name=RETURN,string_val=true"
+   sentence = tag : TAG_REQUEST = "vname=$(VNAME)"
+   sentence = grab : FLAG_GRAB_REQUEST = "vname=$(VNAME)"
 }
 
