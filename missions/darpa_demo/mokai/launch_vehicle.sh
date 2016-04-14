@@ -60,7 +60,7 @@ fi
 
 printf "Assembling MOOS file targ_${VNAME}.moos .\n"
 
-nsplug meta_mokai.moos targ_${VNAME} -f  \
+nsplug meta_mokai.moos targ_${VNAME}.moos -f  \
        VNAME=$VNAME                 \
        VPORT=$VPORT                 \
        WARP=$WARP                   \
@@ -78,8 +78,8 @@ fi
 if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos!"; exit 1; fi
 
 printf "Launching $VNAME MOOS Community.\n"
-pAntler targ_${VNAME} >& /dev/null &
-uMAC targ_${VNAME}
+pAntler targ_${VNAME}.moos >& /dev/null &
+uMAC targ_${VNAME}.moos
 
 printf "Killing all processes ... \n "
 kill -- -$$
