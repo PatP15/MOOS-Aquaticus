@@ -5,6 +5,6 @@ ProcessConfig = uFldFlagManager
   AppTick       = 2
   CommsTick     = 2
 
-  flag = x=76, y=-34,  label=red
-  flag = x=-84, y=-65, label=blue
+  flag = $(RED_FLAG),  label=red
+  flag = $(BLUE_FLAG), label=blue
 }
