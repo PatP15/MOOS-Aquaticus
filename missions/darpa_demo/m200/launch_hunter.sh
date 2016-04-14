@@ -132,7 +132,8 @@ nsplug meta_hunter.bhv targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
-        VTEAM=$VTEAM
+        VTEAM=$VTEAM                \
+        VNAME=$VNAME
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then
