@@ -82,7 +82,7 @@ Behavior = BHV_Waypoint
              points = 50,-24
 }
 
-Behavior = BHV_OpRegion
+//Behavior = BHV_OpRegion
 {
   name    = opregion
   pwt    = 100
