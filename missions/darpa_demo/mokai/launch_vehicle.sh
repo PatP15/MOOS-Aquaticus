@@ -61,7 +61,7 @@ fi
 printf "Assembling MOOS file targ_${VNAME}.moos .\n"
 
 nsplug meta_mokai.moos targ_${VNAME}.moos -f  \
-       VNAME=$VNAME                 \
+       VNAME="$VNAME_$VTEAM"                 \
        VPORT=$VPORT                 \
        WARP=$WARP                   \
        SHARE_LISTEN=$SHARE_LISTEN   \
