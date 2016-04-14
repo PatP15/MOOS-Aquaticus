@@ -99,7 +99,7 @@ Behavior = BHV_Waypoint
   visual_hints = edge_size=1
 }
 
-Behavior = BHV_Trail
+//Behavior = BHV_Trail
 {
   name         = trail_mokai                // example
   pwt          = 100                   // default

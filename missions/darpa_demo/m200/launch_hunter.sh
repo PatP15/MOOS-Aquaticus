@@ -23,7 +23,7 @@ FELIX="no"
 GUS="no"
 VTEAM="red"
 
-RETURN_POS="10,0"
+RETURN_POS="50,-24"
 LOITER_POS="x=100,y=-180"
 
 
