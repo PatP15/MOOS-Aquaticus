@@ -144,10 +144,17 @@ bool ZoneEvent::handleConfigZone(const string& str)
   m_zones_view[name]=true; // default value
   m_zones_varval[name];
 
-  string poly = tokStringParse(str, "pts", '#', '=');
-  if (poly != "")
-    if (!handleConfigPolyZone(name, "pts="+poly)) {
+  string pts = tokStringParse(str, "pts", '#', '=');
+  if (pts != "")
+    if (!handleConfigPolyZone(name, "pts="+pts)) {
       reportConfigWarning("failed to read \"pts\"");
+      return(false);
+    }
+
+  string poly = tokStringParse(str, "polygon", '#', '=');
+  if (poly != "")
+    if (!handleConfigPolyZone(name, poly)) {
+      reportConfigWarning("failed to read \"polygon\"");
       return(false);
     }
 
@@ -220,9 +227,10 @@ bool ZoneEvent::handleConfigViewZone(const string& name, const string& str)
 bool ZoneEvent::handleConfigPolyZone(const string& name, const string& str)
 {
   m_zones[name] = string2Poly(str);
-  if(m_zones[name].size() == 0)
+  if(m_zones[name].size() == 0){
+    reportUnhandledConfigWarning("Bad polygon: " + str);
     return(false);
-
+  }
   m_zones[name].set_edge_size(1);
   m_zones[name].set_vertex_size(1);
   m_zones[name].set_transparency(0.5);
