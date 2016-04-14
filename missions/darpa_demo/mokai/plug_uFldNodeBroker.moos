@@ -1,6 +1,4 @@
 //--------------------------------------------------
-// uFldNodeBroker configuration block from plugin
-
 ProcessConfig = uFldNodeBroker
 {
   AppTick   = 1

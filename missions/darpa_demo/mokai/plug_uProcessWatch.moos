@@ -1,6 +1,4 @@
 //--------------------------------------------------------
-// uProcessWatch Configuration Block (Created from Plugin)
-
 ProcessConfig = uProcessWatch
 {
   AppTick   = 2
@@ -10,16 +8,11 @@ ProcessConfig = uProcessWatch
 
   WATCH_ALL = true // default is true
 
-  NOWATCH = uMAC*  
+  NOWATCH = uMAC*
   NOWATCH = uXMS*
   NOWATCH = uPokeDB*
-  
+
   WATCH  = pNodeReporter
-//  WATCH  = pMarinePID
-//  WATCH  = pHelmIvP
-//  WATCH  = iM200
-  WATCH  = pShare  
-SUMMARY_WAIT = 12
+  WATCH  = pShare
+  SUMMARY_WAIT = 12
 }
-
-

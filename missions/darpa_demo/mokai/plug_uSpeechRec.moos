@@ -1,6 +1,4 @@
 //------------------------------------------
-// uSpeechRec
-
 ProcessConfig = uSpeechRec
 {
   AppTick   = 4

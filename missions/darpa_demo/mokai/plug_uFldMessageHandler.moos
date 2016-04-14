@@ -1,6 +1,4 @@
 //--------------------------------------------------
-// uFldMessageHandler configuration block from plugin
-
 ProcessConfig = uFldMessageHandler
 {
   AppTick   = 3
