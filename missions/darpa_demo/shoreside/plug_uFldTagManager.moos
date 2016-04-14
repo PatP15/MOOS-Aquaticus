@@ -33,8 +33,8 @@ ProcessConfig = uFldTagManager
   team_one=red
   team_two=blue
 
-  zone_one = pts={ 55.00,25.00 : -15.50,-8.00 : 16.30,-75.93 : 86.80,-42.93 }
-  zone_two = pts={ -15.50,-8.00 : -86.00,-41.00 : -54.20,-108.93 : 16.30,-75.93 }
+  zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
+  zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
 
   zone_one_color = pink
   zone_two_color = dodger_blue

@@ -34,8 +34,8 @@ ProcessConfig = pMarineViewer
   button_three = CHASE   # CHASE_ALL=true
   button_four  = STATION   # STATION_KEEP_ALL=true
 
-  op_vertex = x=55.0,   y=25,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=-86, y=-41,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=-54.2, y=-108.93, lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=86,   y=-42.93, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=56,   y=16,  lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=-83, y=-49,  lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=-53, y=-114, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=82,   y=-56, lwidth=1,lcolor=yellow,looped=true,group=moa
 }

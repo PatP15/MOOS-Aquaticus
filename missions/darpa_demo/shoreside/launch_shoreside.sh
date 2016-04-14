@@ -11,8 +11,8 @@ RED_GUYS="yes"
 BLUE_GUYS="yes"
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
-BLUE_FLAG="x=-84,y=-65"
-RED_FLAG="x=76,y=-34"
+BLUE_FLAG="x=-58,y=-71"
+RED_FLAG="x=50,y=-24"
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
