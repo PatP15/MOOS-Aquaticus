@@ -8,6 +8,7 @@ WARP=1
 HELP="no"
 JUST_BUILD="no"
 BAD_ARGS=""
+VTEAM="red"
 
 printf "Initiate launch MOKAI script.\n"
 
@@ -23,6 +24,16 @@ for ARGI; do
         SHARE_LISTEN="9313"
         UNDEFINED_ARG=""
         printf "MOKAI vehicle selected.\n"
+    fi
+    if [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
+        VTEAM="red"
+        UNDEFINED_ARG=""
+        printf "Red team selected.\n"
+    fi
+    if [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
+        VTEAM="blue"
+        UNDEFINED_ARG=""
+        printf "Blue team selected.\n"
     fi
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
@@ -57,7 +68,7 @@ nsplug meta_mokai.moos targ_${VNAME} -f  \
        SHORE_LISTEN=$SHORE_LISTEN   \
        SHORE_IP=$SHORE_IP           \
        VTYPE="kayak"                \
-       VTEAM="red"
+       VTEAM=$VTEAM
 
 if [ ${JUST_BUILD} = "yes" ] ; then
     printf "Files assembled; vehicle not launched; exiting per request.\n"

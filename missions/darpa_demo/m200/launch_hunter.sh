@@ -21,8 +21,7 @@ JUST_BUILD="no"
 EVAN="no"
 FELIX="no"
 GUS="no"
-BAD_ARGS=""
-
+VTEAM="red"
 
 RETURN_POS="10,0"
 LOITER_POS="x=100,y=-180"
@@ -71,6 +70,16 @@ for ARGI; do
         UNDEFINED_ARG=""
         printf "Just building files; no vehicle launch.\n"
     fi
+    if [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
+        VTEAM="red"
+        UNDEFINED_ARG=""
+        printf "Red team selected.\n"
+    fi
+    if [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
+        VTEAM="blue"
+        UNDEFINED_ARG=""
+        printf "Blue team selected.\n"
+    fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
         BAD_ARGS=$UNDEFINED_ARG
     fi
@@ -91,6 +100,8 @@ if [ "${HELP}" = "yes" ]; then
     printf "  --evan, -e             evan vehicle only  \n"
     printf "  --felix, -f            felix vehicle only \n"
     printf "  --gus, -g              gus vehicle only   \n"
+    printf "  --blue, -b       \n"
+    printf "  --red, -r       \n"
     printf "  --just_build, -j       \n"
     printf "  --help, -h             \n"
     exit 0;
@@ -114,13 +125,14 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
         LOITER_POS=$LOITER_POS       \
         VARIATION=$VARIATION         \
         VTYPE="kayak"                \
-        VTEAM="red"
+        VTEAM=$VTEAM
 
 printf "Assembling BHV file targ_${VNAME}.bhv\n"
 nsplug meta_hunter.bhv targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
-        TRAIL_ANGLE=$TRAIL_ANGLE
+        TRAIL_ANGLE=$TRAIL_ANGLE    \
+        VTEAM=$VTEAM
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then
