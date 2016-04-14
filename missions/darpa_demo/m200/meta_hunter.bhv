@@ -36,6 +36,52 @@ set MODE = AVOIDING {
   ENEMY_TERRITORY = true
 }
 
+//----------------------------------------------
+Behavior = BHV_Waypoint
+{
+  name      = waypt_grab
+  pwt       = 50
+  perpetual = true
+
+  condition = MODE==UNTAGGED
+  updates   = WPT_UPDATE
+
+  endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
+  endflag   = RETURN=true
+
+               speed = 5   // meters per second
+        capture_line = false
+      capture_radius = 5.0
+         slip_radius = 5.0
+
+             points = -58,-71
+
+    visual_hints = nextpt_color=gray20
+    visual_hints = nextpt_vertex_size=2
+    visual_hints = nextpt_lcolor=invisible
+    visual_hints = label_color=invisible
+    visual_hints = vertex_color=invisible, edge_color=invisible
+    visual_hints = vertex_size=2, edge_size=1
+}
+
+//----------------------------------------------
+Behavior = BHV_Waypoint
+{
+  name = waypt_untag
+  pwt = 100
+  perpetual = true
+
+  condition = MODE==TAGGED
+
+  activeflag = RETURN = false
+  endflag   = TAGGED = false
+
+              speed = 5
+     capture_radius = 10.0
+        slip_radius = 10.0
+             points = 50,-24
+}
+
 Behavior = BHV_OpRegion
 {
   name    = opregion
