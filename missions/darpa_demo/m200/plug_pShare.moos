@@ -1,6 +1,4 @@
 //---------------------------------------------------------
-// pShare Config Block  (Created from Plugin)
-
 ProcessConfig = pShare
 {
   AppTick    = 2

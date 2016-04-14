@@ -1,10 +1,6 @@
 //--------------------------------------------------------
-// pBasicContactMgr Configuration Block (Created from Plugin)
-
 ProcessConfig = pBasicContactMgr
 {
-
-
   AppTick   = 2
   CommsTick = 2
 
@@ -23,12 +19,4 @@ ProcessConfig = pBasicContactMgr
 
 
   Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=mokai", alert_range=140
-
-//  Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]", alert_range=140, contact_type=uuv
-  //cpa_range=185, alert_range_color=green, cpa_range_color=white
-  
-//   Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]", alert_range=140, cpa_range=185, alert_range_color=green, cpa_range_color=white
-//   Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME] # type=uuv", alert_range=140, cpa_range=185, alert_range_color=green, cpa_range_color=white
-//   Alert = id=trail, var=TRAIL_INFO, val="name=jackal # contact=jackal", alert_range=140, cpa_range=185, alert_range_color=green, cpa_range_color=white
-//   Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=$[VNAME]", alert_range=140, cpa_range=185, alert_range_color=green, cpa_range_color=white
 }

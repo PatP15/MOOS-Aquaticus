@@ -103,11 +103,11 @@ printf "Initiate launch vehicle script\n"
 for ARGI; do
     UNDEFINED_ARG=$ARGI
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	HELP="yes"
-	UNDEFINED_ARG=""
+  HELP="yes"
+  UNDEFINED_ARG=""
     fi
  if [ "${ARGI}" = "--archie" -o "${ARGI}" = "-a" ] ; then
-	M200_IP=192.168.1.171 #archie
+  M200_IP=192.168.1.171 #archie
         ARCHIE="yes"
         UNDEFINED_ARG=""
         VNAME="archie"
@@ -115,17 +115,17 @@ for ARGI; do
         SHARE_LISTEN="9301"
         LOITER_PT="x=50,y=10"
         MOOS_FILE="targ_archie.moos"
-	META_FILE="meta_vehicle_m100.moos"
+  META_FILE="meta_vehicle_m100.moos"
         BHV_FILE="targ_archie.bhv"
         printf "ARCHIE vehicle selected.\n"
         WPT_ORDERV=${WPT_ORDERA}
         SPEEDV=$SPEEDA
         LOITER_POSV=$LOITER_POSA
         WPT_PTSV=$WPT_PTSA
-	RETURN_POSV=$RETURN_POSA
+  RETURN_POSV=$RETURN_POSA
  fi
  if [ "${ARGI}" = "--betty" -o "${ARGI}" = "-b" ] ; then
-	M200_IP=192.168.1.172 #betty
+  M200_IP=192.168.1.172 #betty
         BETTY="yes"
         UNDEFINED_ARG=""
         VNAME="betty"
@@ -133,25 +133,25 @@ for ARGI; do
         SHARE_LISTEN="9302"
         LOITER_PT="x=50,y=10"
         MOOS_FILE="targ_betty.moos"
-	META_FILE="meta_vehicle_m100.moos"
+  META_FILE="meta_vehicle_m100.moos"
         BHV_FILE="targ_betty.bhv"
         printf "BETTY vehicle selected.\n"
         WPT_ORDERV=${WPT_ORDERB}
         SPEEDV=$SPEEDB
         LOITER_POSV=$LOITER_POSB
         WPT_PTSV=$WPT_PTSB
-	RETURN_POSV=$RETURN_POSB
+  RETURN_POSV=$RETURN_POSB
     fi
 
     if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
-	M200_IP=192.168.6.1 #felix
+  M200_IP=192.168.6.1 #felix
         FELIX="yes"
         UNDEFINED_ARG=""
         VNAME="felix"
         VPORT="9006"
         SHARE_LISTEN="9306"
         LOITER_PT="x=50,y=10"
-	META_FILE="meta_vehicle_fld.moos"
+  META_FILE="meta_m200.moos"
         MOOS_FILE="targ_felix.moos"
         BHV_FILE="targ_felix.bhv"
         printf "FELIX vehicle selected.\n"
@@ -159,17 +159,17 @@ for ARGI; do
         SPEEDV=$SPEEDF
         LOITER_POSV=$LOITER_POSF
         WPT_PTSV=$WPT_PTSF
-	RETURN_POSV=$RETURN_POSF
+  RETURN_POSV=$RETURN_POSF
     fi
     if [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
-	M200_IP=192.168.5.1 #evan
+  M200_IP=192.168.5.1 #evan
         EVAN="yes"
         UNDEFINED_ARG=""
         VNAME="evan"
         VPORT="9005"
         SHARE_LISTEN="9305"
         LOITER_PT="x=50,y=0"
-	META_FILE="meta_vehicle_fld.moos"
+  META_FILE="meta_m200.moos"
         MOOS_FILE="targ_evan.moos"
         BHV_FILE="targ_evan.bhv"
         printf "EVAN vehicle selected as HUNTER.\n"
@@ -177,17 +177,17 @@ for ARGI; do
         SPEEDV=$SPEEDE
         LOITER_POSV=$LOITER_POSE
         WPT_PTSV=$WPT_PTSE
-	RETURN_POSV=$RETURN_POSE
+  RETURN_POSV=$RETURN_POSE
     fi
     if [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
-	M200_IP=192.168.7.1 #gus
+  M200_IP=192.168.7.1 #gus
         GUS="yes"
         UNDEFINED_ARG=""
         VNAME="gus"
         VPORT="9007"
         SHARE_LISTEN="9307"
         LOITER_PT="x=50,y=0"
-	META_FILE="meta_vehicle_fld.moos"
+  META_FILE="meta_m200.moos"
         MOOS_FILE="targ_gus.moos"
         BHV_FILE="targ_gus.bhv"
         printf "GUS vehicle selected as HUNTER.\n"
@@ -195,16 +195,16 @@ for ARGI; do
         SPEEDV=$SPEEDE
         LOITER_POSV=$LOITER_POSE
         WPT_PTSV=$WPT_PTSE
-	RETURN_POSV=$RETURN_POSE
+  RETURN_POSV=$RETURN_POSE
     fi
 
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
-	JUST_BUILD="yes"
-	UNDEFINED_ARG=""
+  JUST_BUILD="yes"
+  UNDEFINED_ARG=""
         printf "Just building files; no vehicle launch.\n"
     fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
-	BAD_ARGS=$UNDEFINED_ARG
+  BAD_ARGS=$UNDEFINED_ARG
     fi
 done
 
