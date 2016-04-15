@@ -54,7 +54,7 @@ Behavior = BHV_Waypoint
       capture_radius = 5.0
          slip_radius = 5.0
 
-             points = -58,-71
+             points = $(GRAB_POS)
 
     visual_hints = nextpt_color=gray20
     visual_hints = nextpt_vertex_size=2
@@ -79,7 +79,7 @@ Behavior = BHV_Waypoint
               speed = 5
      capture_radius = 10.0
         slip_radius = 10.0
-             points = 50,-24
+             points = $(UNTAG_POS)
 }
 
 //Behavior = BHV_OpRegion

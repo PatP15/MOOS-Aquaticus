@@ -23,9 +23,10 @@ FELIX="no"
 GUS="no"
 VTEAM="red"
 
-RETURN_POS="50,-24"
+RETURN_POS=""
 LOITER_POS="x=100,y=-180"
-
+GRAB_POS=""
+UNTAG_POS=""
 
 printf "Initiate launch vehicle script\n"
 
@@ -73,11 +74,17 @@ for ARGI; do
     if [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
         UNDEFINED_ARG=""
+        GRAB_POS="-57,-71"
+        UNTAG_POS="50,-26"
+        RETURN_POS="50,-26"
         printf "Red team selected.\n"
     fi
     if [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
         UNDEFINED_ARG=""
+        GRAB_POS="50,-26"
+        UNTAG_POS="-57,-71"
+        RETURN_POS="-57,-71"
         printf "Blue team selected.\n"
     fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
@@ -133,7 +140,9 @@ nsplug meta_hunter.bhv targ_${VNAME}.bhv -f  \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
         VTEAM=$VTEAM                \
-        VNAME=$VNAME
+        VNAME=$VNAME                \
+        GRAB_POS=$GRAB_POS          \
+        UNTAG_POS=$UNTAG_POS
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then
