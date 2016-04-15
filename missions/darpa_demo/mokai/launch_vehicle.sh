@@ -9,6 +9,9 @@ HELP="no"
 JUST_BUILD="no"
 BAD_ARGS=""
 VTEAM="red"
+VNAME="mokai"
+VPORT="9013"
+SHARE_LISTEN="9313"
 
 printf "Initiate launch MOKAI script.\n"
 
@@ -17,13 +20,6 @@ for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         HELP="yes"
         UNDEFINED_ARG=""
-    fi
-    if [ "${ARGI}" = "--mokai" -o "${ARGI}" = "-m" ] ; then
-        VNAME="mokai"
-        VPORT="9013"
-        SHARE_LISTEN="9313"
-        UNDEFINED_ARG=""
-        printf "MOKAI vehicle selected.\n"
     fi
     if [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
