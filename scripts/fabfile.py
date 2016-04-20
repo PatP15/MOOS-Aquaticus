@@ -50,23 +50,33 @@ def cd_mission(name):
     cd(name)
 
 
+@parallel
 @roles('mokais')
 def build_aquaticus():
-    print(green('building aquaticus on ') + red('%(host)s' % env) + '.')
-    update_trunk(aqua_dir)
+    print(green('[ ] building aquaticus on ') + red('%(host)s' % env) + '.')
     build_trunk(aqua_dir)
-    print(green('done building aquaticus on ') + red('%(host)s' % env) + '.')
+    print(green('[X] building aquaticus on ') + red('%(host)s' % env) + '.')
 
 
+@parallel
 @roles('mokais')
 def build_moosivp():
-    print(green('building moos-ivp') + red('%(host)s' % env) + '.')
-    update_trunk(moosivp_dir)
+    print(green('[ ] building moos-ivp on ') + red('%(host)s' % env) + '.')
     build_trunk(moosivp_dir)
-    print(green('done building moos-ivp') + red('%(host)s' % env) + '.')
+    print(green('[X] building moos-ivp on ') + red('%(host)s' % env) + '.')
+
+
+@parallel
+@roles('mokais', 'm200s')
+def update_all():
+    print(green('[ ] updating all trunks on ') + red('%(host)s' % env) + '.')
+    update_trunk(moosivp_dir)
+    update_trunk(aqua_dir)
+    print(green('[X] updating all trunks on ') + red('%(host)s' % env) + '.')
 
 
 @task
 def run_all():
+    execute(update_all)
     execute(build_moosivp)
     execute(build_aquaticus)
