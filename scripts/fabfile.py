@@ -24,36 +24,49 @@ env.roledefs = {
 }
 
 aqua_dir = '/home/student/moos-ivp-aquaticus/'
+moosivp_dir = '/home/student/moos-ivp/'
 
 
-def cd_aquaticus():
-    cd(aqua_dir)
-
-
-def update_trunk():
+def svn_up():
     run('svn up')
 
 
+def update_trunk(path):
+    with cd(path):
+        svn_up()
+
+
+def build_trunk(path):
+    with cd(path):
+        run('./build.sh')
+
+
 def cd_missions():
-    cd(os.path.join(aqua_dir, 'missions'))
+    cd(os.path.join(aquaticus, 'missions'))
 
 
 def cd_mission(name):
-    cd_missions
+    cd_missions()
     cd(name)
-
-
-@roles('mokais', 'm200s')
-def prepare_deploy():
-    print(blue('Executing on ') + red('%(host)s' % env) + '.')
-    run('pwd')
 
 
 @roles('mokais')
 def build_aquaticus():
-    print(blue('Executing on ') + red('%(host)s' % env) + '.')
-    run('ifconfig eth0')
+    print(green('building aquaticus on ') + red('%(host)s' % env) + '.')
+    update_trunk(aqua_dir)
+    build_trunk(aqua_dir)
+    print(green('done building aquaticus on ') + red('%(host)s' % env) + '.')
 
 
+@roles('mokais')
+def build_moosivp():
+    print(green('building moos-ivp') + red('%(host)s' % env) + '.')
+    update_trunk(moosivp_dir)
+    build_trunk(moosivp_dir)
+    print(green('done building moos-ivp') + red('%(host)s' % env) + '.')
+
+
+@task
 def run_all():
-    execute(prepare_deploy)
+    execute(build_moosivp)
+    execute(build_aquaticus)
