@@ -51,7 +51,7 @@ def cd_mission(name):
 
 
 @parallel
-@roles('mokais')
+@roles('mokais', 'm200s')
 def build_aquaticus():
     print(green('[ ] building aquaticus on ') + red('%(host)s' % env) + '.')
     build_trunk(aqua_dir)
@@ -59,7 +59,7 @@ def build_aquaticus():
 
 
 @parallel
-@roles('mokais')
+@roles('mokais', 'm200s')
 def build_moosivp():
     print(green('[ ] building moos-ivp on ') + red('%(host)s' % env) + '.')
     build_trunk(moosivp_dir)
