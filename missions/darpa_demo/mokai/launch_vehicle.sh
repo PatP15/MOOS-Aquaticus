@@ -63,7 +63,7 @@ nsplug meta_mokai.moos targ_${VNAME}.moos -f  \
        SHARE_LISTEN=$SHARE_LISTEN   \
        SHORE_LISTEN=$SHORE_LISTEN   \
        SHORE_IP=$SHORE_IP           \
-       VTYPE="kayak"                \
+       VTYPE="mokai"                \
        VTEAM=$VTEAM
 
 if [ ${JUST_BUILD} = "yes" ] ; then

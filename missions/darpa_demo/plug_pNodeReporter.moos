@@ -6,4 +6,5 @@ ProcessConfig = pNodeReporter
 
   vessel_type = $(VTYPE)
   group       = $(VTEAM)
+  platform_color = $(VTEAM)
 }
