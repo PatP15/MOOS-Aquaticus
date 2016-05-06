@@ -1,0 +1,17 @@
+//------------------------------------------------
+ProcessConfig = uDialogManager
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  sentence = Arnold_Follow : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=TRAIL,string_val=true"
+  sentence = Gus_Follow : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=TRAIL,string_val=true"
+  sentence = Arnold_Station : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=TRAIL,string_val=false"
+  sentence = Gus_Station : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=TRAIL,string_val=false"
+  sentence = Arnold_Return : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=RETURN,string_val=true"
+  sentence = Gus_Return : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=RETURN,string_val=true"
+  sentence = Golf_Attack : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=RETURN,string_val=true"
+  sentence = Golf_Defend : NODE_MESSAGE_LOCAL = "src_node=$(VNAME),dest_node=gus,var_name=RETURN,string_val=true"
+  sentence = tag : TAG_REQUEST = "vname=$(VNAME)"
+  sentence = grab : FLAG_GRAB_REQUEST = "vname=$(VNAME)"
+}
