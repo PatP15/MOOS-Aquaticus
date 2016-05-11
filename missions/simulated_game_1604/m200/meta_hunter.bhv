@@ -1,4 +1,13 @@
-
+initialize DEPLOY     = false
+initialize RETURN     = false
+initialize SOLO       = true
+initialize ATTACK     = false
+initialize AGGRESSIVE = true
+initialize TAGGED     = false
+initialize INTERCEPT  = false
+initialize TRAIL      = false
+initialize COVER      = false
+initialize STATION    = false
 
 
 set MODE = ACTIVE {
@@ -27,6 +36,7 @@ set MODE = TAGGED {
 
 set MODE = AVOIDING {
   MODE    = ACTIVE:INGAME:SOLO:ATTACKING:UNTAGGED
+  AGGRESSIVE = false
 }
 
 set MODE = INTERCEPTING {
@@ -58,8 +68,6 @@ Behavior = BHV_AvoidCollision
   condition     = MODE == ACTIVE
   templating    = spawn
 
-  updates       = CONTACT_INFO
-
   endflag       = CONTACT_RESOLVED = $[CONTACT]
 
   contact           = v
@@ -80,7 +88,6 @@ Behavior = BHV_Waypoint
   name      = waypt_return
   pwt       = 100
 
-  updates   = RETURN_UPDATES
   condition = MODE == RETURNING
 
   endflag   = STATION_KEEP = true
@@ -100,7 +107,6 @@ Behavior = BHV_Waypoint
   perpetual = true
 
   condition = MODE == UNTAGGED
-  updates   = WPT_UPDATE
 
   endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag   = TAGGED=true
@@ -121,8 +127,6 @@ Behavior = BHV_AvoidCollision
   //behavior specific configuration
   condition     = MODE == AVOIDING
   templating    = spawn
-
-  updates       = CONTACT_INFO
 
   endflag       = CONTACT_RESOLVED = $[CONTACT]
 
@@ -146,7 +150,6 @@ Behavior = BHV_Waypoint
   perpetual = true
 
   condition = MODE == TAGGED
-  updates   = WPT_UPDATE
 
   endflag   = TAGGED=false
 
@@ -160,13 +163,16 @@ Behavior = BHV_Waypoint
 
 Behavior = BHV_Loiter
 {
-  name         = loiter_passive
-  pwt          = 100
-  condition    = MODE==PASSIVE
-  updates      = LOITER_UPDATES
+  name          = loiter_passive
+  pwt           = 100
+  condition     = MODE==PASSIVE
 
+  updates       = LOITER_UPDATES
+
+  speed         = 5
+
+  polygon       = radial:: x=0,y=0,radius=10,pts=8 // example
   center_assign = $(UNTAG_POS)
-  polygon = radial:: x=5,y=8,radius=15,pts=8  // example
 }
 
 Behavior = BHV_CutRange
@@ -215,6 +221,7 @@ Behavior = BHV_Trail
   name         = cover_mokai
   pwt          = 100
   condition    = MODE == COVERING
+
   updates      = COVER_INFO
 
   contact = mokai_$(VTEAM)
@@ -238,6 +245,7 @@ Behavior = BHV_Trail
   name         = trail_mokai
   pwt          = 100
   condition    = MODE == COVERING
+
   updates      = COVER_INFO
 
   contact = mokai_$(VTEAM)
