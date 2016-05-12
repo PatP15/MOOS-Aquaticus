@@ -19,7 +19,4 @@ ProcessConfig = pBasicContactMgr
 
 
   Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=mokai", alert_range=140
-
-
-  Alert = id=trail, var=CONTACT_INFO, val="name=avd_$[VNAME] # contact=$[VNAME]"
 }

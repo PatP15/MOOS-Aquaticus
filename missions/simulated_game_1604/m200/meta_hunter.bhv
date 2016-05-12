@@ -78,7 +78,7 @@ Behavior = BHV_AvoidCollision
   on_no_contact_ok        = true
   extrapolate             = true
 
-  completed_dist          = 10
+  completed_dist          = 200
   max_util_cpa_dist       = 25
   min_util_cpa_dist       = 5
   pwt_grade               = linear
@@ -141,7 +141,7 @@ Behavior = BHV_AvoidCollision
   on_no_contact_ok        = true
   extrapolate             = true
 
-  completed_dist          = 75
+  completed_dist          = 200
   max_util_cpa_dist       = 25
   min_util_cpa_dist       = 15
   pwt_grade               = linear
