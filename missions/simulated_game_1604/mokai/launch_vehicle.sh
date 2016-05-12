@@ -15,6 +15,7 @@ VPORT="9013"
 SHARE_LISTEN="9313"
 BUTTON="5"
 JOY_ID="0"
+TEAMMATE=""
 
 printf "Initiate launch MOKAI script.\n"
 
@@ -30,6 +31,8 @@ for ARGI; do
         START_POS="56,16,240"
         VPORT="9013"
         SHARE_LISTEN="9313"
+        TEAMMATE="gus"
+        BUTTON="5"
         printf "Red team selected.\n"
     fi
     if [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
@@ -38,6 +41,8 @@ for ARGI; do
         START_POS="-53,-114,60"
         VPORT="9014"
         SHARE_LISTEN="9314"
+        TEAMMATE="evan"
+        BUTTON="4"
         printf "Blue team selected.\n"
     fi
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
@@ -65,8 +70,8 @@ fi
 
 printf "Assembling MOOS file targ_${VNAME}.moos .\n"
 
-nsplug meta_mokai.moos targ_${VNAME}.moos -f  \
-       VNAME="${VNAME}_${VTEAM}"                 \
+nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
+       VNAME="${VNAME}_${VTEAM}"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$WARP                   \
@@ -76,6 +81,7 @@ nsplug meta_mokai.moos targ_${VNAME}.moos -f  \
        VTEAM=$VTEAM                 \
        BUTTON=$BUTTON               \
        JOY_ID=$JOY_ID               \
+       TEAMMATE=$TEAMMATE           \
        START_POS=$START_POS
 
 if [ ${JUST_BUILD} = "yes" ] ; then
@@ -83,11 +89,11 @@ if [ ${JUST_BUILD} = "yes" ] ; then
     exit 0
 fi
 
-if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos!"; exit 1; fi
+if [ ! -e targ_${VNAME}_${VTEAM}.moos ]; then echo "no targ_${VNAME}_${VTEAM}.moos!"; exit 1; fi
 
 printf "Launching $VNAME MOOS Community.\n"
-pAntler targ_${VNAME}.moos >& /dev/null &
-uMAC targ_${VNAME}.moos
+pAntler targ_${VNAME}_${VTEAM}.moos >& /dev/null &
+uMAC targ_${VNAME}_${VTEAM}.moos
 
 printf "Killing all processes ... \n "
 kill -- -$$
