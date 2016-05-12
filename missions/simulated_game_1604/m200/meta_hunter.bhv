@@ -66,7 +66,8 @@ Behavior = BHV_AvoidCollision
   name                    = active_avd_
   pwt                     = 100
 
-  //behavior specific configuration
+  updates                 = CONTACT_INFO
+
   condition               = MODE == ACTIVE
   templating              = spawn
 
@@ -128,7 +129,8 @@ Behavior = BHV_AvoidCollision
   name                    = avd_
   pwt                     = 100
 
-  //behavior specific configuration
+  updates                 = CONTACT_INFO
+
   condition               = MODE == AVOIDING
   templating              = spawn
 
@@ -205,12 +207,12 @@ Behavior = BHV_CutRange
 //#############################################################################
 Behavior = BHV_StationKeep
 {
-  name                    = station-keep // example
-  pwt                     = 100 // default
+  name                    = station_keep
+  pwt                     = 100
   condition               = MODE==STATIONNING // example
 
 
-  center_activate         = false
+  center_activate         = true
   hibernation_radius      = 5
   inner_radius            = 4
   outer_radius            = 15
@@ -230,8 +232,6 @@ Behavior = BHV_Trail
   name                    = cover_mokai
   pwt                     = 100
   condition               = MODE == COVERING
-
-  updates                 = COVER_INFO
 
   contact                 = mokai_$(VTEAM)
   decay                   = 15,30
@@ -254,9 +254,7 @@ Behavior = BHV_Trail
 {
   name                    = trail_mokai
   pwt                     = 100
-  condition               = MODE == COVERING
-
-  updates                 = COVER_INFO
+  condition               = MODE == TRAILING
 
   contact                 = mokai_$(VTEAM)
   decay                   = 15,30
