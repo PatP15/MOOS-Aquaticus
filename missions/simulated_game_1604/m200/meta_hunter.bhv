@@ -1,14 +1,7 @@
 initialize DEPLOY     = false
 initialize RETURN     = false
-initialize SOLO       = true
-initialize ATTACK     = false
-initialize AGGRESSIVE = false
+initialize ACTION     = DEFEND
 initialize TAGGED     = false
-initialize INTERCEPT  = false
-initialize TRAIL      = false
-initialize COVER      = false
-initialize STATION    = false
-
 
 set MODE     = ACTIVE {
   DEPLOY     = true
@@ -21,13 +14,22 @@ set MODE     = RETURNING {
 
 set MODE     = SOLOPLAY {
   MODE       = ACTIVE:INGAME
-  SOLO       = true
-} TEAMPLAY
+  (ACTION    = ATTACK) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))
+}
+
+set MODE     = TEAMPLAY {
+  MODE       = ACTIVE:INGAME
+  (ACTION    = COVER) or ((ACTION = STATION) or (ACTION = TRAIL))
+}
 
 set MODE     = ATTACKING {
   MODE       = ACTIVE:INGAME:SOLOPLAY
-  ATTACK     = true
-} DEFENDING
+  ACTION     = ATTACK
+}
+
+set MODE     = DEFENDING {
+  MODE       = ACTIVE:INGAME:SOLOPLAY
+}
 
 set MODE     = TAGGED {
   MODE       = ACTIVE:INGAME:SOLOPLAY:ATTACKING
@@ -41,22 +43,27 @@ set MODE     = AVOIDING {
 
 set MODE     = INTERCEPTING {
   MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
-  INTERCEPT  = true
-} PASSIVE
+  ACTION     = INTERCEPT
+}
+
+set MODE     = PASSIVE {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
+  ACTION     = DEFEND
+}
 
 set MODE     = TRAILING {
   MODE       = ACTIVE:INGAME:TEAMPLAY
-  TRAIL      = true
+  ACTION     = TRAIL
 }
 
 set MODE     = COVERING {
   MODE       = ACTIVE:INGAME:TEAMPLAY
-  COVER      = true
+  ACTION     = COVER
 }
 
 set MODE     = STATIONNING {
   MODE       = ACTIVE:INGAME:TEAMPLAY
-  STATION    = true
+  ACTION     = STATION
 }
 
 
