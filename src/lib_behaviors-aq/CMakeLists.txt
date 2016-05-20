@@ -44,4 +44,5 @@ TARGET_LINK_LIBRARIES(BHV_SimpleDefend
    bhvutil 
    mbutil 
    geometry 
+   contacts
    ${SYSTEM_LIBS} )

@@ -5,16 +5,16 @@
 /*    DATE: Feb 22th 2009                                        */
 /*****************************************************************/
  
-#ifndef AOF_SIMPLE_WAYPOINT_HEADER
-#define AOF_SIMPLE_WAYPOINT_HEADER
+#ifndef AOF_SIMPLE_DEFEND_HEADER
+#define AOF_SIMPLE_DEFEND_HEADER
 
 #include "AOF.h"
 #include "IvPDomain.h"
 
-class AOF_SimpleWaypoint: public AOF {
+class AOF_SimpleDefend: public AOF {
  public:
-  AOF_SimpleWaypoint(IvPDomain);
-  ~AOF_SimpleWaypoint() {};
+  AOF_SimpleDefend(IvPDomain);
+  ~AOF_SimpleDefend() {};
 
 public: // virtuals defined
   double evalPoint(const std::vector<double>&) const; 

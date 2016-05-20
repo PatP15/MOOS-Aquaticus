@@ -29,17 +29,18 @@
 #include "ZAIC_PEAK.h"
 #include "OF_Coupler.h"
 #include "OF_Reflector.h"
-#include "AOF_SimpleWaypoint.h"
+#include "AOF_SimpleDefend.h"
+#include "NodeRecordUtils.h"
 
 using namespace std;
 
 //-----------------------------------------------------------
 // Procedure: Constructor
 
-BHV_SimpleWaypoint::BHV_SimpleWaypoint(IvPDomain gdomain) : 
+BHV_SimpleDefend::BHV_SimpleDefend(IvPDomain gdomain) : 
   IvPBehavior(gdomain)
 {
-  IvPBehavior::setParam("name", "simple_waypoint");
+  IvPBehavior::setParam("name", "simple_defend");
   m_domain = subDomain(m_domain, "course,speed");
 
   // All distances are in meters, all speed in meters per second
@@ -53,12 +54,14 @@ BHV_SimpleWaypoint::BHV_SimpleWaypoint(IvPDomain gdomain) :
   m_osy  = 0;
 
   addInfoVars("NAV_X, NAV_Y");
+  addInfoVars("NODE_REPORT");
+  addInfoVars("NODE_REPORT_LOCAL");
 }
 
 //---------------------------------------------------------------
 // Procedure: setParam - handle behavior configuration parameters
 
-bool BHV_SimpleWaypoint::setParam(string param, string val) 
+bool BHV_SimpleDefend::setParam(string param, string val) 
 {
   // Convert the parameter to lower case for more general matching
   param = tolower(param);
@@ -109,7 +112,7 @@ bool BHV_SimpleWaypoint::setParam(string param, string val)
 //-----------------------------------------------------------
 // Procedure: onIdleState
 
-void BHV_SimpleWaypoint::onIdleState() 
+void BHV_SimpleDefend::onIdleState() 
 {
   postViewPoint(false);
 }
@@ -117,7 +120,7 @@ void BHV_SimpleWaypoint::onIdleState()
 //-----------------------------------------------------------
 // Procedure: postViewPoint
 
-void BHV_SimpleWaypoint::postViewPoint(bool viewable) 
+void BHV_SimpleDefend::postViewPoint(bool viewable) 
 {
   m_nextpt.set_label(m_us_name + "'s next waypoint");
   
@@ -132,7 +135,7 @@ void BHV_SimpleWaypoint::postViewPoint(bool viewable)
 //-----------------------------------------------------------
 // Procedure: onRunState
 
-IvPFunction *BHV_SimpleWaypoint::onRunState() 
+IvPFunction *BHV_SimpleDefend::onRunState() 
 {
   // Part 1: Get vehicle position from InfoBuffer and post a 
   // warning if problem is encountered
@@ -143,6 +146,31 @@ IvPFunction *BHV_SimpleWaypoint::onRunState()
     postWMessage("No ownship X/Y info in info_buffer.");
     return(0);
   }
+
+  //Part : Let's check our own NODE_REPORT local to get our own 
+  //Community/Group name which will make sure we only
+  //reason about other team's players
+  bool ok3;
+  std::string own_node_record = getBufferStringVal("NODE_REPORT_LOCAL",ok3);
+
+  if(!ok3){
+
+    NodeRecord new_node_record = string2NodeRecord(own_node_record);
+    
+    string vname = new_node_record.getName();
+    string vgroup = new_node_record.getGroup();
+    if(vgroup == "") {//no group name
+    }
+    else {
+      m_own_group = vgroup;
+    }
+
+
+  }
+
+  //Part 2: Let's check all node_reports to find the closest contact
+  //will this be a list of NODE_REPORTS?
+  //bool ok3
 
   //Part 2: We want to determine the vehicle's goto point
   //For this we need information about the point we are protecting
@@ -198,7 +226,7 @@ IvPFunction *BHV_SimpleWaypoint::onRunState()
 //-----------------------------------------------------------
 // Procedure: buildFunctionWithZAIC
 
-IvPFunction *BHV_SimpleWaypoint::buildFunctionWithZAIC() 
+IvPFunction *BHV_SimpleDefend::buildFunctionWithZAIC() 
 {
   ZAIC_PEAK spd_zaic(m_domain, "speed");
   spd_zaic.setSummit(m_desired_speed);
@@ -236,12 +264,12 @@ IvPFunction *BHV_SimpleWaypoint::buildFunctionWithZAIC()
 //-----------------------------------------------------------
 // Procedure: buildFunctionWithReflector
 
-IvPFunction *BHV_SimpleWaypoint::buildFunctionWithReflector() 
+IvPFunction *BHV_SimpleDefend::buildFunctionWithReflector() 
 {
   IvPFunction *ivp_function;
 
   bool ok = true;
-  AOF_SimpleWaypoint aof_wpt(m_domain);
+  AOF_SimpleDefend aof_wpt(m_domain);
   ok = ok && aof_wpt.setParam("desired_speed", m_desired_speed);
   ok = ok && aof_wpt.setParam("osx", m_osx);
   ok = ok && aof_wpt.setParam("osy", m_osy);

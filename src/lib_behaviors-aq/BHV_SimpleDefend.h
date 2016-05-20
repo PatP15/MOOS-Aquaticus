@@ -1,8 +1,8 @@
 /*****************************************************************/
-/*    NAME: M.Benjamin, H.Schmidt, J. Leonard                    */
+/*    NAME: Michael "Misha" Novitzky                             */
 /*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
-/*    FILE: BHV_SimpleWaypoint.ch                                */
-/*    DATE: July 1st 2008  (For purposes of simple illustration) */
+/*    FILE: BHV_SimpleDefend.h                                   */
+/*    DATE: March 15th 2016  (For purposes of simple flag defense)*/
 /*                                                               */
 /* This program is free software; you can redistribute it and/or */
 /* modify it under the terms of the GNU General Public License   */
@@ -20,17 +20,18 @@
 /* Boston, MA 02111-1307, USA.                                   */
 /*****************************************************************/
  
-#ifndef BHV_SIMPLE_WAYPOINT_HEADER
-#define BHV_SIMPLE_WAYPOINT_HEADER
+#ifndef BHV_SIMPLE_DEFEND_HEADER
+#define BHV_SIMPLE_DEFEND_HEADER
 
 #include <string>
 #include "IvPBehavior.h"
 #include "XYPoint.h"
+#include "NodeRecordUtils.h"
 
-class BHV_SimpleWaypoint : public IvPBehavior {
+class BHV_SimpleDefend : public IvPBehavior {
 public:
-  BHV_SimpleWaypoint(IvPDomain);
-  ~BHV_SimpleWaypoint() {};
+  BHV_SimpleDefend(IvPDomain);
+  ~BHV_SimpleDefend() {};
   
   bool         setParam(std::string, std::string);
   void         onIdleState();
@@ -54,6 +55,7 @@ protected: // Configuration parameters
 protected: // State variables
   double   m_osx;
   double   m_osy;
+  map<std::string, NodeRecord> m_contact_list;
 };
 
 #ifdef WIN32
@@ -65,7 +67,7 @@ protected: // State variables
 
 extern "C" {
   IVP_EXPORT_FUNCTION IvPBehavior * createBehavior(std::string name, IvPDomain domain) 
-  {return new BHV_SimpleWaypoint(domain);}
+  {return new BHV_SimpleDefend(domain);}
 }
 #endif
 

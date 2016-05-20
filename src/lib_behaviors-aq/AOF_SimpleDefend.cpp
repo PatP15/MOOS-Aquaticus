@@ -10,7 +10,7 @@
 #pragma warning(disable : 4503)
 #endif
 #include <math.h> 
-#include "AOF_SimpleWaypoint.h"
+#include "AOF_SimpleDefend.h"
 #include "AngleUtils.h"
 #include "GeomUtils.h"
 
@@ -19,7 +19,7 @@ using namespace std;
 //----------------------------------------------------------
 // Procedure: Constructor
 
-AOF_SimpleWaypoint::AOF_SimpleWaypoint(IvPDomain g_domain) : AOF(g_domain)
+AOF_SimpleDefend::AOF_SimpleDefend(IvPDomain g_domain) : AOF(g_domain)
 {
   // Unitialized cache values for later use in evalBox calls
   m_min_speed    = 0;
@@ -44,7 +44,7 @@ AOF_SimpleWaypoint::AOF_SimpleWaypoint(IvPDomain g_domain) : AOF(g_domain)
 //----------------------------------------------------------------
 // Procedure: setParam
 
-bool AOF_SimpleWaypoint::setParam(const string& param, double param_val)
+bool AOF_SimpleDefend::setParam(const string& param, double param_val)
 {
   if(param == "osy") {
     m_osy = param_val;
@@ -78,7 +78,7 @@ bool AOF_SimpleWaypoint::setParam(const string& param, double param_val)
 //----------------------------------------------------------------
 // Procedure: initialize
 
-bool AOF_SimpleWaypoint::initialize()
+bool AOF_SimpleDefend::initialize()
 {
   // Check for failure conditions
   if(!m_osy_set || !m_osx_set || !m_pty_set || !m_ptx_set || !m_desired_spd_set)
@@ -98,7 +98,7 @@ bool AOF_SimpleWaypoint::initialize()
 // Procedure: evalPoint
 //   Purpose: Evaluate a candidate point in the decision space
 
-double AOF_SimpleWaypoint::evalPoint(const vector<double>& point) const
+double AOF_SimpleDefend::evalPoint(const vector<double>& point) const
 {
   // Determine the course and speed being evaluated
   double eval_crs = extract("course", point);
