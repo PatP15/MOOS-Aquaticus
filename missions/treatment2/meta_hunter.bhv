@@ -105,7 +105,7 @@ Behavior = BHV_StationKeep
   condition = MODE == STATION-KEEPING
 //  	     runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=Betty Is Stationing
  // 	     runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t2_no_problemo.wav
-//  runflag = NODE_MESSAGE_LOCAL=src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold Is Stationing
+  runflag = NODE_MESSAGE_LOCAL=src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold Is Stationing
   runflag = BOT_DIALOG_STATUS=Stationing
 
      center_activate = true
