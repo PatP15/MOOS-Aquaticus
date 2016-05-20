@@ -65,7 +65,7 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
 
       if(sval == "STATUS") {
 	//form a string including m_bot_ivp_mode and publish to
-	string ackStatement =  "src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold";
+	string ackStatement =  "src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold is " + m_bot_dialog_status;
 	//say={Did you mean " + svalLowered +"}, rate=200"Arnold " + m_bot_dialog_status;
 
 	//	  m_Comms.Notify("SAY_MOOS",ackStatement);
