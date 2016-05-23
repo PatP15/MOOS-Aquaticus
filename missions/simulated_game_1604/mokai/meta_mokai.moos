@@ -19,14 +19,16 @@ Processconfig = ANTLER
   // Run = iOS5000             @ NewConsole = false
   // Run = iGPSDevice          @ NewConsole = false
   Run = uSimMarine          @ NewConsole = false
-  Run = iJoystick           @ NewConsole = false
-  Run = pMapValues          @ NewConsole = false
+  // Run = iJoystick           @ NewConsole = false
+  // Run = pMapValues          @ NewConsole = false
   Run = uProcessWatch       @ NewConsole = false
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
   // Run = uSpeechRec          @ NewConsole = false
   Run = uDialogManager      @ NewConsole = false
   Run = uTermCommand        @ NewConsole = true
+  Run = pHelmIvP            @ NewConsole = false
+  Run = pMarinePID          @ NewConsole = false
 }
 
 #include plug_iSay.moos
@@ -62,3 +64,7 @@ Processconfig = ANTLER
 #include plug_pMapValues.moos
 
 #include plug_uTermCommand.moos
+
+#include plug_pHelmIvP.moos
+
+#include plug_pMarinePID.moos

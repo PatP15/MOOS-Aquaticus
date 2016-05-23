@@ -92,6 +92,7 @@ Behavior = BHV_AvoidCollision
   pwt_inner_dist          = 20
   pwt_outer_dist          = 200
 }
+
 //#############################################################################
 Behavior = BHV_Waypoint
 {
@@ -136,12 +137,12 @@ Behavior = BHV_AvoidCollision
   name                    = avd_
   pwt                     = 100
 
-  updates                 = CONTACT_INFO
+  updates                 = CONTACT_INFO_AVOIDING
 
   condition               = MODE == AVOIDING
   templating              = spawn
 
-  endflag                 = CONTACT_RESOLVED = $[CONTACT]
+  endflag                 = CONTACT_AVOIDING_RESOLVED = $[CONTACT]
 
   contact                 = v
   decay                   = 15,30

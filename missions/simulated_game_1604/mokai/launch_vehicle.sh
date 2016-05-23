@@ -29,6 +29,9 @@ for ARGI; do
         VTEAM="red"
         UNDEFINED_ARG=""
         START_POS="56,16,240"
+        GRAB_POS="-57,-71"
+        UNTAG_POS="50,-26"
+        RETURN_POS="50,-26"
         VPORT="9013"
         SHARE_LISTEN="9313"
         TEAMMATE="gus"
@@ -39,6 +42,9 @@ for ARGI; do
         VTEAM="blue"
         UNDEFINED_ARG=""
         START_POS="-53,-114,60"
+        GRAB_POS="50,-26"
+        UNTAG_POS="-57,-71"
+        RETURN_POS="-57,-71"
         VPORT="9014"
         SHARE_LISTEN="9314"
         TEAMMATE="evan"
@@ -68,7 +74,7 @@ if [ "${HELP}" = "yes" ]; then
     exit 0;
 fi
 
-printf "Assembling MOOS file targ_${VNAME}.moos .\n"
+printf "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos .\n"
 
 nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        VNAME="${VNAME}_${VTEAM}"    \
@@ -84,12 +90,32 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        TEAMMATE=$TEAMMATE           \
        START_POS=$START_POS
 
+printf "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv .\n"
+
+nsplug meta_mokai.bhv targ_${VNAME}_${VTEAM}.bhv -f  \
+       VNAME="${VNAME}_${VTEAM}"    \
+       VPORT=$VPORT                 \
+       SHARE_LISTEN=$SHARE_LISTEN   \
+       WARP=$WARP                   \
+       SHORE_LISTEN=$SHORE_LISTEN   \
+       SHORE_IP=$SHORE_IP           \
+       VTYPE="mokai"                \
+       VTEAM=$VTEAM                 \
+       BUTTON=$BUTTON               \
+       JOY_ID=$JOY_ID               \
+       TEAMMATE=$TEAMMATE           \
+       START_POS=$START_POS         \
+       RETURN_POS=$RETURN_POS       \
+       GRAB_POS=$GRAB_POS           \
+       UNTAG_POS=$UNTAG_POS
+
 if [ ${JUST_BUILD} = "yes" ] ; then
     printf "Files assembled; vehicle not launched; exiting per request.\n"
     exit 0
 fi
 
 if [ ! -e targ_${VNAME}_${VTEAM}.moos ]; then echo "no targ_${VNAME}_${VTEAM}.moos!"; exit 1; fi
+if [ ! -e targ_${VNAME}_${VTEAM}.bhv ]; then echo "no targ_${VNAME}_${VTEAM}.bhv!"; exit 1; fi
 
 printf "Launching $VNAME MOOS Community.\n"
 pAntler targ_${VNAME}_${VTEAM}.moos >& /dev/null &
