@@ -5,16 +5,8 @@
 </s>        sil
 
 % NAME
-ARNOLD      aa r n ah l d
-BETTY       b eh t iy
-CHARLIE     ch aa r l iy
 EVAN        eh v ah n
-ECHO        eh k ow
 FELIX       f iy l ih k s
-FOXTROT     f aa k s t r aa t
-GUS         g ah s
-GOLF        g aa l f
-TEAM        t iy m
 
 %COMMAND_G
 RETURN      r ih t er n
@@ -25,29 +17,11 @@ ATTACK      ah t ae k
 DEFEND      d ih f eh n d
 COVER       k ah v er
 
-%COMMAND_T
-HOLD        hh ow l d
 
 %ACK
 YES         y eh s
-AFFIRMATIVE ah f er m ah t ih v
-ROGER       r aa jh er
 NO          n ow
-NEGATIVE    n eh g ah t ih v
 
 %INTERACT
 TAG         t ae g
 GRAB        g r ae b
-
-% DIGIT
-OH         ow
-ZERO       z iy r ow
-ONE        w ah n
-TWO        t uw
-THREE      th r iy
-FOUR       f ao r
-FIVE       f ay v
-SIX        s ih k s
-SEVEN      s eh v ah n
-EIGHT      ey t
-NINE       n ay n
