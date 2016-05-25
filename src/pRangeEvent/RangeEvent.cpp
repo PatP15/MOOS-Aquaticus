@@ -218,6 +218,8 @@ bool RangeEvent::onNodeReport(CMOOSMsg& nr_msg)
   NodeRecord new_node_record = string2NodeRecord(nr_msg.GetString());
 
   string vname = new_node_record.getName();
+  if(m_host_community == vname) // Sanity check
+    return(true);
   double vx = new_node_record.getX();
   double vy = new_node_record.getY();
 

@@ -23,6 +23,7 @@ ProcessConfig = ANTLER
   // Run = iM200              @ NewConsole = false
   Run = uSimMarine         @ NewConsole = false
   Run = uFldMessageHandler @ NewConsole = false
+  Run = pRangeEvent        @ NewConsole = false
 }
 
 #include plug_iM200.moos
@@ -50,3 +51,5 @@ ProcessConfig = ANTLER
 #include plug_pBasicContactMgr.moos
 
 #include plug_uSimMarine.moos
+
+#include plug_pRangeEvent.moos
