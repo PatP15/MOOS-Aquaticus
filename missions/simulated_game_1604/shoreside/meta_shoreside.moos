@@ -26,6 +26,8 @@ Processconfig = ANTLER
   Run = uFldFlagManager @ NewConsole = false
   Run = uFldTagManager  @ NewConsole = false
   Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
+
+  Run = iSay            @ NewConsole = false
 }
 
 #include ../plug_pShare.moos
@@ -47,3 +49,5 @@ Processconfig = ANTLER
 #include plug_pMarineViewer.moos
 
 #include plug_uProcessWatch.moos
+
+#include ../plug_iSay.moos

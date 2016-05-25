@@ -12,6 +12,7 @@ ProcessConfig = uFldShoreBroker
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
   qbridge  = TAGGED
+  qbridge  = SAY_MOOS
 
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
