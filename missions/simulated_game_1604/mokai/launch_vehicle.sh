@@ -34,7 +34,7 @@ for ARGI; do
         RETURN_POS="50,-26"
         VPORT="9013"
         SHARE_LISTEN="9313"
-        TEAMMATE="gus"
+        TEAMMATE="felix"
         BUTTON="5"
         printf "Red team selected.\n"
     fi
