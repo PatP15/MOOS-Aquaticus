@@ -68,7 +68,7 @@ set MODE     = STATIONNING {
 
 
 //#############################################################################
-Behavior = BHV_AvoidCollision
+Behavior = BHV_AvdColregs
 {
   name                    = active_avd_
   pwt                     = 100
@@ -88,7 +88,7 @@ Behavior = BHV_AvoidCollision
   completed_dist          = 200
   max_util_cpa_dist       = 25
   min_util_cpa_dist       = 5
-  pwt_grade               = linear
+  // pwt_grade               = linear
   pwt_inner_dist          = 20
   pwt_outer_dist          = 200
 }
@@ -132,7 +132,7 @@ Behavior = BHV_Waypoint
 }
 
 //#############################################################################
-Behavior = BHV_AvoidCollision
+Behavior = BHV_AvdColregs
 {
   name                    = avd_
   pwt                     = 100
@@ -152,7 +152,7 @@ Behavior = BHV_AvoidCollision
   completed_dist          = 200
   max_util_cpa_dist       = 25
   min_util_cpa_dist       = 15
-  pwt_grade               = linear
+  // pwt_grade               = linear
   pwt_inner_dist          = 25
   pwt_outer_dist          = 200
 }
