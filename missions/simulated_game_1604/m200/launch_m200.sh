@@ -139,7 +139,7 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
         START_POS=$START_POS
 
 printf "Assembling BHV file targ_${VNAME}.bhv\n"
-nsplug meta_hunter.bhv targ_${VNAME}.bhv -f  \
+nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \

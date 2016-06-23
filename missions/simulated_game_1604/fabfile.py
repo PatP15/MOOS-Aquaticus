@@ -83,9 +83,9 @@ def update_all():
 def launch_humans_v():
     with cd(os.path.join(aqua_dir, 'missions', 'simulated_game_1604', 'mokai')):
         if (env.host == '192.168.1.192'):
-            run('./launch_vehicle.sh -b &')
+            run('./launch_mokai.sh -b &')
         elif (env.host == '192.168.1.191'):
-            run('./launch_vehicle.sh -r &')
+            run('./launch_mokai.sh -r &')
 
 
 @roles('m200s')
@@ -93,9 +93,9 @@ def launch_humans_v():
 def launch_robots_v():
     with cd(os.path.join(aqua_dir, 'missions', 'simulated_game_1604', 'm200')):
         if (env.host == '192.168.5.100'):
-            run('./launch_hunter.sh -e -b &')
+            run('./launch_m200.sh -e -b &')
         elif (env.host == '192.168.6.100'):
-            run('./launch_hunter.sh -f -r &')
+            run('./launch_m200.sh -f -r &')
 
 
 @task
