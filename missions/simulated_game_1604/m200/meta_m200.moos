@@ -20,8 +20,8 @@ ProcessConfig = ANTLER
   Run = pHostInfo          @ NewConsole = false
   Run = uFldNodeBroker     @ NewConsole = false
   Run = pDeadManPost       @ NewConsole = false
-  Run = iM200              @ NewConsole = false
-  // Run = uSimMarine         @ NewConsole = false
+  // Run = iM200              @ NewConsole = false
+  Run = uSimMarine         @ NewConsole = false
   Run = uFldMessageHandler @ NewConsole = false
   Run = pRangeEvent        @ NewConsole = false
 }
