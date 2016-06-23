@@ -29,10 +29,10 @@ ProcessConfig = uFldTagManager
   robot_tag_post   = TAGGED_$UP_TARGET=true
 
   //robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
-  human_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
-  human_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
-  robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
-  robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
+  // human_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  // human_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
+  // robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  // robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
   human_untag_post = TAGGED_$UP_TARGET=false
   robot_untag_post = TAGGED_$UP_TARGET=false
 
