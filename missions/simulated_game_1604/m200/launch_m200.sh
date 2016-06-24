@@ -1,16 +1,6 @@
 #!/bin/bash
 WARP=1
 
-#M200_IP="localhost"
-#M200_IP=192.168.5.1 #evan
-#M200_IP=192.168.6.1 #felix
-#M200_IP=192.168.7.1 #gus
-
-# SHORE_IP
-#  Emulation, shoreside running on same machine as vehicle: localhost
-#  Emulation, shoreside running on a different machine:     IP address of that machine (often 192.168.2.1)
-#  Actual vehicle:                                          IP address of the shoreside computer
-#SHORE_IP="localhost"
 SHORE_IP=192.168.1.155
 SHORE_LISTEN="9300"
 
@@ -72,6 +62,11 @@ for ARGI; do
         UNDEFINED_ARG=""
         printf "Just building files; no vehicle launch.\n"
     fi
+    if [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
+        SIM="yes"
+        UNDEFINED_ARG=""
+        printf "Simulation mode ON.\n"
+    fi
     if [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
         UNDEFINED_ARG=""
@@ -113,6 +108,7 @@ if [ "${HELP}" = "yes" ]; then
     printf "  --blue, -b       \n"
     printf "  --red, -r       \n"
     printf "  --just_build, -j       \n"
+    printf "  --sim, -s       \n"
     printf "  --help, -h             \n"
     exit 0;
 fi
@@ -123,20 +119,38 @@ fi
 
 printf "Assembling MOOS file targ_${VNAME}.moos\n"
 
-nsplug meta_m200.moos targ_${VNAME}.moos -f \
-        VNAME=$VNAME                 \
-        VPORT=$VPORT                 \
-        WARP=$WARP                   \
-        SHARE_LISTEN=$SHARE_LISTEN   \
-        SHORE_LISTEN=$SHORE_LISTEN   \
-        SHORE_IP=$SHORE_IP           \
-        M200_IP=$M200_IP             \
-        HOSTIP_FORCE="localhost"     \
-        LOITER_POS=$LOITER_POS       \
-        VARIATION=$VARIATION         \
-        VTYPE="kayak"                \
-        VTEAM=$VTEAM                 \
-        START_POS=$START_POS
+if [[ -z $SIM ]]; then
+  nsplug meta_m200.moos targ_${VNAME}.moos -f \
+    VNAME=$VNAME                 \
+    VPORT=$VPORT                 \
+    WARP=$WARP                   \
+    SHARE_LISTEN=$SHARE_LISTEN   \
+    SHORE_LISTEN=$SHORE_LISTEN   \
+    SHORE_IP=$SHORE_IP           \
+    M200_IP=$M200_IP             \
+    HOSTIP_FORCE="localhost"     \
+    LOITER_POS=$LOITER_POS       \
+    VARIATION=$VARIATION         \
+    VTYPE="kayak"                \
+    VTEAM=$VTEAM                 \
+    START_POS=$START_POS
+else
+  nsplug meta_m200.moos targ_${VNAME}.moos -f \
+    VNAME=$VNAME                 \
+    VPORT=$VPORT                 \
+    WARP=$WARP                   \
+    SHARE_LISTEN=$SHARE_LISTEN   \
+    SHORE_LISTEN=$SHORE_LISTEN   \
+    SHORE_IP=$SHORE_IP           \
+    M200_IP=$M200_IP             \
+    HOSTIP_FORCE="localhost"     \
+    LOITER_POS=$LOITER_POS       \
+    VARIATION=$VARIATION         \
+    VTYPE="kayak"                \
+    VTEAM=$VTEAM                 \
+    START_POS=$START_POS         \
+    SIM
+fi
 
 printf "Assembling BHV file targ_${VNAME}.bhv\n"
 nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \

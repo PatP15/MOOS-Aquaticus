@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SHORE_IP=192.168.1.155
-# SHORE_IP=multicast_7
 SHORE_LISTEN="9300"
 
 WARP=1
@@ -56,6 +55,16 @@ for ARGI; do
         UNDEFINED_ARG=""
         printf "Just building files; no vehicle launch.\n"
     fi
+    if [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
+        SIM="FULL"
+        UNDEFINED_ARG=""
+        printf "Full simulation mode ON.\n"
+    fi
+    if [ "${ARGI}" = "--semi-sim" -o "${ARGI}" = "-ss" ] ; then
+        SIM="SEMI"
+        UNDEFINED_ARG=""
+        printf "Semi simulation mode ON.\n"
+    fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
         BAD_ARGS=$UNDEFINED_ARG
     fi
@@ -76,7 +85,8 @@ fi
 
 printf "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos .\n"
 
-nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
+if [[ -z $SIM ]]; then
+  nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        VNAME="${VNAME}_${VTEAM}"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
@@ -89,6 +99,22 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        JOY_ID=$JOY_ID               \
        TEAMMATE=$TEAMMATE           \
        START_POS=$START_POS
+else
+  nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
+    VNAME="${VNAME}_${VTEAM}"    \
+    VPORT=$VPORT                 \
+    SHARE_LISTEN=$SHARE_LISTEN   \
+    WARP=$WARP                   \
+    SHORE_LISTEN=$SHORE_LISTEN   \
+    SHORE_IP=$SHORE_IP           \
+    VTYPE="mokai"                \
+    VTEAM=$VTEAM                 \
+    BUTTON=$BUTTON               \
+    JOY_ID=$JOY_ID               \
+    TEAMMATE=$TEAMMATE           \
+    START_POS=$START_POS         \
+    SIM=$SIM
+fi;
 
 printf "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv .\n"
 
