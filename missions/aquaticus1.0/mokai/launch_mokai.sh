@@ -65,6 +65,16 @@ for ARGI; do
         UNDEFINED_ARG=""
         printf "Semi simulation mode ON.\n"
     fi
+    if [ "${ARGI}" = "--voice-on" -o "${ARGI}" = "-von" ] ; then
+        VOICE="ON"
+        UNDEFINED_ARG=""
+        printf "Voice recognition ON.\n"
+    fi
+    if [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
+        VOICE="OFF"
+        UNDEFINED_ARG=""
+        printf "Voice recognition OFF.\n"
+    fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
         BAD_ARGS=$UNDEFINED_ARG
     fi
@@ -78,6 +88,12 @@ fi
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
     printf "Switches:                \n"
+    printf "  --blue, -b         : Blue team\n"
+    printf "  --red, -r          : Red team\n"
+    printf "  --semi-sim, -ss    : Semi-autonomous simulation (w/ joysticks)\n"
+    printf "  --sim, -s          : Full simulation\n"
+    printf "  --voice-on, -von   : Voice recognition on\n"
+    printf "  --voice-off, -voff : Voice recognition off\n"
     printf "  --just_build, -j       \n"
     printf "  --help, -h             \n"
     exit 0;
@@ -98,6 +114,7 @@ if [[ -z $SIM ]]; then
        BUTTON=$BUTTON               \
        JOY_ID=$JOY_ID               \
        TEAMMATE=$TEAMMATE           \
+       VOICE=$VOICE                 \
        START_POS=$START_POS
 else
   nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
@@ -113,6 +130,7 @@ else
     JOY_ID=$JOY_ID               \
     TEAMMATE=$TEAMMATE           \
     START_POS=$START_POS         \
+    VOICE=$VOICE                 \
     SIM=$SIM
 fi;
 

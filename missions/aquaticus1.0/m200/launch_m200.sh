@@ -102,13 +102,13 @@ fi
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
     printf "Switches:                \n"
-    printf "  --evan, -e             evan vehicle only  \n"
-    printf "  --felix, -f            felix vehicle only \n"
-    printf "  --gus, -g              gus vehicle only   \n"
-    printf "  --blue, -b       \n"
-    printf "  --red, -r       \n"
+    printf "  --evan, -e      : Evan vehicle only  \n"
+    printf "  --felix, -f     : Felix vehicle only \n"
+    printf "  --gus, -g       : Gus vehicle only   \n"
+    printf "  --blue, -b      : Blue team \n"
+    printf "  --red, -r       : Red team \n"
+    printf "  --sim, -s       : Simulation mode \n"
     printf "  --just_build, -j       \n"
-    printf "  --sim, -s       \n"
     printf "  --help, -h             \n"
     exit 0;
 fi
