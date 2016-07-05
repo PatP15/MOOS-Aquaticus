@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd ./m200
-./launch_m200.sh -e -b -s > /tmp/m200_blue &
+./launch_m200.sh -e -b -s -t > /tmp/m200_blue &
 ./launch_m200.sh -f -r -s > /tmp/m200_red  &
 
 cd ..

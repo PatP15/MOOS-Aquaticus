@@ -37,6 +37,7 @@ for ARGI; do
         VNAME="evan"
         VPORT="9005"
         SHARE_LISTEN="9305"
+	TEST_TAG="YES"
         printf "EVAN vehicle selected as HUNTER.\n"
     fi
     if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
@@ -84,6 +85,10 @@ for ARGI; do
         RETURN_POS="-57,-71"
         START_POS="-53,-114,60"
         printf "Blue team selected.\n"
+    fi
+    if [ "${ARGI}" = "--tag" -o "${ARGI}" = "-t" ] ; then
+	START_POS="54,16,240"
+        UNDEFINED_ARG=""
     fi
     if [ "${UNDEFINED_ARG}" != "" ] ; then
         BAD_ARGS=$UNDEFINED_ARG
