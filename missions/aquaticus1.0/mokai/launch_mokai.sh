@@ -6,7 +6,6 @@ SHORE_LISTEN="9300"
 WARP=1
 HELP="no"
 JUST_BUILD="no"
-BAD_ARGS=""
 VTEAM="red"
 START_POS="0,0,0"
 VNAME="mokai"
@@ -16,17 +15,13 @@ BUTTON="5"
 JOY_ID="0"
 TEAMMATE=""
 
-printf "Initiate launch MOKAI script.\n"
+echo "Initiate launch MOKAI script."
 
 for ARGI; do
-    UNDEFINED_ARG=$ARGI
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         HELP="yes"
-        UNDEFINED_ARG=""
-    fi
-    if [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
+    elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
-        UNDEFINED_ARG=""
         START_POS="56,16,240"
         GRAB_POS="-57,-71"
         UNTAG_POS="50,-26"
@@ -35,11 +30,9 @@ for ARGI; do
         SHARE_LISTEN="9313"
         TEAMMATE="felix"
         BUTTON="5"
-        printf "Red team selected.\n"
-    fi
-    if [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
+        echo "Red team selected."
+    elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
-        UNDEFINED_ARG=""
         START_POS="-53,-114,60"
         GRAB_POS="50,-26"
         UNTAG_POS="-57,-71"
@@ -48,61 +41,46 @@ for ARGI; do
         SHARE_LISTEN="9314"
         TEAMMATE="evan"
         BUTTON="4"
-        printf "Blue team selected.\n"
-    fi
-    if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
+        echo "Blue team selected."
+    elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
-        UNDEFINED_ARG=""
-        printf "Just building files; no vehicle launch.\n"
-    fi
-    if [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
-        SIM="FULL"
-        UNDEFINED_ARG=""
-        printf "Full simulation mode ON.\n"
-    fi
-    if [ "${ARGI}" = "--semi-sim" -o "${ARGI}" = "-ss" ] ; then
-        SIM="SEMI"
-        UNDEFINED_ARG=""
-        printf "Semi simulation mode ON.\n"
-    fi
-    if [ "${ARGI}" = "--voice-on" -o "${ARGI}" = "-von" ] ; then
+        echo "Just building files; no vehicle launch."
+    elif [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
+        SIM="SIM=FULL"
+        echo "Full simulation mode ON."
+    elif [ "${ARGI}" = "--semi-sim" -o "${ARGI}" = "-ss" ] ; then
+        SIM="SIM=SEMI"
+        echo "Semi simulation mode ON."
+    elif [ "${ARGI}" = "--voice-on" -o "${ARGI}" = "-von" ] ; then
         VOICE="ON"
-        UNDEFINED_ARG=""
-        printf "Voice recognition ON.\n"
-    fi
-    if [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
+        echo "Voice recognition ON."
+    elif [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
         VOICE="OFF"
-        UNDEFINED_ARG=""
-        printf "Voice recognition OFF.\n"
-    fi
-    if [ "${UNDEFINED_ARG}" != "" ] ; then
-        BAD_ARGS=$UNDEFINED_ARG
+        echo "Voice recognition OFF."
+    else
+      echo "Undefined argument:" $ARGI
+      echo "Please use -h for help."
+      exit 1
     fi
 done
 
-if [ "${BAD_ARGS}" != "" ] ; then
-    printf "Bad Argument: %s \n" $BAD_ARGS
-    exit 0
-fi
-
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
-    printf "Switches:                \n"
-    printf "  --blue, -b         : Blue team\n"
-    printf "  --red, -r          : Red team\n"
-    printf "  --semi-sim, -ss    : Semi-autonomous simulation (w/ joysticks)\n"
-    printf "  --sim, -s          : Full simulation\n"
-    printf "  --voice-on, -von   : Voice recognition on\n"
-    printf "  --voice-off, -voff : Voice recognition off\n"
-    printf "  --just_build, -j       \n"
-    printf "  --help, -h             \n"
+    echo "Switches:                "
+    echo "  --blue, -b         : Blue team"
+    echo "  --red, -r          : Red team"
+    echo "  --semi-sim, -ss    : Semi-autonomous simulation (w/ joysticks)"
+    echo "  --sim, -s          : Full simulation"
+    echo "  --voice-on, -von   : Voice recognition on"
+    echo "  --voice-off, -voff : Voice recognition off"
+    echo "  --just_build, -j       "
+    echo "  --help, -h             "
     exit 0;
 fi
 
-printf "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos .\n"
+echo "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos ."
 
-if [[ -z $SIM ]]; then
-  nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
+nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        VNAME="${VNAME}_${VTEAM}"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
@@ -115,26 +93,10 @@ if [[ -z $SIM ]]; then
        JOY_ID=$JOY_ID               \
        TEAMMATE=$TEAMMATE           \
        VOICE=$VOICE                 \
-       START_POS=$START_POS
-else
-  nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
-    VNAME="${VNAME}_${VTEAM}"    \
-    VPORT=$VPORT                 \
-    SHARE_LISTEN=$SHARE_LISTEN   \
-    WARP=$WARP                   \
-    SHORE_LISTEN=$SHORE_LISTEN   \
-    SHORE_IP=$SHORE_IP           \
-    VTYPE="mokai"                \
-    VTEAM=$VTEAM                 \
-    BUTTON=$BUTTON               \
-    JOY_ID=$JOY_ID               \
-    TEAMMATE=$TEAMMATE           \
-    START_POS=$START_POS         \
-    VOICE=$VOICE                 \
-    SIM=$SIM
-fi;
+       START_POS=$START_POS         \
+       $SIM
 
-printf "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv .\n"
+echo "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv ."
 
 nsplug meta_mokai.bhv targ_${VNAME}_${VTEAM}.bhv -f  \
        VNAME="${VNAME}_${VTEAM}"    \
@@ -154,14 +116,14 @@ nsplug meta_mokai.bhv targ_${VNAME}_${VTEAM}.bhv -f  \
        UNTAG_POS=$UNTAG_POS
 
 if [ ${JUST_BUILD} = "yes" ] ; then
-    printf "Files assembled; vehicle not launched; exiting per request.\n"
+    echo "Files assembled; vehicle not launched; exiting per request."
     exit 0
 fi
 
 if [ ! -e targ_${VNAME}_${VTEAM}.moos ]; then echo "no targ_${VNAME}_${VTEAM}.moos!"; exit 1; fi
 if [ ! -e targ_${VNAME}_${VTEAM}.bhv ]; then echo "no targ_${VNAME}_${VTEAM}.bhv!"; exit 1; fi
 
-printf "Launching $VNAME MOOS Community.\n"
+echo "Launching $VNAME MOOS Community."
 pAntler targ_${VNAME}_${VTEAM}.moos >& /dev/null &
 uMAC targ_${VNAME}_${VTEAM}.moos
 
