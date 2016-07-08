@@ -65,7 +65,7 @@ for ARGI; do
 done
 
 if [ "${HELP}" = "yes" ]; then
-    printf "%s [SWITCHES]            \n" $0
+    echo "$0 [SWITCHES]"
     echo "Switches:                "
     echo "  --blue, -b         : Blue team"
     echo "  --red, -r          : Red team"
@@ -127,6 +127,6 @@ echo "Launching $VNAME MOOS Community."
 pAntler targ_${VNAME}_${VTEAM}.moos >& /dev/null &
 uMAC targ_${VNAME}_${VTEAM}.moos
 
-printf "Killing all processes ... \n "
+echo "Killing all processes ..."
 kill -- -$$
-printf "Done killing processes.   \n "
+echo "Done killing processes."

@@ -80,8 +80,8 @@ done
 #-------------------------------------------------------
 
 if [ "${HELP}" = "yes" ]; then
-    printf "%s [SWITCHES]            \n" $0
-    echo "Switches:                "
+    echo "$0 [SWITCHES]"
+    echo "Switches:"
     echo "  --evan, -e      : Evan vehicle only."
     echo "  --felix, -f     : Felix vehicle only."
     echo "  --gus, -g       : Gus vehicle only."
@@ -111,7 +111,7 @@ else [[ -z $START_POS_X || (-z $START_POS_Y || -z $START_POS_A) ]]
   exit 1
 fi
 
-printf "Assembling MOOS file targ_${VNAME}.moos\n"
+echo "Assembling MOOS file targ_${VNAME}.moos"
 
 
 nsplug meta_m200.moos targ_${VNAME}.moos -f \
@@ -154,6 +154,6 @@ echo "Launching $VNAME MOOS Community "
 pAntler targ_${VNAME}.moos >& /dev/null &
 uMAC targ_${VNAME}.moos
 
-printf "Killing all processes ... \n "
+echo "Killing all processes ..."
 kill -- -$$
-printf "Done killing processes.   \n "
+echo "Done killing processes."
