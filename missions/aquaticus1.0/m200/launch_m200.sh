@@ -16,7 +16,7 @@ LOITER_POS="x=100,y=-180"
 GRAB_POS=""
 UNTAG_POS=""
 
-printf "Initiate launch vehicle script\n"
+echo "Initiate launch vehicle script"
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -29,39 +29,39 @@ for ARGI; do
         VNAME="evan"
         VPORT="9005"
         SHARE_LISTEN="9305"
-        printf "EVAN vehicle selected as HUNTER.\n"
+        echo "EVAN vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
         M200_IP=192.168.6.1 #felix
         VNAME="felix"
         VPORT="9006"
         SHARE_LISTEN="9306"
-        printf "FELIX vehicle selected.\n"
+        echo "FELIX vehicle selected."
     elif [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
         M200_IP=192.168.7.1 #gus
         VNAME="gus"
         VPORT="9007"
         SHARE_LISTEN="9307"
-        printf "GUS vehicle selected as HUNTER.\n"
+        echo "GUS vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
-        printf "Just building files; no vehicle launch.\n"
+        echo "Just building files; no vehicle launch."
     elif [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
         SIM="SIM"
-        printf "Simulation mode ON.\n"
+        echo "Simulation mode ON."
     elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
         GRAB_POS="-57,-71"
         UNTAG_POS="50,-26"
         RETURN_POS="50,-26"
         START_POS="56,16,240"
-        printf "Red team selected.\n"
+        echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
         GRAB_POS="50,-26"
         UNTAG_POS="-57,-71"
         RETURN_POS="-57,-71"
         START_POS="-53,-114,60"
-        printf "Blue team selected.\n"
+        echo "Blue team selected."
     elif [ "${ARGI:0:10}" = "--start-x=" ] ; then
         START_POS_X="${ARGI#--start-x=*}"
     elif [ "${ARGI:0:10}" = "--start-y=" ] ; then
@@ -81,18 +81,18 @@ done
 
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
-    printf "Switches:                \n"
-    printf "  --evan, -e      : Evan vehicle only.\n"
-    printf "  --felix, -f     : Felix vehicle only.\n"
-    printf "  --gus, -g       : Gus vehicle only.\n"
-    printf "  --blue, -b      : Blue team.\n"
-    printf "  --red, -r       : Red team.\n"
-    printf "  --sim, -s       : Simulation mode.\n"
-    printf "  --start-x       : Start from x position (requires x y a).\n"
-    printf "  --start-y       : Start from y position (requires x y a).\n"
-    printf "  --start-a       : Start from angle (requires x y a).\n"
-    printf "  --just_build, -j       \n"
-    printf "  --help, -h             \n"
+    echo "Switches:                "
+    echo "  --evan, -e      : Evan vehicle only."
+    echo "  --felix, -f     : Felix vehicle only."
+    echo "  --gus, -g       : Gus vehicle only."
+    echo "  --blue, -b      : Blue team."
+    echo "  --red, -r       : Red team."
+    echo "  --sim, -s       : Simulation mode."
+    echo "  --start-x       : Start from x position (requires x y a)."
+    echo "  --start-y       : Start from y position (requires x y a)."
+    echo "  --start-a       : Start from angle (requires x y a)."
+    echo "  --just_build, -j       "
+    echo "  --help, -h             "
     exit 0;
 fi
 
@@ -130,7 +130,7 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     START_POS=$START_POS         \
     $SIM
 
-printf "Assembling BHV file targ_${VNAME}.bhv\n"
+echo "Assembling BHV file targ_${VNAME}.bhv"
 nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
@@ -142,7 +142,7 @@ nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then
-    printf "Files assembled; vehicle not launched; exiting per request.\n"
+    echo "Files assembled; vehicle not launched; exiting per request."
     exit 0
 fi
 
@@ -150,7 +150,7 @@ fi
 #  Part 4: Launch the processes
 #-------------------------------------------------------
 
-printf "Launching $VNAME MOOS Community \n"
+echo "Launching $VNAME MOOS Community "
 pAntler targ_${VNAME}.moos >& /dev/null &
 uMAC targ_${VNAME}.moos
 
