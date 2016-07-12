@@ -9,6 +9,7 @@ ProcessConfig = uSimMarine
   start_pos = $(START_POS)
   prefix    = NAV
 
+	turn_rate = 99
   //rotate_speed = 0.012
   //drift_x      = 0.0045
 

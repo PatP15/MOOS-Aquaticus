@@ -162,9 +162,9 @@ Behavior = BHV_Loiter
   condition = MODE==LOITERING
   updates   = LOITER_UPDATES
 
-          speed = 2
-        polygon = radial:: x=0,y=0,radius=10,pts=8 // example
-  center_assign = $(UNTAG_POS)
+          speed = 1.4
+        polygon = format=ellipse, x=0, y=0, degs=115, major=50, minor=10, pts=16 // example
+  center_assign = $(DEFEND_POS)
 }
 
 //----------------------------------------------

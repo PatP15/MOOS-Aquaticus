@@ -16,6 +16,7 @@ RETURN_POS=""
 LOITER_POS="x=100,y=-180"
 GRAB_POS=""
 UNTAG_POS=""
+DEFEND_POS=""
 SIM="NO"
 
 printf "Initiate launch vehicle script\n"
@@ -95,10 +96,12 @@ if [ "${VTEAM}" = "red" ] ; then
     GRAB_POS="-57,-71"
     RETURN_POS="50,-26"
     UNTAG_POS="50,-26"     
+    DEFEND_POS="25,-37"     
 elif [ "${VTEAM}" = "blue" ] ; then
     GRAB_POS="50,-26"
     RETURN_POS="-57,-71"
     UNTAG_POS="-57,-71"    
+    DEFEND_POS="-25,-62"    
 else
     printf "Unrecognized or no vehicle team selected: $VTEAM \n";
     exit 1
@@ -125,7 +128,7 @@ nsplug meta_m200.bhv targ_${VNAME}.bhv -f --strict       \
        RETURN_POS=${RETURN_POS}     VTEAM=$VTEAM         \
        TRAIL_RANGE=$TRAIL_RANGE     VNAME=$VNAME         \
        TRAIL_ANGLE=$TRAIL_ANGLE     GRAB_POS=$GRAB_POS   \
-       UNTAG_POS=$UNTAG_POS
+       DEFEND_POS=$DEFEND_POS       UNTAG_POS=$UNTAG_POS         
 
 
 if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos"; exit; fi

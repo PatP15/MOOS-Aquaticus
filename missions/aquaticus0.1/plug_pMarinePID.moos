@@ -9,7 +9,7 @@ ProcessConfig = pMarinePID
   active_start  = true
 
   // Yaw PID controller
-  yaw_pid_kp             = 0.35 // 0.4  sim, m200
+  yaw_pid_kp             = 0.55 // 0.4  sim, m200
 //  YAW_PID_KP             = 0.07 // 0.4 m100
   yaw_pid_kd             = 0.07 // 0.1
   yaw_pid_ki             = 0.0  // 0.0
