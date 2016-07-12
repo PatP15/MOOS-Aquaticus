@@ -3,6 +3,7 @@ initialize RETURN     = false
 initialize ACTION     = defend
 initialize TAGGED     = false
 initialize INTRUDER   = false
+initialize HAVE_FLAG  = false
 
 	// ACTION = {attack, defend}
 	//
@@ -46,7 +47,7 @@ set MODE = TAGGED {
 
 set MODE = GO-GRAB {
   MODE = ACTIVE:ATTACKING
-  TAGGED = false
+  TAGGED != true
 	HAVE_FLAG = false
 } GRAB-RETURN
 

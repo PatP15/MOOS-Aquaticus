@@ -136,7 +136,7 @@ ProcessConfig = uFldShoreBroker
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
-  qbridge  = TAGGED
+  qbridge  = TAGGED, ACTION
   qbridge  = SAY_MOOS
 
   bridge   = src=IN_OWN_TERRITORY
@@ -195,10 +195,13 @@ ProcessConfig = pMarineViewer
   vehicles_name_mode   = names
 
   circle_viewable_all = true
-
+	polygon_viewable_labels = false
+	
   appcast_viewable = true
   appcast_color_scheme = indigo
 
+
+	
   scope = FLAG_GRAB_REPORT
   scope = NODE_BROKER_PING
   scope = DEPLOY_ALL
@@ -230,6 +233,9 @@ ProcessConfig = pMarineViewer
 
   cmd = label=RETURN, var=RETURN, sval=true, receivers=all:evan:felix
   cmd = label=RETURN, var=STATION_KEEP, sval=false, receivers=all:evan:felix
+
+	cmd = label=GO-TAG, var=ACTION, sval=attack, receivers=evan:felix
+	cmd = label=DEFEND, var=ACTION, sval=defend, receivers=evan:felix
 
   cmd = label=STATION, var=STATION_KEEP,  sval=true,  receivers=all:evan:felix
 	
