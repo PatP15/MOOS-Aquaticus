@@ -34,6 +34,7 @@ class RangeEvent : public AppCastingMOOSApp
 
   bool handleConfigMinRange(std::string, bool = true);
   bool handleConfigEventVar(std::string&);
+  bool handleConfigGroupVar(std::string&);
   void publishEvents();
 
  protected: // Mail Callbacks
@@ -45,6 +46,7 @@ class RangeEvent : public AppCastingMOOSApp
 
  private: // Configuration variables
   double m_min_range, m_max_range;
+  std::string m_ignored_group;
 
  private: // State variables
   double m_vx, m_vy, m_speed, m_heading;

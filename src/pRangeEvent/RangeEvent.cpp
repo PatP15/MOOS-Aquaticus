@@ -164,6 +164,8 @@ bool RangeEvent::OnStartUp()
         handled = handleConfigMinRange(value, false);
       else if(param == "EVENT_VAR")
         handled = handleConfigEventVar(value);
+      else if(param == "IGNORE_GROUP")
+        handled = handleConfigGroupVar(value);
 
       if(!handled)
         reportUnhandledConfigWarning(orig);
@@ -197,6 +199,15 @@ bool RangeEvent::handleConfigEventVar(string& str)
   return(true);
 }
 
+bool RangeEvent::handleConfigGroupVar(string& str)
+{
+  if(str == "")
+    return(false);
+
+  m_ignored_group = str;
+  return(true);
+}
+
 #if 0 // Keep this as an example for callbacks
 //------------------------------------------------------------
 // Procedure: onMessageFoo() callback
@@ -220,6 +231,12 @@ bool RangeEvent::onNodeReport(CMOOSMsg& nr_msg)
   string vname = new_node_record.getName();
   if(m_host_community == vname) // Sanity check
     return(true);
+
+  // if vehicle belongs to the group that needs to be ignored
+  string vgroup = new_node_record.getGroup();
+  if(m_ignored_group == vgroup)
+    return(true);
+
   double vx = new_node_record.getX();
   double vy = new_node_record.getY();
 

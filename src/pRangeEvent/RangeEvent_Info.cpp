@@ -78,6 +78,8 @@ void showExampleConfigAndExit()
   blk("  min_range = 0 // default");
   blk("  max_range = 10 // default");
   blk("                                                                ");
+  blk("  ignore_group = red // this group will be ignored when within range");
+  blk("                                                                ");
   blk("  // Event variables:");
   blk("  // Dynamic values options");
   blk("  //          ($[SELFVNAME], $[SELFVX], $[SELFVY],");

@@ -10,6 +10,9 @@ ProcessConfig = pRangeEvent
   min_range = 0 // default
   max_range = 10 // default
 
+  // a group that needs to be ignored
+  IGNORE_GROUP = red
+
   // Event variables:
   // Dynamic values options
   //          ($[SELFVNAME], $[SELFVX], $[SELFVY], $[SELFSPEED], $[SELFHEADING],
