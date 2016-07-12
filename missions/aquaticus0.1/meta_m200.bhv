@@ -1,77 +1,72 @@
 initialize DEPLOY     = false
 initialize RETURN     = false
-initialize ACTION     = DEFEND
+initialize ACTION     = defend
 initialize TAGGED     = false
+initialize INTRUDER   = false
 
-set MODE     = ACTIVE {
-  DEPLOY     = true
+	// ACTION = {attack, defend}
+	//
+	//  ROOT
+	//	   - INACTIVE
+	//	   - ACTIVE
+	//	      - STATION-KEEPING
+	//	      - RETURNING
+	//	      - ATTACKING
+	//	        - TAGGED
+	//          - GO-GRAB
+	//          - GRAB-RETURN
+	//        - DEFENDING
+	//          - LOITERING
+	//          - INTERCEPTING
+	
+set MODE = ACTIVE {
+  DEPLOY = true
 } INACTIVE
 
-set MODE     = RETURNING {
-  MODE       = ACTIVE
-  RETURN     = true
-} INGAME
-
-set MODE     = SOLOPLAY {
-  MODE       = ACTIVE:INGAME
-  (ACTION    = ATTACK) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))
+set MODE = STATION-KEEPING {
+    MODE = ACTIVE
+  STATION_KEEP = true
 }
 
-set MODE     = TEAMPLAY {
-  MODE       = ACTIVE:INGAME
-  (ACTION    = COVER) or ((ACTION = STATION) or (ACTION = TRAIL))
+set MODE = RETURNING {
+    MODE = ACTIVE
+  RETURN = true
+} 
+
+// ATTACKING MODES
+set MODE = ATTACKING {
+    MODE = ACTIVE
+  ACTION = attack
 }
 
-set MODE     = ATTACKING {
-  MODE       = ACTIVE:INGAME:SOLOPLAY
-  ACTION     = ATTACK
+set MODE = TAGGED {
+  MODE = ACTIVE:ATTACKING
+  TAGGED = true
+} 
+
+set MODE = GO-GRAB {
+  MODE = ACTIVE:ATTACKING
+  TAGGED = false
+	HAVE_FLAG = false
+} GRAB-RETURN
+
+// DEFENDING MODES
+set MODE = DEFENDING {
+    MODE = ACTIVE
+	ACTION = defend
 }
 
-set MODE     = DEFENDING {
-  MODE       = ACTIVE:INGAME:SOLOPLAY
-}
-
-set MODE     = TAGGED {
-  MODE       = ACTIVE:INGAME:SOLOPLAY:ATTACKING
-  TAGGED     = true
-} UNTAGGED
-
-set MODE     = AVOIDING {
-  MODE       = ACTIVE:INGAME:SOLOPLAY:ATTACKING:UNTAGGED
-  AGGRESSIVE = false
-}
-
-set MODE     = INTERCEPTING {
-  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
-  ACTION     = INTERCEPT
-}
-
-set MODE     = PASSIVE {
-  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
-  ACTION     = DEFEND
-}
-
-set MODE     = TRAILING {
-  MODE       = ACTIVE:INGAME:TEAMPLAY
-  ACTION     = TRAIL
-}
-
-set MODE     = COVERING {
-  MODE       = ACTIVE:INGAME:TEAMPLAY
-  ACTION     = COVER
-}
-
-set MODE     = STATIONNING {
-  MODE       = ACTIVE:INGAME:TEAMPLAY
-  ACTION     = STATION
-}
+set MODE = LOITERING {
+    MODE = ACTIVE:DEFENDING
+	INTRUDER = false
+} INTERCEPT
 
 
 //----------------------------------------------
 Behavior = BHV_AvdColregs
 {
-  name       = active_avd_
-  pwt        = 100
+  name       = colavd_
+  pwt        = 300
   updates    = CONTACT_INFO
   condition  = MODE == ACTIVE
   templating = spawn
@@ -85,8 +80,29 @@ Behavior = BHV_AvdColregs
      completed_dist = 200
   max_util_cpa_dist = 25
   min_util_cpa_dist = 5
-     pwt_inner_dist = 20
-     pwt_outer_dist = 200
+     pwt_inner_dist = 10
+     pwt_outer_dist = 20
+}
+
+//----------------------------------------------
+Behavior = BHV_StationKeep
+{
+  name      = station_keep
+  pwt       = 100
+  condition = MODE==STATION-KEEPING // example
+
+     center_activate = true
+  hibernation_radius = 5
+        inner_radius = 4
+        outer_radius = 15
+         outer_speed = 5
+       transit_speed = 5
+
+        visual_hints = vertex_size = 1     // default
+        visual_hints = edge_color = light_blue // default
+        visual_hints = edge_size = 1       // default
+        visual_hints = label_color = white // default
+        visual_hints = vertex_color = red  // default
 }
 
 //----------------------------------------------
@@ -97,7 +113,7 @@ Behavior = BHV_Waypoint
   condition = MODE == RETURNING
   endflag   = STATION_KEEP = true
 
-        speed = 3.0
+        speed = 2
        radius = 3.0
   slip_radius = 15.0
        points = $(RETURN_POS)
@@ -111,11 +127,11 @@ Behavior = BHV_Waypoint
   name      = waypt_grab
   pwt       = 50
   perpetual = true
-  condition = MODE == UNTAGGED
+  condition = MODE == GO-GRAB
   endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
-  endflag   = TAGGED=true
+  endflag   = HAVE_FLAG=true
 
-           speed = 5 // meters per second
+           speed = 2 // meters per second
     capture_line = false
   capture_radius = 5.0
      slip_radius = 5.0
@@ -131,7 +147,7 @@ Behavior = BHV_Waypoint
   condition = MODE == TAGGED
   endflag   = TAGGED=false
 
-           speed = 5 // meters per second
+           speed = 2 // meters per second
     capture_line = false
   capture_radius = 5.0
      slip_radius = 5.0
@@ -141,12 +157,12 @@ Behavior = BHV_Waypoint
 //----------------------------------------------
 Behavior = BHV_Loiter
 {
-  name      = loiter_passive
+  name      = loiter_defend
   pwt       = 100
-  condition = MODE==PASSIVE
+  condition = MODE==LOITERING
   updates   = LOITER_UPDATES
 
-          speed = 5
+          speed = 2
         polygon = radial:: x=0,y=0,radius=10,pts=8 // example
   center_assign = $(UNTAG_POS)
 }
@@ -156,7 +172,7 @@ Behavior = BHV_CutRange
 {
   name       = cutrange_
   pwt        = 100
-  condition  = MODE == INTERCEPTING
+  condition  = MODE == INTERCEPT
   updates    = CR_INTERCEPT_UPDATES
   templating = spawn
 
@@ -170,26 +186,5 @@ Behavior = BHV_CutRange
           patience = 50
     pwt_inner_dist = 12
     pwt_outer_dist = 20
-}
-
-//----------------------------------------------
-Behavior = BHV_StationKeep
-{
-  name      = station_keep
-  pwt       = 100
-  condition = MODE==STATIONNING // example
-
-     center_activate = true
-  hibernation_radius = 5
-        inner_radius = 4
-        outer_radius = 15
-         outer_speed = 5
-       transit_speed = 5
-
-        visual_hints = vertex_size = 1     // default
-        visual_hints = edge_color = light_blue // default
-        visual_hints = edge_size = 1       // default
-        visual_hints = label_color = white // default
-        visual_hints = vertex_color = red  // default
 }
 

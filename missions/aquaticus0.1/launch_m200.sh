@@ -29,10 +29,15 @@ for ARGI; do
 	printf "Switches:                                                 \n"
 	printf "  --vname=NAME      Set vehicle name {evan,felix,gus,hal} \n"
 	printf "  --vteam=TEAM      Set team name {red,blue}              \n"
+	printf "  --warp=WARP       Set the time warp (Simulation only)   \n"
 	printf "  --sim, -s         Simulation mode                       \n"
 	printf "  --just_build, -j  Just build files                      \n"
 	printf "  --help, -h                                              \n"
 	exit 0;
+    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$WARP" = 1 ]; then
+        WARP=$ARGI
+    elif [ "${ARGI:0:7}" = "--warp=" ] ; then
+        WARP="${ARGI#--warp=*}"
     elif [ "${ARGI:0:8}" = "--vname=" ] ; then
         VNAME="${ARGI#--vname=*}"
     elif [ "${ARGI:0:8}" = "--vteam=" ] ; then
@@ -49,6 +54,12 @@ for ARGI; do
 	exit 0
     fi
 done
+
+if [ "${SIM}" = "NO" -a "$TIME_WARP" != 1 ]; then
+    printf "WARP other than 1 can only be used in simulation. Exiting. \n"
+    exit 1
+fi
+
 
 
 #-------------------------------------------------------

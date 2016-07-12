@@ -94,9 +94,12 @@ ProcessConfig = uFldFlagManager
   team_one=red
   team_two=blue
 
-  zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
-  zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
+  zone_one = pts={ 59,21 : -15,-15 : 19,-87 : 90.9,-52.4 }
+  zone_two = pts={ -15,-15 : -85,-48 : -53.1,-121.4 : 19,-87 }
 
+  //zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
+  //zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
+	
   zone_one_color = pink
   zone_two_color = dodger_blue
 }
@@ -214,12 +217,12 @@ ProcessConfig = pMarineViewer
   button_three = CHASE   # CHASE_ALL=true
   button_four  = STATION   # STATION_KEEP_ALL=true
 
-  op_vertex = x=56,   y=16,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=-83, y=-49,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=-53, y=-114, lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=82,   y=-56, lwidth=1,lcolor=yellow,looped=true,group=moa
+	op_vertex = x=-85, y=-48,    lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=-53.1, y=-121.4, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=90.9, y=-52.4,   lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=59, y=21,    lwidth=1,lcolor=yellow,looped=true,group=moa
 
-	}
+}
 
 //--------------------------------------------------------
 // uProcessWatch Configuration Block
