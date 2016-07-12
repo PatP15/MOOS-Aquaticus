@@ -26,7 +26,7 @@ done
 # Launch Evan and check for results
 #-----------------------------------------------
 ./launch_m200.sh --vname=evan                  \
-		 --vteam=red                   \
+		 --vteam=blue                   \
 		 --startpos=-30,-60,70         \
 		 --sim $TIME_WARP              \
 		 $JUST_MAKE 
@@ -40,7 +40,7 @@ fi
 # Launch Felix and check for results
 #-----------------------------------------------
 ./launch_m200.sh --vname=felix                 \
-		 --vteam=blue                  \
+		 --vteam=red                  \
 		 --startpos=30,-30,230         \
 		 --sim $TIME_WARP              \
 		 $JUST_MAKE 
