@@ -221,6 +221,18 @@ ProcessConfig = pMarineViewer
   op_vertex = x=90.9, y=-52.4,   lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=59, y=21,    lwidth=1,lcolor=yellow,looped=true,group=moa
 
+
+  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:evan:felix
+  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:evan:felix
+  cmd = label=DEPLOY, var=AVOID,  sval=true,  receivers=all:evan:felix
+  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:evan:felix
+  cmd = label=DEPLOY, var=STATION_KEEP, sval=false, receivers=all:evan:felix
+
+  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:evan:felix
+  cmd = label=RETURN, var=STATION_KEEP, sval=false, receivers=all:evan:felix
+
+  cmd = label=STATION, var=STATION_KEEP,  sval=true,  receivers=all:evan:felix
+	
 }
 
 //--------------------------------------------------------
