@@ -199,7 +199,6 @@ ProcessConfig = pMarineViewer
 	
   appcast_viewable = true
   appcast_color_scheme = indigo
-
 	
   scope = FLAG_GRAB_REPORT
   scope = NODE_BROKER_PING
