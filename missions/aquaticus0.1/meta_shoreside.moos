@@ -136,7 +136,7 @@ ProcessConfig = uFldShoreBroker
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
-  qbridge  = TAGGED, ACTION
+  qbridge  = TAGGED, ACTION, LOITER_UPDATES
   qbridge  = SAY_MOOS
 
   bridge   = src=IN_OWN_TERRITORY
@@ -200,7 +200,6 @@ ProcessConfig = pMarineViewer
   appcast_viewable = true
   appcast_color_scheme = indigo
 
-
 	
   scope = FLAG_GRAB_REPORT
   scope = NODE_BROKER_PING
@@ -234,9 +233,18 @@ ProcessConfig = pMarineViewer
   cmd = label=RETURN, var=RETURN, sval=true, receivers=all:evan:felix
   cmd = label=RETURN, var=STATION_KEEP, sval=false, receivers=all:evan:felix
 
-	cmd = label=GO-TAG, var=ACTION, sval=attack, receivers=evan:felix
+	cmd = label=ATTACK, var=ACTION, sval=attack, receivers=evan:felix
 	cmd = label=DEFEND, var=ACTION, sval=defend, receivers=evan:felix
 
+	cmd = label=DEFEND-N, var=ACTION, sval=defend, receivers=evan
+	cmd = label=DEFEND-N, var=LOITER_UPDATES, sval={polygon=format=ellipse, x=-31, y=-47, degs=115, major=25, minor=8, pts=16}, receivers=evan
+
+	cmd = label=DEFEND-M, var=ACTION, sval=defend, receivers=evan
+	cmd = label=DEFEND-M, var=LOITER_UPDATES, sval={polygon = format=ellipse, x=-25, y=-62, degs=115, major=55, minor=10, pts=16}, receivers=evan
+
+	cmd = label=DEFEND-S, var=ACTION, sval=defend, receivers=evan
+	cmd = label=DEFEND-S, var=LOITER_UPDATES, sval={polygon = format=ellipse, x=-19, y=-74, degs=115, major=25, minor=8, pts=16}, receivers=evan
+	
   cmd = label=STATION, var=STATION_KEEP,  sval=true,  receivers=all:evan:felix
 	
 }
