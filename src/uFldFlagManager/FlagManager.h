@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "NodeRecord.h"
 #include "XYMarker.h"
@@ -35,6 +36,7 @@ class FlagManager : public AppCastingMOOSApp
    bool handleMailNodeReport(std::string str);
    bool handleMailFlagGrab(std::string, std::string);
    bool handleMailFlagReset(std::string);
+   bool handleMailTaggedVehicles(std::string);
 
    bool resetFlagsByLabel(std::string);
    bool resetFlagsByVName(std::string);
@@ -65,6 +67,8 @@ class FlagManager : public AppCastingMOOSApp
    std::map<std::string, unsigned int> m_map_flag_count;
    unsigned int m_total_node_reports_rcvd;
 
+   std::set<std::string>  m_tagged_vnames;
+   
    // Grab request state vars
    unsigned int m_total_grab_requests_rcvd;
 

@@ -63,6 +63,8 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
       handled = handleMailFlagReset(sval);
     else if(key == "FLAG_GRAB_REQUEST")
       handled = handleMailFlagGrab(sval, comm);
+    else if(key == "TAGGED_VEHICLES")
+      handled = handleMailTaggedVehicles(sval);
     else
       reportRunWarning("Unhandled Mail: " + key);
   }
@@ -182,6 +184,7 @@ void FlagManager::registerVariables()
   Register("FLAG_RESET", 0);
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
+  Register("TAGGED_VEHICLES", 0);
 }
 
 
@@ -226,7 +229,23 @@ bool FlagManager::handleConfigFlag(string str)
 }
 
 //------------------------------------------------------------
-// Procedure: handleMailNodeReport
+// Procedure: handleMailTaggedVehicles()
+
+bool FlagManager::handleMailTaggedVehicles(string str)
+{
+  m_tagged_vnames.clear();
+
+  vector<string> svector = parseString(str, ',');
+  for(unsigned int i=0; i<svector.size(); i++) {
+    string vname = stripBlankEnds(svector[i]);
+    m_tagged_vnames.insert(vname);
+  }
+
+  return(true);
+}
+
+//------------------------------------------------------------
+// Procedure: handleMailNodeReport()
 
 bool FlagManager::handleMailNodeReport(string str)
 {
@@ -254,7 +273,7 @@ bool FlagManager::handleMailNodeReport(string str)
 }
 
 //------------------------------------------------------------
-// Procedure: handleMailFlagReset
+// Procedure: handleMailFlagReset()
 //   Example: FLAG_RESET = vname=henry
 //   Example: FLAG_RESET = label=alpha
 
@@ -314,6 +333,9 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   // Part 3: OK grab, so increment counters.
   m_map_grab_count[up_vname]++;
 
+  if(m_tagged_vnames.count(grabbing_vname) ||  m_tagged_vnames.count(up_vname))
+    return(false);
+    
   // Part 4: Get the grabbing vehicle's position from the record
   NodeRecord record = m_map_record[up_vname];
   double curr_vx = record.getX();

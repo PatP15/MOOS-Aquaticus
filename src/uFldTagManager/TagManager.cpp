@@ -102,6 +102,7 @@ bool TagManager::OnStartUp()
   STRING_LIST sParams;
   m_MissionReader.GetConfiguration(GetAppName(), sParams);
 
+  
   STRING_LIST::iterator p;
   for(p = sParams.begin(); p!=sParams.end(); p++) {
     string line  = *p;
@@ -167,6 +168,8 @@ bool TagManager::Iterate()
   processVTags();
   checkForExpiredTags();
 
+  postTagSummary();
+  
   if(m_tag_circle)
     postTagCircles();
 
@@ -195,6 +198,27 @@ void TagManager::registerVariables()
   Register("UNTAG_REQUEST", 0);
 }
 
+//------------------------------------------------------------
+// Procedure: postTagSummary()
+
+void TagManager::postTagSummary()
+{
+  string tagged_vnames;
+  map<string,bool>::iterator p;
+  for(p=m_map_node_vtags_nowtagged.begin();
+      p!=m_map_node_vtags_nowtagged.end(); p++) {
+    string vname = p->first;
+    bool   tagged = p->second;
+    if(tagged) {
+      if(tagged_vnames != "")
+	tagged_vnames += ",";
+      tagged_vnames += vname;
+    }
+  }
+  Notify("TAGGED_VEHICLES", tagged_vnames);
+}
+  
+  
 //---------------------------------------------------------
 // Procedure: handleMailNodeReport
 //   Example: NAME=alpha,TYPE=KAYAK,UTC_TIME=1267294386.51,X=29.66,Y=3.9,
@@ -599,7 +623,7 @@ void TagManager::processVTag(VTag vtag)
   
   // Part 4: Sanity checks.
   if(map_node_range.size() == 0) {
-    postRangePulse(vx, vy, m_post_color, vname+"_vtag", pulse_duration, m_tag_range);
+    //postRangePulse(vx, vy, m_post_color, vname+"_vtag", pulse_duration, m_tag_range);
     return;
   }
   if(node_closest == "") {

@@ -66,6 +66,7 @@ class TagManager : public AppCastingMOOSApp
   double  getTrueNodeRange(double, double, std::string);
 
   void    processVTags();
+  void    postTagSummary();
   void    processVTag(VTag);
   void    checkForExpiredTags();
   void    postTagCircles();
