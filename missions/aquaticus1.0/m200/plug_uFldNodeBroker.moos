@@ -5,6 +5,7 @@ ProcessConfig = uFldNodeBroker
   CommsTick = 1
 
   TRY_SHORE_HOST = pshare_route=192.168.1.157:$(SHORE_LISTEN)
+  TRY_SHORE_HOST = pshare_route=192.168.1.155:$(SHORE_LISTEN)
 #ifdef SIM
   TRY_SHORE_HOST = pshare_route=localhost:$(SHORE_LISTEN)
 #endif
