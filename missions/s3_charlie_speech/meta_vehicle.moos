@@ -26,8 +26,10 @@ ProcessConfig = ANTLER
 
   Run = uFldMessageHandler @ NewConsole = false
 //  Run = uTimerScript       @ NewConsole = false
+  Run = pBotDialog @ NewConsole = false
 }
 
+#include plug_pBotDialog.moos
 #include plug_uFldNodeBroker.moos
 #include plug_pShare.moos
 #include plug_pHostInfo.moos

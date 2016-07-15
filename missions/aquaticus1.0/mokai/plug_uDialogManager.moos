@@ -13,7 +13,7 @@ ProcessConfig = uDialogManager
   sentence = $(TEAMMATE)_Intercept : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name = RETURN,string_val = false" + NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name = ACTION,string_val = INTERCEPT"
   sentence = $(TEAMMATE)_Defend    : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name = RETURN,string_val = false" + NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name = ACTION,string_val = DEFEND"
   sentence = $(TEAMMATE)_Attack    : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name = RETURN,string_val = false" + NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name = ACTION,string_val = ATTACK"
-  sentence = $(TEAMMATE)_Status    : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name=BOT_DIALOG_REQUEST,string_val=STATUS"
+  sentence = $(TEAMMATE)_Status    : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name=BOT_DIALOG_REQUEST,string_val=STATUS:src=$(VNAME)"
 
   sentence = tag  : TAG_REQUEST       = "vname = $(VNAME)"
   sentence = grab : FLAG_GRAB_REQUEST = "vname = $(VNAME)"

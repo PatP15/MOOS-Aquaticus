@@ -55,36 +55,52 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
-    string my_name =  m_host_community;
+    string my_community_name =  m_host_community;
     //#endif
     
     if(key == "BOT_DIALOG_REQUEST") {
-      //A Finite State Machine (FSM) is used to determine the mode
       string keepConversation;
-      keepConversation = "User: " + sval;
+      keepConversation = "Request: " + sval;
       m_conversation.push_back(keepConversation);
 
-      if(sval == "STATUS") {
+      //expecting message request as "STATUS,src=requesting_vehicle"
+      //example, BOT_DIALOG_REQUEST="STATUS,src=mokai_red"
+
+      //breakdown the incoming string looking for src and dialog request
+      std::string startingString = sval;
+      std::string requestString ="";
+      std::string requestingDestination = "";
+      bool STATUS = false;
+      //      while(startingString!="")
+      //	{
+	  std::string tempString = biteStringX(startingString,':');
+	  if(tempString == "STATUS") {
+	    STATUS = true;
+	  }
+
+	  if (startingString.find("src")!=string::npos) {
+	    //means we have found src=community name
+	    std::string tempHoldSrc = biteStringX(startingString,'=');
+	    //tempString now holds our requesting destination
+	    requestString = startingString;
+	  }
+
+
+
+	  //}
+     if(STATUS) {
 	//form a string including m_bot_ivp_mode and publish to
-	string ackStatement =  "src_node="+ my_name +",dest_node="+ msrc  +",var_name=SAY_MOOS,string_val=Arnold is " + m_bot_dialog_status;
+	string ackStatement =  "src_node="+ my_community_name +",dest_node="+ requestString  +",var_name=SAY_MOOS,string_val=" + my_community_name + " is " + m_bot_dialog_status;
 	//say={Did you mean " + svalLowered +"}, rate=200"Arnold " + m_bot_dialog_status;
 
 	//	  m_Comms.Notify("SAY_MOOS",ackStatement);
-  m_Comms.Notify("NODE_MESSAGE_LOCAL",ackStatement);
-      }
-
-      //      if(m_state == WAIT_COMMAND) {
-      //	m_state = COMMAND_RECEIVED;
-      //	triggerCommandSequence(sval);
-      // }
-      // else if(m_state == WAIT_ACK) {
-      ///	m_state = ACK_RECEIVED;
-      //	triggerAckSequence(sval);
-      // }
+	m_Comms.Notify("NODE_MESSAGE_LOCAL",ackStatement);
+     }
     }
-    else if( key == "BOT_DIALOG_STATUS") {
+    //IvP behavior posted new behavior/mode
+    else if( key == "BOT_DIALOG_STATUS") { 
       m_bot_dialog_status = sval;
-}
+    }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);

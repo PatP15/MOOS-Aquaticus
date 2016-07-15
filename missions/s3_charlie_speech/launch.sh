@@ -2,7 +2,7 @@
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
 #-------------------------------------------------------
-TIME_WARP=3
+TIME_WARP=15
 JUST_MAKE="no"
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -24,7 +24,7 @@ done
 #  Part 2: Create the .moos and .bhv files. 
 #-------------------------------------------------------
 VNAME1="archie"        
-VNAME2="betty"         
+VNAME2="evan"         
 #VNAME3="hunter"        
 VNAME4="mokai"        
 
@@ -69,13 +69,13 @@ nsplug meta_vehicle.bhv targ_archie.bhv -f VNAME=$VNAME1  \
 #-------------------------------------------------------
 #  HUNTER = BETTY = TRAIL
 #-------------------------------------------------------
-nsplug meta_vehicle.moos targ_betty.moos -f WARP=$TIME_WARP \
+nsplug meta_vehicle.moos targ_evan.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME2          SHARE_LISTEN="9302"              \
     VPORT="9002"           SHORE_LISTEN=$SHORE_LISTEN       \
     START_POS=$START_POS2  VARIATION=$VARIATION   \
        VTYPE="kayak" SHORE_IP=$SHORE_IP
 
-nsplug meta_hunter.bhv targ_betty.bhv -f VNAME=$VNAME2  \
+nsplug meta_hunter.bhv targ_evan.bhv -f VNAME=$VNAME2  \
     START_POS=$START_POS2 LOITER_POS=$LOITER_POS2     \
     WPT_ORDER=reverse WPT_PTS=$WPT_PTS2 SPEED=$SPEED2 \
     RETURN_POS=$RETURN_POS2  \

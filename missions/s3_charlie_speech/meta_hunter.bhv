@@ -70,7 +70,8 @@ Behavior = BHV_Trail
              condition    = MODE == TRAILING //TRAIL_ALLOWED = true 
 	   //  runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=Betty Is Following
 //  runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t2_affirmative.wav
-  runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t3_programmed.wav
+  runflag = NODE_MESSAGE_LOCAL=src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold Is Following
+  runflag = BOT_DIALOG_STATUS=Following
              updates      = TRAIL_INFO            // example
 //             templating   = spawn                 // example
   
@@ -103,7 +104,10 @@ Behavior = BHV_StationKeep
   pwt       = 100
   condition = MODE == STATION-KEEPING
 //  	     runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=Betty Is Stationing
-  	     runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t2_no_problemo.wav
+ // 	     runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t2_no_problemo.wav
+//  runflag = NODE_MESSAGE_LOCAL=src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold Is Stationing
+  runflag = BOT_DIALOG_STATUS=Stationing
+
      center_activate = true
         inner_radius = 5
         outer_radius = 10 
@@ -142,7 +146,10 @@ Behavior = BHV_Waypoint
   updates   = RETURN_UPDATES
   condition = MODE == RETURNING
 //  runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=Betty Is Returning
-  runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t1_be_back.wav
+//  runflag = NODE_MESSAGE_LOCAL=src_node=betty,dest_node=mokai,var_name=SAY_MOOS,string_val=file=t1_be_back.wav
+  runflag = NODE_MESSAGE_LOCAL=src_node=evan,dest_node=mokai,var_name=SAY_MOOS,string_val=Arnold Is Returning
+  runflag = BOT_DIALOG_STATUS=Returning
+
   endflag   = STATION_KEEP = true
 
       speed = 3.0
@@ -159,7 +166,7 @@ Behavior = BHV_Waypoint
   name       = trail_contact
   pwt        = 100
   condition  = (MODE == TRAILING) or (MODE == PATROLLING)
-  condition  = TRAILING_ALLOWED = true
+  condition  = TRAILING_ALLOWED = true  
   runflag    = TRAIL = true
   idleflag   = TRAIL = false
   updates    = TRAIL_INFO
