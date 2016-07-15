@@ -82,9 +82,9 @@ def update_all():
 @task
 def launch_humans_v():
     with cd(os.path.join(aqua_dir, 'missions', 'aquaticus1.0', 'mokai')):
-        if (env.host == '192.168.1.192'):
+        if (env.host == '192.168.1.191'):
             run('./launch_mokai.sh -b &')
-        elif (env.host == '192.168.1.191'):
+        elif (env.host == '192.168.1.192'):
             run('./launch_mokai.sh -r &')
 
 
