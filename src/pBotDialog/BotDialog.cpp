@@ -33,6 +33,7 @@ DialogManager::DialogManager()
   m_nicknames["team"]="all";
 
   m_bot_dialog_status = "NOT ACTIVE";
+  m_tagged_status = "false";
 }
 
 //---------------------------------------------------------
@@ -90,7 +91,12 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
 	  //}
      if(STATUS) {
 	//form a string including m_bot_ivp_mode and publish to
-	string ackStatement =  "src_node="+ my_community_name +",dest_node="+ requestString  +",var_name=SAY_MOOS,string_val=" + my_community_name + " is " + m_bot_dialog_status;
+       //is my bot tagged? if so include it
+       std::string tag_stat = "";
+       if(m_tagged_status=="true"){
+	 tag_stat = " tagged and is ";
+	   } 
+	string ackStatement =  "src_node="+ my_community_name +",dest_node="+ requestString  +",var_name=SAY_MOOS,string_val=" + my_community_name + " is " + tag_stat + " " + m_bot_dialog_status;
 	//say={Did you mean " + svalLowered +"}, rate=200"Arnold " + m_bot_dialog_status;
 
 	//	  m_Comms.Notify("SAY_MOOS",ackStatement);
@@ -100,6 +106,9 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     //IvP behavior posted new behavior/mode
     else if( key == "BOT_DIALOG_STATUS") { 
       m_bot_dialog_status = sval;
+    }
+    else if( key == "TAGGED") {
+      m_tagged_status = sval;
     }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -383,6 +392,7 @@ void DialogManager::registerVariables()
   // Register("FOOBAR", 0);
   m_Comms.Register("BOT_DIALOG_REQUEST",0);
   m_Comms.Register("BOT_DIALOG_STATUS",0);
+  m_Comms.Register("TAGGED",0);
 }
 
 
