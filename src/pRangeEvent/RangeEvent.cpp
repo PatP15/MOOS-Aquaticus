@@ -61,7 +61,6 @@ bool RangeEvent::OnNewMail(MOOSMSG_LIST &NewMail)
       reportRunWarning("Unhandled Mail: " + key);
   }
 
-  // return UpdateMOOSVariables(NewMail);  // Automatically updates registered MOOS Vars
   return(true);
 }
 
@@ -84,16 +83,6 @@ bool RangeEvent::OnConnectToServer()
   AddMessageRouteToActiveQueue("foo_callback", "FOO_IN");
 #endif
 
-  // AddMOOSVariable("nr", "NODE_REPORT", "NaN", 0); // foo_msg is a local name
-  // AddActiveQueue("nr_callback", this, &RangeEvent::onNodeReport);
-  // AddMessageRouteToActiveQueue("nr_callback", "NODE_REPORT");
-
-  // AddMOOSVariable("nrl", "NODE_REPORT_LOCAL", "NaN", 0); // foo_msg is a local name
-  // AddActiveQueue("nrl_callback", this, &RangeEvent::onNodeReportLocal);
-  // AddMessageRouteToActiveQueue("nrl_callback", "NODE_REPORT_LOCAL");
-
-  // AddMOOSVariable("dbtime", "DB_UPTIME", "NaN", 0);
-
   registerVariables();
   return(true);
 }
@@ -109,7 +98,6 @@ void RangeEvent::registerVariables()
   Register("NODE_REPORT_LOCAL",0);
   Register("DB_UPTIME",0);
 
-  // RegisterMOOSVariables();
 }
 
 //---------------------------------------------------------
@@ -121,8 +109,6 @@ bool RangeEvent::Iterate()
   AppCastingMOOSApp::Iterate();
 
   publishEvents();
-
-  // PublishFreshMOOSVariables();
 
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -327,7 +313,6 @@ bool RangeEvent::buildReport()
   ACTable actab(5);
   actab << "Time | Vehicle | Range | POS_X | POS_Y";
   actab.addHeaderLines();
-  // double dbtime = GetMOOSVar("dbtime")->GetDoubleVal();
   map<string, NodeRecord>::iterator it_nr;
   for(it_nr = m_map_v_records.begin(); it_nr != m_map_v_records.end(); ++it_nr){
     actab << m_dbtime << it_nr->first;
