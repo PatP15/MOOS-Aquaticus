@@ -259,9 +259,14 @@ bool RangeEvent::onNodeReport(string& node_report)
   if( (range <= m_max_range) && (range >= m_min_range)){
     m_map_v_records[vname] = new_node_record;
   } else { // the vehicle is out of range => remove it from the map
-    map<string, NodeRecord>::iterator p = m_map_v_records.find(vname);
-    if (p != m_map_v_records.end())
-      m_map_v_records.erase(p);
+
+    if(m_map_v_records.count(vname))
+      m_map_v_records.erase(vname);
+    
+    //map<string, NodeRecord>::iterator p = m_map_v_records.find(vname);
+    //if (p != m_map_v_records.end())
+    //  m_map_v_records.erase(p);
+
   }
 
   return(true);
