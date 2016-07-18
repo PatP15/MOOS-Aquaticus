@@ -41,8 +41,8 @@ class RangeEvent : public AppCastingMOOSApp
 #if 0 // Keep this as an example for callbacks
   bool onMessageFoo(CMOOSMsg&);
 #endif
-  bool onNodeReport(CMOOSMsg&);
-  bool onNodeReportLocal(CMOOSMsg&);
+  bool onNodeReport(std::string&);
+  bool onNodeReportLocal(std::string&);
 
  private: // Configuration variables
   double m_min_range, m_max_range;
@@ -50,6 +50,7 @@ class RangeEvent : public AppCastingMOOSApp
 
  private: // State variables
   double m_vx, m_vy, m_speed, m_heading;
+  double m_dbtime;
 
   std::map<std::string, std::string> m_map_var_val;
   std::map<std::string, NodeRecord> m_map_v_records;

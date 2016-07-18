@@ -28,6 +28,8 @@ RangeEvent::RangeEvent()
   m_speed = 0.;
   m_heading = 0.;
 
+  m_dbtime = 0.;
+
   m_min_range = 0.;
   m_max_range = 10.;
 }
@@ -39,7 +41,28 @@ bool RangeEvent::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);
 
-  return UpdateMOOSVariables(NewMail);  // Automatically updates registered MOOS Vars
+  MOOSMSG_LIST::iterator p;
+  for(p=NewMail.begin(); p!=NewMail.end(); p++) {
+    CMOOSMsg &msg = *p;
+
+    string key  = msg.GetKey();
+    string sval = msg.GetString();
+
+    bool handled = false;
+    if(key == "NODE_REPORT")
+      handled = onNodeReport(sval);
+    else if(key == "NODE_REPORT_LOCAL")
+      handled = onNodeReportLocal(sval);
+    else if(key == "DB_UPTIME"){
+      m_dbtime = msg.GetDouble();
+      handled = true;
+    }
+    if(!handled)
+      reportRunWarning("Unhandled Mail: " + key);
+  }
+
+  // return UpdateMOOSVariables(NewMail);  // Automatically updates registered MOOS Vars
+  return(true);
 }
 
 //---------------------------------------------------------
@@ -61,15 +84,15 @@ bool RangeEvent::OnConnectToServer()
   AddMessageRouteToActiveQueue("foo_callback", "FOO_IN");
 #endif
 
-  AddMOOSVariable("nr", "NODE_REPORT", "NaN", 0); // foo_msg is a local name
-  AddActiveQueue("nr_callback", this, &RangeEvent::onNodeReport);
-  AddMessageRouteToActiveQueue("nr_callback", "NODE_REPORT");
+  // AddMOOSVariable("nr", "NODE_REPORT", "NaN", 0); // foo_msg is a local name
+  // AddActiveQueue("nr_callback", this, &RangeEvent::onNodeReport);
+  // AddMessageRouteToActiveQueue("nr_callback", "NODE_REPORT");
 
-  AddMOOSVariable("nrl", "NODE_REPORT_LOCAL", "NaN", 0); // foo_msg is a local name
-  AddActiveQueue("nrl_callback", this, &RangeEvent::onNodeReportLocal);
-  AddMessageRouteToActiveQueue("nrl_callback", "NODE_REPORT_LOCAL");
+  // AddMOOSVariable("nrl", "NODE_REPORT_LOCAL", "NaN", 0); // foo_msg is a local name
+  // AddActiveQueue("nrl_callback", this, &RangeEvent::onNodeReportLocal);
+  // AddMessageRouteToActiveQueue("nrl_callback", "NODE_REPORT_LOCAL");
 
-  AddMOOSVariable("dbtime", "DB_UPTIME", "NaN", 0);
+  // AddMOOSVariable("dbtime", "DB_UPTIME", "NaN", 0);
 
   registerVariables();
   return(true);
@@ -82,7 +105,11 @@ void RangeEvent::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
 
-  RegisterMOOSVariables();
+  Register("NODE_REPORT",0);
+  Register("NODE_REPORT_LOCAL",0);
+  Register("DB_UPTIME",0);
+
+  // RegisterMOOSVariables();
 }
 
 //---------------------------------------------------------
@@ -95,7 +122,7 @@ bool RangeEvent::Iterate()
 
   publishEvents();
 
-  PublishFreshMOOSVariables();
+  // PublishFreshMOOSVariables();
 
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -224,9 +251,9 @@ bool RangeEvent:onMessageFoo(CMOOSMsg& foo)
 //------------------------------------------------------------
 // Procedure: onNodeReport() callback
 
-bool RangeEvent::onNodeReport(CMOOSMsg& nr_msg)
+bool RangeEvent::onNodeReport(string& node_report)
 {
-  NodeRecord new_node_record = string2NodeRecord(nr_msg.GetString());
+  NodeRecord new_node_record = string2NodeRecord(node_report);
 
   string vname = new_node_record.getName();
   if(m_host_community == vname) // Sanity check
@@ -257,9 +284,9 @@ bool RangeEvent::onNodeReport(CMOOSMsg& nr_msg)
 //------------------------------------------------------------
 // Procedure: onNodeReportLocal() callback
 
-bool RangeEvent::onNodeReportLocal(CMOOSMsg& nr_msg)
+bool RangeEvent::onNodeReportLocal(string& node_report)
 {
-  NodeRecord new_node_record = string2NodeRecord(nr_msg.GetString());
+  NodeRecord new_node_record = string2NodeRecord(node_report);
 
   string vname = new_node_record.getName();
   if(m_host_community != vname) // Sanity check
@@ -300,10 +327,10 @@ bool RangeEvent::buildReport()
   ACTable actab(5);
   actab << "Time | Vehicle | Range | POS_X | POS_Y";
   actab.addHeaderLines();
-  double dbtime = GetMOOSVar("dbtime")->GetDoubleVal();
+  // double dbtime = GetMOOSVar("dbtime")->GetDoubleVal();
   map<string, NodeRecord>::iterator it_nr;
   for(it_nr = m_map_v_records.begin(); it_nr != m_map_v_records.end(); ++it_nr){
-    actab << dbtime << it_nr->first;
+    actab << m_dbtime << it_nr->first;
     double vx = it_nr->second.getX();
     double vy = it_nr->second.getY();
     double range = hypot(m_vx-vx, m_vy-vy);
