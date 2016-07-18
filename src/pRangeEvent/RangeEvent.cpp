@@ -157,7 +157,7 @@ void RangeEvent::publishEvents()
 
       double range = hypot(m_vx-nr.getX(),m_vy-nr.getY());
       val = findReplace(val, "$[RANGE]", doubleToString(range));
-      val = findReplace(val, "$[TIME]", doubleToString(GetMOOSVar("dbtime")->GetDoubleVal()));
+      val = findReplace(val, "$[TIME]", doubleToString(m_dbtime));
 
       Notify(var_name, val);
     }
