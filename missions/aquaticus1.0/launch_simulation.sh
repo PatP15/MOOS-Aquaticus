@@ -8,8 +8,8 @@ cd ./m200
 cd ..
 
 cd ./mokai
-./launch_mokai.sh -b -ss > /tmp/mokai_blue &
-./launch_mokai.sh -r -ss > /tmp/mokai_red  &
+./launch_mokai.sh -e -b -ss > /tmp/mokai_blue &
+./launch_mokai.sh -f -r -ss > /tmp/mokai_red  &
 
 cd ..
 

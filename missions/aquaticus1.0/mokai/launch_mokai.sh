@@ -28,7 +28,6 @@ for ARGI; do
         RETURN_POS="50,-26"
         VPORT="9013"
         SHARE_LISTEN="9313"
-        TEAMMATE="felix"
         BUTTON="5"
         echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
@@ -39,9 +38,14 @@ for ARGI; do
         RETURN_POS="-57,-71"
         VPORT="9014"
         SHARE_LISTEN="9314"
-        TEAMMATE="evan"
         BUTTON="4"
         echo "Blue team selected."
+    elif [ "${ARGI}" = "--w-evan" -o "${ARGI}" = "-e" ] ; then
+        TEAMMATE="evan"
+    elif [ "${ARGI}" = "--w-felix" -o "${ARGI}" = "-f" ] ; then
+        TEAMMATE="felix"
+    elif [ "${ARGI}" = "--w-gus" -o "${ARGI}" = "-g" ] ; then
+        TEAMMATE="gus"
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -69,6 +73,9 @@ if [ "${HELP}" = "yes" ]; then
     echo "Switches:                "
     echo "  --blue, -b         : Blue team"
     echo "  --red, -r          : Red team"
+    echo "  --w-evan, -e       : Evan as a teammate."
+    echo "  --w-felix, -f      : Felix as a teammate."
+    echo "  --w-gus, -g        : Gus as a teammate."
     echo "  --semi-sim, -ss    : Semi-autonomous simulation (w/ joysticks)"
     echo "  --sim, -s          : Full simulation"
     echo "  --voice-on, -von   : Voice recognition on"
@@ -76,6 +83,12 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --just_build, -j       "
     echo "  --help, -h             "
     exit 0;
+fi
+
+if [ -z $TEAMMATE ]; then
+    echo "No teammate has been selected..."
+    echo "Exiting."
+    exit 2
 fi
 
 echo "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos ."
