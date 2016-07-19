@@ -709,7 +709,11 @@ bool TagManager::handleMailVUnTagPost(const string& launch_str)
     return(false);
   }
 
-  
+  // If the requesting vehicle is not currently tagged, just ignore
+  if(!m_map_node_vtags_nowtagged.count(vname) ||
+     !m_map_node_vtags_nowtagged[vname]) {
+    return(true);
+  }
   
   stringstream ss;
   ss << "Untag requested for " << vname ;
