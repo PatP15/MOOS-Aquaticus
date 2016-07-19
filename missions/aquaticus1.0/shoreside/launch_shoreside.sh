@@ -6,8 +6,6 @@ TIME_WARP=1
 JUST_MAKE="no"
 VTEAM1="red"
 VTEAM2="blue"
-RED_GUYS="yes"
-BLUE_GUYS="yes"
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
 BLUE_FLAG="x=-58,y=-71"
@@ -16,6 +14,8 @@ RED_FLAG="x=50,y=-24"
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         echo "$0 [SWITCHES]"
+        echo "  --shore-port=    , set up a shore listening port. (Default is $SHORE_LISTEN)"
+        echo "  --shore-ip=      , set up a shore listening IP. (Default is $SHORE_IP)"
         echo "  --just_make, -j    "
         echo "  --help, -h         "
         exit 0
@@ -23,10 +23,6 @@ for ARGI; do
         TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_MAKE="yes"
-    elif [ "${ARGI}" = "--blue_guys_no" -o "${ARGI}" = "-b" ] ; then
-        BLUE_GUYS="no"
-    elif [ "${ARGI}" = "--red_guys_no" -o "${ARGI}" = "-r" ] ; then
-        RED_GUYS="no"
     elif [ "${ARGI:0:11}" = "--shore-ip=" ] ; then
         SHORE_IP="${ARGI#--shore-ip=*}"
     elif [ "${ARGI:0:13}" = "--shore-port=" ] ; then
