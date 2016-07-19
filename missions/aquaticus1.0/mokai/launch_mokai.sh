@@ -6,16 +6,14 @@ SHORE_LISTEN="9300"
 WARP=1
 HELP="no"
 JUST_BUILD="no"
-VTEAM="red"
 START_POS="0,0,0"
 VNAME="mokai"
+VTEAM=""
 VPORT="9013"
 SHARE_LISTEN="9313"
 BUTTON="5"
 JOY_ID="0"
 TEAMMATE=""
-
-echo "Initiate launch MOKAI script."
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -70,7 +68,6 @@ done
 
 if [ "${HELP}" = "yes" ]; then
     echo "$0 [SWITCHES]"
-    echo "Switches:                "
     echo "  --blue, -b         : Blue team"
     echo "  --red, -r          : Red team"
     echo "  --w-evan, -e       : Evan as a teammate."
@@ -83,6 +80,12 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --just_build, -j       "
     echo "  --help, -h             "
     exit 0;
+fi
+
+if [ -z $VTEAM ]; then
+    echo "No team has been selected..."
+    echo "Exiting."
+    exit 3
 fi
 
 if [ -z $TEAMMATE ]; then
