@@ -47,7 +47,6 @@ set MODE = TAGGED {
 
 set MODE = GO-GRAB {
   MODE = ACTIVE:ATTACKING
-  TAGGED != true
 	HAVE_FLAG = false
 } GRAB-RETURN
 
@@ -79,7 +78,7 @@ Behavior = BHV_AvdColregs
         extrapolate = true
 
      completed_dist = 200
-  max_util_cpa_dist = 25
+  max_util_cpa_dist = 15
   min_util_cpa_dist = 5
      pwt_inner_dist = 10
      pwt_outer_dist = 20
@@ -114,12 +113,13 @@ Behavior = BHV_Waypoint
   condition = MODE == RETURNING
   endflag   = STATION_KEEP = true
 
-        speed = 2
-       radius = 3.0
-  slip_radius = 15.0
-        point = 5,0
-       repeat = 10
-         lead = 8
+	crs_spd_zaic_ratio = 20
+               speed = 2
+              radius = 3.0
+         slip_radius = 15.0
+               point = 5,0
+              repeat = 10
+                lead = 8
 }
 
 //----------------------------------------------
@@ -162,7 +162,7 @@ Behavior = BHV_Waypoint
   pwt       = 50
   perpetual = true
   condition = MODE == TAGGED
-  endflag   = TAGGED=false
+//  endflag   = TAGGED=false
 
            speed = 2 // meters per second
     capture_line = false
@@ -182,7 +182,13 @@ Behavior = BHV_Loiter
           speed = 1.4
         polygon = format=ellipse, x=0, y=0, degs=115, major=50, minor=10, pts=16
   center_assign = $(DEFEND_POS)
-}
+      clockwise = true
+	acquire_dist = 5
+     patience = 80
+	
+   visual_hints = edge_color=gray50, vertex_size=0
+   visual_hints = nextpt_size=1
+	}
 
 //----------------------------------------------
 Behavior = BHV_CutRange

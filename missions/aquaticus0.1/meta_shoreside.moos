@@ -60,7 +60,7 @@ ProcessConfig = uFldFlagManager
   AppTick   = 4
   CommsTick = 4
 
-  tag_range = 10     // default (meters)
+  tag_range = 20     // default (meters)
 
   post_color = white  // default
 
@@ -86,9 +86,14 @@ ProcessConfig = uFldFlagManager
   //robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
   // human_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
   // human_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
-  // robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
-  // robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
-  human_untag_post = TAGGED_$UP_TARGET=false
+
+  //robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  //robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
+
+	robot_untag_post   = TEST_UNTAG=$TARGET_has_been_untagged,rate=200
+
+
+	human_untag_post = TAGGED_$UP_TARGET=false
   robot_untag_post = TAGGED_$UP_TARGET=false
 
   team_one=red
@@ -196,6 +201,7 @@ ProcessConfig = pMarineViewer
 
   circle_viewable_all = true
 	polygon_viewable_labels = false
+	point_viewable_labels = false
 	
   appcast_viewable = true
   appcast_color_scheme = indigo
@@ -222,30 +228,15 @@ ProcessConfig = pMarineViewer
   op_vertex = x=90.9, y=-52.4,   lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=59, y=21,    lwidth=1,lcolor=yellow,looped=true,group=moa
 
+#include plug_commandfolio.txt	
+}
 
-  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:evan:felix
-  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:evan:felix
-  cmd = label=DEPLOY, var=AVOID,  sval=true,  receivers=all:evan:felix
-  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:evan:felix
-  cmd = label=DEPLOY, var=STATION_KEEP, sval=false, receivers=all:evan:felix
+//--------------------------------------------------------
+// uProcessWatch Configuration Block
 
-  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:evan:felix
-  cmd = label=RETURN, var=STATION_KEEP, sval=false, receivers=all:evan:felix
-
-	cmd = label=ATTACK, var=ACTION, sval=attack, receivers=evan:felix
-	cmd = label=DEFEND, var=ACTION, sval=defend, receivers=evan:felix
-
-	cmd = label=DEFEND-N, var=ACTION, sval=defend, receivers=evan
-	cmd = label=DEFEND-N, var=LOITER_UPDATES, sval={polygon=format=ellipse, x=-31, y=-47, degs=115, major=25, minor=8, pts=16}, receivers=evan
-
-	cmd = label=DEFEND-M, var=ACTION, sval=defend, receivers=evan
-	cmd = label=DEFEND-M, var=LOITER_UPDATES, sval={polygon = format=ellipse, x=-25, y=-62, degs=115, major=55, minor=10, pts=16}, receivers=evan
-
-	cmd = label=DEFEND-S, var=ACTION, sval=defend, receivers=evan
-	cmd = label=DEFEND-S, var=LOITER_UPDATES, sval={polygon = format=ellipse, x=-19, y=-74, degs=115, major=25, minor=8, pts=16}, receivers=evan
-	
-  cmd = label=STATION, var=STATION_KEEP,  sval=true,  receivers=all:evan:felix
-	
+ProcessConfig = uCommand
+{
+#include plug_commandfolio.txt	
 }
 
 //--------------------------------------------------------
