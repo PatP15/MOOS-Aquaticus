@@ -119,7 +119,7 @@ Behavior = BHV_Waypoint
   perpetual               = true
 
   condition               = MODE == UNTAGGED
-  runflag                 = BOT_DIALOG_STATUS=Grabbing Flag
+  runflag                 = BOT_DIALOG_STATUS=Attacking
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
 
