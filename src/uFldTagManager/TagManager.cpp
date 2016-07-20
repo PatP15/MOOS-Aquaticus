@@ -709,15 +709,18 @@ void TagManager::checkForOutOfZoneVehicles()
     double vy = record.getY();
 
     if(!m_zone_one.contains(vx, vy) && !m_zone_two.contains(vx, vy)) {
-      m_map_node_vtags_beentagged[vname]++;
-      m_map_node_vtags_nowtagged[vname] = true;
-      m_map_node_vtags_timetagged[vname] = m_curr_time;
-
-      string targ_type = tolower(record.getType());
-      if(targ_type == m_human_platform)
-	postHumanTagPairs("tag_manager", vname);
-      else
-	postRobotTagPairs("tag_manager", vname);
+      if(m_map_node_vtags_nowtagged.count(vname) &&
+	 !m_map_node_vtags_nowtagged[vname]) {
+	m_map_node_vtags_beentagged[vname]++;
+	m_map_node_vtags_nowtagged[vname] = true;
+	m_map_node_vtags_timetagged[vname] = m_curr_time;
+	
+	string targ_type = tolower(record.getType());
+	if(targ_type == m_human_platform)
+	  postHumanTagPairs("tag_manager", vname);
+	else
+	  postRobotTagPairs("tag_manager", vname);
+      }
     }
   }
 }
