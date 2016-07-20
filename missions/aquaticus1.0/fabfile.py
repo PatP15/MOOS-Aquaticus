@@ -19,10 +19,12 @@ env.roledefs = {
     'm200s': [
         '192.168.5.100',
         '192.168.6.100',
+        # '192.168.7.100',
     ],
     'mokais': [
         '192.168.1.191',
         '192.168.1.192',
+        # '192.168.1.193',
     ]
 }
 
@@ -46,10 +48,6 @@ def build(path):
 def cd_missions():
     cd(os.path.join(aqua_dir, 'missions'))
 
-
-def cd_mission(name):
-    cd_missions()
-    cd(name)
 
 @roles('mokais', 'm200s')
 @task
@@ -83,9 +81,9 @@ def update_all():
 def launch_humans_v():
     with cd(os.path.join(aqua_dir, 'missions', 'aquaticus1.0', 'mokai')):
         if (env.host == '192.168.1.191'):
-            run('./launch_mokai.sh -b &')
+            run('./launch_mokai.sh -e -b &')
         elif (env.host == '192.168.1.192'):
-            run('./launch_mokai.sh -r &')
+            run('./launch_mokai.sh -f -r &')
 
 
 @roles('m200s')
