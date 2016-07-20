@@ -6,7 +6,7 @@ if [ -d "$2$1" ]; then
 fi
 
 if [ -z "$1" ] ; then
-    echo "GenMOOSDriver: usage: $0 [app-name] [prefix] [your-name]"
+    echo "GenMOOSMOOSAppCastingCallbacks: usage: $0 [app-name] [prefix] [your-name]"
     exit 0
 fi
 
