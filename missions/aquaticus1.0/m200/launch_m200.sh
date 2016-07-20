@@ -8,15 +8,14 @@ TRAIL_RANGE="3"
 TRAIL_ANGLE="330"
 HELP="no"
 JUST_BUILD="no"
-VTEAM="red"
+VTEAM=""
+VNAME=""
 
 START_POS="56,16,240"
 RETURN_POS=""
 LOITER_POS="x=100,y=-180"
 GRAB_POS=""
 UNTAG_POS=""
-
-echo "Initiate launch vehicle script"
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -81,19 +80,30 @@ done
 
 if [ "${HELP}" = "yes" ]; then
     echo "$0 [SWITCHES]"
-    echo "Switches:"
     echo "  --evan, -e      : Evan vehicle only."
     echo "  --felix, -f     : Felix vehicle only."
     echo "  --gus, -g       : Gus vehicle only."
     echo "  --blue, -b      : Blue team."
     echo "  --red, -r       : Red team."
     echo "  --sim, -s       : Simulation mode."
-    echo "  --start-x       : Start from x position (requires x y a)."
-    echo "  --start-y       : Start from y position (requires x y a)."
-    echo "  --start-a       : Start from angle (requires x y a)."
+    echo "  --start-x=      : Start from x position (requires x y a)."
+    echo "  --start-y=      : Start from y position (requires x y a)."
+    echo "  --start-a=      : Start from angle (requires x y a)."
     echo "  --just_build, -j       "
     echo "  --help, -h             "
     exit 0;
+fi
+
+if [ -z $VNAME ]; then
+    echo "No vehicle has been selected..."
+    echo "Exiting."
+    exit 2
+fi
+
+if [ -z $VTEAM ]; then
+    echo "No team has been selected..."
+    echo "Exiting."
+    exit 3
 fi
 
 #-------------------------------------------------------
