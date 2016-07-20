@@ -69,8 +69,9 @@ class TagManager : public AppCastingMOOSApp
   void    postTagSummary();
   void    processVTag(VTag);
   void    checkForExpiredTags();
+  void    checkForOutOfZoneVehicles();
   void    postTagCircles();
-
+    
   void    postHumanTagPairs(std::string src_vname, std::string tar_vname);
   void    postRobotTagPairs(std::string src_vname, std::string tar_vname);
   void    postHumanUnTagPairs(std::string tar_vname);

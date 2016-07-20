@@ -167,6 +167,7 @@ bool TagManager::Iterate()
   AppCastingMOOSApp::Iterate();
   processVTags();
   checkForExpiredTags();
+  checkForOutOfZoneVehicles();
 
   postTagSummary();
   
@@ -690,6 +691,33 @@ void TagManager::checkForExpiredTags()
         string msg = "vname=" + vname + ",time=" + time_str;
         Notify("TAG_RELEASE_VERBOSE", msg);
       }
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: checkForOutOfZoneVehicles()
+
+void TagManager::checkForOutOfZoneVehicles()
+{
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
+    string vname = p->first;
+    NodeRecord record = p->second;
+
+    double vx = record.getX();
+    double vy = record.getY();
+
+    if(!m_zone_one.contains(vx, vy) && !m_zone_two.contains(vx, vy)) {
+      m_map_node_vtags_beentagged[vname]++;
+      m_map_node_vtags_nowtagged[vname] = true;
+      m_map_node_vtags_timetagged[vname] = m_curr_time;
+
+      string targ_type = tolower(record.getType());
+      if(targ_type == m_human_platform)
+	postHumanTagPairs("tag_manager", vname);
+      else
+	postRobotTagPairs("tag_manager", vname);
     }
   }
 }

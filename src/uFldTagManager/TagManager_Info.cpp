@@ -148,6 +148,7 @@ void showInterfaceAndExit()
   blk("                MODE=MODE@ACTIVE:LOITERING                      ");
   blk("                                                                ");
   blk("  TAG_REQUEST = vname=henry                                     ");
+  blk("  UNTAG_REQUEST = vname=henry                                  ");
   blk("  APPCAST_REQ                                                   ");
   blk("                                                                ");
   blk("PUBLICATIONS (configurable):                                    ");
