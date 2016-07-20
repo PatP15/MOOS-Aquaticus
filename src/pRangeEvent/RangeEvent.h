@@ -18,7 +18,7 @@ class RangeEvent : public AppCastingMOOSApp
 {
  public:
   RangeEvent();
-  ~RangeEvent() {};
+  ~RangeEvent() { delete m_pLock;};
 
  protected: // Standard MOOSApp functions to overload
   bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -51,6 +51,7 @@ class RangeEvent : public AppCastingMOOSApp
  private: // State variables
   double m_vx, m_vy, m_speed, m_heading;
   double m_dbtime;
+  CMOOSLock *m_pLock;
 
   std::map<std::string, std::string> m_map_var_val;
   std::map<std::string, NodeRecord> m_map_v_records;

@@ -32,6 +32,8 @@ RangeEvent::RangeEvent()
 
   m_min_range = 0.;
   m_max_range = 10.;
+
+  m_pLock = new CMOOSLock();
 }
 
 //---------------------------------------------------------
@@ -120,6 +122,7 @@ bool RangeEvent::Iterate()
 void RangeEvent::publishEvents()
 {
   map<string, NodeRecord>::iterator it_nr;
+  m_pLock->Lock();
   for(it_nr = m_map_v_records.begin(); it_nr != m_map_v_records.end(); ++it_nr){
     string vname = it_nr->first;
     NodeRecord nr = it_nr->second;
@@ -148,6 +151,7 @@ void RangeEvent::publishEvents()
       Notify(var_name, val);
     }
   }
+  m_pLock->UnLock();
 }
 
 //---------------------------------------------------------
@@ -257,12 +261,14 @@ bool RangeEvent::onNodeReport(string& node_report)
 
   // if the Vehicle is within specified range, record its info for later processing
   if( (range <= m_max_range) && (range >= m_min_range)){
+    m_pLock->Lock();
     m_map_v_records[vname] = new_node_record;
+    m_pLock->UnLock();
   } else { // the vehicle is out of range => remove it from the map
-
+    m_pLock->Lock();
     if(m_map_v_records.count(vname))
       m_map_v_records.erase(vname);
-    
+    m_pLock->UnLock();
     //map<string, NodeRecord>::iterator p = m_map_v_records.find(vname);
     //if (p != m_map_v_records.end())
     //  m_map_v_records.erase(p);
@@ -283,10 +289,12 @@ bool RangeEvent::onNodeReportLocal(string& node_report)
   if(m_host_community != vname) // Sanity check
     return(false);
 
+  m_pLock->Lock();
   m_vx = new_node_record.getX();
   m_vy = new_node_record.getY();
   m_speed = new_node_record.getSpeed();
   m_heading = new_node_record.getHeading();
+  m_pLock->UnLock();
 
   return(true);
 }
@@ -306,6 +314,7 @@ bool RangeEvent::buildReport()
   m_msgs << "\tRegistred variables to be published:" << endl;
 
   map<string, string>::iterator it_varval;
+  m_pLock->Lock();
   for(it_varval = m_map_var_val.begin(); it_varval != m_map_var_val.end(); ++it_varval){
     string var_name = it_varval->first;
     string val = it_varval->second;
@@ -313,12 +322,14 @@ bool RangeEvent::buildReport()
     m_msgs << "\t\t> " << var_name << " : ";
     m_msgs << val << endl;
   }
+  m_pLock->UnLock();
 
   m_msgs << endl;
   ACTable actab(5);
   actab << "Time | Vehicle | Range | POS_X | POS_Y";
   actab.addHeaderLines();
   map<string, NodeRecord>::iterator it_nr;
+  m_pLock->Lock();
   for(it_nr = m_map_v_records.begin(); it_nr != m_map_v_records.end(); ++it_nr){
     actab << m_dbtime << it_nr->first;
     double vx = it_nr->second.getX();
@@ -327,6 +338,7 @@ bool RangeEvent::buildReport()
     actab << range;
     actab << vx << vy;
   }
+  m_pLock->UnLock();
   m_msgs << actab.getFormattedString();
 
   return(true);
