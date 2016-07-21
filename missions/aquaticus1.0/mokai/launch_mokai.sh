@@ -3,7 +3,7 @@
 SHORE_IP=192.168.1.155
 SHORE_LISTEN="9300"
 
-WARP=1
+TIME_WARP=1
 HELP="no"
 JUST_BUILD="no"
 START_POS="0,0,0"
@@ -18,6 +18,8 @@ TEAMMATE=""
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         HELP="yes"
+    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
+        TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
         START_POS="50,-24,240"
@@ -100,7 +102,7 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        VNAME="${VNAME}_${VTEAM}"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
-       WARP=$WARP                   \
+       WARP=$TIME_WARP              \
        SHORE_LISTEN=$SHORE_LISTEN   \
        SHORE_IP=$SHORE_IP           \
        VTYPE="mokai"                \

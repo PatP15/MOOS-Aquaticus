@@ -1,5 +1,5 @@
 #!/bin/bash
-WARP=1
+TIME_WARP=1
 
 SHORE_IP=192.168.1.155
 SHORE_LISTEN="9300"
@@ -23,6 +23,8 @@ UNTAG_POS=""
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         HELP="yes"
+    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
+        TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
         M200_IP=192.168.5.1 #evan
         VNAME="evan"
@@ -127,7 +129,7 @@ echo "Assembling MOOS file targ_${VNAME}.moos"
 nsplug meta_m200.moos targ_${VNAME}.moos -f \
     VNAME=$VNAME                 \
     VPORT=$VPORT                 \
-    WARP=$WARP                   \
+    WARP=$TIME_WARP              \
     SHARE_LISTEN=$SHARE_LISTEN   \
     SHORE_LISTEN=$SHORE_LISTEN   \
     SHORE_IP=$SHORE_IP           \
