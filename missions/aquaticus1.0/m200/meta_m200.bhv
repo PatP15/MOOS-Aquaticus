@@ -2,6 +2,7 @@ initialize DEPLOY     = false
 initialize RETURN     = false
 initialize ACTION     = DEFEND
 initialize TAGGED     = false
+initialize AGGRESSIVE = false
 
 set MODE     = ACTIVE {
   DEPLOY     = true
@@ -80,17 +81,17 @@ Behavior = BHV_AvdColregs
 
   endflag                 = CONTACT_RESOLVED = $[CONTACT]
 
-  contact                 = v
+  contact                 = optional_vehicle_name
   decay                   = 15,30
   on_no_contact_ok        = true
   extrapolate             = true
 
-  completed_dist          = 200
+  completed_dist          = 40
   max_util_cpa_dist       = 25
   min_util_cpa_dist       = 5
   // pwt_grade               = linear
   pwt_inner_dist          = 20
-  pwt_outer_dist          = 200
+  pwt_outer_dist          = 35
 }
 
 //#############################################################################
@@ -144,17 +145,17 @@ Behavior = BHV_AvdColregs
 
   endflag                 = CONTACT_AVOIDING_RESOLVED = $[CONTACT]
 
-  contact                 = v
+  contact                 = optional_vehicle_name
   decay                   = 15,30
   on_no_contact_ok        = true
   extrapolate             = true
 
-  completed_dist          = 200
+  completed_dist          = 90
   max_util_cpa_dist       = 25
   min_util_cpa_dist       = 15
   // pwt_grade               = linear
   pwt_inner_dist          = 25
-  pwt_outer_dist          = 200
+  pwt_outer_dist          = 80
 }
 
 //#############################################################################
