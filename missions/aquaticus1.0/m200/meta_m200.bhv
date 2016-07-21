@@ -69,7 +69,7 @@ set MODE     = STATIONNING {
 
 
 //#############################################################################
-Behavior = BHV_AvdColregs
+Behavior = BHV_AvdColregsV2
 {
   name                    = active_avd_
   pwt                     = 100
@@ -133,7 +133,7 @@ Behavior = BHV_Waypoint
 }
 
 //#############################################################################
-Behavior = BHV_AvdColregs
+Behavior = BHV_AvdColregsV2
 {
   name                    = avd_
   pwt                     = 100
