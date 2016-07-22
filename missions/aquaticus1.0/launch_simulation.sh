@@ -2,6 +2,9 @@
 TIME_WARP=4
 
 CMD_ARGS=""
+NO_M200=""
+NO_MOKAI=""
+NO_SHORESIDE=""
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -9,6 +12,12 @@ CMD_ARGS=""
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         HELP="yes"
+    elif [ "${ARGI}" = "--no_shoreside" -o "${ARGI}" = "-ns" ] ; then
+        NO_SHORESIDE="true"
+    elif [ "${ARGI}" = "--no_mokai" -o "${ARGI}" = "-nmo" ] ; then
+        NO_MOKAI="true"
+    elif [ "${ARGI}" = "--no_m200" -o "${ARGI}" = "-nm2" ] ; then
+        NO_M200="true"
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
         echo "Time warp set up to $TIME_WARP."
@@ -23,38 +32,47 @@ done
 
 if [ "${HELP}" = "yes" ]; then
   echo "$0 [SWITCHES]"
-  echo "  XX                : Time warp"
-  echo "  --just_build, -j       "
-  echo "  --help, -h             "
+  echo "  XX                  : Time warp"
+  echo "  --no_shoreside, -ns"
+  echo "  --no_mokai, -nm"
+  echo "  --no_m200, -nm2"
+  echo "  --just_build, -j"
+  echo "  --help, -h"
   exit 0;
 fi
 
 #-------------------------------------------------------
 #  Part 2: Launching M200s
 #-------------------------------------------------------
-cd ./m200
-# Evan Blue
-./launch_m200.sh $TIME_WARP -e -b -s > /dev/null &
-# Felix Red
-./launch_m200.sh $TIME_WARP -f -r -s > /dev/null &
-cd ..
+if [[ -z $NO_M200 ]]; then
+  cd ./m200
+  # Evan Blue
+  ./launch_m200.sh $TIME_WARP -e -b -s > /dev/null &
+  # Felix Red
+  ./launch_m200.sh $TIME_WARP -f -r -s > /dev/null &
+  cd ..
+fi
 
 #-------------------------------------------------------
 #  Part 3: Launching MOKAIs
 #-------------------------------------------------------
-cd ./mokai
-# Evan Blue
-./launch_mokai.sh $TIME_WARP -e -b -ss >& /dev/null &
-# Felix Red
-./launch_mokai.sh $TIME_WARP -f -r -ss >& /dev/null &
-cd ..
+if [[ -z $NO_MOKAI ]]; then
+  cd ./mokai
+  # w/ Evan Blue
+  ./launch_mokai.sh $TIME_WARP -e -b -ss >& /dev/null &
+  # w/ Felix Red
+  ./launch_mokai.sh $TIME_WARP -f -r -ss >& /dev/null &
+  cd ..
+fi
 
 #-------------------------------------------------------
 #  Part 4: Launching shoreside
 #-------------------------------------------------------
-cd ./shoreside
-./launch_shoreside.sh $TIME_WARP >& /dev/null &
-cd ..
+if [[ -z $NO_SHORESIDE ]]; then
+  cd ./shoreside
+  ./launch_shoreside.sh $TIME_WARP >& /dev/null &
+  cd ..
+fi
 
 #-------------------------------------------------------
 #  Part 4: Launching uMAC
@@ -66,5 +84,6 @@ uMAC shoreside/targ_shoreside.moos
 #-------------------------------------------------------
 echo "Killing Simulation..."
 kill -- -$$
-sleep 1
+# sleep is to give enough time to all processes to die
+sleep 3
 echo "All processes killed"
