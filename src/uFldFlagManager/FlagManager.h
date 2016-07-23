@@ -14,6 +14,7 @@
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "NodeRecord.h"
 #include "XYMarker.h"
+#include "VarDataPair.h"
 
 class FlagManager : public AppCastingMOOSApp
 {
@@ -32,7 +33,13 @@ class FlagManager : public AppCastingMOOSApp
 
  protected:
    void registerVariables();
+
    bool handleConfigFlag(std::string);
+   bool handleConfigGrabPost(std::string);
+   bool handleConfigLosePost(std::string);
+   bool handleConfigNearPost(std::string);
+   bool handleConfigAwayPost(std::string);
+
    bool handleMailNodeReport(std::string str);
    bool handleMailFlagGrab(std::string, std::string);
    bool handleMailFlagReset(std::string);
@@ -65,6 +72,7 @@ class FlagManager : public AppCastingMOOSApp
    std::map<std::string, unsigned int> m_map_rcount;
    std::map<std::string, unsigned int> m_map_grab_count;
    std::map<std::string, unsigned int> m_map_flag_count;
+
    unsigned int m_total_node_reports_rcvd;
 
    std::set<std::string>  m_tagged_vnames;
@@ -72,6 +80,12 @@ class FlagManager : public AppCastingMOOSApp
    // Grab request state vars
    unsigned int m_total_grab_requests_rcvd;
 
+   std::vector<VarDataPair> m_flag_grab_posts;
+   std::vector<VarDataPair> m_flag_lose_posts;
+   std::vector<VarDataPair> m_flag_near_posts;
+   std::vector<VarDataPair> m_flag_away_posts;
+   
+   
 };
 
 #endif

@@ -105,7 +105,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("       NODE_REPORT = NAME=alpha,TYPE=UUV,TIME=1252348077.59,   ");
+  blk("       NODE_REPORT = NAME=alpha,TYPE=UUV,TIME=1252348077.59,    ");
   blk("                      X=51.71,Y=-35.50, LAT=43.824981,          ");
   blk("                      LON=-70.329755,SPD=2.0,HDG=118.8,         ");
   blk("                      YAW=118.8,DEPTH=4.6,LENGTH=3.8,           ");
@@ -117,11 +117,14 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  FLAG_GRAB_REPORT = grabbed=one,grabbed=two                    ");
-  blk("  FLAG_GRAB_REPORT = nothing_grabbed                            ");
-  blk("  VIEW_MARKER      = x=60,y=-30,width=2,range=10.00,            ");
-  blk("                     primary_color=red,secondary_color=black,   ");
-  blk("                     type=circle,label=one                      ");
+  blk("  HAS_FLAG_VNAME     = true/false                               ");
+  blk("  HAS_FLAG_ALL       = false (upon global reset)                ");
+  blk("  VTEAM_FLAG_GRABBED = grabbed=one,grabbed=two                  ");
+  blk("  FLAG_GRAB_REPORT   = grabbed=one,grabbed=two                  ");
+  blk("  FLAG_GRAB_REPORT   = nothing_grabbed                          ");
+  blk("  VIEW_MARKER        = x=60,y=-30,width=2,range=10.00,          ");
+  blk("                       primary_color=red,secondary_color=black, ");
+  blk("                       type=circle,label=one                    ");
   blk("                                                                ");
   exit(0);
 }

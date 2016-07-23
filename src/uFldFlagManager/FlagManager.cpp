@@ -158,6 +158,14 @@ bool FlagManager::OnStartUp()
     bool handled = false;
     if(param == "flag")
       handled = handleConfigFlag(value);
+    else if(param == "grab_post")
+      handled = handleConfigGrabPost(value);
+    else if(param == "lose_post")
+      handled = handleConfigLosePost(value);
+    else if(param == "near_post")
+      handled = handleConfigNearPost(value);
+    else if(param == "away_post")
+      handled = handleConfigAwayPost(value);
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -225,6 +233,62 @@ bool FlagManager::handleConfigFlag(string str)
   m_flags.push_back(flag);
   m_flags_changed.push_back(true);
 
+  return(true);
+}
+
+//---------------------------------------------------------
+// Procedure: handleConfigGrabPost
+//   Example: var=SAY_MOOS, sval={Hello World}
+//   Example: var=SAY_MOOS, sval={$[VNAME] has the flag}
+//   Example: var=SAY_MOOS_$[VNAME],     \
+//            sval={You have the flag}
+
+bool FlagManager::handleConfigGrabPost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+
+  m_flag_grab_posts.push_back(pair);
+  return(true);
+}
+
+//---------------------------------------------------------
+// Procedure: handleConfigLosePost
+
+bool FlagManager::handleConfigLosePost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+
+  m_flag_lose_posts.push_back(pair);
+  return(true);
+}
+
+//---------------------------------------------------------
+// Procedure: handleConfigNearPost
+
+bool FlagManager::handleConfigNearPost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+
+  m_flag_near_posts.push_back(pair);
+  return(true);
+}
+
+//---------------------------------------------------------
+// Procedure: handleConfigAwayPost
+
+bool FlagManager::handleConfigAwayPost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+  
+  m_flag_away_posts.push_back(pair);
   return(true);
 }
 
@@ -357,6 +421,8 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
         m_flags[i].set_owner(grabbing_vname);
         m_flags_changed[i] = true;
         m_map_flag_count[up_vname]++;
+
+	Notify("HAS_FLAG_"+toupper(grabbing_vname), "true");
       }
     }
   }
@@ -383,13 +449,15 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 bool FlagManager::resetFlagsByLabel(string label)
 {
   bool some_flags_were_reset = false;
-
+  
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_label() == label) {
       if(m_flags[i].get_owner() != "") {
+	string flag_owner = m_flags[i].get_owner();
         m_flags[i].set_owner("");
         m_flags_changed[i] = true;
         some_flags_were_reset = true;
+	Notify("HAS_FLAG_"+toupper(flag_owner), "false");
       }
     }
   }
@@ -411,6 +479,7 @@ bool FlagManager::resetFlagsAll()
       m_flags[i].set_owner("");
       m_flags_changed[i] = true;
       some_flags_were_reset = true;
+      Notify("HAS_FLAG_ALL", "false");
     }
   }
   return(some_flags_were_reset);
@@ -431,6 +500,9 @@ bool FlagManager::resetFlagsByVName(string vname)
       m_flags[i].set_owner("");
       m_flags_changed[i] = true;
       some_flags_were_reset = true;
+
+      Notify("HAS_FLAG_"+toupper(vname), "false");
+
     }
   }
   return(some_flags_were_reset);
