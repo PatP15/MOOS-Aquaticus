@@ -6,7 +6,7 @@ ProcessConfig = iSay
 
   min_utter_interval = 0.1
   interval_policy    = from_end
-  os_mode=linux
+  os_mode=both
   audio_dir=../../sounds
 
 }
