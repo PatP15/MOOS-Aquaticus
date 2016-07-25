@@ -84,7 +84,7 @@ Behavior = BHV_AvdColregsV2
   contact                 = optional_vehicle_name
   decay                   = 15,30
   on_no_contact_ok        = true
-  extrapolate             = true
+  extrapolate             = false
 
   completed_dist          = 40
   max_util_cpa_dist       = 25
@@ -148,7 +148,7 @@ Behavior = BHV_AvdColregsV2
   contact                 = optional_vehicle_name
   decay                   = 15,30
   on_no_contact_ok        = true
-  extrapolate             = true
+  extrapolate             = false
 
   completed_dist          = 90
   max_util_cpa_dist       = 25
@@ -204,7 +204,7 @@ Behavior = BHV_CutRange
 
   contact                 = v
   decay                   = 15,30
-  extrapolate             = true
+  extrapolate             = false
   on_no_contact_ok        = true
   time_on_leg             = 60
 
@@ -245,7 +245,7 @@ Behavior = BHV_Trail
   runflag                 = BOT_DIALOG_STATUS=Covering
   contact                 = mokai_$(VTEAM)
   decay                   = 15,30
-  extrapolate             = true
+  extrapolate             = false
   on_no_contact_ok        = true
   time_on_leg             = 60
 
@@ -268,7 +268,7 @@ Behavior = BHV_Trail
   runflag                 = BOT_DIALOG_STATUS=Trailing
   contact                 = mokai_$(VTEAM)
   decay                   = 15,30
-  extrapolate             = true
+  extrapolate             = false
   on_no_contact_ok        = true
   time_on_leg             = 60
 
