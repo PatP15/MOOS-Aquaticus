@@ -45,11 +45,15 @@ class FlagManager : public AppCastingMOOSApp
    bool handleMailFlagReset(std::string);
    bool handleMailTaggedVehicles(std::string);
 
+   void updateVehiclesInFlagRange();
+   
    bool resetFlagsByLabel(std::string);
    bool resetFlagsByVName(std::string);
    bool resetFlagsAll();
    void postFlagMarkers();
    void postFlagSummary();
+
+   void invokePosts(std::string, std::string, std::string);
 
  private: // Config variables
 
@@ -72,6 +76,7 @@ class FlagManager : public AppCastingMOOSApp
    std::map<std::string, unsigned int> m_map_rcount;
    std::map<std::string, unsigned int> m_map_grab_count;
    std::map<std::string, unsigned int> m_map_flag_count;
+   std::map<std::string, bool>         m_map_in_fzone;
 
    unsigned int m_total_node_reports_rcvd;
 
@@ -84,8 +89,6 @@ class FlagManager : public AppCastingMOOSApp
    std::vector<VarDataPair> m_flag_lose_posts;
    std::vector<VarDataPair> m_flag_near_posts;
    std::vector<VarDataPair> m_flag_away_posts;
-   
-   
 };
 
 #endif

@@ -87,6 +87,9 @@ bool FlagManager::OnConnectToServer()
 bool FlagManager::Iterate()
 {
   AppCastingMOOSApp::Iterate();
+
+  updateVehiclesInFlagRange();
+  
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -101,7 +104,7 @@ bool FlagManager::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
+  if(!m_MissionReader.GetConfigurationAndPreserveSpace(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
   STRING_LIST pass2params;
@@ -410,6 +413,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   string result;
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if((m_flags[i].get_owner() == "") && (m_flags[i].get_label() != group)) {
+      string flag_name = m_flags[i].get_label();
       double x = m_flags[i].get_vx();
       double y = m_flags[i].get_vy();
       double dist = hypot(x-curr_vx, y-curr_vy);
@@ -423,6 +427,8 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
         m_map_flag_count[up_vname]++;
 
 	Notify("HAS_FLAG_"+toupper(grabbing_vname), "true");
+
+	invokePosts("grab", grabbing_vname, flag_name);
       }
     }
   }
@@ -436,6 +442,41 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   Notify("FLAG_GRAB_REPORT", result);
 
   return(true);
+}
+
+
+//------------------------------------------------------------
+// Procedure: updateVehiclesInFlagRange
+//   Purpose: For each vehicle determine if it is within the range
+//            of an enemy flag.
+
+void FlagManager::updateVehiclesInFlagRange()
+{
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_record.begin(); p!=m_map_record.end(); p++) {
+    string vname = p->first;
+    NodeRecord record = p->second;
+    string group = record.getGroup();
+    double vx = record.getX();
+    double vy = record.getY();
+
+    bool vname_in_flag_range = false;
+    
+    for(unsigned int i=0; i<m_flags.size(); i++) {
+      string label = m_flags[i].get_label();
+      if(label != group) {
+	double range = m_flags[i].get_range();
+	double flagx = m_flags[i].get_vx();
+	double flagy = m_flags[i].get_vy();
+
+	double dist = hypot(vx-flagx, vy-flagy);
+	if(dist <= range)
+	  vname_in_flag_range = true;
+      }
+    }
+
+    m_map_in_fzone[vname] = vname_in_flag_range;
+  }
 }
 
 
@@ -458,6 +499,8 @@ bool FlagManager::resetFlagsByLabel(string label)
         m_flags_changed[i] = true;
         some_flags_were_reset = true;
 	Notify("HAS_FLAG_"+toupper(flag_owner), "false");
+
+	invokePosts("lose", "system", label);
       }
     }
   }
@@ -476,10 +519,14 @@ bool FlagManager::resetFlagsAll()
 
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_owner() != "") {
+      string flag_name = m_flags[i].get_label();
+      m_flags[i].set_owner("");
       m_flags[i].set_owner("");
       m_flags_changed[i] = true;
       some_flags_were_reset = true;
       Notify("HAS_FLAG_ALL", "false");
+
+      invokePosts("lose", "system", flag_name);
     }
   }
   return(some_flags_were_reset);
@@ -497,12 +544,14 @@ bool FlagManager::resetFlagsByVName(string vname)
 
   for(unsigned int i=0; i<m_flags.size(); i++) {
     if(m_flags[i].get_owner() == vname) {
+      string flag_name = m_flags[i].get_label();
+
       m_flags[i].set_owner("");
       m_flags_changed[i] = true;
       some_flags_were_reset = true;
 
       Notify("HAS_FLAG_"+toupper(vname), "false");
-
+      invokePosts("lose", "system", flag_name);
     }
   }
   return(some_flags_were_reset);
@@ -553,8 +602,47 @@ void FlagManager::postFlagSummary()
       Notify(var_label, "true");
   }
   Notify("FLAG_SUMMARY", summary);
+}
 
+//------------------------------------------------------------
+// Procedure: invokePosts()
 
+void FlagManager::invokePosts(string ptype, string vname, string fname)
+{
+  vector<VarDataPair> pairs;
+  if(ptype == "grab")
+    pairs = m_flag_grab_posts;
+  else if(ptype == "lose")
+    pairs = m_flag_lose_posts;
+  else if(ptype == "near")
+    pairs = m_flag_near_posts;
+  else if(ptype == "away")
+    pairs = m_flag_away_posts;
+
+  for(unsigned int i=0; i<pairs.size(); i++) {
+    VarDataPair pair = pairs[i];
+    string moosvar = pair.get_var();
+    moosvar = findReplace(moosvar, "$VNAME", vname);
+    moosvar = findReplace(moosvar, "$FLAG", fname);
+    moosvar = findReplace(moosvar, "$UP_VNAME", toupper(vname));
+    
+    if(!pair.is_string()) {
+      double dval = pair.get_ddata();
+      Notify(moosvar, dval);
+    }
+    else {
+      string sval = pair.get_sdata();
+      sval = findReplace(sval, "$VNAME", vname);
+      sval = findReplace(sval, "$FLAG", fname);
+      sval = findReplace(sval, "$UP_VNAME", toupper(vname));
+      
+      if(strContains(sval, "TIME")) {
+	string stime = doubleToString(m_curr_time, 2);
+	sval = findReplace(sval, "$TIME", stime);
+      }
+      Notify(moosvar, sval);
+    }
+  }
 }
 
 //------------------------------------------------------------
@@ -562,7 +650,6 @@ void FlagManager::postFlagSummary()
 
 bool FlagManager::buildReport()
 {
-
   m_msgs << "Configuration Summary: " << endl;
   m_msgs << "======================================" << endl;
   m_msgs << "  default_flag_range: " << m_default_flag_range << endl;
