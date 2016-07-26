@@ -40,6 +40,12 @@ ProcessConfig = uFldFlagManager
 
   flag = $(RED_FLAG), color=red, label=red
   flag = $(BLUE_FLAG), colore=blue, label=blue
+
+	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
+
+	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
+	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
 }
 
 //--------------------------------------------------
