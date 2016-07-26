@@ -53,7 +53,7 @@ class FlagManager : public AppCastingMOOSApp
    void postFlagMarkers();
    void postFlagSummary();
 
-   void invokePosts(std::string, std::string, std::string);
+   void invokePosts(std::string ptype, std::string vname, std::string fname);
 
  private: // Config variables
 

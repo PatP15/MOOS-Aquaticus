@@ -460,22 +460,29 @@ void FlagManager::updateVehiclesInFlagRange()
     double vx = record.getX();
     double vy = record.getY();
 
-    bool vname_in_flag_range = false;
-    
+    bool vname_in_flag_zone = false;
+
+    string flag_name;
     for(unsigned int i=0; i<m_flags.size(); i++) {
-      string label = m_flags[i].get_label();
-      if(label != group) {
+      flag_name = m_flags[i].get_label();
+      if(flag_name != group) {
 	double range = m_flags[i].get_range();
 	double flagx = m_flags[i].get_vx();
 	double flagy = m_flags[i].get_vy();
 
 	double dist = hypot(vx-flagx, vy-flagy);
 	if(dist <= range)
-	  vname_in_flag_range = true;
+	  vname_in_flag_zone = true;
       }
     }
 
-    m_map_in_fzone[vname] = vname_in_flag_range;
+    if(!m_map_in_fzone[vname] && vname_in_flag_zone)
+      invokePosts("near", vname, flag_name);
+
+    if(m_map_in_fzone[vname] && !vname_in_flag_zone)
+      invokePosts("away", vname, flag_name);
+
+    m_map_in_fzone[vname] = vname_in_flag_zone;
   }
 }
 
@@ -678,8 +685,8 @@ bool FlagManager::buildReport()
 
   m_msgs << "Vehicle Summary" << endl;
   m_msgs << "======================================" << endl;
-  ACTable actab(3);
-  actab << "VName | Grabs | Flags ";
+  ACTable actab(4);
+  actab << "VName | Grabs | Flags | InFlagZone";
   actab.addHeaderLines();
 
   map<string,unsigned int>::iterator p2;
@@ -692,10 +699,15 @@ bool FlagManager::buildReport()
     if(m_map_flag_count.count(vname) != 0)
       flag_count = m_map_flag_count[vname];
 
+    bool in_flag_zone = false;
+    if(m_map_in_fzone.count(vname) != 0)
+      in_flag_zone = m_map_in_fzone[vname];
+        
     string s_grab_count = uintToString(grab_count);
     string s_flag_count = uintToString(flag_count);
+    string s_in_flag_zone = boolToString(in_flag_zone);
 
-    actab << vname << s_grab_count << s_flag_count;
+    actab << vname << s_grab_count << s_flag_count << s_in_flag_zone;
   }
   m_msgs << actab.getFormattedString();
   m_msgs << endl << endl;
