@@ -9,10 +9,15 @@
   cmd = label=RETURN, var=STATION_KEEP, sval=false, receivers=all:evan:felix:gus:hal
 
   cmd = label=ATTACK, var=ACTION, sval=attack, receivers=evan:felix:gus:hal
+  cmd = label=ATTACK, var=STATION_KEEP, sval=false, receivers=evan:felix:gus:hal
+
   cmd = label=DEFEND, var=ACTION, sval=defend, receivers=evan:felix:gus:hal
+  cmd = label=DEFEND, var=STATION_KEEP, sval=false, receivers=evan:felix:gus:hal
 
   cmd = label=STATION, var=STATION_KEEP,  sval=true,  receivers=all:evan:felix:gus:hal
-  
+
+  cmd = label=STATION-OFF, var=STATION_KEEP,  sval=false,  receivers=all:evan:felix:gus:hal
+
   cmd = label=DEFEND-NW, var=ACTION, sval=defend, receivers=evan:felix
   cmd = label=DEFEND-NW, var=LOITER_UPDATES, sval={polygon=format=ellipse, x=-31, y=-47, degs=115, major=25, minor=8, pts=16}, receivers=evan:felix
   cmd = label=DEFEND-NW, var=STATION_KEEP, sval=false, receivers=evan:felix

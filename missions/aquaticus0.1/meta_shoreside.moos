@@ -48,8 +48,17 @@ ProcessConfig = uFldFlagManager
   AppTick       = 2
   CommsTick     = 2
 
-  flag = $(RED_FLAG),  label=red
-  flag = $(BLUE_FLAG), label=blue
+  flag = $(RED_FLAG), color=red, label=red
+  flag = $(BLUE_FLAG), color=blue, label=blue
+
+	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
+
+	//near_post = var=SAY_MOOS, sval={say={$VNAME is near the $FLAG flag}}
+	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
+
+	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
+
 }
 
 //--------------------------------------------------
@@ -71,6 +80,8 @@ ProcessConfig = uFldFlagManager
 
   tag_duration = 10000
 
+	robot_tag_post   = TESTING=true
+	
   //robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
   human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
   human_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
@@ -142,7 +153,7 @@ ProcessConfig = uFldShoreBroker
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
   qbridge  = TAGGED, ACTION, LOITER_UPDATES
-  qbridge  = SAY_MOOS
+  qbridge  = SAY_MOOS, HAS_FLAG
 
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
@@ -261,14 +272,14 @@ ProcessConfig = uProcessWatch
 
 ProcessConfig = iSay
 {
-  AppTick   = 10
-  CommsTick = 10
+  AppTick   = 5
+  CommsTick = 5
 
-  min_utter_interval = 0.1
-  interval_policy    = from_end
-  os_mode=linux
+  min_utter_interval = 1
+  interval_policy    = from_start
+
+  os_mode=both
   audio_dir=sounds
-
 }
 
 
@@ -286,7 +297,7 @@ ProcessConfig = UFZEUntag
   zone_info = name=blue_untag # post_var = UNTAG_REQUEST=vname=$[VNAME]
   zone_info = name=blue_untag # post_var = FLAG_RESET=vname=$[VNAME]
   zone_info = name=blue_untag # viewable=true  // default is true
-  zone_info = name=blue_untag # color=blue  // default is orange
+  //zone_info = name=blue_untag # color=blue  // default is orange
   zone_info = name=blue_untag # group=blue
   zone_info = name=red_untag  # polygon=format=radial, $(RED_FLAG), radius=10, pts=10, snap=1
   zone_info = name=red_untag  # post_var = UNTAG_REQUEST=vname=$[VNAME]

@@ -9,7 +9,10 @@ ProcessConfig = pLogger
   AsyncLog   = true
   FileTimeStamp = true
 
+	// Explicitly name any variables where there may be multiple
+	// posts to the DB on startup
   Log = IVPHELM_LIFE_EVENT @ 0 nosync
+  Log = BCM_ALERT_REQUEST @ 0 nosync
 
   // Log it all!!!!!
   LogAuxSrc = true
