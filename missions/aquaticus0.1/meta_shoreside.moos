@@ -56,8 +56,9 @@ ProcessConfig = uFldFlagManager
 
 	//near_post = var=SAY_MOOS, sval={say={$VNAME is near the $FLAG flag}}
 	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
-
 	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
+
+	deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}
 
 }
 
