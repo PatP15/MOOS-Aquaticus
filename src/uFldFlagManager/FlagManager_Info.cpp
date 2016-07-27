@@ -85,6 +85,13 @@ void showExampleConfigAndExit()
   blk("                                                                ");
   blk("  flag = x=60, y=-30,  label=one, range=20, width=10            ");
   blk("  flag = x=60, y=-170, label=two, color=purple, type=diamond    ");
+  blk("                                                                ");
+  blk("  grab_post = var=SAY_MOOS, sval={say={$VNAME has $FLAG flag}}  ");
+  blk("  lose_post = var=SAY_MOOS, sval={say={$FLAG flag is reset}}    ");
+  blk("  near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}     ");
+  blk("  away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}       ");
+  blk("  deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}   ");
+  blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -105,15 +112,17 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("       NODE_REPORT = NAME=alpha,TYPE=UUV,TIME=1252348077.59,    ");
+  blk("        NODE_REPORT = NAME=alpha,TYPE=UUV,TIME=1252348077.59,   ");
   blk("                      X=51.71,Y=-35.50, LAT=43.824981,          ");
   blk("                      LON=-70.329755,SPD=2.0,HDG=118.8,         ");
   blk("                      YAW=118.8,DEPTH=4.6,LENGTH=3.8,           ");
   blk("                      MODE=MODE@ACTIVE:LOITERING,               ");
   blk("                      THRUST_MODE_REVERSE=true                  ");
+  blk("  NODE_REPORT_LOCAL = NAME=alpha,TYPE=UUV,....                  ");
   blk("         FLAG_RESET = vname=henry                               ");
   blk("         FLAG_RESET = label=alpha                               ");
   blk("  FLAG_GRAB_REQUEST = vname=henry                               ");
+  blk("    TAGGED_VEHICLES = henry,gus                                 ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
@@ -121,13 +130,27 @@ void showInterfaceAndExit()
   blk("  HAS_FLAG_ALL       = false (upon global reset)                ");
   blk("  VTEAM_FLAG_GRABBED = grabbed=one,grabbed=two                  ");
   blk("  FLAG_GRAB_REPORT   = grabbed=one,grabbed=two                  ");
-  blk("  FLAG_GRAB_REPORT   = nothing_grabbed                          ");
+  blk("  FLAG_GRAB_REPORT   = Nothing grabbed - vehicle is tagged      ");
   blk("  VIEW_MARKER        = x=60,y=-30,width=2,range=10.00,          ");
   blk("                       primary_color=red,secondary_color=black, ");
   blk("                       type=circle,label=one                    ");
   blk("                                                                ");
+  blk("  FLAG_SUMMARY = x=50,y=-24,width=3,range=10,primary_color=red, ");
+  blk("                 type=circle,owner=evan,label=red # x=-58,y=-71,");
+  blk("                 width=3,range=10,primary_color=blue,           ");
+  blk("                 type=circle,label=blue                         ");
+  blk("                                                                ");
+  blk("  User-configured posts via config params:                     ");
+  blk("     o grab_post                                                ");
+  blk("     o lose_post                                                ");
+  blk("     o near_post                                                ");
+  blk("     o away_post                                                ");
+  blk("     o deny_post                                                ");
+  blk("                                                                ");
   exit(0);
 }
+
+
 
 //----------------------------------------------------------------
 // Procedure: showReleaseInfoAndExit

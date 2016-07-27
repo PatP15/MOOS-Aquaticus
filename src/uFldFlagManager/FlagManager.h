@@ -39,6 +39,7 @@ class FlagManager : public AppCastingMOOSApp
    bool handleConfigLosePost(std::string);
    bool handleConfigNearPost(std::string);
    bool handleConfigAwayPost(std::string);
+   bool handleConfigDenyPost(std::string);
 
    bool handleMailNodeReport(std::string str);
    bool handleMailFlagGrab(std::string, std::string);
@@ -53,7 +54,8 @@ class FlagManager : public AppCastingMOOSApp
    void postFlagMarkers();
    void postFlagSummary();
 
-   void invokePosts(std::string ptype, std::string vname, std::string fname);
+   void invokePosts(std::string ptype, std::string vname,
+		    std::string fname, std::string reason="");
 
  private: // Config variables
 
@@ -89,6 +91,8 @@ class FlagManager : public AppCastingMOOSApp
    std::vector<VarDataPair> m_flag_lose_posts;
    std::vector<VarDataPair> m_flag_near_posts;
    std::vector<VarDataPair> m_flag_away_posts;
+   std::vector<VarDataPair> m_flag_deny_posts;
+
 };
 
 #endif

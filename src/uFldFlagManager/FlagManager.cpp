@@ -169,6 +169,8 @@ bool FlagManager::OnStartUp()
       handled = handleConfigNearPost(value);
     else if(param == "away_post")
       handled = handleConfigAwayPost(value);
+    else if(param == "deny_post")
+      handled = handleConfigDenyPost(value);
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -295,8 +297,22 @@ bool FlagManager::handleConfigAwayPost(string str)
   return(true);
 }
 
+//---------------------------------------------------------
+// Procedure: handleConfigDenyPost
+
+bool FlagManager::handleConfigDenyPost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+  
+  m_flag_deny_posts.push_back(pair);
+  return(true);
+}
+
 //------------------------------------------------------------
 // Procedure: handleMailTaggedVehicles()
+//   Example: TAGGED_VEHICLES = henry,gus,hal
 
 bool FlagManager::handleMailTaggedVehicles(string str)
 {
@@ -388,27 +404,43 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   // Part 2: Sanity check on the Grab Request
   // Check if grabbing vname is set and matches message community
   if((grabbing_vname == "") || (grabbing_vname != community)) {
+    invokePosts("deny", grabbing_vname, "", "invalid vehicle name");
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - invalid vehicle name.");
     return(false);
   }
-
+  
   // If no node records of the grabbing vehicle, return false
   string up_vname = toupper(grabbing_vname);
-  if(m_map_record.count(up_vname) == 0)
+  if(m_map_record.count(up_vname) == 0) {
+    invokePosts("deny", grabbing_vname, "", "name unknown to flag manager");
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - name unknown to flag manager.");
     return(false);
+  }
 
 
   // Part 3: OK grab, so increment counters.
   m_map_grab_count[up_vname]++;
 
-  if(m_tagged_vnames.count(grabbing_vname) ||  m_tagged_vnames.count(up_vname))
+  if(m_tagged_vnames.count(grabbing_vname) ||  m_tagged_vnames.count(up_vname)) {
+    invokePosts("deny", grabbing_vname, "", "grabbing vehicle is tagged");
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - grabbing vehicle is tagged.");
     return(false);
-    
+  }
+
+  if(m_flags.size() == 0) {
+    invokePosts("deny", grabbing_vname, "", "no flags to grab");
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - no flags to grab");
+    return(false);
+  }
+  
   // Part 4: Get the grabbing vehicle's position from the record
   NodeRecord record = m_map_record[up_vname];
   double curr_vx = record.getX();
   double curr_vy = record.getY();
   string group = record.getGroup();
 
+
+  
   // Part 5: For each flag with the grab_dist of the vehicle, GRAB
   string result;
   for(unsigned int i=0; i<m_flags.size(); i++) {
@@ -432,12 +464,14 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
       }
     }
   }
-  if(result == "")
-    result = "nothing_grabbed";
-  else {
-    postFlagSummary();
-    postFlagMarkers();
+  if(result == "") {
+    invokePosts("deny", grabbing_vname, "", "out of range");
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - out of range");
+    return(false);
   }
+  
+  postFlagSummary();
+  postFlagMarkers();
 
   Notify("FLAG_GRAB_REPORT", result);
 
@@ -614,7 +648,8 @@ void FlagManager::postFlagSummary()
 //------------------------------------------------------------
 // Procedure: invokePosts()
 
-void FlagManager::invokePosts(string ptype, string vname, string fname)
+void FlagManager::invokePosts(string ptype, string vname,
+			      string fname, string reason)
 {
   vector<VarDataPair> pairs;
   if(ptype == "grab")
@@ -625,6 +660,8 @@ void FlagManager::invokePosts(string ptype, string vname, string fname)
     pairs = m_flag_near_posts;
   else if(ptype == "away")
     pairs = m_flag_away_posts;
+  else if(ptype == "deny")
+    pairs = m_flag_deny_posts;
 
   for(unsigned int i=0; i<pairs.size(); i++) {
     VarDataPair pair = pairs[i];
@@ -642,6 +679,7 @@ void FlagManager::invokePosts(string ptype, string vname, string fname)
       sval = findReplace(sval, "$VNAME", vname);
       sval = findReplace(sval, "$FLAG", fname);
       sval = findReplace(sval, "$UP_VNAME", toupper(vname));
+      sval = findReplace(sval, "$REASON", reason);
       
       if(strContains(sval, "TIME")) {
 	string stime = doubleToString(m_curr_time, 2);
