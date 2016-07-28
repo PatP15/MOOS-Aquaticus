@@ -522,6 +522,52 @@ void FlagManager::updateVehiclesInFlagRange()
 
 
 //------------------------------------------------------------
+// Procedure: updateVehiclesHaveScored
+
+# if 0
+void FlagManager::updateVehiclesHaveScored()
+{
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_record.begin(); p!=m_map_record.end(); p++) {
+    string vname = p->first;
+    if(hasFlag(vname)) {
+      NodeRecord record = p->second;
+      string group = record.getGroup();
+      double vx = record.getX();
+      double vy = record.getY();
+
+      for(unsigned int i=0; i<m_flags.size(); i++) {
+	if(m_flags
+      
+    bool vname_in_flag_zone = false;
+
+    string flag_name;
+    for(unsigned int i=0; i<m_flags.size(); i++) {
+      flag_name = m_flags[i].get_label();
+      if(flag_name != group) {
+	double range = m_flags[i].get_range();
+	double flagx = m_flags[i].get_vx();
+	double flagy = m_flags[i].get_vy();
+
+	double dist = hypot(vx-flagx, vy-flagy);
+	if(dist <= range)
+	  vname_in_flag_zone = true;
+      }
+    }
+
+    if(!m_map_in_fzone[vname] && vname_in_flag_zone)
+      invokePosts("near", vname, flag_name);
+
+    if(m_map_in_fzone[vname] && !vname_in_flag_zone)
+      invokePosts("away", vname, flag_name);
+
+    m_map_in_fzone[vname] = vname_in_flag_zone;
+  }
+}
+#endif
+
+
+//------------------------------------------------------------
 // Procedure: resetFlagsByLabel
 //      Note: Resets any flag with the given label to be not
 //            ownedby anyone.
@@ -625,6 +671,10 @@ void FlagManager::postFlagMarkers()
 
 //------------------------------------------------------------
 // Procedure: postFlagSummary
+//   Example: FLAG_SUMMARY = x=50,y=-24,width=3,range=10,
+//            primary_color=red, type=circle,owner=evan,label=red #
+//            x=-58,y=-71, width=3,range=10,primary_color=blue,           
+//            type=circle,label=blue   
 
 void FlagManager::postFlagSummary()
 {
@@ -643,6 +693,20 @@ void FlagManager::postFlagSummary()
       Notify(var_label, "true");
   }
   Notify("FLAG_SUMMARY", summary);
+}
+
+//------------------------------------------------------------
+// Procedure: hasFlag()
+//   Purpose: Determine if the given vehicle has a flag. No check
+//            is made w.r.t. type/color of flag. 
+
+bool FlagManager::hasFlag(string vname)
+{
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    if(m_flags[i].get_owner() == vname)
+      return(true);
+  }
+  return(false);
 }
 
 //------------------------------------------------------------

@@ -47,6 +47,7 @@ class FlagManager : public AppCastingMOOSApp
    bool handleMailTaggedVehicles(std::string);
 
    void updateVehiclesInFlagRange();
+   void updateVehiclesHaveScored();
    
    bool resetFlagsByLabel(std::string);
    bool resetFlagsByVName(std::string);
@@ -54,12 +55,14 @@ class FlagManager : public AppCastingMOOSApp
    void postFlagMarkers();
    void postFlagSummary();
 
+   bool hasFlag(std::string vname);
    void invokePosts(std::string ptype, std::string vname,
 		    std::string fname, std::string reason="");
 
  private: // Config variables
 
-   // Flag Configurations
+   // Flag Configurations. Flag ownership is stored in XYMarker.
+   // So m_flags is really also a state variable.
    std::vector<XYMarker>  m_flags;
    std::vector<bool>      m_flags_changed;
 
@@ -80,6 +83,9 @@ class FlagManager : public AppCastingMOOSApp
    std::map<std::string, unsigned int> m_map_flag_count;
    std::map<std::string, bool>         m_map_in_fzone;
 
+   // Overall Flag/Game Score
+   std::map<std::string, unsigned int> m_map_team_score;
+   
    unsigned int m_total_node_reports_rcvd;
 
    std::set<std::string>  m_tagged_vnames;
@@ -92,7 +98,6 @@ class FlagManager : public AppCastingMOOSApp
    std::vector<VarDataPair> m_flag_near_posts;
    std::vector<VarDataPair> m_flag_away_posts;
    std::vector<VarDataPair> m_flag_deny_posts;
-
 };
 
 #endif
