@@ -42,12 +42,19 @@ ProcessConfig = uFldFlagManager
   flag = $(BLUE_FLAG), colore=blue, label=blue
 
 	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+	grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
+
 	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
+	lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been reset}}
 
 	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
+	near_post = var=SAY_MOOS_ALL, sval={file=sounds/shipbell.wav}
+
 	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
+	away_post = var=SAY_MOOS_ALL, sval={file=sounds/buzzer.wav}
 
   deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
+  deny_post = var=SAY_MOOS_ALL, sval={say={Grab denied $REASON}}
 }
 
 //--------------------------------------------------
