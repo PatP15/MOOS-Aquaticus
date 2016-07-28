@@ -762,6 +762,8 @@ bool TagManager::handleMailVUnTagPost(const string& launch_str)
   string time_str = doubleToString(m_curr_time - m_start_time);
   string msg = "vname=" + vname + ",time=" + time_str;
   Notify("TAG_RELEASE_VERBOSE", msg);
+  Notify("TAG_RELEASE_"+toupper(vname), msg);
+  Notify("TAGGED_"+toupper(vname), "false");
 
   // Part 3: Post an inactive circle for this vehicle to erase
   XYCircle circle;
