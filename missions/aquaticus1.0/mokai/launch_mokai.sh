@@ -46,6 +46,12 @@ for ARGI; do
         TEAMMATE="felix"
     elif [ "${ARGI}" = "--w-gus" -o "${ARGI}" = "-g" ] ; then
         TEAMMATE="gus"
+    elif [ "${ARGI}" = "--w-hal" -o "${ARGI}" = "-H" ] ; then
+        TEAMMATE="hal"
+    elif [ "${ARGI}" = "--w-ida" -o "${ARGI}" = "-i" ] ; then
+        TEAMMATE="ida"
+    elif [ "${ARGI}" = "--w-jing" -o "${ARGI}" = "-J" ] ; then
+        TEAMMATE="jing"
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -70,17 +76,20 @@ done
 
 if [ "${HELP}" = "yes" ]; then
     echo "$0 [SWITCHES]"
-    echo "  --blue, -b         : Blue team"
-    echo "  --red, -r          : Red team"
-    echo "  --w-evan, -e       : Evan as a teammate."
-    echo "  --w-felix, -f      : Felix as a teammate."
-    echo "  --w-gus, -g        : Gus as a teammate."
-    echo "  --semi-sim, -ss    : Semi-autonomous simulation (w/ joysticks)"
-    echo "  --sim, -s          : Full simulation"
-    echo "  --voice-on, -von   : Voice recognition on"
-    echo "  --voice-off, -voff : Voice recognition off"
-    echo "  --just_build, -j       "
-    echo "  --help, -h             "
+    echo "  --blue,       -b    : Blue team"
+    echo "  --red,        -r    : Red team"
+    echo "  --w-evan,     -e    : Evan as a teammate."
+    echo "  --w-felix,    -f    : Felix as a teammate."
+    echo "  --w-gus,      -g    : Gus as a teammate."
+    echo "  --w-hal,      -H    : Hal as a teammate."
+    echo "  --w-ida,      -i    : Ida as a teammate."
+    echo "  --w-jing,     -J    : Jing as a teammate."
+    echo "  --semi-sim,   -ss   : Semi-autonomous simulation (w/ joysticks)"
+    echo "  --sim,        -s    : Full simulation"
+    echo "  --voice-on,   -von  : Voice recognition on"
+    echo "  --voice-off,  -voff : Voice recognition off"
+    echo "  --just_build, -j"
+    echo "  --help,       -h"
     exit 0;
 fi
 

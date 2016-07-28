@@ -36,13 +36,31 @@ for ARGI; do
         VNAME="felix"
         VPORT="9006"
         SHARE_LISTEN="9306"
-        echo "FELIX vehicle selected."
+        echo "FELIX vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
         M200_IP=192.168.7.1 #gus
         VNAME="gus"
         VPORT="9007"
         SHARE_LISTEN="9307"
         echo "GUS vehicle selected as HUNTER."
+    elif [ "${ARGI}" = "--hal" -o "${ARGI}" = "-H" ] ; then
+        M200_IP=192.168.8.1 #hal
+        VNAME="hal"
+        VPORT="9008"
+        SHARE_LISTEN="9308"
+        echo "HAL vehicle selected as HUNTER."
+    elif [ "${ARGI}" = "--ida" -o "${ARGI}" = "-i" ] ; then
+        M200_IP=192.168.9.1 #ida
+        VNAME="ida"
+        VPORT="9009"
+        SHARE_LISTEN="9309"
+        echo "IDA vehicle selected as HUNTER."
+    elif [ "${ARGI}" = "--jing" -o "${ARGI}" = "-J" ] ; then
+        M200_IP=192.168.10.1 #jing
+        VNAME="jing"
+        VPORT="9010"
+        SHARE_LISTEN="9310"
+        echo "JING vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -82,17 +100,20 @@ done
 
 if [ "${HELP}" = "yes" ]; then
     echo "$0 [SWITCHES]"
-    echo "  --evan, -e      : Evan vehicle only."
-    echo "  --felix, -f     : Felix vehicle only."
-    echo "  --gus, -g       : Gus vehicle only."
-    echo "  --blue, -b      : Blue team."
-    echo "  --red, -r       : Red team."
-    echo "  --sim, -s       : Simulation mode."
-    echo "  --start-x=      : Start from x position (requires x y a)."
-    echo "  --start-y=      : Start from y position (requires x y a)."
-    echo "  --start-a=      : Start from angle (requires x y a)."
-    echo "  --just_build, -j       "
-    echo "  --help, -h             "
+    echo "  --evan,       -e  : Evan vehicle."
+    echo "  --felix,      -f  : Felix vehicle."
+    echo "  --gus,        -g  : Gus vehicle."
+    echo "  --hal,        -H  : Hal vehicle."
+    echo "  --ida,        -i  : Ida vehicle."
+    echo "  --jing,       -J  : Jing vehicle."
+    echo "  --blue,       -b  : Blue team."
+    echo "  --red,        -r  : Red team."
+    echo "  --sim,        -s  : Simulation mode."
+    echo "  --start-x=        : Start from x position (requires x y a)."
+    echo "  --start-y=        : Start from y position (requires x y a)."
+    echo "  --start-a=        : Start from angle (requires x y a)."
+    echo "  --just_build, -j"
+    echo "  --help, -h"
     exit 0;
 fi
 
