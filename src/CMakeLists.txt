@@ -12,34 +12,35 @@ FILE(GLOB LOCAL_LIBRARY_DIRS ./lib_*)
 INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 
 #============================================================================
+# option for minimal and full compilation
+#============================================================================
+option(BUILD_ALL "Build all apps." ON)
+
+
+#============================================================================
 # List the subdirectories to build...
 #============================================================================
-ADD_SUBDIRECTORY(lib_behaviors-test)
-#ADD_SUBDIRECTORY(lib_behaviors-aq)
+IF(BUILD_ALL)
+  ADD_SUBDIRECTORY(iBlink)
+  ADD_SUBDIRECTORY(lib_behaviors-test)
+  ADD_SUBDIRECTORY(lib_SimpleSerial)
+  ADD_SUBDIRECTORY(uSpeechRec)
+  ADD_SUBDIRECTORY(uDialogManager)
+  ADD_SUBDIRECTORY(uFldFlagManager)
+  ADD_SUBDIRECTORY(uFldTagManager)
+  ADD_SUBDIRECTORY(uFldZoneEvent)
+  ADD_SUBDIRECTORY(iJoystick)
+  ADD_SUBDIRECTORY(pMapValues)
+  ADD_SUBDIRECTORY(iGPSDevice)
+  ADD_SUBDIRECTORY(iOS5000)
+  ADD_SUBDIRECTORY(uSimM200)
+ENDIF()
 ADD_SUBDIRECTORY(lib_NMEAParse)
-ADD_SUBDIRECTORY(lib_SimpleSerial)
 ADD_SUBDIRECTORY(lib_gpsParser)
-ADD_SUBDIRECTORY(uSpeechRec)
-ADD_SUBDIRECTORY(uDialogManager)
-#ADD_SUBDIRECTORY(uDialogManager_3_0)
 ADD_SUBDIRECTORY(pBotDialog)
-ADD_SUBDIRECTORY(uFldFlagManager)
-ADD_SUBDIRECTORY(uFldTagManager)
-ADD_SUBDIRECTORY(uFldZoneEvent)
-ADD_SUBDIRECTORY(pFlagStrategy)
-ADD_SUBDIRECTORY(pEvalLoiter)
-ADD_SUBDIRECTORY(iJoystick)
-ADD_SUBDIRECTORY(pMapValues)
-ADD_SUBDIRECTORY(iActuationMokai)
-ADD_SUBDIRECTORY(iGPSDevice)
-ADD_SUBDIRECTORY(iGPSSim)
 ADD_SUBDIRECTORY(iM200)
-ADD_SUBDIRECTORY(iOS5000)
-ADD_SUBDIRECTORY(iuModemMP)
-ADD_SUBDIRECTORY(uJSON)
-ADD_SUBDIRECTORY(uSimM200)
-ADD_SUBDIRECTORY(iBlink)
 ADD_SUBDIRECTORY(pRangeEvent)
+
 
 
 ##############################################################################

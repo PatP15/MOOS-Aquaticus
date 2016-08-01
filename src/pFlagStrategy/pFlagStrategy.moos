@@ -1,9 +1,0 @@
-//------------------------------------------------
-// pFlagStrategy config block
-
-ProcessConfig = pFlagStrategy
-{
-   AppTick   = 4
-   CommsTick = 4
-}
-
