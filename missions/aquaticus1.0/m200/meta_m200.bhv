@@ -76,7 +76,7 @@ Behavior = BHV_AvdColregsV2
 
   updates                 = CONTACT_INFO
 
-  condition               = (MODE == ACTIVE) and (AGGRESSIVE!=false)
+  condition               = (MODE == ACTIVE)
   templating              = spawn
 
   endflag                 = CONTACT_RESOLVED = $[CONTACT]
