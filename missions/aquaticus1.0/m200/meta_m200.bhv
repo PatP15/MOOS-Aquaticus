@@ -86,12 +86,12 @@ Behavior = BHV_AvdColregsV2
   on_no_contact_ok        = true
   extrapolate             = false
 
-  completed_dist          = 40
-  max_util_cpa_dist       = 25
-  min_util_cpa_dist       = 5
+  completed_dist          = 15
+  max_util_cpa_dist       = 15
+  min_util_cpa_dist       = 10
   // pwt_grade               = linear
-  pwt_inner_dist          = 20
-  pwt_outer_dist          = 35
+  pwt_inner_dist          = 10
+  pwt_outer_dist          = 15
 }
 
 //#############################################################################
@@ -149,12 +149,12 @@ Behavior = BHV_AvdColregsV2
   on_no_contact_ok        = true
   extrapolate             = false
 
-  completed_dist          = 90
+  completed_dist          = 30
   max_util_cpa_dist       = 25
-  min_util_cpa_dist       = 15
+  min_util_cpa_dist       = 20
   // pwt_grade               = linear
-  pwt_inner_dist          = 25
-  pwt_outer_dist          = 80
+  pwt_inner_dist          = 20
+  pwt_outer_dist          = 25
 }
 
 //#############################################################################
