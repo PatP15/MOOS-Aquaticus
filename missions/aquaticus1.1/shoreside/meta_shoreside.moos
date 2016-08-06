@@ -179,6 +179,7 @@ ProcessConfig = uFldShoreBroker
   qbridge  = DEPLOY, RETURN, STATION, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
   qbridge  = TAGGED
+	qbridge = HAS_FLAG
   qbridge  = ACTION, AGGRESSIVE
   qbridge  = SAY_MOOS
 
