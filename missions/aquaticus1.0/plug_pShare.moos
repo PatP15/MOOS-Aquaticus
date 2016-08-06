@@ -1,5 +1,7 @@
 //---------------------------------------------------------
-ProcessConfig = pShare
+	// pShare Configuration Block
+	
+	ProcessConfig = pShare
 {
   AppTick    = 2
   CommsTick  = 2

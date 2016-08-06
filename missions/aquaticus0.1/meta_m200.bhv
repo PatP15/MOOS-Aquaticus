@@ -1,9 +1,10 @@
-initialize DEPLOY     = false
-initialize RETURN     = false
-initialize ACTION     = defend
-initialize TAGGED     = false
-initialize INTRUDER   = false
-initialize HAVE_FLAG  = false
+initialize DEPLOY    = false
+initialize RETURN    = false
+initialize ACTION    = defend
+initialize TAGGED    = false
+initialize INTRUDER  = false
+initialize HAS_FLAG  = false
+initialize GO_GRAB   = false
 
 	// ACTION = {attack, defend}
 	//
@@ -11,7 +12,8 @@ initialize HAVE_FLAG  = false
 	//	   - INACTIVE
 	//	   - ACTIVE
 	//	      - STATION-KEEPING
-	//	      - RETURNING
+	//	      - RETURN-PAVLAB
+  //
 	//	      - ATTACKING
 	//	        - TAGGED
 	//          - GO-GRAB
@@ -29,7 +31,7 @@ set MODE = STATION-KEEPING {
   STATION_KEEP = true
 }
 
-set MODE = RETURNING {
+set MODE = RETURN-PAVLAB {
     MODE = ACTIVE
   RETURN = true
 } 
@@ -47,7 +49,8 @@ set MODE = TAGGED {
 
 set MODE = GO-GRAB {
   MODE = ACTIVE:ATTACKING
-	HAVE_FLAG = false
+	HAS_FLAG = false
+	GO_GRAB  = true
 } GRAB-RETURN
 
 // DEFENDING MODES
@@ -133,7 +136,7 @@ Behavior = BHV_Waypoint
 {
   name      = waypt_return_base
   pwt       = 100
-  condition = MODE == RETURNING
+  condition = MODE == RETURN-PAVLAB
   endflag   = STATION_KEEP = true
 
 	crs_spd_zaic_ratio = 20
@@ -151,7 +154,7 @@ Behavior = BHV_Waypoint
   name      = waypt_return_grab
   pwt       = 100
   condition = MODE == GRAB-RETURN
-  endflag   = STATION_KEEP = true
+  endflag   = GO_GRAB = true
 
         speed = 2
        radius = 3.0
@@ -169,12 +172,12 @@ Behavior = BHV_Waypoint
   perpetual = true
   condition = MODE == GO-GRAB
   endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
-  endflag   = HAVE_FLAG=true
+	endflag   = GO_GRAB = false
 
            speed = 2 // meters per second
     capture_line = false
-  capture_radius = 25.0
-     slip_radius = 5.0
+  capture_radius = 5.0
+     slip_radius = 10.0
           points = $(GRAB_POS)
 }
 
@@ -185,7 +188,6 @@ Behavior = BHV_Waypoint
   pwt       = 50
   perpetual = true
   condition = MODE == TAGGED
-//  endflag   = TAGGED=false
 
            speed = 2 // meters per second
     capture_line = false

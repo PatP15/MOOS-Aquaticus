@@ -10,6 +10,7 @@
 
   cmd = label=ATTACK, var=ACTION, sval=attack, receivers=evan:felix:gus:hal
   cmd = label=ATTACK, var=STATION_KEEP, sval=false, receivers=evan:felix:gus:hal
+  cmd = label=ATTACK, var=GO_GRAB, sval=true, receivers=evan:felix:gus:hal
 
   cmd = label=DEFEND, var=ACTION, sval=defend, receivers=evan:felix:gus:hal
   cmd = label=DEFEND, var=STATION_KEEP, sval=false, receivers=evan:felix:gus:hal

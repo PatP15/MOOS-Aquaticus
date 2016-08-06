@@ -25,7 +25,7 @@ Processconfig = ANTLER
 
   Run = uFldFlagManager @ NewConsole = false
   Run = uFldTagManager  @ NewConsole = false
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
+  //Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
 
   Run = iSay            @ NewConsole = false
 }
@@ -45,21 +45,27 @@ ProcessConfig = pShare
 
 ProcessConfig = uFldFlagManager
 {
-  AppTick       = 2
-  CommsTick     = 2
+  AppTick       = 4
+  CommsTick     = 4
 
-  flag = $(RED_FLAG), color=red, label=red
-  flag = $(BLUE_FLAG), color=blue, label=blue
+	default_flag_range = 15
+
+  flag = $(RED_FLAG), color=red, label=red, range=15
+  flag = $(BLUE_FLAG), color=blue, label=blue, range=12
 
 	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
-	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
+	//lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
 
 	//near_post = var=SAY_MOOS, sval={say={$VNAME is near the $FLAG flag}}
 	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
 	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
 
-	deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}
+	//deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}
+	deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
 
+	goal_post = var=SAY_MOOS, sval={say={$VTEAM has returned the $FLAG flag}}
+
+	home_post = var=SAY_MOOS, sval={say={$VNAME has returned home}}
 }
 
 //--------------------------------------------------
@@ -153,7 +159,7 @@ ProcessConfig = uFldShoreBroker
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
-  qbridge  = TAGGED, ACTION, LOITER_UPDATES
+  qbridge  = TAGGED, ACTION, LOITER_UPDATES, GO_GRAB
   qbridge  = SAY_MOOS, HAS_FLAG
 
   bridge   = src=IN_OWN_TERRITORY
@@ -235,10 +241,10 @@ ProcessConfig = pMarineViewer
   button_three = CHASE   # CHASE_ALL=true
   button_four  = STATION   # STATION_KEEP_ALL=true
 
-	op_vertex = x=-85, y=-48,    lwidth=1,lcolor=yellow,looped=true,group=moa
+	op_vertex = x=-85, y=-48,      lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-53.1, y=-121.4, lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=90.9, y=-52.4,   lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=59, y=21,    lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=59, y=21,        lwidth=1,lcolor=yellow,looped=true,group=moa
 
 #include plug_commandfolio.txt	
 }
@@ -293,13 +299,16 @@ ProcessConfig = UFZEUntag
   CommsTick = 4
 
   // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
+
   // zone name should correspond to the vehicle's group name to be active
   zone_info = name=blue_untag # polygon=format=radial, $(BLUE_FLAG), radius=10, pts=10, snap=1
   zone_info = name=blue_untag # post_var = UNTAG_REQUEST=vname=$[VNAME]
   zone_info = name=blue_untag # post_var = FLAG_RESET=vname=$[VNAME]
-  zone_info = name=blue_untag # viewable=true  // default is true
+  zone_info = name=blue_untag # viewable=false  // default is true
+
   //zone_info = name=blue_untag # color=blue  // default is orange
   zone_info = name=blue_untag # group=blue
+	
   zone_info = name=red_untag  # polygon=format=radial, $(RED_FLAG), radius=10, pts=10, snap=1
   zone_info = name=red_untag  # post_var = UNTAG_REQUEST=vname=$[VNAME]
   zone_info = name=red_untag  # post_var = FLAG_RESET=vname=$[VNAME]
