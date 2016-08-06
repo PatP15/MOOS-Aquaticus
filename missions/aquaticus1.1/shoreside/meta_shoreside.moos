@@ -44,8 +44,8 @@ ProcessConfig = uFldFlagManager
 	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
 	grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
 
-	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
-	lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been reset}}
+	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
+	lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
 
 	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
 	near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
