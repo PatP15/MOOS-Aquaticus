@@ -93,10 +93,16 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
 	//form a string including m_bot_ivp_mode and publish to
        //is my bot tagged? if so include it
        std::string tag_stat = "";
+       std::string have_flag_stat = "";
        if(m_tagged_status=="true"){
-	 tag_stat = " tagged and is ";
+	 tag_stat = " is tagged and ";
 	   } 
-	string ackStatement =  "src_node="+ my_community_name +",dest_node="+ requestString  +",var_name=SAY_MOOS,string_val=" + my_community_name + " is " + tag_stat + " " + m_bot_dialog_status;
+
+       if(m_have_flag_status=="true"){
+	 have_flag_stat = " has the flag and ";
+       }
+
+	string ackStatement =  "src_node="+ my_community_name +",dest_node="+ requestString  +",var_name=SAY_MOOS,string_val=" + my_community_name + have_flag_stat +  tag_stat + " is " + m_bot_dialog_status;
 	//say={Did you mean " + svalLowered +"}, rate=200"Arnold " + m_bot_dialog_status;
 
 	//	  m_Comms.Notify("SAY_MOOS",ackStatement);
@@ -109,6 +115,9 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     }
     else if( key == "TAGGED") {
       m_tagged_status = sval;
+    }
+    else if( key == "HAS_FLAG"){
+      m_have_flag_status= sval;
     }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -392,6 +401,7 @@ void DialogManager::registerVariables()
   // Register("FOOBAR", 0);
   m_Comms.Register("BOT_DIALOG_REQUEST",0);
   m_Comms.Register("BOT_DIALOG_STATUS",0);
+  m_Comms.Register("HAS_FLAG",0);
   m_Comms.Register("TAGGED",0);
 }
 
@@ -464,8 +474,21 @@ bool DialogManager::buildReport()
   for(std::vector<std::string>::reverse_iterator it = m_conversation.rbegin(); it!=m_conversation.rend(); ++it) {
     m_msgs << *it << endl;
   }
-  
-  m_msgs <<"BOT_DIALOG_STATUS " << m_bot_dialog_status << endl;
+
+  //For now same logic composes appcast string as human hears
+  std::string tag_stat = "";
+       std::string have_flag_stat = "";
+       if(m_tagged_status=="true"){
+	 tag_stat = " is tagged and ";
+	   } 
+
+       if(m_have_flag_status=="true"){
+	 have_flag_stat = " has the flag and ";
+       }
+
+	string appCastStatement = have_flag_stat +  tag_stat + " is " + m_bot_dialog_status;
+	
+  m_msgs <<"BOT_DIALOG_STATUS: " << appCastStatement << endl;
 
   return(true);
 }

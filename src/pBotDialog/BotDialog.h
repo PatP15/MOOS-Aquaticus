@@ -50,6 +50,7 @@ class DialogManager : public AppCastingMOOSApp
  private: // State variables
   std::string m_bot_dialog_status;
   std::string m_tagged_status;
+  std::string m_have_flag_status;
   std::string m_commanded_string;
   std::vector<std::string> m_conversation;
   enum type_name {
