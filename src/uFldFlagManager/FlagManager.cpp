@@ -7,11 +7,14 @@
 
 #include <iterator>
 #include "MBUtils.h"
+#include "GeomUtils.h"
 #include "ACTable.h"
 #include "FlagManager.h"
 #include "NodeRecordUtils.h"
 #include "XYMarker.h"
+#include "XYPolygon.h"
 #include "XYFormatUtilsMarker.h"
+#include "XYFormatUtilsPoly.h"
 
 using namespace std;
 
@@ -30,8 +33,17 @@ FlagManager::FlagManager()
   m_total_node_reports_rcvd  = 0;
   m_total_grab_requests_rcvd = 0;
 
+  m_flag_follows_vehicle = true;
+  
   m_grabbed_color   = "white";
   m_ungrabbed_color = "red";
+
+  m_poly_vertex_size = 0;
+  m_poly_edge_size = 1;
+  m_poly_vertex_color = "blue";
+  m_poly_edge_color = "grey50";
+  m_poly_fill_color = "grey90";
+  
 }
 
 //---------------------------------------------------------
@@ -89,6 +101,11 @@ bool FlagManager::Iterate()
   AppCastingMOOSApp::Iterate();
 
   updateVehiclesInFlagRange();
+  updateVehiclesHaveScored();
+  updateVehiclesUntagged();
+
+  if(m_flag_follows_vehicle)
+    updateVehiclesFlagRender();
   
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -108,6 +125,9 @@ bool FlagManager::OnStartUp()
     reportConfigWarning("No config block found for " + GetAppName());
 
   STRING_LIST pass2params;
+
+  // Perform two passes so we can set the default flag paramaters before
+  // handling the flags in the second pass.
   STRING_LIST::iterator p;
   for(p=sParams.begin(); p!=sParams.end(); p++) {
     string orig  = *p;
@@ -115,40 +135,45 @@ bool FlagManager::OnStartUp()
     string param = tolower(biteStringX(line, '='));
     string value = line;
 
-    bool handled = false;
-    if((param == "grabbed_color") && isColor(value)) {
-      m_grabbed_color = value;
-      handled = true;
-    }
-    else if((param == "ungrabbed_color") && isColor(value)) {
-      m_ungrabbed_color = value;
-      handled = true;
-    }
-    else if((param == "default_flag_range") && isNumber(value)) {
-      double dval = atof(value.c_str());
-      if(dval >= 0) {
-        m_default_flag_range = dval;
-        handled = true;
-      }
-    }
-    else if((param == "default_flag_width") && isNumber(value)) {
-      double dval = atof(value.c_str());
-      if(dval >= 0) {
-        m_default_flag_width = dval;
-        handled = true;
-      }
-    }
+    bool handled = true;
+    if(param == "grabbed_color")
+      handled = setColorOnString(m_grabbed_color, value);
+    else if(param == "ungrabbed_color")
+      handled = setColorOnString(m_ungrabbed_color, value);
+    
+    else if(param == "default_flag_range")
+      handled = setNonNegDoubleOnString(m_default_flag_range, value);
+    else if(param == "default_flag_width")
+      handled = setNonNegDoubleOnString(m_default_flag_width, value);
+    else if(param == "poly_vertex_size")
+      handled = setNonNegDoubleOnString(m_poly_vertex_size, value);
+    else if(param == "poly_edge_size")
+      handled = setNonNegDoubleOnString(m_poly_edge_size, value);
+    else if(param == "poly_vertex_color")
+      handled = setColorOnString(m_poly_vertex_color, value);
+    else if(param == "poly_edge_color")
+      handled = setColorOnString(m_poly_edge_color, value);
+    else if(param == "poly_fill_color")
+      handled = setColorOnString(m_poly_fill_color, value);
+    
+    else if(param == "flag_follows_vehicle")
+      handled = setBooleanOnString(m_flag_follows_vehicle, value);
+    
     else if(param == "default_flag_type") {
       value = tolower(value);
-      if((value == "circle")  || (value == "square") ||
-         (value == "diamond") || (value == "efield") ||
-         (value == "gateway") || (value == "triangle")) {
+      if((value != "circle")  && (value != "square") &&
+         (value != "diamond") && (value != "efield") &&
+         (value != "gateway") & (value != "triangle")) 
+        handled = false;
+      else
         m_default_flag_type = value;
-        handled = true;
-      }
     }
     else
       pass2params.push_back(orig);
+
+    if(!handled)
+      reportUnhandledConfigWarning(orig);
+
   }
 
   STRING_LIST::iterator p2;
@@ -158,7 +183,7 @@ bool FlagManager::OnStartUp()
     string param = tolower(biteStringX(line, '='));
     string value = line;
 
-    bool handled = false;
+    bool handled = true;
     if(param == "flag")
       handled = handleConfigFlag(value);
     else if(param == "grab_post")
@@ -171,7 +196,13 @@ bool FlagManager::OnStartUp()
       handled = handleConfigAwayPost(value);
     else if(param == "deny_post")
       handled = handleConfigDenyPost(value);
-
+    else if(param == "goal_post")
+      handled = handleConfigGoalPost(value);
+    else if(param == "home_post")
+      handled = handleConfigHomePost(value);
+    else
+      handled = false;
+    
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -183,6 +214,8 @@ bool FlagManager::OnStartUp()
   if(m_report_flags_on_start)
     postFlagSummary();
 
+  postPolygons();
+  
   registerVariables();
   return(true);
 }
@@ -310,6 +343,32 @@ bool FlagManager::handleConfigDenyPost(string str)
   return(true);
 }
 
+//---------------------------------------------------------
+// Procedure: handleConfigGoalPost
+
+bool FlagManager::handleConfigGoalPost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+  
+  m_flag_goal_posts.push_back(pair);
+  return(true);
+}
+
+//---------------------------------------------------------
+// Procedure: handleConfigHomePost
+
+bool FlagManager::handleConfigHomePost(string str)
+{
+  VarDataPair pair = stringToVarDataPair(str);
+  if(!pair.valid())
+    return(false);
+  
+  m_flag_home_posts.push_back(pair);
+  return(true);
+}
+
 //------------------------------------------------------------
 // Procedure: handleMailTaggedVehicles()
 //   Example: TAGGED_VEHICLES = henry,gus,hal
@@ -404,7 +463,7 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   // Part 2: Sanity check on the Grab Request
   // Check if grabbing vname is set and matches message community
   if((grabbing_vname == "") || (grabbing_vname != community)) {
-    invokePosts("deny", grabbing_vname, "", "invalid vehicle name");
+    invokePosts("deny", grabbing_vname, "", "", "invalid vehicle name");
     Notify("FLAG_GRAB_REPORT", "Nothing grabbed - invalid vehicle name.");
     return(false);
   }
@@ -412,8 +471,16 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   // If no node records of the grabbing vehicle, return false
   string up_vname = toupper(grabbing_vname);
   if(m_map_record.count(up_vname) == 0) {
-    invokePosts("deny", grabbing_vname, "", "name unknown to flag manager");
+    invokePosts("deny", grabbing_vname, "", "", "name unknown to flag manager");
     Notify("FLAG_GRAB_REPORT", "Nothing grabbed - name unknown to flag manager.");
+    return(false);
+  }
+
+  // If grabbing vehicle already has a flag, return false
+  if(hasFlag(grabbing_vname)) {
+    string reason = grabbing_vname + " already has a flag";
+    invokePosts("deny", grabbing_vname, "", "", reason);
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
   }
 
@@ -422,13 +489,14 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   m_map_grab_count[up_vname]++;
 
   if(m_tagged_vnames.count(grabbing_vname) ||  m_tagged_vnames.count(up_vname)) {
-    invokePosts("deny", grabbing_vname, "", "grabbing vehicle is tagged");
-    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - grabbing vehicle is tagged.");
+    string reason = grabbing_vname + " is tagged";
+    invokePosts("deny", grabbing_vname, "", "", reason);
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
   }
 
   if(m_flags.size() == 0) {
-    invokePosts("deny", grabbing_vname, "", "no flags to grab");
+    invokePosts("deny", grabbing_vname, "", "", "no flags to grab");
     Notify("FLAG_GRAB_REPORT", "Nothing grabbed - no flags to grab");
     return(false);
   }
@@ -458,14 +526,16 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
         m_flags_changed[i] = true;
         m_map_flag_count[up_vname]++;
 
+	m_map_team_grabs[group]++;
+	
 	Notify("HAS_FLAG_"+toupper(grabbing_vname), "true");
 
-	invokePosts("grab", grabbing_vname, flag_name);
+	invokePosts("grab", grabbing_vname, group, flag_name);
       }
     }
   }
   if(result == "") {
-    invokePosts("deny", grabbing_vname, "", "out of range");
+    invokePosts("deny", grabbing_vname, group, "", "out of range");
     Notify("FLAG_GRAB_REPORT", "Nothing grabbed - out of range");
     return(false);
   }
@@ -490,7 +560,7 @@ void FlagManager::updateVehiclesInFlagRange()
   for(p=m_map_record.begin(); p!=m_map_record.end(); p++) {
     string vname = p->first;
     NodeRecord record = p->second;
-    string group = record.getGroup();
+    string vteam = record.getGroup();
     double vx = record.getX();
     double vy = record.getY();
 
@@ -499,7 +569,7 @@ void FlagManager::updateVehiclesInFlagRange()
     string flag_name;
     for(unsigned int i=0; i<m_flags.size(); i++) {
       flag_name = m_flags[i].get_label();
-      if(flag_name != group) {
+      if(flag_name != vteam) {
 	double range = m_flags[i].get_range();
 	double flagx = m_flags[i].get_vx();
 	double flagy = m_flags[i].get_vy();
@@ -510,13 +580,13 @@ void FlagManager::updateVehiclesInFlagRange()
       }
     }
 
-    if(!m_map_in_fzone[vname] && vname_in_flag_zone)
-      invokePosts("near", vname, flag_name);
+    if(!m_map_in_flag_zone[vname] && vname_in_flag_zone)
+      invokePosts("near", vname, vteam, flag_name);
 
-    if(m_map_in_fzone[vname] && !vname_in_flag_zone)
-      invokePosts("away", vname, flag_name);
+    if(m_map_in_flag_zone[vname] && !vname_in_flag_zone)
+      invokePosts("away", vname, vteam, flag_name);
 
-    m_map_in_fzone[vname] = vname_in_flag_zone;
+    m_map_in_flag_zone[vname] = vname_in_flag_zone;
   }
 }
 
@@ -524,48 +594,124 @@ void FlagManager::updateVehiclesInFlagRange()
 //------------------------------------------------------------
 // Procedure: updateVehiclesHaveScored
 
-# if 0
 void FlagManager::updateVehiclesHaveScored()
 {
+  // For each vehicle, check if it has scored.
   map<string, NodeRecord>::iterator p;
   for(p=m_map_record.begin(); p!=m_map_record.end(); p++) {
-    string vname = p->first;
-    if(hasFlag(vname)) {
-      NodeRecord record = p->second;
-      string group = record.getGroup();
-      double vx = record.getX();
-      double vy = record.getY();
+    string vname      = p->first;
+    NodeRecord record = p->second;
 
-      for(unsigned int i=0; i<m_flags.size(); i++) {
-	if(m_flags
-      
-    bool vname_in_flag_zone = false;
+    // Check, for all flags, if vname owns the flag
+    for(unsigned int i=0; i<m_flags.size(); i++) {
+      string flag_owner = tolower(m_flags[i].get_owner());
+      string flag_label = m_flags[i].get_label();
+      if(flag_owner == tolower(vname)) {
+	// If it owns the flag, check if vname is home yet
+	string vteam = record.getGroup();
+	double vx = record.getX();
+	double vy = record.getY();
 
+	// home is defined by begin close enough to ownflag
+	for(unsigned int j=0; j<m_flags.size(); j++) {
+	  if(m_flags[j].get_label() == vteam) {
+	    double range = m_flags[j].get_range();
+	    double fx = m_flags[j].get_vx();
+	    double fy = m_flags[j].get_vy();
+	    double dist = hypot((fx-vx), (fy-vy));
+	    // If successful
+	    if(dist < range) {
+	      m_map_team_score[vteam]++;
+	      resetFlagsByVName(vname);
+	      invokePosts("goal", vname, vteam, flag_label);
+
+	      postFlagMarkers();
+	      postFlagSummary();
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: updateVehiclesFlagRender
+
+void FlagManager::updateVehiclesFlagRender()
+{
+  // For each vehicle, check if it has scored.
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_record.begin(); p!=m_map_record.end(); p++) {
+    string vname      = p->first;
+    NodeRecord record = p->second;
+
+    // Check, for all flags, if vname owns the flag
+    for(unsigned int i=0; i<m_flags.size(); i++) {
+      string flag_owner = tolower(m_flags[i].get_owner());
+      string flag_label = m_flags[i].get_label();
+      if(flag_owner == tolower(vname)) {
+
+	XYMarker marker = m_flags[i];
+	marker.set_color("secondary_color", "black");
+	
+	double vx = record.getX();
+	double vy = record.getY();
+	double vh = record.getHeading();
+	
+	double px, py;
+	projectPoint((vh+180), 3, vx, vy, px, py);
+	marker.set_vx(px);
+	marker.set_vy(py);
+	
+	string spec = marker.get_spec();
+	Notify("VIEW_MARKER", spec);
+	
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: updateVehiclesUntagged
+
+void FlagManager::updateVehiclesUntagged()
+{
+  // For each vehicle, check if it is tagged, and if it is home now.
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_record.begin(); p!=m_map_record.end(); p++) {
+    string vname      = tolower(p->first);
+    NodeRecord record = p->second;
+
+    string vteam = record.getGroup();
+    double vx = record.getX();
+    double vy = record.getY();
+
+    bool vname_in_home_zone = false;
+
+    // home is defined by begin close enough to ownflag
     string flag_name;
     for(unsigned int i=0; i<m_flags.size(); i++) {
       flag_name = m_flags[i].get_label();
-      if(flag_name != group) {
-	double range = m_flags[i].get_range();
-	double flagx = m_flags[i].get_vx();
-	double flagy = m_flags[i].get_vy();
-
-	double dist = hypot(vx-flagx, vy-flagy);
-	if(dist <= range)
-	  vname_in_flag_zone = true;
+      if(flag_name == vteam) {
+	double flag_range = m_flags[i].get_range();
+	double fx = m_flags[i].get_vx();
+	double fy = m_flags[i].get_vy();
+	double dist = hypot((fx-vx), (fy-vy));
+	// If successful
+	if(dist < flag_range) {
+	  vname_in_home_zone = true;
+	  if(m_tagged_vnames.count(vname) && !m_map_in_home_zone[vname]) {
+	    Notify("UNTAG_REQUEST", "vname="+vname);
+	    invokePosts("home", vname, vteam, "");
+	  }
+	}
       }
     }
 
-    if(!m_map_in_fzone[vname] && vname_in_flag_zone)
-      invokePosts("near", vname, flag_name);
-
-    if(m_map_in_fzone[vname] && !vname_in_flag_zone)
-      invokePosts("away", vname, flag_name);
-
-    m_map_in_fzone[vname] = vname_in_flag_zone;
+    m_map_in_home_zone[vname] = vname_in_home_zone;
   }
 }
-#endif
-
 
 //------------------------------------------------------------
 // Procedure: resetFlagsByLabel
@@ -587,7 +733,7 @@ bool FlagManager::resetFlagsByLabel(string label)
         some_flags_were_reset = true;
 	Notify("HAS_FLAG_"+toupper(flag_owner), "false");
 
-	invokePosts("lose", "system", label);
+	invokePosts("lose", "system", "", label);
       }
     }
   }
@@ -613,7 +759,7 @@ bool FlagManager::resetFlagsAll()
       some_flags_were_reset = true;
       Notify("HAS_FLAG_ALL", "false");
 
-      invokePosts("lose", "system", flag_name);
+      invokePosts("lose", "system", "", flag_name);
     }
   }
   return(some_flags_were_reset);
@@ -628,9 +774,10 @@ bool FlagManager::resetFlagsAll()
 bool FlagManager::resetFlagsByVName(string vname)
 {
   bool some_flags_were_reset = false;
-
+  
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    if(m_flags[i].get_owner() == vname) {
+    string flag_owner = tolower(m_flags[i].get_owner());
+    if(flag_owner == tolower(vname)) {
       string flag_name = m_flags[i].get_label();
 
       m_flags[i].set_owner("");
@@ -638,7 +785,7 @@ bool FlagManager::resetFlagsByVName(string vname)
       some_flags_were_reset = true;
 
       Notify("HAS_FLAG_"+toupper(vname), "false");
-      invokePosts("lose", "system", flag_name);
+      invokePosts("lose", "system", "", flag_name);
     }
   }
   return(some_flags_were_reset);
@@ -666,6 +813,31 @@ void FlagManager::postFlagMarkers()
       Notify("VIEW_MARKER", spec);
       m_flags_changed[i] = false;
     }
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: postPolygons
+//      Note: Typically JUST called on startup unless marker
+//            positions or colors are allowed to change.
+
+void FlagManager::postPolygons()
+{
+  for(unsigned int i=0; i<m_flags.size(); i++) {
+    string spec = "format=radial";
+    spec += ",x=" + doubleToString(m_flags[i].get_vx(),3);
+    spec += ",y=" + doubleToString(m_flags[i].get_vy(),3);
+    spec += ",radius=" + doubleToString(m_flags[i].get_range(),1);
+    spec += ",pts=24";
+    spec += ",label=flag_zone_" + m_flags[i].get_label();
+    XYPolygon poly = string2Poly(spec);
+    poly.set_vertex_size(m_poly_vertex_size);
+    poly.set_edge_size(m_poly_edge_size);
+    poly.set_vertex_color(m_poly_vertex_color);
+    poly.set_edge_color(m_poly_edge_color);
+    poly.set_color("fill", m_poly_fill_color);
+    string pspec = poly.get_spec();
+    Notify("VIEW_POLYGON", pspec);
   }
 }
 
@@ -703,7 +875,7 @@ void FlagManager::postFlagSummary()
 bool FlagManager::hasFlag(string vname)
 {
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    if(m_flags[i].get_owner() == vname)
+    if(tolower(m_flags[i].get_owner()) == tolower(vname))
       return(true);
   }
   return(false);
@@ -712,7 +884,7 @@ bool FlagManager::hasFlag(string vname)
 //------------------------------------------------------------
 // Procedure: invokePosts()
 
-void FlagManager::invokePosts(string ptype, string vname,
+void FlagManager::invokePosts(string ptype, string vname, string vteam,
 			      string fname, string reason)
 {
   vector<VarDataPair> pairs;
@@ -726,13 +898,19 @@ void FlagManager::invokePosts(string ptype, string vname,
     pairs = m_flag_away_posts;
   else if(ptype == "deny")
     pairs = m_flag_deny_posts;
+  else if(ptype == "goal")
+    pairs = m_flag_goal_posts;
+  else if(ptype == "home")
+    pairs = m_flag_home_posts;
 
   for(unsigned int i=0; i<pairs.size(); i++) {
     VarDataPair pair = pairs[i];
     string moosvar = pair.get_var();
     moosvar = findReplace(moosvar, "$VNAME", vname);
+    moosvar = findReplace(moosvar, "$VTEAM", vteam);
     moosvar = findReplace(moosvar, "$FLAG", fname);
     moosvar = findReplace(moosvar, "$UP_VNAME", toupper(vname));
+    moosvar = findReplace(moosvar, "$UP_VTEAM", toupper(vteam));
     
     if(!pair.is_string()) {
       double dval = pair.get_ddata();
@@ -741,8 +919,10 @@ void FlagManager::invokePosts(string ptype, string vname,
     else {
       string sval = pair.get_sdata();
       sval = findReplace(sval, "$VNAME", vname);
+      sval = findReplace(sval, "$VTEAM", vteam);
       sval = findReplace(sval, "$FLAG", fname);
       sval = findReplace(sval, "$UP_VNAME", toupper(vname));
+      sval = findReplace(sval, "$UP_VTEAM", toupper(vteam));
       sval = findReplace(sval, "$REASON", reason);
       
       if(strContains(sval, "TIME")) {
@@ -785,10 +965,29 @@ bool FlagManager::buildReport()
 
   m_msgs << endl;
 
+  m_msgs << "Team Summary" << endl;
+  m_msgs << "======================================" << endl;
+  ACTable actab(3);
+  actab << "Team | Grabs | Scores";
+  actab.addHeaderLines();
+
+  map<string,unsigned int>::iterator p1;
+  for(p1=m_map_team_grabs.begin(); p1!=m_map_team_grabs.end(); p1++) {
+    string vteam = p1->first;
+    unsigned int grabs  = p1->second;
+    unsigned int scores = m_map_team_score[vteam];
+    string s_scores = uintToString(scores);
+    string s_grabs  = uintToString(grabs);
+    actab << vteam << s_grabs << s_scores;
+  }
+  m_msgs << actab.getFormattedString();
+
+ 
+  m_msgs << endl << endl;;
   m_msgs << "Vehicle Summary" << endl;
   m_msgs << "======================================" << endl;
-  ACTable actab(4);
-  actab << "VName | Grabs | Flags | InFlagZone";
+  actab = ACTable(5);
+  actab << "VName | Grabs | Flags | InFlagZone | HasFlag";
   actab.addHeaderLines();
 
   map<string,unsigned int>::iterator p2;
@@ -802,14 +1001,17 @@ bool FlagManager::buildReport()
       flag_count = m_map_flag_count[vname];
 
     bool in_flag_zone = false;
-    if(m_map_in_fzone.count(vname) != 0)
-      in_flag_zone = m_map_in_fzone[vname];
-        
+    if(m_map_in_flag_zone.count(vname) != 0)
+      in_flag_zone = m_map_in_flag_zone[vname];
+
+    bool has_flag = hasFlag(vname);
+    
     string s_grab_count = uintToString(grab_count);
     string s_flag_count = uintToString(flag_count);
     string s_in_flag_zone = boolToString(in_flag_zone);
+    string s_has_flag = boolToString(has_flag);
 
-    actab << vname << s_grab_count << s_flag_count << s_in_flag_zone;
+    actab << vname << s_grab_count << s_flag_count << s_in_flag_zone << s_has_flag;
   }
   m_msgs << actab.getFormattedString();
   m_msgs << endl << endl;
