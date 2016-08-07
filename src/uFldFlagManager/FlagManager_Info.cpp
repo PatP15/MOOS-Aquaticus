@@ -80,6 +80,12 @@ void showExampleConfigAndExit()
   blk("  default_flag_type  = circle   // Default is circle            ");
   blk("  default_flag_range = 10       // Default is 10 meters         ");
   blk("                                                                ");
+  blk("  poly_vertex_size  = 1     // Default is 1                     ");
+  blk("  poly_edge_size    = 1     // Default is 1                     ");
+  blk("  poly_veretx_color = 1     // Default is blue                  ");
+  blk("  poly_edge_color   = 1     // Default is grey50                ");
+  blk("  poly_fill_color   = 1     // Default is grey90                ");
+  blk("                                                                ");
   blk("  grabbed_color      = white    // Default is white             ");
   blk("  ungrabbed_color    = red      // Default is red               ");
   blk("                                                                ");
@@ -91,7 +97,8 @@ void showExampleConfigAndExit()
   blk("  near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}     ");
   blk("  away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}       ");
   blk("  deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}   ");
-  blk("                                                                ");
+  blk("  home_post = var=SAY_MOOS, sval={file=sounds/i-am-back.wav}    ");
+  blk("  goal_post = var=SAY_MOOS, sval={file=sounds/goaaaal.wav}      ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -140,12 +147,14 @@ void showInterfaceAndExit()
   blk("                 width=3,range=10,primary_color=blue,           ");
   blk("                 type=circle,label=blue                         ");
   blk("                                                                ");
-  blk("  User-configured posts via config params:                     ");
+  blk("  User-configured posts via config params:                      ");
   blk("     o grab_post                                                ");
   blk("     o lose_post                                                ");
   blk("     o near_post                                                ");
   blk("     o away_post                                                ");
   blk("     o deny_post                                                ");
+  blk("     o home_post                                                ");
+  blk("     o goal_post                                                ");
   blk("                                                                ");
   exit(0);
 }
