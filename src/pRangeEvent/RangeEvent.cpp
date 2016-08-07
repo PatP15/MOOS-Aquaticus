@@ -125,7 +125,8 @@ void RangeEvent::publishEvents()
     NodeRecord nr = it_nr->second;
 
     map<string, string>::iterator it_varval;
-    for(it_varval = m_map_var_val.begin(); it_varval != m_map_var_val.end(); ++it_varval){
+    for(it_varval = m_map_var_val.begin(); it_varval != m_map_var_val.end();
+	++it_varval){
       string var_name = it_varval->first;
       string val = it_varval->second;
 

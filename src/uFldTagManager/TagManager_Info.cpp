@@ -99,6 +99,7 @@ void showExampleConfigAndExit()
   blk("  tag_circle = true         // default                          ");
   blk("  tag_circle_range = 5      // default (in meters)              ");
   blk("  tag_circle_color = green  // default                          ");
+  blk("  oop_circle_color = yellow // default                          ");
   blk("  tag_min_interval = 10     // default (in seconds)             ");
   blk("  tag_duration     = 30     // default (in seconds)             ");
   blk("                                                                ");
@@ -148,7 +149,7 @@ void showInterfaceAndExit()
   blk("                MODE=MODE@ACTIVE:LOITERING                      ");
   blk("                                                                ");
   blk("  TAG_REQUEST = vname=henry                                     ");
-  blk("  UNTAG_REQUEST = vname=henry                                  ");
+  blk("  UNTAG_REQUEST = vname=henry                                   ");
   blk("  APPCAST_REQ                                                   ");
   blk("                                                                ");
   blk("PUBLICATIONS (configurable):                                    ");
@@ -163,12 +164,14 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
+  blk("  APPCAST             = This is an appcast-enabledd MOOS App    ");
   blk("  TAG_RESULT_VNAME    = event=23,source=abe,                    ");
   blk("                        result=rejected_toofreq                 ");
   blk("  TAG_RESULT_VNAME    = event=23,source=abe, tagged=gus         ");
   blk("                                                                ");
   blk("  TAG_RESULT_VERBOSE  = event=1,src=archie,ranges=betty:20.2    ");
   blk("  TAG_RELEASE_VERBOSE = vname=betty,time=85.86929               ");
+  blk("  TAGGED_VEHICLES     = betty,gus,henry                         ");
   blk("                                                                ");
   blk("  VIEW_CIRCLE     = x=60.7,y=-65.98,radius=5,duration=0,        ");
   blk("                    label=betty,edge_color=red,fill_color=red,  ");
@@ -182,6 +185,9 @@ void showInterfaceAndExit()
   blk("                     label=archie_vtag,edge_color=white,        ");
   blk("                     fill_color=white,time=17399416389.33,      ");
   blk("                     edge_size=1                                ");
+  blk("  VIEW_COMMS_PULSE = label=one,sx=4,sy=2,tx=44,ty=55,           ");
+  blk("                     beam_width=10,duration=5,fill=0.3,         ");
+  blk("                     fill_color=yellow,edge_color=green         ");
   exit(0);
 }
 
