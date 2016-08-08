@@ -25,7 +25,6 @@ Processconfig = ANTLER
 
   Run = uFldFlagManager @ NewConsole = false
   Run = uFldTagManager  @ NewConsole = false
-  Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
 
   Run = iSay            @ NewConsole = false
 }
@@ -41,20 +40,23 @@ ProcessConfig = uFldFlagManager
   flag = $(RED_FLAG), color=red, label=red
   flag = $(BLUE_FLAG), colore=blue, label=blue
 
-	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
-	grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
+  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
 
-	lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
-	lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
+  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
+  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
 
-	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
-	near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
+  near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
+  near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
 
-	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
-	away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
+  away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
+  away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
 
   deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
   deny_post = var=SAY_MOOS_$UP_VNAME, sval={say={Grab denied $REASON}}
+
+  home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
+  home_post = var=FLAG_RESET, sval={vname=$VNAME}
 }
 
 //--------------------------------------------------
@@ -113,37 +115,15 @@ ProcessConfig = uFldTagManager
 }
 
 //---------------------------------------------------------
-	// pShare Configuration Block
-	
-	ProcessConfig = pShare
+// pShare Configuration Block
+
+ProcessConfig = pShare
 {
   AppTick    = 2
   CommsTick  = 2
 
   input = route =  localhost:$(SHARE_LISTEN)
 //  input = route =  multicast_7
-}
-
-//------------------------------------------------
-// uFldZoneEvent config block
-
-ProcessConfig = UFZEUntag
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-  // zone name should correspond to the vehicle's group name to be active
-  zone_info = name=blue_untag # polygon=format=radial, $(BLUE_FLAG), radius=10, pts=10, snap=1
-  zone_info = name=blue_untag # post_var = UNTAG_REQUEST=vname=$[VNAME]
-  zone_info = name=blue_untag # post_var = FLAG_RESET=vname=$[VNAME]
-  zone_info = name=blue_untag # viewable=true  // default is true
-  zone_info = name=blue_untag # color=blue  // default is orange
-  zone_info = name=blue_untag # group=blue
-  zone_info = name=red_untag  # polygon=format=radial, $(RED_FLAG), radius=10, pts=10, snap=1
-  zone_info = name=red_untag  # post_var = UNTAG_REQUEST=vname=$[VNAME]
-  zone_info = name=red_untag  # post_var = FLAG_RESET=vname=$[VNAME]
-  zone_info = name=red_untag  # viewable=true # color=red # group = red
 }
 
 //--------------------------------------------------
@@ -179,7 +159,7 @@ ProcessConfig = uFldShoreBroker
   qbridge  = DEPLOY, RETURN, STATION, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
   qbridge  = TAGGED
-	qbridge = HAS_FLAG
+  qbridge  = HAS_FLAG
   qbridge  = ACTION, AGGRESSIVE
   qbridge  = SAY_MOOS
 
