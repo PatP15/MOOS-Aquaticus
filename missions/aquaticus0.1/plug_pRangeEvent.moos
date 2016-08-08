@@ -8,7 +8,7 @@ ProcessConfig = pRangeEvent
 
   // Range within which the event is triggered
   min_range = 0 // default
-  max_range = 20 // default
+  max_range = 40 // default
 
 	ignore_group = $(VTEAM)
 

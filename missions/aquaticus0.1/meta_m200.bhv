@@ -123,7 +123,8 @@ Behavior = BHV_StationKeep
         outer_radius = 15
          outer_speed = 5
        transit_speed = 5
-
+		      swing_time = 4
+	
         visual_hints = vertex_size = 1     // default
         visual_hints = edge_color = light_blue // default
         visual_hints = edge_size = 1       // default
