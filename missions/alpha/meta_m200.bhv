@@ -25,7 +25,7 @@ Behavior = BHV_Waypoint
          slip_radius = 15.0
 	efficiency_measure = all
 
-             polygon = 0,-10 : 0,-40 : 40,-40 : 55,-25 : 40,-10
+             polygon = 0,-10 : 5,-20 : 25,-25 : 30,-10 : 25,-0
              repeat = 10000
 
 //	ipf_type = roc
