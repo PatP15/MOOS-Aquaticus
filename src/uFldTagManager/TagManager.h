@@ -52,15 +52,16 @@ class TagManager : public AppCastingMOOSApp
   bool    handleConfigVTagRange(std::string);
   bool    handleConfigZone(int, std::string);
   bool    handleConfigTeamName(int, std::string);
-  bool    handleConfigHumanTagPost(std::string);
   bool    handleConfigRobotTagPost(std::string);
-  bool    handleConfigHumanUnTagPost(std::string);
+  bool    handleConfigHumanTagPost(std::string);
   bool    handleConfigRobotUnTagPost(std::string);
+  bool    handleConfigHumanUnTagPost(std::string);
+  bool    handleConfigNoTagPost(std::string);
 
  protected: // Incoming mail utilities
-  bool    handleMailNodeReport(const std::string&);
-  bool    handleMailVTagPost(const std::string&);
-  bool    handleMailVUnTagPost(const std::string&);
+  bool    handleMailNodeReport(std::string);
+  bool    handleMailVTagPost(std::string);
+  bool    handleMailVUnTagPost(std::string);
 
  protected: // Processing Utilities
   double  getTrueNodeRange(double, double, std::string);
@@ -76,6 +77,8 @@ class TagManager : public AppCastingMOOSApp
   void    postRobotTagPairs(std::string src_vname, std::string tar_vname);
   void    postHumanUnTagPairs(std::string tar_vname);
   void    postRobotUnTagPairs(std::string tar_vname);
+  void    postNoTagPairs(std::string src_vname, std::string src_vteam,
+			 std::string src_reason);
 
  protected: // Outgoing mail utilities
   void    postRangePulse(double x, double y, std::string color,
@@ -84,7 +87,9 @@ class TagManager : public AppCastingMOOSApp
 			 std::string color, double duration);
 
   void    postResult(std::string event, std::string vname,
-		     std::string vteam, std::string result);
+		     std::string vteam, std::string result,
+		     std::string reason);
+
   void    postResult(std::string event, std::string vname,
 		     std::map<std::string, double>);
   void    postZonePolys();
@@ -101,11 +106,13 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_vtags_succeeded;
   std::map<std::string, unsigned int> m_map_node_vtags_rejfreq;
   std::map<std::string, unsigned int> m_map_node_vtags_rejzone;
+  std::map<std::string, unsigned int> m_map_node_vtags_rejself;
   std::map<std::string, double>       m_map_node_vtags_last_tag;
 
   // Perspective of vehicles being tagged: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
   std::map<std::string, bool>         m_map_node_vtags_nowtagged;
+  std::map<std::string, std::string>  m_map_node_vtags_tagreason;
   std::map<std::string, double>       m_map_node_vtags_timetagged;
 
   // Other key states
@@ -114,6 +121,9 @@ class TagManager : public AppCastingMOOSApp
   // Map from team name to members of the team (team name == zone name)
   std::map<std::string, std::set<std::string> > m_map_teams;
 
+  // Keep track of notag post times, to limit frequency
+  std::map<std::string, double>  m_map_prev_notag_post;
+  
  protected: // Configuration variables
   double        m_tag_range;
   double        m_tag_min_interval;
@@ -131,6 +141,7 @@ class TagManager : public AppCastingMOOSApp
   unsigned int  m_tag_events;
   bool          m_tag_circle;
   std::string   m_tag_circle_color;
+  std::string   m_oob_circle_color;
   double        m_tag_circle_range;
 
   std::vector<VarDataPair> m_robot_tag_posts;
@@ -138,6 +149,9 @@ class TagManager : public AppCastingMOOSApp
   std::vector<VarDataPair> m_robot_untag_posts;
   std::vector<VarDataPair> m_human_untag_posts;
 
+  std::vector<VarDataPair> m_notag_posts;
+  double                   m_notag_gap;
+  
   // Visual hints
   std::string   m_post_color;
 };

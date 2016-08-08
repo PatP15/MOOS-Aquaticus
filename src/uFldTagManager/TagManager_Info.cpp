@@ -103,6 +103,8 @@ void showExampleConfigAndExit()
   blk("  tag_min_interval = 10     // default (in seconds)             ");
   blk("  tag_duration     = 30     // default (in seconds)             ");
   blk("                                                                ");
+  blk("  notag_gap = 5             // default (in seconds)             ");
+  blk("                                                                ");
   blk("  robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true       ");
   blk("  robot_tag_post   = SAY_MOOS=file=sounds/tennis_grunt.wav      ");
   blk("                                                                ");
@@ -114,6 +116,8 @@ void showExampleConfigAndExit()
   blk("                                                                ");
   blk("  human_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false      ");
   blk("  human_untag_post = SAY_MOOS=file=sounds/t2_no_problemo.wav    ");
+  blk("                                                                ");
+  blk("  notag_post = SAY_MOOS=say={No Tag $REASON},rate=200           ");
   blk("                                                                ");
   blk("  team_one = red     // default                                 ");
   blk("  team_two = blue    // default                                 ");
@@ -157,10 +161,11 @@ void showInterfaceAndExit()
   blk("  The user may configure posts to occur upon certain events.    ");
   blk("  Such events include when:                                     ");
   blk("                                                                ");
-  blk("    robot_tag_post                                              ");
-  blk("    human_tag_post                                              ");
-  blk("    robot_untag_post                                            ");
-  blk("    human_untag_post                                            ");
+  blk("    robot_tag_post   - A robot has been tagged                  ");
+  blk("    human_tag_post   - A human has been tagged                  ");
+  blk("    robot_untag_post - A robot has been untagged                ");
+  blk("    human_untag_post - A human has been untagged                ");
+  blk("    notag_post       - Any vehicle has a failed tag             ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
@@ -171,7 +176,9 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("  TAG_RESULT_VERBOSE  = event=1,src=archie,ranges=betty:20.2    ");
   blk("  TAG_RELEASE_VERBOSE = vname=betty,time=85.86929               ");
+  blk("  TAG_RELEASE_VNAME   = vname=betty,time=85.86929               ");
   blk("  TAGGED_VEHICLES     = betty,gus,henry                         ");
+  blk("  TAGGED_VNAME        = true                                    ");
   blk("                                                                ");
   blk("  VIEW_CIRCLE     = x=60.7,y=-65.98,radius=5,duration=0,        ");
   blk("                    label=betty,edge_color=red,fill_color=red,  ");
