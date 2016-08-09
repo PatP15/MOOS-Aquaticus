@@ -154,6 +154,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("  TAG_REQUEST = vname=henry                                     ");
   blk("  UNTAG_REQUEST = vname=henry                                   ");
+  blk("  PMV_CONNECT = 0   (published by pMarineViewer upon startup)   ");
   blk("  APPCAST_REQ                                                   ");
   blk("                                                                ");
   blk("PUBLICATIONS (configurable):                                    ");

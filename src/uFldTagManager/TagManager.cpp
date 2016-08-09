@@ -79,7 +79,7 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     string key  = msg.GetKey();
     string sval = msg.GetString();
 
-    bool handled = false;
+    bool handled = true;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleMailNodeReport(sval);
     else if(key == "TAG_REQUEST")
@@ -88,7 +88,11 @@ bool TagManager::OnNewMail(MOOSMSG_LIST &NewMail)
       handled = handleMailVUnTagPost(sval);
     else if(key == "APPCAST_REQ")
       handled = true;
-
+    else if(key == "PMV_CONNECT") 
+      postZonePolys();
+    else
+      handled = false;
+    
     if(!handled)
       reportRunWarning("Unhandled Mail: " + key);
   }
@@ -207,6 +211,7 @@ void TagManager::registerVariables()
   Register("NODE_REPORT_LOCAL", 0);
   Register("TAG_REQUEST", 0);
   Register("UNTAG_REQUEST", 0);
+  Register("PMV_CONNECT", 0);
 }
 
 //------------------------------------------------------------

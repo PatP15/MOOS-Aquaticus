@@ -132,6 +132,8 @@ void showInterfaceAndExit()
   blk("         FLAG_RESET = label=alpha                               ");
   blk("  FLAG_GRAB_REQUEST = vname=henry                               ");
   blk("    TAGGED_VEHICLES = henry,gus                                 ");
+  blk("        PMV_CONNECT = 0  (pub by pMarineViewer upon startup)    ");
+  blk("        APPCAST_REQ                                             ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");

@@ -68,7 +68,7 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool   mstr  = msg.IsString();
 #endif
 
-    bool handled = false;
+    bool handled = true;
     if((key == "NODE_REPORT") || (key == "NODE_REPORT_LOCAL"))
       handled = handleMailNodeReport(sval);
     else if(key == "FLAG_RESET")
@@ -77,7 +77,14 @@ bool FlagManager::OnNewMail(MOOSMSG_LIST &NewMail)
       handled = handleMailFlagGrab(sval, comm);
     else if(key == "TAGGED_VEHICLES")
       handled = handleMailTaggedVehicles(sval);
+    else if(key == "PMV_CONNECT") {
+      postFlagMarkers(true);
+      postPolygons();
+    }
     else
+      handled = false;
+
+    if(!handled)
       reportRunWarning("Unhandled Mail: " + key);
   }
 
@@ -231,6 +238,7 @@ void FlagManager::registerVariables()
   Register("NODE_REPORT", 0);
   Register("NODE_REPORT_LOCAL", 0);
   Register("TAGGED_VEHICLES", 0);
+  Register("PMV_CONNECT", 0);
 }
 
 
@@ -796,10 +804,10 @@ bool FlagManager::resetFlagsByVName(string vname)
 //      Note: Typically JUST called on startup unless marker
 //            positions or colors are allowed to change.
 
-void FlagManager::postFlagMarkers()
+void FlagManager::postFlagMarkers(bool force)
 {
   for(unsigned int i=0; i<m_flags.size(); i++) {
-    if(m_flags_changed[i]) {
+    if(m_flags_changed[i] || force) {
       XYMarker marker = m_flags[i];
       if(m_flags[i].get_owner() == "") {
         if(!m_flags[i].color_set("primary_color"))

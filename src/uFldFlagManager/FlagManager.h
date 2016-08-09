@@ -56,7 +56,7 @@ class FlagManager : public AppCastingMOOSApp
   bool resetFlagsByLabel(std::string);
   bool resetFlagsByVName(std::string);
   bool resetFlagsAll();
-  void postFlagMarkers();
+  void postFlagMarkers(bool force=false);
   void postFlagSummary();
   
   bool hasFlag(std::string vname);
