@@ -28,6 +28,6 @@ ProcessConfig = uDialogManager
 
   sentence = TEAM_Status    : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE1),var_name=BOT_DIALOG_REQUEST,string_val=STATUS:src=$(VNAME)" + NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE2),var_name=BOT_DIALOG_REQUEST,string_val=STATUS:src=$(VNAME)"
 
-  sentence = tag  : TAG_REQUEST       = "vname = $(VNAME)"
-  sentence = grab : FLAG_GRAB_REQUEST = "vname = $(VNAME)"
+  sentence = tag {NOCONFIRM} : TAG_REQUEST       = "vname = $(VNAME)"
+  sentence = grab {NOCONFIRM} : FLAG_GRAB_REQUEST = "vname = $(VNAME)"
 }
