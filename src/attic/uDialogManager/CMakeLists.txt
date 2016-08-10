@@ -1,12 +1,12 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for:             uDialogManager_3_0
-# Author(s): Michael "Misha" Novitzky                             
+# The CMakeLists.txt for:                       uDialogManager
+# Author(s):                              
 #--------------------------------------------------------
 
 SET(SRC
-  DialogManager_3_0.cpp
-  DialogManager_Info_3_0.cpp
-  main_3_0.cpp
+  DialogManager.cpp
+  DialogManager_Info.cpp
+  main.cpp
 )
 
 ADD_EXECUTABLE(uDialogManager ${SRC})
