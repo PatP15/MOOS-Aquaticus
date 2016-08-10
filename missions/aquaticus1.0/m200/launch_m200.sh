@@ -15,6 +15,8 @@ START_POS="56,16,240"
 RETURN_POS="5,0"
 LOITER_POS="x=100,y=-180"
 GRAB_POS=""
+GRABR_POS=""
+GRABL_POS=""
 UNTAG_POS=""
 
 #-------------------------------------------------------
@@ -70,6 +72,8 @@ for ARGI; do
     elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
         GRAB_POS="-58,-71"
+	GRABR_POS="-46,-42"
+	GRABL_POS="-29,-83"
         UNTAG_POS="50,-24"
         RETURN_POS="5,0"
         START_POS="50,-24,240"
@@ -77,6 +81,8 @@ for ARGI; do
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
         GRAB_POS="50,-24"
+	GRABR_POS="42,-55"
+        GRABL_POS="19,-11"
         UNTAG_POS="-58,-71"
         RETURN_POS="5,0"
         START_POS="-58,-71,60"
@@ -170,8 +176,10 @@ nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
         VTEAM=$VTEAM                \
         VNAME=$VNAME                \
-        GRAB_POS=$GRAB_POS          \
-        UNTAG_POS=$UNTAG_POS
+        GRAB_POS=$GRAB_POS     \
+        GRABR_POS=$GRABR_POS   \
+        GRABL_POS=$GRABL_POS    \
+        UNTAG_POS=$UNTAG_POS   
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then

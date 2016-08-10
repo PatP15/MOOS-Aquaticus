@@ -264,6 +264,10 @@ ProcessConfig = pMarineViewer
   cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=evan:felix:gus
   cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=evan:felix:gus
 
+  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=evan:felix:gus
+
+  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=evan:felix:gus
+
   cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=evan:felix:gus
 
   cmd = label=COVER, var=ACTION, sval=COVER, receivers=evan:felix:gus

@@ -15,7 +15,7 @@ set MODE     = RETURNING {
 
 set MODE     = SOLOPLAY {
   MODE       = ACTIVE:INGAME
-  (ACTION    = ATTACK) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))
+  ((ACTION    = ATTACK) or ((ACTION = ATTACK_LEFT) or (ACTION = ATTACK_RIGHT))) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))
 }
 
 set MODE     = TEAMPLAY {
@@ -28,12 +28,33 @@ set MODE     = ATTACKING {
   ACTION     = ATTACK
 }
 
+set MODE     = ATTACKING_RIGHT {
+  MODE	     = ACTIVE:INGAME:SOLOPLAY
+  ACTION     = ATTACK_RIGHT
+}
+
+set MODE     = ATTACKING_LEFT {
+  MODE	     = ACTIVE:INGAME:SOLOPLAY
+  ACTION     = ATTACK_LEFT
+}
+
+
 set MODE     = DEFENDING {
   MODE       = ACTIVE:INGAME:SOLOPLAY
 }
 
 set MODE     = TAGGED {
   MODE       = ACTIVE:INGAME:SOLOPLAY:ATTACKING
+  TAGGED     = true
+} UNTAGGED
+
+set MODE     = TAGGED {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:ATTACKING_LEFT
+  TAGGED     = true
+} UNTAGGED
+
+set MODE     = TAGGED {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:ATTACKING_RIGHT
   TAGGED     = true
 } UNTAGGED
 
@@ -118,7 +139,7 @@ Behavior = BHV_Waypoint
   pwt                     = 50
   perpetual               = true
 
-  condition               = MODE == UNTAGGED
+  condition               = (MODE == UNTAGGED) and (MODE == ATTACKING)
   runflag                 = BOT_DIALOG_STATUS=Attacking
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
@@ -130,6 +151,47 @@ Behavior = BHV_Waypoint
 
   points                  = $(GRAB_POS)
 }
+
+//################################################################
+Behavior = BHV_Waypoint
+{
+  name                    = left_waypt_grab
+  pwt                     = 50
+  perpetual               = true
+
+  condition               = MODE == ATTACKING_LEFT 
+  runflag                 = BOT_DIALOG_STATUS=Attacking
+  endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
+  endflag                 = TAGGED=true
+
+  speed                   = 5 // meters per second
+  capture_line            = false
+  capture_radius          = 5.0
+  slip_radius             = 5.0
+
+  points                  = $(GRABL_POS):$(GRAB_POS)
+}
+
+//#########################################
+Behavior = BHV_Waypoint
+{
+  name                    = right_waypt_grab
+  pwt                     = 50
+  perpetual               = true
+
+  condition               = MODE == ATTACKING_RIGHT
+  runflag                 = BOT_DIALOG_STATUS=Attacking
+  endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
+  endflag                 = TAGGED=true
+
+  speed                   = 5 // meters per second
+  capture_line            = false
+  capture_radius          = 5.0
+  slip_radius             = 5.0
+
+  points                  = $(GRABR_POS):$(GRAB_POS)
+}
+
 
 //#############################################################################
 Behavior = BHV_AvdColregsV2
