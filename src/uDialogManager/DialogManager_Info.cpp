@@ -33,7 +33,7 @@ void showHelpAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("Usage: uDialogManager file.moos [OPTIONS]                   ");
+  blu("Usage: uDialogManager 2.0 file.moos [OPTIONS]                   ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
@@ -65,7 +65,7 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uDialogManager Example MOOS Configuration                   ");
+  blu("uDialogManager 2.0 Example MOOS Configuration                   ");
   blu("=============================================================== ");
   blk("                                                                ");
   blk("ProcessConfig = uDialogManager                              ");
@@ -92,7 +92,7 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uDialogManager INTERFACE                                    ");
+  blu("uDialogManager 2.0 INTERFACE                                    ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
@@ -115,7 +115,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uDialogManager", "gpl");
+  showReleaseInfo("uDialogManager 2.0", "gpl");
   exit(0);
 }
 
