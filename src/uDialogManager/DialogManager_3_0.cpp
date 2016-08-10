@@ -21,6 +21,7 @@ DialogManager::DialogManager()
 {
   //Initialize state machine to waiting for voice command
   m_state = WAIT_COMMAND;
+  m_number_ack_attempts = 0;
 
   //Initialize map for nicknames
   // example m_nicknames["nickname"]="vehicle_name";
@@ -126,6 +127,8 @@ void DialogManager::triggerAckSequence(string sval)
   if(sval == m_confirm_word[m_commanded_string]) {
     matched = triggerVariablePosts();
     ackStatement = "Command Sent";
+    m_state = WAIT_COMMAND;
+    m_number_ack_attempts = 0;
   }
 
   //Here we check to see if the person answered No for an Ack which cancels everything and we wait for another command
@@ -135,10 +138,20 @@ void DialogManager::triggerAckSequence(string sval)
   else if(sval == m_decline_word[m_commanded_string]) { //all is canceled
  
     ackStatement = "Command Canceled";
+    m_state = WAIT_COMMAND;
+    m_number_ack_attempts = 0;
   }
 
-  else {
-    ackStatement = "Error Wrong Ack";
+  else if(m_number_ack_attempts==1){ //means have have errored our ack a certain number of times
+    ackStatement = "Command Canceled, Wrong Responses";
+    m_state = WAIT_COMMAND;
+    m_number_ack_attempts = 0;
+  }
+  else{
+    //    ackStatement = "Error Wrong Ack";
+    ackStatement = "Try One More Time, " +  m_confirm_word[m_commanded_string] + " or " +  m_decline_word[m_commanded_string];
+    m_state = WAIT_ACK;
+    m_number_ack_attempts += 1;
   }
 
   m_Comms.Notify("SAY_MOOS",ackStatement);
@@ -149,7 +162,7 @@ void DialogManager::triggerAckSequence(string sval)
   if(matched == true) {
     m_Comms.Notify("SPEECH_COMMANDED", m_commanded_string);
   }
-  m_state = WAIT_COMMAND;
+  
 }
 
 //---------------------------------------------------------

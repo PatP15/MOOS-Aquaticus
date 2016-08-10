@@ -46,6 +46,7 @@ class DialogManager : public AppCastingMOOSApp
   bool triggerVariablePosts();
 
  private: // Configuration variables
+  int m_number_ack_attempts;
   std::map<std::string,std::string> m_nicknames;
   std::map<std::string,std::list<var_value> > m_actions;
   std::map<std::string,bool> m_just_publish;
