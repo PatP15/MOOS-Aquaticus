@@ -38,7 +38,7 @@ ProcessConfig = uFldFlagManager
   CommsTick     = 2
 
   flag = $(RED_FLAG), color=red, label=red
-  flag = $(BLUE_FLAG), colore=blue, label=blue
+  flag = $(BLUE_FLAG), color=blue, label=blue
 
   grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
   grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
@@ -57,6 +57,9 @@ ProcessConfig = uFldFlagManager
 
   home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
   home_post = var=FLAG_RESET, sval={vname=$VNAME}
+
+	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
+	goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
 }
 
 //--------------------------------------------------
