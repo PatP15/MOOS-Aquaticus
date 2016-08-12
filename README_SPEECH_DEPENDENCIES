@@ -42,7 +42,7 @@ export LIBRARY_PATH=/opt/local/lib to either your .profile, .bash_profile, or .b
 
 It is necessary because unfortunately MacPorts is not properly adding the library path.
 
-And then add the packages for juliues and portaudio:
+And then add the packages for Julius and portaudio:
 sudo port install julius portaudio
 
 
