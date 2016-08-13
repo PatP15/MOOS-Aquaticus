@@ -63,9 +63,9 @@ fi
 if [[ -z $NO_MOKAI ]]; then
   cd ./mokai
   # w/ Evan Blue
-  ./launch_mokai.sh $TIME_WARP -e -b -ss >& /dev/null &
+  ./launch_mokai.sh $TIME_WARP -e -H -b -ss >& /dev/null &
   # w/ Felix Red
-  ./launch_mokai.sh $TIME_WARP -f -r -ss >& /dev/null &
+  ./launch_mokai.sh $TIME_WARP -f -i -r -ss >& /dev/null &
   cd ..
 fi
 
