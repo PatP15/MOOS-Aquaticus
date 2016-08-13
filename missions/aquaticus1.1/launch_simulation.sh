@@ -50,6 +50,10 @@ if [[ -z $NO_M200 ]]; then
   ./launch_m200.sh $TIME_WARP -e -b -s > /dev/null &
   # Felix Red
   ./launch_m200.sh $TIME_WARP -f -r -s > /dev/null &
+  # Hal Blue
+  ./launch_m200.sh $TIME_WARP -H -b -s > /dev/null &
+  # Ida Red
+  ./launch_m200.sh $TIME_WARP -i -r -s > /dev/null &
   cd ..
 fi
 
