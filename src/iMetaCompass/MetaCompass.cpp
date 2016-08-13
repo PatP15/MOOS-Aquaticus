@@ -81,7 +81,7 @@ bool MetaCompass::OnConnectToServer()
   m_Comms.Register("GPS_HEADING", 0);
   m_Comms.Register("GPS_SPEED", 0);
   m_Comms.Register("COMPASS_HEADING", 0);
-  m_Comms.Register("DESIRED_THRUST", 0);
+  //  m_Comms.Register("DESIRED_THRUST", 0);
   return(true);
 }
 
