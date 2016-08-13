@@ -19,4 +19,4 @@ ProcessConfig = uXMS
   source = iGPS
 }
 
-#include ../src/iGPS.moos
+#include ../iGPS.moos
