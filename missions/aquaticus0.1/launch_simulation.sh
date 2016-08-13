@@ -28,18 +28,19 @@ done
 #-----------------------------------------------
 # Launch Evan and check for results      BLUE #1
 #-----------------------------------------------
-./launch_m200.sh --vname=evan   --startpos=-40,-55,70        \
+./launch_m200.sh --vname=evan   --startpos=-25,-25,70        \
                  --vteam=blue   --sim $TIME_WARP $JUST_MAKE 
+#./launch_m200.sh --vname=evan   --startpos=-40,-55,70        \
 
 if [ $? -ne 0 ]; then echo Launch of evan failed; exit 1;  fi
 
 #-----------------------------------------------
 # Launch Gus and check for results        RED #1
 #-----------------------------------------------
-./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
-		 --vteam=red   --sim $TIME_WARP $JUST_MAKE 
-
-if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
+#./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
+#		 --vteam=red   --sim $TIME_WARP $JUST_MAKE 
+#
+#if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
 
 
 

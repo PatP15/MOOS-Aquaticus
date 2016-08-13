@@ -14,19 +14,18 @@ Processconfig = ANTLER
 
   Run = MOOSDB          @ NewConsole = false
   Run = pLogger         @ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
 
-  Run = pMarineViewer   @ NewConsole = false
+  Run = uFldFlagManager @ NewConsole = false
+  Run = uFldTagManager  @ NewConsole = false
+
+  Run = uProcessWatch   @ NewConsole = false
 
   Run = pHostInfo       @ NewConsole = false
   Run = pShare          @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
   Run = uFldNodeComms   @ NewConsole = false
 
-  Run = uFldFlagManager @ NewConsole = false
-  Run = uFldTagManager  @ NewConsole = false
-  //Run = uFldZoneEvent   @ NewConsole = false ~ UFZEUntag
-
+  Run = pMarineViewer   @ NewConsole = false
   Run = iSay            @ NewConsole = false
 }
 
@@ -101,7 +100,7 @@ ProcessConfig = uFldTagManager
   human_tag_post   = TAGGED_$UP_TARGET=true
   robot_tag_post   = TAGGED_$UP_TARGET=true
 
-	notag_post = SAY_MOOS=say={No Tag $REASON},rate=200 
+	notag_post = SAY_MOOS_$UP_SOURCE=say={No Tag $REASON},rate=200 
 	
   //robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
   // human_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
@@ -239,8 +238,13 @@ ProcessConfig = pMarineViewer
   button_one   = RETURN_ALL=false # STATION_KEEP_ALL=false
 
   button_two   = RETURN  # RETURN_ALL=true
-  button_two   = RETURN  # STATION_KEEP_ALL=false
-  button_three = CHASE   # CHASE_ALL=true
+  button_two   = STATION_KEEP_ALL=false
+
+  button_three = PLAY # STATION_KEEP_GUS=true
+  button_three = ACTION_EVAN=attack
+  button_three = STATION_KEEP_EVAN=false
+  button_three = GO_GRAB_EVAN=true
+
   button_four  = STATION   # STATION_KEEP_ALL=true
 
 	op_vertex = x=-85, y=-48,      lwidth=1,lcolor=yellow,looped=true,group=moa

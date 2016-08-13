@@ -5,6 +5,7 @@ initialize TAGGED    = false
 initialize INTRUDER  = false
 initialize HAS_FLAG  = false
 initialize GO_GRAB   = false
+initialize RECOVER   = false
 
 	// ACTION = {attack, defend}
 	//
@@ -22,23 +23,30 @@ initialize GO_GRAB   = false
 	//          - LOITERING
 	//          - INTERCEPTING
 	
+
 set MODE = ACTIVE {
   DEPLOY = true
 } INACTIVE
 
+set MODE = RECOVERING {
+	MODE = ACTIVE
+  RECOVER = true
+}
+	
 set MODE = STATION-KEEPING {
-    MODE = ACTIVE
+  MODE = ACTIVE
   STATION_KEEP = true
 }
 
+
 set MODE = RETURN-PAVLAB {
-    MODE = ACTIVE
+  MODE = ACTIVE
   RETURN = true
 } 
 
 // ATTACKING MODES
 set MODE = ATTACKING {
-    MODE = ACTIVE
+  MODE = ACTIVE
   ACTION = attack
 }
 
@@ -66,12 +74,27 @@ set MODE = LOITERING {
 
 
 //----------------------------------------------
+Behavior = BHV_OpRegionRecover
+{
+  name         = recover
+  pwt          = 300
+  updates      = RECOVER_UPDATES
+  activeflag   = RECOVER = true
+  inactiveflag = RECOVER = false
+
+             polygon = pts={-85,-48 : 59,21 : 90.9,-52.4 : -53.1, -121.4}
+	trigger_entry_time = 1
+	trigger_exit_time  = 1
+}
+
+//----------------------------------------------
 Behavior = BHV_AvdColregs
 {
   name       = colavd_one_
   pwt        = 300
   updates    = CONTACT_INFO_ONE
   condition  = MODE == ACTIVE
+  condition  = MODE != ACTIVE:RECOVERING
   templating = spawn
   endflag    = CONTACT_RESOLVED = $[CONTACT]
 
@@ -82,10 +105,12 @@ Behavior = BHV_AvdColregs
   ignore_contact_group = $(VTEAM)
 	
      completed_dist = 25
-  max_util_cpa_dist = 15
-  min_util_cpa_dist = 5
+  //max_util_cpa_dist = 15
+  //min_util_cpa_dist = 5
+  max_util_cpa_dist = 85
+  min_util_cpa_dist = 50
      pwt_inner_dist = 10
-     pwt_outer_dist = 20
+     pwt_outer_dist = 200
 }
 
 //----------------------------------------------
@@ -144,7 +169,7 @@ Behavior = BHV_Waypoint
                speed = 2
               radius = 3.0
          slip_radius = 15.0
-               point = 5,0
+               point = 55,50
               repeat = 10
                 lead = 8
 }
@@ -175,6 +200,8 @@ Behavior = BHV_Waypoint
   endflag   = FLAG_GRAB_REQUEST=vname=$(VNAME)
 	endflag   = GO_GRAB = false
 
+	
+	
            speed = 2 // meters per second
     capture_line = false
   capture_radius = 5.0
