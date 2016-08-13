@@ -193,7 +193,6 @@ fi
 
 echo "Launching $VNAME MOOS Community "
 pAntler targ_${VNAME}.moos >& /dev/null &
-python ~/rypkema/python/razor_driver/iPyRazor.py $VPORT &
 uMAC targ_${VNAME}.moos
 
 echo "Killing all processes ..."
