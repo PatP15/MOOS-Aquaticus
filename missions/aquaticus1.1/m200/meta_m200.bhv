@@ -166,7 +166,7 @@ Behavior = BHV_Waypoint
 
   speed                   = 5 // meters per second
   capture_line            = false
-  capture_radius          = 5.0
+  capture_radius          = 7.0
   slip_radius             = 5.0
 
   points                  = $(GRAB_POS)
@@ -186,7 +186,7 @@ Behavior = BHV_Waypoint
 
   speed                   = 5 // meters per second
   capture_line            = false
-  capture_radius          = 5.0
+  capture_radius          = 7.0
   slip_radius             = 5.0
 
   points                  = $(GRABL_POS):$(GRAB_POS)
@@ -206,7 +206,7 @@ Behavior = BHV_Waypoint
 
   speed                   = 5 // meters per second
   capture_line            = false
-  capture_radius          = 5.0
+  capture_radius          = 7.0
   slip_radius             = 5.0
 
   points                  = $(GRABR_POS):$(GRAB_POS)
