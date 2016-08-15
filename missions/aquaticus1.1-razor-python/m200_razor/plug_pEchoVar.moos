@@ -13,5 +13,6 @@ ProcessConfig = pEchoVar
   Echo    = TEMP_LAT     ->  NAV_LAT                       
   Echo    = TEMP_LONG 	 ->  NAV_LONG                  
   Echo    = TEMP_SPEED   ->  NAV_SPEED
-  Echo 	  = META_HEADING ->  NAV_HEADING
+	//  Echo 	  = META_HEADING ->  NAV_HEADING
+	  Echo 	  = COMPASS_HEADING ->  NAV_HEADING
 }
