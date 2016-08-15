@@ -11,7 +11,7 @@ TARGET_LINK_LIBRARIES(iGPSDevice
    ${MOOSGeodesy_LIBRARIES}
    gpsParser
    SimpleSerial
-   mbutil
    geometry
+   mbutil
    m
    pthread)
