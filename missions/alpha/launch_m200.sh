@@ -10,6 +10,7 @@ HELP="no"
 JUST_BUILD="no"
 VTEAM=""
 VNAME=""
+VMODEL="M200"
 
 START_POS="0,0,180"
 RETURN_POS="5,0"
@@ -46,18 +47,21 @@ for ARGI; do
     elif [ "${ARGI}" = "--hal" -o "${ARGI}" = "-H" ] ; then
         M200_IP=192.168.8.1 #hal
         VNAME="hal"
+	VMODEL="M300"
         VPORT="9008"
         SHARE_LISTEN="9308"
         echo "HAL vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--ida" -o "${ARGI}" = "-i" ] ; then
         M200_IP=192.168.9.1 #ida
         VNAME="ida"
+	VMODEL="M300"
         VPORT="9009"
         SHARE_LISTEN="9309"
         echo "IDA vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--jing" -o "${ARGI}" = "-J" ] ; then
         M200_IP=192.168.10.1 #jing
         VNAME="jing"
+	VMODEL="M300"
         VPORT="9010"
         SHARE_LISTEN="9310"
         echo "JING vehicle selected as HUNTER."
@@ -136,6 +140,7 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     HOSTIP_FORCE="localhost"     \
     LOITER_POS=$LOITER_POS       \
     VARIATION=$VARIATION         \
+    VMODEL=$VMODEL                \
     VTYPE="kayak"                \
     VTEAM="blue"                 \
     START_POS=$START_POS         \
