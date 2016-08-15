@@ -12,7 +12,7 @@ ProcessConfig = iM200
                                // When false, vehicle in rudder-thrust mode.
 
 #ifdef VMODEL M300 
-  HEADING_OFFSET = 179.9       // Offset to add to published heading
+  HEADING_OFFSET = 0.0       // Offset to add to published heading
 #else
   HEADING_OFFSET = 0.0         // Offset to add to published heading
 #endif
