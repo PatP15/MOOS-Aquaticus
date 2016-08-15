@@ -25,8 +25,14 @@ Behavior = BHV_Waypoint
          slip_radius = 5.0
 	efficiency_measure = all
 
-             polygon = pts={-2,-21:44,-2:56,-29:37,-48:10,-49}
-             //polygon = 0,-10 : 15,-45 : 80,-15 : 60,15
+	// Bigger home plate
+  // polygon = pts={-17,-26:52,1:69,-40:41,-67:1,-68} //
+
+	// Smaller home plate
+  polygon = pts={-2,-21:44,-2:56,-29:37,-48:10,-49}
+
+	// Saad's original small rectangle
+  // polygon = 0,-10 : 15,-45 : 80,-15 : 60,15
 						 order = reverse
              repeat = 10000
 
