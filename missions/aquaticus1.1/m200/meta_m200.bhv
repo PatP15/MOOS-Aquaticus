@@ -3,11 +3,17 @@ initialize RETURN     = false
 initialize ACTION     = DEFEND
 initialize TAGGED     = false
 initialize AGGRESSIVE = false
+initialize RECOVER    = false
 
 set MODE     = ACTIVE {
   DEPLOY     = true
 } INACTIVE
 
+set MODE = RECOVERING {
+	MODE = ACTIVE
+  RECOVER = true
+}
+	
 set MODE     = RETURNING {
   MODE       = ACTIVE
   RETURN     = true
@@ -87,12 +93,27 @@ set MODE     = STATIONNING {
   ACTION     = STATION
 }
 
+//----------------------------------------------
+Behavior = BHV_OpRegionRecover
+{
+  name         = recover
+  pwt          = 300
+  updates      = RECOVER_UPDATES
+  activeflag   = RECOVER = true
+  inactiveflag = RECOVER = false
+
+             polygon = pts={-85,-48 : 59,21 : 90.9,-52.4 : -53.1, -121.4}
+	trigger_entry_time = 1
+	trigger_exit_time  = 1
+}
+
+
 
 //#############################################################################
 Behavior = BHV_AvdColregsV2
 {
   name                    = active_avd_
-  pwt                     = 100
+  pwt                     = 200
 
   updates                 = CONTACT_INFO
 
@@ -108,10 +129,10 @@ Behavior = BHV_AvdColregsV2
 
   completed_dist          = 15
   max_util_cpa_dist       = 15
-  min_util_cpa_dist       = 10
+  min_util_cpa_dist       = 5
   // pwt_grade               = linear
   pwt_inner_dist          = 10
-  pwt_outer_dist          = 15
+  pwt_outer_dist          = 20
 }
 
 //#############################################################################
@@ -159,7 +180,7 @@ Behavior = BHV_Waypoint
   perpetual               = true
   updates		  = UPDATE_WPT
   condition               = (MODE == UNTAGGED) and (MODE == ATTACKING_LEFT)
-  runflag                 = BOT_DIALOG_STATUS=Attacking left
+  runflag                 = BOT_DIALOG_STATUS=Attacking
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
 
@@ -179,7 +200,7 @@ Behavior = BHV_Waypoint
   perpetual               = true
   updates		  = UPDATE_WPT
   condition               = (MODE == UNTAGGED) and (MODE == ATTACKING_RIGHT) 
-  runflag                 = BOT_DIALOG_STATUS=Attacking right
+  runflag                 = BOT_DIALOG_STATUS=Attacking
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
 
@@ -195,7 +216,7 @@ Behavior = BHV_Waypoint
 Behavior = BHV_AvdColregsV2
 {
   name                    = avd_
-  pwt                     = 100
+  pwt                     = 200
 
   updates                 = CONTACT_INFO_AVOIDING
 
@@ -211,9 +232,9 @@ Behavior = BHV_AvdColregsV2
 
   completed_dist          = 30
   max_util_cpa_dist       = 25
-  min_util_cpa_dist       = 20
+  min_util_cpa_dist       = 15
   // pwt_grade               = linear
-  pwt_inner_dist          = 20
+  pwt_inner_dist          = 10
   pwt_outer_dist          = 25
 }
 
