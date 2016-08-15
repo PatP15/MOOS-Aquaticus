@@ -5,6 +5,7 @@
  *      Author: Alon Yaari
  */
 
+#include "AngleUtils.h"
 #include "NMEAbase.h"
 #include "gpsParser.h"
 #include "GPGGAnmea.h"
@@ -293,9 +294,17 @@ bool gpsParser::HandleGPRMC(string nmea)
     if (gprmc.Get_speedMPS(curSpeed))
         AddToPublishQueue(curSpeed, "SPEED");
     double curHeading;
+#if 1 // mikerb Aug1516
+    gprmc.Get_headingTrueN(curHeading);
+    curHeading += m_headingOffset;
+    curHeading = angle360(curHeading);
+    AddToPublishQueue(curHeading, "HEADING_GPRMC");
+#endif
+#if 0 // ALon
     if (gprmc.Get_headingTrueN(curHeading)) {
         curHeading += m_headingOffset;
         AddToPublishQueue(curHeading, "HEADING_GPRMC"); }
+#endif
     double curMagVar = BAD_DOUBLE;
     if (gprmc.Get_magVar(curMagVar))
         AddToPublishQueue(curMagVar, "MAGVAR");

@@ -174,7 +174,12 @@ bool CPNVGnmea::Get_depthTop(double& dVal)
 bool CPNVGnmea::Get_headingTrueN(double& dVal)
 {
     dVal = info.headingTrueN;
+#if 0 // Alon
     return Validate_headingTrueN();
+#endif
+#if 1 // Mikerb Aug1516
+    return(true);
+#endif    
 }
 
 bool CPNVGnmea::Get_roll(double& dVal)

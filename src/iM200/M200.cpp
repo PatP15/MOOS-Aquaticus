@@ -362,7 +362,7 @@ void iM200::HandleOneMessage(gpsValueToPublish gVal)
   // Deal with heading
   //    M200 has non-GPS messages for heading, heading from GPS should be ignored
   if (key == "HEADING" ||
-      key == "HEADING_GPRMC" ||
+      //      key == "HEADING_GPRMC" ||   // turned on by mikerb aug1516
       key == "HEADING_PASHR")
       return;
 
@@ -379,6 +379,9 @@ void iM200::PublishMessage(gpsValueToPublish gVal)
   if (key == "LAT")       m_Comms.Notify(m_pubNameLat,     dVal);
   if (key == "LONG")      m_Comms.Notify(m_pubNameLon,     dVal);
   if (key == "SPEED")     m_Comms.Notify(m_pubNameSpeed,   dVal);
+  if (key == "HEADING")   m_Comms.Notify(m_pubNameHeading, dVal);
+
+  if (key == "HEADING_GPRMC") m_Comms.Notify(m_prefix+"_"+key, dVal);
 }
 
 bool iM200::ThrustRudderToLR()
@@ -853,8 +856,14 @@ bool iM200::ParseCPNVG(string nmea)
     reportRunWarning("Could not parse CPNVG message: " + nmea);
     return false; }
   double dHeading = BAD_DOUBLE;
+#if 1 // Mikerb Aug1516
+  cpnvg.Get_headingTrueN(dHeading);
+  PublishHeading(dHeading);
+#endif
+#if 0 // Alon
   if (cpnvg.Get_headingTrueN(dHeading))
       PublishHeading(dHeading);
+#endif
   return true;
 }
 

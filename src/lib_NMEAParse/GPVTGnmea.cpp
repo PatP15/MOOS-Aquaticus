@@ -118,7 +118,12 @@ bool GPVTGnmea::GetInfo(infoGPVTG& curInfo)
 bool GPVTGnmea::Get_headingTrueN(double& dVal)
 {
   dVal = info.headingTrueN;
+#if 0 // Alon
   return Validate_headingTrueN(dVal);
+#endif
+#if 1 // mikerb Aug1516
+  return(true);
+#endif
 }
 
 bool GPVTGnmea::Get_headingMagN(double& dVal)

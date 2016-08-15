@@ -12,5 +12,6 @@ TARGET_LINK_LIBRARIES(iGPSDevice
    gpsParser
    SimpleSerial
    mbutil
+   geometry
    m
    pthread)

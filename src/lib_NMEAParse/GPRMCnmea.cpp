@@ -239,7 +239,12 @@ bool GPRMCnmea::Get_speedMPS(double& dSpeedMpS)
 bool GPRMCnmea::Get_headingTrueN(double& dHeadingTrue)
 {
     dHeadingTrue = info.headingTrueN;
+#if 0 // Alon
     return Validate_headingTrueN();
+#endif
+#if 1 // mikerb Aug1516
+    return(true);
+#endif
 }
 
 bool GPRMCnmea::Get_dateUTC(utcDate& utcDate)
