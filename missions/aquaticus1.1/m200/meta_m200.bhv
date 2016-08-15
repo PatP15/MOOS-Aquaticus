@@ -159,7 +159,7 @@ Behavior = BHV_Waypoint
   perpetual               = true
   updates		  = UPDATE_WPT
   condition               = (MODE == UNTAGGED) and (MODE == ATTACKING_LEFT)
-  runflag                 = BOT_DIALOG_STATUS=Attacking
+  runflag                 = BOT_DIALOG_STATUS=Attacking left
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
 
@@ -179,7 +179,7 @@ Behavior = BHV_Waypoint
   perpetual               = true
   updates		  = UPDATE_WPT
   condition               = (MODE == UNTAGGED) and (MODE == ATTACKING_RIGHT) 
-  runflag                 = BOT_DIALOG_STATUS=Attacking
+  runflag                 = BOT_DIALOG_STATUS=Attacking right
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
 
