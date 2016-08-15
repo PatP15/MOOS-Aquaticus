@@ -483,7 +483,7 @@ bool iM200::SetParam_HEADING_OFFSET(string sVal)
     ssMsg << "Param HEADING_OFFSET must be a number in range [0.0, 180.0). Defaulting to 0.0.";
   else
     m_heading_offset = strtod(sVal.c_str(), 0);
-  if (m_heading_offset < 0.0 || m_heading_offset >= 180.0) {
+  if (m_heading_offset < 0.0 || m_heading_offset > 180.0) {
     ssMsg << "Param HEADING_OFFSET cannot be " << m_heading_offset << ". Must be in range [0.0, 180.0). Defaulting to 0.0.";
     m_heading_offset = 0.0; }
   string msg = ssMsg.str();
