@@ -27,6 +27,8 @@ Processconfig = ANTLER
   Run = uFldTagManager  @ NewConsole = false
 
   Run = iSay            @ NewConsole = false
+
+  Run = pTimeWatch 	@ NewConsole = false
 }
 
 //--------------------------------------------------
@@ -309,4 +311,16 @@ ProcessConfig = iSay
 
   os_mode=both
   audio_dir=sounds
+}
+
+//----------------------------------------
+ProcessConfig = pTimeWatch
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+  watch_var = NODE_REPORT
+
+  threshhold = 30
+  //local_offset = 30
 }
