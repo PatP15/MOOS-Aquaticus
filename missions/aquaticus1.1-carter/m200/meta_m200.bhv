@@ -124,6 +124,7 @@ Behavior = BHV_Waypoint
   name                    = waypt_grab
   pwt                     = 50
   perpetual               = true
+  updates 		  = WAYPT_GRAB_UPDATE
 
   condition               = MODE == UNTAGGED
   runflag                 = BOT_DIALOG_STATUS=Attacking

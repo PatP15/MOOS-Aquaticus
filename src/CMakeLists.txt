@@ -44,8 +44,9 @@ ADD_SUBDIRECTORY(lib_gpsParser)
 ADD_SUBDIRECTORY(pBotDialog)
 ADD_SUBDIRECTORY(iM200)
 ADD_SUBDIRECTORY(pRangeEvent)
+ADD_SUBDIRECTORY(pPingResponder)
+ADD_SUBDIRECTORY(pAttackCommander)
 ADD_SUBDIRECTORY(iMetaCompass)
-
 
 
 ##############################################################################

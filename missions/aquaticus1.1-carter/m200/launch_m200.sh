@@ -164,6 +164,8 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     VTYPE="kayak"                \
     VTEAM=$VTEAM                 \
     VENEMY=$VENEMY               \
+    GRAB_POS=$GRAB_POS           \
+    UNTAG_POS=$UNTAG_POS         \
     START_POS=$START_POS         \
     $SIM
 
