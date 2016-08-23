@@ -471,22 +471,27 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
   // Part 2: Sanity check on the Grab Request
   // Check if grabbing vname is set and matches message community
   if((grabbing_vname == "") || (grabbing_vname != community)) {
-    invokePosts("deny", grabbing_vname, "", "", "invalid vehicle name");
-    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - invalid vehicle name.");
+    string reason = "invalid vehicle name";
+    invokePosts("deny", grabbing_vname, "", "", reason);
+    reportRunWarning("FLAG_GRAB_REQUEST: " + reason);
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
   }
   
   // If no node records of the grabbing vehicle, return false
   string up_vname = toupper(grabbing_vname);
   if(m_map_record.count(up_vname) == 0) {
-    invokePosts("deny", grabbing_vname, "", "", "name unknown to flag manager");
-    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - name unknown to flag manager.");
+    string reason = "name unknown to flag manager";
+    reportRunWarning("FLAG_GRAB_REQUEST: " + reason);
+    invokePosts("deny", grabbing_vname, "", "", reason);
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
   }
 
   // If grabbing vehicle already has a flag, return false
   if(hasFlag(grabbing_vname)) {
     string reason = grabbing_vname + " already has a flag";
+    reportRunWarning("FLAG_GRAB_REQUEST: " + reason);
     invokePosts("deny", grabbing_vname, "", "", reason);
     Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
@@ -498,14 +503,17 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
 
   if(m_tagged_vnames.count(grabbing_vname) ||  m_tagged_vnames.count(up_vname)) {
     string reason = grabbing_vname + " is tagged";
+    reportRunWarning("FLAG_GRAB_REQUEST: " + reason);
     invokePosts("deny", grabbing_vname, "", "", reason);
     Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
   }
 
   if(m_flags.size() == 0) {
-    invokePosts("deny", grabbing_vname, "", "", "no flags to grab");
-    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - no flags to grab");
+    string reason = "no flags to grab";
+    invokePosts("deny", grabbing_vname, "", "", reason);
+    reportRunWarning("FLAG_GRAB_REQUEST: " + reason);
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - " + reason);
     return(false);
   }
   
@@ -543,9 +551,9 @@ bool FlagManager::handleMailFlagGrab(string str, string community)
     }
   }
   if(result == "") {
-    invokePosts("deny", grabbing_vname, group, "", "out of range");
-    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - out of range");
-    return(false);
+    invokePosts("deny", grabbing_vname, group, "", "no one in range");
+    Notify("FLAG_GRAB_REPORT", "Nothing grabbed - no one in range");
+    return(true);
   }
   
   postFlagSummary();
