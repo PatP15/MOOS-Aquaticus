@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "AttackCommander.h"
+#include <math.h>
 
 using namespace std;
 
@@ -67,13 +68,16 @@ bool AttackCommander::OnNewMail(MOOSMSG_LIST &NewMail)
 
 XYPoint AttackCommander::getCordsFromReport(std::string report)
 {
-  //cout << "\""<< report << "\"" << endl;
-  return XYPoint(std::stod(tokStringParse(report, "X", ',', '=')), std::stod(tokStringParse(report, "Y", ',', '=')));
+  string xStr = tokStringParse(report, "X", ',', '=');
+  string yStr = tokStringParse(report, "Y", ',', '=');
+  double x = atof(xStr.c_str());
+  double y = atof(yStr.c_str());
+  return XYPoint(x, y);
 }
 
 double AttackCommander::distance(double x1, double y1, double x2, double y2)
 {
-  return std::hypot((x2-x1),(y2-y1));
+  return sqrt(pow((x2-x1),2.0)+pow((y2-y1),2.0));
 }
 
 double AttackCommander::distance(XYPoint point1, XYPoint point2){
