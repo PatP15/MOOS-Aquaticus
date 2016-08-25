@@ -15,8 +15,8 @@ ADD_EXECUTABLE(pAttackCommander ${SRC})
 TARGET_LINK_LIBRARIES(pAttackCommander
    ${MOOS_LIBRARIES}
    apputil
-   mbutil
    geometry
+   mbutil
    m
    pthread)
 
