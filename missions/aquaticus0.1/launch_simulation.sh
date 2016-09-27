@@ -37,10 +37,10 @@ if [ $? -ne 0 ]; then echo Launch of evan failed; exit 1;  fi
 #-----------------------------------------------
 # Launch Gus and check for results        RED #1
 #-----------------------------------------------
-#./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
-#		 --vteam=red   --sim $TIME_WARP $JUST_MAKE 
-#
-#if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
+./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
+		 --vteam=red   --sim $TIME_WARP $JUST_MAKE 
+
+if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
 
 
 
