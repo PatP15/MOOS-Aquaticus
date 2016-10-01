@@ -88,7 +88,7 @@ Behavior = BHV_OpRegionRecover
 }
 
 //----------------------------------------------
-Behavior = BHV_AvdColregs
+Behavior = BHV_AvdColregsV2
 {
   name       = colavd_one_
   pwt        = 300
@@ -109,6 +109,11 @@ Behavior = BHV_AvdColregs
   min_util_cpa_dist = 5
      pwt_inner_dist = 10
      pwt_outer_dist = 30
+
+  //max_util_cpa_dist = 85
+  //min_util_cpa_dist = 55
+  //   pwt_inner_dist = 10
+  //   pwt_outer_dist = 200
 }
 
 //----------------------------------------------
