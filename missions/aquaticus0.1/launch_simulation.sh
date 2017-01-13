@@ -2,13 +2,26 @@
 
 TIME_WARP=1
 JUST_MAKE=""
-JUST_TWO="no"
+
+EVAN="no"
+FELIX="no"
+GUS="no"
+HAL="no"
+
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
 #-------------------------------------------------------
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	printf "%s [WARP]             \n" $0
+	printf "%s [OPTIONS] [WARP]                       \n\n" $0
+	printf "Options:                                  \n"
+	printf "--evan   Launch the vehicle EVAN          \n" 
+	printf "--felix  Launch the vehicle FELIX         \n" 
+	printf "--gus    Launch the vehicle GUS           \n" 
+	printf "--hal    Launch the vehicle HAL           \n" 
+	printf "--red    Launch the RED Team EVAN,FELIX   \n" 
+	printf "--blue   Launch the BLUE Team, GUS,HAL    \n" 
+	printf "-j       Just Build the target files      \n" 
 	exit 0;
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
@@ -16,8 +29,25 @@ for ARGI; do
 	TIME_WARP="${ARGI#--warp=*}"
     elif [ "${ARGI}" = "--just_make" -o "${ARGI}" = "-j" ] ; then
         JUST_MAKE="-j"
-    elif [ "${ARGI}" = "-jt" ] ; then
-        JUST_TWO="yes"
+    elif [ "${ARGI}" = "--evan" ] ; then
+        EVAN="yes"
+    elif [ "${ARGI}" = "--felix" ] ; then
+        FELIX="yes"
+    elif [ "${ARGI}" = "--gus" ] ; then
+        GUS="yes"
+    elif [ "${ARGI}" = "--hal" ] ; then
+        HAL="yes"
+    elif [ "${ARGI}" = "--blue" ] ; then
+        EVAN="yes"
+        FELIX="yes"
+    elif [ "${ARGI}" = "--red" ] ; then
+        GUS="yes"
+        HAL="yes"
+    elif [ "${ARGI}" = "--all" ] ; then
+        EVAN="yes"
+        FELIX="yes"
+        GUS="yes"
+        HAL="yes"
     else
 	printf "Bad Argument: %s \n" $ARGI ". Use --help"
 	exit 0
@@ -28,38 +58,42 @@ done
 #-----------------------------------------------
 # Launch Evan and check for results      BLUE #1
 #-----------------------------------------------
-./launch_m200.sh --vname=evan   --startpos=-25,-25,70        \
-                 --vteam=blue   --sim $TIME_WARP $JUST_MAKE 
-#./launch_m200.sh --vname=evan   --startpos=-40,-55,70        \
+if [ ${EVAN} = "yes" ] ; then
+    ./launch_m200.sh --vname=evan   --startpos=-25,-25,70        \
+                     --vteam=blue   --sim $TIME_WARP $JUST_MAKE 
 
-if [ $? -ne 0 ]; then echo Launch of evan failed; exit 1;  fi
+    if [ $? -ne 0 ]; then echo Launch of evan failed; exit 1;  fi
+fi
 
 #-----------------------------------------------
-# Launch Gus and check for results        RED #1
+# Launch Felix and check for results     BLUE #2
 #-----------------------------------------------
-./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
-		 --vteam=red   --sim $TIME_WARP $JUST_MAKE 
-
-if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
-
-
-
-
-if [ ${JUST_TWO} = "no" ] ; then
-    #-----------------------------------------------
-    # Launch Felix and check for results     BLUE #2
-    #-----------------------------------------------
+if [ ${FELIX} = "yes" ] ; then
     ./launch_m200.sh --vname=felix --startpos=-35,-75,70         \
 		     --vteam=blue  --sim $TIME_WARP $JUST_MAKE 
     if [ $? -ne 0 ]; then echo launch of Felix failed; exit 1; fi
+fi
     
-    #-----------------------------------------------
-    # Launch Hal and check for results        RED #2
-    #-----------------------------------------------
+#-----------------------------------------------
+# Launch Gus and check for results        RED #1
+#-----------------------------------------------
+if [ ${GUS} = "yes" ] ; then
+    ./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
+		     --vteam=red   --sim $TIME_WARP $JUST_MAKE 
+    
+    if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
+fi
+
+#-----------------------------------------------
+# Launch Hal and check for results        RED #2
+#-----------------------------------------------
+if [ ${HAL} = "yes" ] ; then
     ./launch_m200.sh --vname=hal   --startpos=25,-15,230         \
 		     --vteam=red   --sim $TIME_WARP $JUST_MAKE     
     if [ $? -ne 0 ]; then echo launch of Hal failed; exit 1; fi    
 fi
+
+
 
 #-----------------------------------------------
 # Launch the Shoreside

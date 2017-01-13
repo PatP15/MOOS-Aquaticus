@@ -105,15 +105,16 @@ Behavior = BHV_AvdColregsV2
   ignore_contact_group = $(VTEAM)
 	
      completed_dist = 25
+
   max_util_cpa_dist = 15
   min_util_cpa_dist = 5
      pwt_inner_dist = 10
      pwt_outer_dist = 30
 
-  //max_util_cpa_dist = 85
-  //min_util_cpa_dist = 55
-  //   pwt_inner_dist = 10
-  //   pwt_outer_dist = 200
+//  max_util_cpa_dist = 85
+//  min_util_cpa_dist = 55
+//     pwt_inner_dist = 10
+//     pwt_outer_dist = 200
 }
 
 //----------------------------------------------
