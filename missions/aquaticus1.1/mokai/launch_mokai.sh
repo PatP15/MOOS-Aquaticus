@@ -15,6 +15,7 @@ BUTTON="5"
 JOY_ID="0"
 TEAMMATE1=""
 TEAMMATE2=""
+VOICE="ON"
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
