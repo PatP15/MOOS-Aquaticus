@@ -65,6 +65,13 @@ for ARGI; do
         VPORT="9010"
         SHARE_LISTEN="9310"
         echo "JING vehicle selected as HUNTER."
+    elif [ "${ARGI}" = "--kirk" -o "${ARGI}" = "-k" ] ; then
+        M200_IP=192.168.11.1 #kirk
+        VNAME="kirk"
+	VMODEL="M300"
+        VPORT="9011"
+        SHARE_LISTEN="9311"
+        echo "KIRK vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -96,6 +103,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --hal,        -H  : Hal vehicle."
     echo "  --ida,        -i  : Ida vehicle."
     echo "  --jing,       -J  : Jing vehicle."
+    echo "  --kirk,       -k  : Kirk vehicle."
     echo "  --sim,        -s  : Simulation mode."
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
