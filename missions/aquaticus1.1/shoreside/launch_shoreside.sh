@@ -61,6 +61,6 @@ echo "Done Launching Shoreside "
 
 uMAC targ_shoreside.moos
 
-echo "Killing all processes ... "
-kill -- -$$
-echo "Done killing processes.   "
+# echo "Killing all processes ... "
+# kill -- -$$
+# echo "Done killing processes.   "
