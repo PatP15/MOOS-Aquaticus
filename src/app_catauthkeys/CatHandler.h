@@ -14,7 +14,7 @@
 class CatHandler
 {
  public:
-  CatHandler();
+  CatHandler() {};
   ~CatHandler() {};
 
   bool addFile(std::string);

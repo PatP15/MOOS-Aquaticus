@@ -21,7 +21,7 @@ option(BUILD_ALL "Build all apps." ON)
 # List the subdirectories to build...
 #============================================================================
 IF(BUILD_ALL)
-  ADD_SUBDIRECTORY(app_catauthkey)
+  ADD_SUBDIRECTORY(app_catauthkeys)
   ADD_SUBDIRECTORY(iBlink)
   ADD_SUBDIRECTORY(lib_behaviors-test)
   ADD_SUBDIRECTORY(lib_SimpleSerial)

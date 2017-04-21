@@ -15,13 +15,6 @@
 using namespace std;
 
 //--------------------------------------------------------
-// Constructor
-
-CatHandler::CatHandler()
-{
-}
-
-//--------------------------------------------------------
 // Procedure: handle
 //     Notes: 
 
@@ -30,11 +23,13 @@ bool CatHandler::handle()
   for(unsigned int i=0; i<m_files.size(); i++) {
     vector<string> lines = fileBuffer(m_files[i]);
     for(unsigned int j=0; j<lines.size(); j++) {
-      string line = stripBlankEnds(lines[i]);
+      string line = stripBlankEnds(lines[j]);
       if(line.length() != 0) {
 	string key_type = biteStringX(line, ' ');
 	string key      = biteStringX(line, ' ');
 	string key_mach = line;
+
+	// cout << "From file:" << m_files[i] << ", mach:" << key_mach << endl;
 
 	m_map_key_to_type[key] = key_type;
 	m_map_key_to_mach[key] = key_mach;
