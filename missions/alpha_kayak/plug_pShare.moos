@@ -1,0 +1,14 @@
+//---------------------------------------------------------
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  output = DESIRED_SPEED->192.168.1.103:9301
+  output = DESIRED_HEADING->192.168.1.103:9301
+   output = DESIRED_THRUST->192.168.1.103:9301
+
+  input = route =  localhost:$(SHARE_LISTEN)
+
+//  input = route =  multicast_7
+}
