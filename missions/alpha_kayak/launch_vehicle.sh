@@ -147,7 +147,7 @@ fi
 echo "Assembling MOOS file targ_${VNAME}.moos"
 
 
-nsplug meta_m200.moos targ_${VNAME}.moos -f \
+nsplug meta_vehicle.moos targ_${VNAME}.moos -f \
     VNAME=$VNAME                 \
     VPORT=$VPORT                 \
     WARP=$TIME_WARP              \
@@ -165,7 +165,7 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     $SIM
 
 echo "Assembling BHV file targ_${VNAME}.bhv"
-nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
+nsplug meta_vehicle.bhv targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \

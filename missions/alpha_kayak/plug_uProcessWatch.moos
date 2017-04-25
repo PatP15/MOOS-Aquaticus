@@ -13,7 +13,9 @@ ProcessConfig = uProcessWatch
   NOWATCH = uPokeDB*
 
   WATCH         = pNodeReporter
+#ifdef VMODEL M300
   WATCH         = pMarinePID
+#endif
   WATCH         = pHelmIvP
   // WATCH         = iM200
   WATCH         = pShare
