@@ -4,9 +4,7 @@ ServerHost = 192.168.1.103
 ServerPort = 9300
 Community  = NOSTROMO
 
-// MIT Sailing Pavilion
-LatOrigin  =  42.358436        
-LongOrigin = -71.087448    
+#include plug_origin_warp.moos
   
 //------------------------------------------------------------
 Processconfig = ANTLER
@@ -53,10 +51,10 @@ ProcessConfig = pShare
     AppTick     = 4
 
 //points toward the backseat IP and port number
-    output = NAV_X->192.168.1.242:9305
-    output = NAV_Y->192.168.1.242:9305
-    output = NAV_HEADING->192.168.1.242:9305
-    output = NAV_SPEED->192.168.1.242:9305
+    output = NAV_X->$(BACK_IP):$(BACKSEAT_SHARE_PORT) // 192.168.1.242:9305
+    output = NAV_Y->$(BACK_IP):$(BACKSEAT_SHARE_PORT)
+    output = NAV_HEADING->$(BACK_IP):$(BACKSEAT_SHARE_PORT)
+    output = NAV_SPEED->$(BACK_IP):$(BACKSEAT_SHARE_PORT)
   
     input = route=192.168.1.103:9301 
 }

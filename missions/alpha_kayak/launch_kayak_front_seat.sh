@@ -1,8 +1,7 @@
 #!/bin/bash 
 
-# modify path
-# PATH=$PATH:/home/student/moos-ivp-jleight/ivp-extend/trunk/bin
-
+BACKSEAT_IP="192.168.1.242"
+TIME_WARP=1
 # set defaults
 HELP="no"
 JUST_BUILD="no"
@@ -11,6 +10,7 @@ VNAME=""
 ALTIMETER="no_altimeter"
 SIMULATION=false
 HELM=false
+BACKSEAT_SHARE=""
 
 #-------------------------------------------------------
 #  Part 1: Process command-line arguments
@@ -28,6 +28,7 @@ for ARGI; do
     fi
     if [ "${ARGI}" = "--nostromo" ] ; then
         VNAME="NOSTROMO"
+	BACKSEAT_SHARE="9314"
         UNDEFINED_ARG=""
     fi
     if [ "${ARGI}" = "--silvana" ] ; then
@@ -105,7 +106,7 @@ if $SIMULATION ; then
         
 else
     nsplug meta_vehicle_fld_rtk.moos targ_$VNAME.moos -f \
-        $VNAME=1 $ALTIMETER=1
+        $VNAME=1 BACK_IP=$BACKSEAT_IP BACKSEAT_SHARE_PORT=$BACKSEAT_SHARE WARP=$TIME_WARP
         
 fi
 
