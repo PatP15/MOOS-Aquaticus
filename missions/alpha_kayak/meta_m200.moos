@@ -14,7 +14,9 @@ ProcessConfig = ANTLER
   Run = pShare             @ NewConsole = false
   Run = pLogger            @ NewConsole = false
   Run = pNodeReporter      @ NewConsole = false
-//  Run = pMarinePID         @ NewConsole = false
+#ifdef VMODEL M300
+  Run = pMarinePID         @ NewConsole = false
+#endif
   Run = pHelmIvP           @ NewConsole = false
   Run = pBasicContactMgr   @ NewConsole = false
   Run = pHostInfo          @ NewConsole = false
@@ -22,23 +24,31 @@ ProcessConfig = ANTLER
   Run = pDeadManPost       @ NewConsole = false
 #ifdef SIM
   Run = uSimMarine         @ NewConsole = false
-#else
-//  Run = iM200              @ NewConsole = false
+#elseifdef VMODEL M300
+  Run = iM200              @ NewConsole = false
 #endif
   Run = uFldMessageHandler @ NewConsole = false
 }
 
+#ifdef VMODEL M300
+
 #include plug_iM200.moos
 
 #include plug_pShare.moos
+
+#include plug_pMarinePID.moos
+
+#elseifdef VMODEL kayak
+
+#include plug_pShare_nostromo.moos
+
+#endif
 
 #include plug_pDeadManPost.moos
 
 #include plug_pLogger.moos
 
 #include plug_pNodeReporter.moos
-
-#include plug_pMarinePID.moos
 
 #include plug_pHelmIvP.moos
 

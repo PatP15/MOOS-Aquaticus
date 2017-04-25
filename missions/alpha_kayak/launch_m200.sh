@@ -10,7 +10,7 @@ HELP="no"
 JUST_BUILD="no"
 VTEAM=""
 VNAME=""
-VMODEL="M200"
+VMODEL="M300"
 
 START_POS="0,0,180"
 RETURN_POS="5,0"
@@ -29,49 +29,58 @@ for ARGI; do
     elif [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
         M200_IP=192.168.5.1 #evan
         VNAME="evan"
+	VMODEL="M300"
         VPORT="9005"
         SHARE_LISTEN="9305"
-        echo "EVAN vehicle selected as HUNTER."
+        echo "EVAN vehicle selected."
     elif [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
         M200_IP=192.168.6.1 #felix
         VNAME="felix"
+	VMODEL="M300"
         VPORT="9006"
         SHARE_LISTEN="9306"
-        echo "FELIX vehicle selected as HUNTER."
+        echo "FELIX vehicle selected."
     elif [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
         M200_IP=192.168.7.1 #gus
         VNAME="gus"
+	VMODEL="M300"
         VPORT="9007"
         SHARE_LISTEN="9307"
-        echo "GUS vehicle selected as HUNTER."
+        echo "GUS vehicle selected."
     elif [ "${ARGI}" = "--hal" -o "${ARGI}" = "-H" ] ; then
         M200_IP=192.168.8.1 #hal
         VNAME="hal"
 	VMODEL="M300"
         VPORT="9008"
         SHARE_LISTEN="9308"
-        echo "HAL vehicle selected as HUNTER."
+        echo "HAL vehicle selected."
     elif [ "${ARGI}" = "--ida" -o "${ARGI}" = "-i" ] ; then
         M200_IP=192.168.9.1 #ida
         VNAME="ida"
 	VMODEL="M300"
         VPORT="9009"
         SHARE_LISTEN="9309"
-        echo "IDA vehicle selected as HUNTER."
+        echo "IDA vehicle selected."
     elif [ "${ARGI}" = "--jing" -o "${ARGI}" = "-J" ] ; then
         M200_IP=192.168.10.1 #jing
         VNAME="jing"
 	VMODEL="M300"
         VPORT="9010"
         SHARE_LISTEN="9310"
-        echo "JING vehicle selected as HUNTER."
+        echo "JING vehicle selected."
     elif [ "${ARGI}" = "--kirk" -o "${ARGI}" = "-k" ] ; then
         M200_IP=192.168.11.1 #kirk
         VNAME="kirk"
 	VMODEL="M300"
         VPORT="9011"
         SHARE_LISTEN="9311"
-        echo "KIRK vehicle selected as HUNTER."
+        echo "KIRK vehicle selected."
+    elif [ "${ARGI}" = "--nostromo" -o "${ARGI}" = "-n" ] ; then
+        VNAME="nostromo"
+	VMODEL="kayak"
+        VPORT="9014"
+        SHARE_LISTEN="9314"
+        echo "Nostromo vehicle selected."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -104,6 +113,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --ida,        -i  : Ida vehicle."
     echo "  --jing,       -J  : Jing vehicle."
     echo "  --kirk,       -k  : Kirk vehicle."
+    echo "  --nostromo,   -n  : Nostromo vehicle."
     echo "  --sim,        -s  : Simulation mode."
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."

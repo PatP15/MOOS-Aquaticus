@@ -1,4 +1,5 @@
 //---------------------------------------------------------
+// settings for the NOSTROMO front seat
 ProcessConfig = pShare
 {
   AppTick    = 2
