@@ -1,7 +1,7 @@
 // DO NOT MODIFY - nostromo hardware configuration options
 
 ServerHost = 192.168.1.103
-ServerPort = 9300
+ServerPort = 9200
 Community  = NOSTROMO
 
 #include plug_origin_warp.moos
