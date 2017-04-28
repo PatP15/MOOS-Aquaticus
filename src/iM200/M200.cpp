@@ -379,9 +379,10 @@ void iM200::PublishMessage(gpsValueToPublish gVal)
   if (key == "LAT")       m_Comms.Notify(m_pubNameLat,     dVal);
   if (key == "LONG")      m_Comms.Notify(m_pubNameLon,     dVal);
   if (key == "SPEED")     m_Comms.Notify(m_pubNameSpeed,   dVal);
-  if (key == "HEADING")   m_Comms.Notify(m_pubNameHeading, dVal);
+  //  if (key == "HEADING")   m_Comms.Notify(m_pubNameHeading, dVal);
 
   if (key == "HEADING_GPRMC") m_Comms.Notify(m_pubNameHeading, dVal);
+    if (key == "HEADING_GPRMC") m_Comms.Notify(m_prefix+"HEADING_GPRMC", dVal);
 }
 
 bool iM200::ThrustRudderToLR()
@@ -808,7 +809,8 @@ void iM200::PublishHeading(double dHeading)
     return;
   dHeading += m_heading_offset;
   dHeading = angle360(dHeading);
-  Notify(m_pubNameHeading, dHeading);
+  //  Notify(m_pubNameHeading, dHeading);
+    Notify(m_prefix + "HEADING_CPNVG", dHeading);
 }
 
 bool iM200::DealWithNMEA(string nmea)
@@ -826,7 +828,7 @@ bool iM200::DealWithNMEA(string nmea)
 
   // Clearpath-specific sentences
   if      (nmeaHeader == "$CPIMU")  return ParseUnknownNMEA(nmea);
-  //  else if (nmeaHeader == "$CPNVG")  return ParseCPNVG(nmea);        // Heading from front seat
+  else if (nmeaHeader == "$CPNVG")  return ParseCPNVG(nmea);        // Heading from front seat
   else if (nmeaHeader == "$CPNVR")  return ParseUnknownNMEA(nmea);  // ParseCPNVR(nmea)
   else if (nmeaHeader == "$CPRBS")  return ParseCPRBS(nmea);        // Battery voltage from front seat
   else if (nmeaHeader == "$CPRCM")  return ParseUnknownNMEA(nmea);  // ParseCPRCM(nmea);
