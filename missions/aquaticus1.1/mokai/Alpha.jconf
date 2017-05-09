@@ -20,7 +20,7 @@
 #-charconv from to		# print with character set conversion
 #-nocharconv			# disable "-charconv"
 #-module			# start in module mode
-#-record dir			# record each inputs into dir
+-record ./saved_speech			# record each inputs into dir
 #-logfile file			# redirect logs to file
 #-nolog				# disable all logs
 #-help				# print help, and exit
