@@ -161,11 +161,3 @@ ProcessConfig = uProcessWatch
 
   summary_wait = 10
 }
-
-ProcessConfig = uXMS
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  var    = NAV_HEADING, NAV_HEADING_CPNVG
-}

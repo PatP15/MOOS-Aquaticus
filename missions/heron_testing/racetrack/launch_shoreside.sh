@@ -56,11 +56,11 @@ fi
 #  Part 3: Launch the Shoreside
 #-------------------------------------------------------
 echo "Launching $SNAME MOOS Community (WARP=$TIME_WARP)"
-pAntler targ_shoreside.moos >& /dev/null &
+pAntler targ_shoreside.moos --MOOSTimeWarp=1 >& /dev/null &
 echo "Done Launching Shoreside "
 
 uMAC targ_shoreside.moos
 
-# echo "Killing all processes ... "
-# kill -- -$$
-# echo "Done killing processes.   "
+echo "Killing all processes ... "
+kill -- -$$
+echo "Done killing processes.   "
