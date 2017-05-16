@@ -1,0 +1,828 @@
+/*****************************************************************/
+/*    NAME: Raphael Segal	                                       */
+/*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
+/*    FILE: ui.cpp 	                                					 	 */
+/*    DESC: main UI for the MOOS Fleet Manager                   */
+/*    DATE: March 8th 2017                                       */
+/*****************************************************************/
+
+#include <unistd.h>
+#include <ncurses.h>
+#include "system_call.h"
+#include "ManagedMoosMachine.h" // definitely included from other headers...
+#include "utils.h"
+#include "MBUtils.h"
+#include <ACTable.h>
+#include "ui.h"
+#include <regex>
+#include "utils.h"
+#include "Constants.h"
+
+using namespace std;
+
+// matches keyboard modifier 'control', as in ctrl-c.
+#define CTRL(X) (X & 037)
+#define SECOND_IN_MICROS 1000000 // 1,000,000 microseconds == 1 second
+
+//--------------------------------------------------------------------
+// Procedure: setTableFormats()
+//   Purpose: set up the formating for each window view (to be read by
+//						ACTables in UI::loop)
+//   Returns:
+//      Note:
+
+void UI::setTableFormats()
+{
+	m_headers["main"].push_back("M#");
+	m_headers["main"].push_back("NAME");
+	m_headers["main"].push_back("ID");
+	m_headers["main"].push_back("F");
+	m_headers["main"].push_back("NET");
+	m_headers["main"].push_back("COMPASS");
+	m_headers["main"].push_back("GPS PDOP");
+	m_headers["main"].push_back("B");
+	m_headers["main"].push_back("NET");
+	m_headers["main"].push_back("MOOSDB");
+	m_headers["main"].push_back("SVN");
+	m_headers["main"].push_back("TEAM");
+
+	m_headers["cmd_hist"].push_back("EXEC SUMMARY");
+	m_headers["cmd_hist"].push_back("TIME");
+	m_headers["cmd_hist"].push_back("FULL COMMAND");
+
+	m_headers["net"].push_back("M#");
+	m_headers["net"].push_back("NAME");
+	m_headers["net"].push_back("ID");
+	m_headers["net"].push_back("F");
+	m_headers["net"].push_back("PING");
+	m_headers["net"].push_back("SSH");
+	m_headers["net"].push_back("USER");
+	m_headers["net"].push_back("ADDR");
+	m_headers["net"].push_back("B");
+	m_headers["net"].push_back("PING");
+	m_headers["net"].push_back("SSH");
+	m_headers["net"].push_back("USER");
+	m_headers["net"].push_back("ADDR");
+
+	m_headers["svn"].push_back("##");
+	m_headers["svn"].push_back("NAME");
+	m_headers["svn"].push_back("");
+	m_headers["svn"].push_back("MOOS-IVP");
+	m_headers["svn"].push_back("M");
+	m_headers["svn"].push_back("");
+	m_headers["svn"].push_back("AQUATICUS");
+	m_headers["svn"].push_back("A");
+	m_headers["svn"].push_back("");
+	m_headers["svn"].push_back("PABLO");
+	m_headers["svn"].push_back("P");
+	m_headers["svn"].push_back("");
+
+	m_help_headers.push_back("TOPIC");
+	m_help_headers.push_back("CMD");
+	m_help_headers.push_back("DESCRIPTION");
+
+	// a command is a pair of strings; the command itself and a description
+	// each window (keys of the map) has a list (the vector) of commands
+	m_help["all"].push_back(make_pair("h", "Toggle full help tooltips"));
+	m_help["all"].push_back(make_pair("ctrl-a", "Toggle commanding mode"));
+	m_help["all"].push_back(make_pair("ctrl-c", "Quit"));
+	m_help["nav"].push_back(make_pair("m", "Main window"));
+	m_help["nav"].push_back(make_pair("H", "Command history window"));
+	m_help["nav"].push_back(make_pair("v", "SVN revisions window"));
+	m_help["nav"].push_back(make_pair("n", "Network communications window"));
+	m_help["cmd_all"].push_back(make_pair("S", "Start MOOS on all machines"));
+	m_help["cmd_all"].push_back(make_pair("s#", "Start MOOS on machine #"));
+	m_help["cmd_all"].push_back(make_pair("K", "ktm on all machines"));
+	m_help["cmd_all"].push_back(make_pair("k#", "ktm on machine #"));
+	m_help["cmd_all"].push_back(make_pair("R", "restart MOOS on all machines"));
+	m_help["cmd_all"].push_back(make_pair("r#", "restart MOOS on machine #"));
+	m_help["main"].push_back(make_pair("C",
+																		 "Clear app's cache for all machines"));
+	m_help["main"].push_back(make_pair("c#",
+																		 "Clear app's cache for machines #"));
+}
+
+//--------------------------------------------------------------------
+// Procedure: timeStampCommand()
+//   Purpose: Add a timestamp to the command that the machine reports
+//   Returns:
+//      Note:
+
+TimestampedCommand UI::timeStampCommand(pair<string, string> raw_command)
+{
+	TimestampedCommand tc;
+	tc.summary = raw_command.first;
+	tc.command = raw_command.second;
+	tc.timestamp = time(0);
+
+	return(tc);
+}
+
+//--------------------------------------------------------------------
+// Procedure: formatCommandTime()
+//   Purpose: format a time for printing in the command history
+//   Returns:
+//      Note: time should be human-readable, with at least H/M/S info.
+
+
+string UI::formatCommandTime(time_t time)
+{
+	string formated_time = "";
+	tm * local_time = localtime(&time);
+
+	formated_time += to_string(local_time->tm_hour) + ":";
+	formated_time += to_string(local_time->tm_min) + ":";
+	formated_time += to_string(local_time->tm_sec);
+
+	return(formated_time);
+}
+
+//--------------------------------------------------------------------
+// Procedure: accumulateStatus()
+//   Purpose: Given multiple component statuses, give a summary
+//   Returns: Summary string
+//      Note: good values match with AND, bad values match with OR, else default
+
+string UI::accumulateStatus(vector<string> statuses,
+														vector<string> good_values,
+														vector<string> bad_values,
+														string default_value)
+{
+	vector<string>::iterator value;
+	vector<string>::iterator status;
+
+	// if S1 == good_value AND S2 == good_value AND ...
+	for(value=good_values.begin(); value!=good_values.end(); value++) {
+		bool all_equal = true;
+		for(status=statuses.begin(); status!=statuses.end(); status++) {
+			if (*status!=*value) {
+				all_equal = false;
+				break;
+			}
+		}
+		if (all_equal) return(*value);
+	}
+	// if S1 == bad_value OR S2 == bad_value OR ...
+	for(value=bad_values.begin(); value!=bad_values.end(); value++) {
+		// bool one_equal = false;
+		// string v;
+		for(status=statuses.begin(); status!=statuses.end(); status++) {
+			if (*status==*value) {
+				return(*value);
+				// one_equal = true;
+				// v=*value;
+				// break;
+			}
+		}
+		// if (one_equal) return(v);
+	}
+	return(default_value);
+}
+
+//--------------------------------------------------------------------
+// Procedure: machineIsFiltered()
+//   Purpose: Determines whether a machine should be displayed
+//   Returns: true if the machine should be filtered
+//      Note:
+
+bool UI::machineIsFiltered(vector<bool> statuses)
+{}
+
+//--------------------------------------------------------------------
+// Procedure: checkMachineMail()
+//   Purpose: call on the machines to check mail
+//   Returns:
+//      Note: throttles for the CPU's sake
+
+void UI::checkMachineMail()
+{
+	time_t new_time = time(0);
+	int time_between_status_requests = 5; // seconds
+	int time_between_mailbox_checks = 1; // seconds
+
+	vector<ManagedMoosMachine>::iterator m;
+	int elapsed_time_dispatch = new_time - m_last_status_request;
+	if (time_between_status_requests < elapsed_time_dispatch) {
+		for (m = m_machines.begin(); m != m_machines.end(); m++) {
+			m->dispatchPing();
+			m->dispatchSsh();
+			m->dispatchVehiclePing();
+			m->dispatchVehicleSsh();
+
+			// machine (back seat)
+			if ((m->readSshMail()==Status::GOOD)||
+					(m->readSshMail()==Status::ISLOCAL)) {
+				m->dispatchMoosdbCheck();
+				// svn
+				m->dispatchMoosIvpSvnRevision();
+				m->dispatchAquaticusSvnRevision();
+				m->dispatchPabloSvnRevision();
+			}
+
+			// front seat, if applicable and up
+			if ((m->readVehicleSshMail()==Status::GOOD)) {
+				m->dispatchCompassStatus();
+				m->dispatchGpsPdop();
+			}
+		}
+		m_last_status_request = new_time;
+	}
+
+	int elapsed_time_check_mail = 0;
+	if (true) {
+		for (m = m_machines.begin(); m != m_machines.end(); m++) {
+			m->checkPingMail();
+			m->checkSshMail();
+			m->checkVehiclePingMail();
+			m->checkVehicleSshMail();
+			m->checkMoosdbMail();
+			m->checkCompassStatusMail();
+			m->checkGpsPdopStatusMail();
+
+			// svn
+			m->checkMoosIvpSvnRevisionMail();
+			m->checkAquaticusSvnRevisionMail();
+			m->checkPabloSvnRevisionMail();
+		}
+	}
+}
+//--------------------------------------------------------------------
+// Procedure: actOnKeyPress()
+//   Purpose: parse key inputs, and respond if they match a known command
+//   Returns:
+//      Note: modifies m_key_feed and m_view
+
+void UI::actOnKeyPress(int c)
+{
+	pair<string, string> record;
+	vector<ManagedMoosMachine>::iterator m;
+	// conveniently, \\d+ only matches positive integers
+	const regex restart_one ("r\\d+");
+	const regex ktm_one ("k\\d+");
+	const regex start_one ("s\\d+");
+	const regex clear_one ("c\\d+");
+
+	if(c!=ERR) {
+		bool command_match = false;
+		//--------------------------------------------------------------------
+		// match special characters, such as ctrl-c
+		//--------------------------------------------------------------------
+		if (c==27||c==127) { // BACKSPACE, DELETE keys
+			if (m_key_feed.size() > 0) m_key_feed.pop_back();
+		}
+		else if (c==CTRL('c')) {
+			m_keep_alive = false;
+			return;
+		}
+		else if (c==CTRL('a')) {
+			m_is_commanding ^= true; // toggle
+		}
+		else if (c==KEY_RESIZE) {
+			// do nothing, don't add to key feed
+		}
+		//--------------------------------------------------------------------
+		// add character to command, see if it matches
+		//--------------------------------------------------------------------
+		else {
+			m_key_feed += c;
+		}
+		//--------------------------------------------------------------------
+		// match special UI commands
+		//--------------------------------------------------------------------
+		if (m_key_feed=="h") {
+			m_view_full_help ^= true; // toggle
+			command_match = true;
+		}
+		else if (m_key_feed=="m") {
+			m_view = "main";
+			command_match = true;
+		}
+		else if (m_key_feed=="H") {
+			m_view = "cmd_hist";
+			command_match = true;
+		}
+		else if (m_key_feed=="v") {
+			m_view = "svn";
+			command_match = true;
+		}
+		else if (m_key_feed=="n") {
+			m_view = "net";
+			command_match = true;
+		}
+		//--------------------------------------------------------------------
+		// match exact machine commands
+		//--------------------------------------------------------------------
+		if (m_is_commanding) {
+			if (m_key_feed=="S") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					// if is connected or is local
+					if ((m->readSshMail()==Status::GOOD)||
+							(m->readSshMail()==Status::ISLOCAL))
+					{
+						// don't start MOOS twice...
+						if (m->readMoosdbMail()==Status::NODATA) record = m->startMOOS();
+					}
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, start_one)) {
+				int start_index = stoi(m_key_feed.substr(1));
+				record = m_machines[start_index].startMOOS();
+				command_match = true;
+			}
+			else if (m_key_feed=="K") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					record = m->stopMOOS();
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, ktm_one)) {
+				int ktm_index = stoi(m_key_feed.substr(1));
+				record = m_machines[ktm_index].stopMOOS();
+				command_match = true;
+			}
+			else if (m_key_feed=="R") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					record = m->restartMOOS();
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, restart_one)) {
+				int restart_index = stoi(m_key_feed.substr(1));
+				// machines[restart_index].restartHardware();
+				record = m_machines[restart_index].restartMOOS();
+				command_match = true;
+			}
+		}
+		if (m_key_feed=="C") {
+			for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+				record = m->clearCache();
+			}
+			command_match = true;
+		}
+		else if (regex_match(m_key_feed, clear_one)) {
+			int clear_index = stoi(m_key_feed.substr(1));
+			record = m_machines[clear_index].clearCache();
+			command_match = true;
+		}
+		if (command_match) {
+			m_key_feed = "";
+			c = -1;
+			// some commands, like switching windows, don't generate a record entry
+			if ((record.first!="")&&(record.second!="")) {
+				m_command_history.push_back(timeStampCommand(record));
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------------
+// Procedure: printWindow()
+//   Purpose: print the current window
+//   Returns:
+//      Note:
+
+int UI::printWindow(int line_number)
+{
+	vector<ManagedMoosMachine>::iterator m;
+
+	//--------------------------------------------------------------------
+	// Make a copy of the window's headers. The copied table will be printed.
+	//--------------------------------------------------------------------
+	ACTable view_table = ACTable(m_headers[m_view].size(), m_padding_size);
+	vector<string>::iterator ti;
+	for (ti=m_headers[m_view].begin(); ti!=m_headers[m_view].end(); ti++) {
+		view_table << *ti;
+	}
+
+	//--------------------------------------------------------------------
+	// Fill in view table contents
+	//--------------------------------------------------------------------
+
+	// horizontal break above content
+	view_table.addHeaderLines();
+
+
+	// gather all svn revisions; report which machine(s) are relatively newest
+	vector<int> moos_revisions, aqua_revisions, pablo_revisions;
+	for (m = m_machines.begin(); m != m_machines.end(); m++) {
+		string raw_svn_rev;
+		raw_svn_rev = m->readMoosIvpSvnRevisionMail();
+		if (raw_svn_rev==Status::NODATA) moos_revisions.push_back(-1);
+		else {
+			try {
+			 moos_revisions.push_back(stoi(raw_svn_rev));
+			} catch (...) {
+				moos_revisions.push_back(-2);
+			}
+		}
+		raw_svn_rev = m->readAquaticusSvnRevisionMail();
+		if (raw_svn_rev==Status::NODATA) aqua_revisions.push_back(-1);
+		else {
+			try {
+				 aqua_revisions.push_back(stoi(raw_svn_rev));
+			} catch (...) {
+				aqua_revisions.push_back(-2);
+			}
+		}
+		raw_svn_rev = m->readPabloSvnRevisionMail();
+		if (raw_svn_rev==Status::NODATA) pablo_revisions.push_back(-1);
+		else {
+			try {
+				 pablo_revisions.push_back(stoi(raw_svn_rev));
+			} catch (...) {
+				pablo_revisions.push_back(-2);
+			}
+		}
+	}
+	int machine_i = 0;
+
+	if (m_view=="main") {
+		vector<string> comms_good;
+		comms_good.push_back(Status::GOOD);
+		comms_good.push_back(Status::ISLOCAL);
+		comms_good.push_back(Status::NOTAPPLIC);
+
+		vector<string> comms_bad;
+		comms_bad.push_back(Status::ERROR);
+		comms_bad.push_back(Status::NOCONN);
+		comms_bad.push_back(Status::NODATA);
+
+		vector<string> svn_good;
+		svn_good.push_back("NEW");
+
+		vector<string> svn_bad;
+		svn_bad.push_back("OOB"); // Out Of Bounds
+		svn_bad.push_back(Status::ERROR);
+		svn_bad.push_back(Status::NODATA);
+		svn_bad.push_back("OLD");
+
+		string default_err = "UI ERR";
+
+		for (m = m_machines.begin(); m != m_machines.end(); m++) {
+			int this_machine_i = machine_i++;
+			vector<string> fs_comms;
+			fs_comms.push_back(m->readVehiclePingMail());
+			fs_comms.push_back(m->readVehicleSshMail());
+			string fs_comm_status = accumulateStatus(fs_comms,
+																							 comms_good,
+																							 comms_bad,
+																							 default_err);
+
+			vector<string> bs_comms;
+			bs_comms.push_back(m->readPingMail());
+			bs_comms.push_back(m->readSshMail());
+
+			string bs_comm_status = accumulateStatus(bs_comms,
+																							 comms_good,
+																							 comms_bad,
+																							 default_err);
+
+			// if the user requested "up" mode, and a machine (and its front seat, if
+			// it has one) hasn't come up, then don't display it
+			bool fs_down = ((fs_comm_status==Status::NODATA)||
+					 						(fs_comm_status==Status::NOCONN)||
+					 						(fs_comm_status==Status::NOTAPPLIC));
+
+			bool bs_down = ((bs_comm_status==Status::NODATA)||
+					 						(bs_comm_status==Status::NOCONN));
+
+			if ((m_config.m_filter_by_liveness)&&(fs_down&&bs_down)) continue;
+
+			view_table << to_string(this_machine_i);
+			view_table << m->getName();
+			view_table << m->getId();
+			view_table << "##"; // Front
+
+			view_table << fs_comm_status;
+
+			view_table << m->readCompassStatusMail();
+			view_table << m->readGpsPdopStatusMail();
+			view_table << "##"; // Back
+
+			view_table << bs_comm_status;
+
+			view_table << m->readMoosdbMail();
+
+			vector<string> svn_sum;
+			svn_sum.push_back(compare_to_newest(this_machine_i, aqua_revisions));
+			svn_sum.push_back(compare_to_newest(this_machine_i, moos_revisions));
+			svn_sum.push_back(compare_to_newest(this_machine_i, pablo_revisions));
+
+			view_table << accumulateStatus(svn_sum, svn_good, svn_bad, default_err);
+
+			if (m->getTeam() == "") view_table << "-";
+			else view_table << m->getTeam();
+		}
+	}
+	else if (m_view=="cmd_hist") {
+		int total_commands = m_command_history.size();
+		if (total_commands>0) {
+			int commands_to_view = 10; // TODO make this setable?
+			int first_command;
+			if (total_commands>commands_to_view) {
+				first_command = total_commands - commands_to_view - 1;
+			}
+			else {
+				first_command = 0;
+			}
+
+			for(int hist_i=first_command; hist_i<total_commands; hist_i++) {
+				view_table << m_command_history[hist_i].summary;
+
+				time_t raw_time = m_command_history[hist_i].timestamp;
+				view_table << formatCommandTime(raw_time);
+
+				string full_command = m_command_history[hist_i].command;
+				vector<string> splitlines = parseString(full_command, '\n');
+				if (splitlines.size()==1) {
+					view_table << full_command;
+				}
+				else {
+					vector<string>::iterator line;
+					for(line=splitlines.begin(); line!=splitlines.end(); line++) {
+						if (line!=splitlines.begin()) {
+							view_table << "";
+							view_table << "";
+						}
+						view_table << *line;
+					}
+				}
+			}
+		}
+	}
+	else if (m_view=="svn") {
+		int machine_i = 0;
+		for (m = m_machines.begin(); m != m_machines.end(); m++) {
+			int this_machine_i = machine_i++;
+			view_table << to_string(this_machine_i);
+			view_table << m->getName();
+
+			view_table << "##";
+			view_table << m->readMoosIvpSvnRevisionMail();
+			view_table << compare_to_newest(this_machine_i, moos_revisions);
+			view_table << "##";
+			view_table << m->readAquaticusSvnRevisionMail();
+			view_table << compare_to_newest(this_machine_i, aqua_revisions);
+			view_table << "##";
+			view_table << m->readPabloSvnRevisionMail();
+			view_table << compare_to_newest(this_machine_i, pablo_revisions);
+			view_table << "##";
+
+		}
+	}
+	else if (m_view=="net") {
+		int machine_i = 0;
+		for (m = m_machines.begin(); m != m_machines.end(); m++) {
+			view_table << to_string(machine_i++);
+			view_table << m->getName();
+			view_table << m->getId();
+			view_table << "##"; // Front
+			view_table << m->readVehiclePingMail();
+			view_table << m->readVehicleSshMail();
+			view_table << m->getFrontSeatUsername();
+			view_table << m->getFrontSeatIp();
+			view_table << "##"; // Back
+			view_table << m->readPingMail();
+			view_table << m->readSshMail();
+			view_table << m->getUsername();
+			view_table << m->getIp();
+		}
+	}
+
+	// horizontal break below content
+	view_table.addHeaderLines();
+
+	//--------------------------------------------------------------------
+	// print the fully composed view
+	//--------------------------------------------------------------------
+	vector<string> printable_table = view_table.getTableOutput();
+	for(ti=printable_table.begin(); ti!=printable_table.end(); ti++) {
+		mvprintw(line_number++, 0, ti->c_str());
+	}
+	// add one line of padding
+	line_number++;
+
+	return(line_number);
+}
+
+//--------------------------------------------------------------------
+// Procedure: printKeyFeed()
+//   Purpose: print the keyboard input feed
+//   Returns:
+//      Note:
+
+int UI::printKeyFeed(int key, int line_number)
+{
+	string prompt = "Input Stream:";
+	mvprintw(line_number++, 0, prompt.c_str());
+	if (m_is_commanding) mvprintw(line_number, prompt.size()+1, ": COMMAND MODE");
+	attron(A_BOLD);
+	mvprintw(line_number, 0, "%s", m_key_feed.c_str());
+
+	int size = m_key_feed.size();
+	if (m_key_feed.size() > 0) {
+		if (key > 0) mvprintw(line_number, size, " (%3d)", key);
+	}
+	attroff(A_BOLD);
+	// move cursor to the end of the key feed
+	mvprintw(line_number, m_key_feed.size(), "");
+
+
+	// move past key feed, and add one line of padding
+	return(line_number+2);
+}
+
+//--------------------------------------------------------------------
+// Procedure: printHelpText()
+//   Purpose: print the help text
+//   Returns:
+//      Note:
+
+int UI::printHelpText(int line_number)
+{
+	//--------------------------------------------------------------------
+	// Make a copy of the view's help headers. The copied table will be printed.
+	//--------------------------------------------------------------------
+	vector<string>::iterator ti;
+	ACTable help_view = ACTable(m_help_headers.size(), m_padding_size + 1);
+	for(ti=m_help_headers.begin(); ti!=m_help_headers.end(); ti++) {
+		help_view << *ti;
+	}
+
+	// Horizontal break above content
+	help_view.addHeaderLines();
+
+	// Add only the help topics that are relevant (all, and nav + current view
+	// if the user asks to see the entire help sheet)
+	vector<string> help_topics;
+	help_topics.push_back("all");
+	if (m_view_full_help) {
+		help_topics.push_back("nav");
+
+		// add this window as a section, if it has any commands
+		if (m_help[m_view].size()>0) help_topics.push_back(m_view);
+
+		// add commands if in the right windows and commanding mode
+		if ((m_view=="main")&&(m_is_commanding)) help_topics.push_back("cmd_all");
+	}
+
+	//--------------------------------------------------------------------
+	// Add each help topic
+	//--------------------------------------------------------------------
+	vector<string>::iterator hti;
+	for(hti=help_topics.begin(); hti!=help_topics.end(); hti++) {
+		string topic = *hti;
+
+		// topic header
+		help_view << topic;
+		help_view << "";
+		help_view << "";
+
+		// add the commands
+		vector<pair<string, string> > commands = m_help[topic];
+		vector<pair<string, string> >::iterator hi;
+		for(hi=commands.begin(); hi!=commands.end(); hi++) {
+			help_view << "";
+			help_view << hi->first;
+			help_view << hi->second;
+		}
+	}
+
+	// Horizontal break below content
+	help_view.addHeaderLines();
+
+	//--------------------------------------------------------------------
+	// Print out the table
+	//--------------------------------------------------------------------
+	mvprintw(line_number++, 0, "Commands (case sensitive):");
+	vector<string> printable_help = help_view.getTableOutput();
+	for(ti=printable_help.begin(); ti!=printable_help.end(); ti++) {
+		mvprintw(line_number++, 2, ti->c_str());
+	}
+
+	// add one line of padding
+	line_number++;
+	return(line_number);
+}
+
+//--------------------------------------------------------------------
+// Procedure: printComputerInfo()
+//   Purpose: print info about the caller's computer
+//   Returns:
+//      Note:
+
+int UI::printComputerInfo(int line_number) {
+
+	// TODO
+	// Own IP
+	// Network name (e.g. is it Kayak-Local-5/2?)
+	// Own CPU/RAM/Network traffic
+
+	mvprintw(line_number++, 0, "-----------------------------------------------");
+	string current_time = "Time: " + formatCommandTime(time(0));
+	mvprintw(line_number++, 0, current_time.c_str());
+	string ip = "My IP: NOT YET IMPLEMENTED";
+	mvprintw(line_number++, 0, ip.c_str());
+	mvprintw(line_number++, 0, "-----------------------------------------------");
+
+	// add one line of padding
+	line_number++;
+	return(line_number);
+}
+
+//--------------------------------------------------------------------
+// Procedure: buildUp()
+//   Purpose: Prepare the UI app.
+//   Returns:
+//      Note: Should be kept separate from UI instantiation. This is the "start
+//						the UI" method, which you may want to do some time after you
+//						instatiate it
+
+void UI::buildUp ()
+{
+	initscr();
+	// raw();
+	halfdelay(1);
+	noecho();
+
+	vector<ManagedMoosMachine>::iterator m;
+	for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+		m->dispatchPing();
+		m->dispatchSsh();
+		m->dispatchVehiclePing();
+		m->dispatchVehicleSsh();
+	}
+
+	setTableFormats();
+	clear();
+}
+
+//--------------------------------------------------------------------
+// Procedure: tearDown()
+//   Purpose: Cleanly close the UI app.
+//   Returns:
+//      Note:
+
+void UI::tearDown ()
+{
+	clear();
+	endwin();
+	printf("That was the Managed MOOS!\n"); // TODO - why don't I see this?
+}
+
+//--------------------------------------------------------------------
+// Procedure: loop()
+//   Purpose: Main rendering loop
+//   Returns:
+//      Note:
+
+void UI::loop()
+{
+	m_last_status_request = time(0);
+	m_last_mail_check_request = time(0) + 1;
+
+	int i = 0; // iteration counter, for rate limiting
+	int key_press = -1; // input character
+	int print_i; // current line. Some prints, but not all, increment print_i
+	while(m_keep_alive) {
+		clear();
+		// initialize variables
+		print_i = 0;
+
+		// header
+		string header = "MOOS Fleet Manager";
+		mvprintw(print_i, 0, header.c_str());
+		if (m_is_commanding) mvprintw(print_i, header.size()+1, ": COMMAND MODE");
+		print_i+=2;
+
+		checkMachineMail();
+		actOnKeyPress(key_press);
+
+		print_i = printWindow(print_i);
+		print_i = printHelpText(print_i);
+		print_i = printComputerInfo(print_i);
+		// get input characters below (it's the blocking step, it goes last)
+		print_i = printKeyFeed(key_press, print_i);
+
+		refresh();
+		i++;
+		// get input characters
+		key_press = getch();
+		// sleep(2);
+	}
+}
+
+//--------------------------------------------------------------------
+// Procedure: UI()
+
+UI::UI(Configuration config) {
+	m_config = config;
+	m_machines = m_config.getMachines();
+	m_filtering_by_liveness = config.m_filter_by_liveness;
+	m_view = "main";
+	m_padding_size = 2;
+	m_view_full_help = false;
+	m_keep_alive = true;
+	m_is_commanding = false;
+}
