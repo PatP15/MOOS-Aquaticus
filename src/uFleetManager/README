@@ -1,0 +1,9 @@
+In order to build uFleetManager, you need ncurses installed!
+
+On a Mac:
+
+	port/brew install ncurses
+
+On Linux:
+
+	apt-get install ncurses
