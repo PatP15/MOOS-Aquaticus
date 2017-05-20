@@ -1,8 +1,11 @@
-// DO NOT MODIFY - nostromo hardware configuration options
+// DO NOT MODIFY - hovergroup kayak hardware configuration options
 
-ServerHost = 192.168.1.103
-ServerPort = 9200
-Community  = NOSTROMO
+//ServerHost = 192.168.1.103
+ServerHost = $(SERVERHOST)
+//ServerPort = 9200
+ServerPort = $(SERVERPORT)
+//Community  = NOSTROMO
+Community  = $(VNAME)
 
 #include plug_origin_warp.moos
   
@@ -56,7 +59,7 @@ ProcessConfig = pShare
     output = NAV_HEADING->$(BACK_IP):$(BACKSEAT_SHARE_PORT)
     output = NAV_SPEED->$(BACK_IP):$(BACKSEAT_SHARE_PORT)
   
-    input = route=192.168.1.103:9301 
+    input = route=localhost:$(SHARE_PORT) 
 }
 
 ProcessConfig = pLogger
@@ -64,7 +67,8 @@ ProcessConfig = pLogger
     IterateMode = 0    // regular iterate and mail
     AppTick     = 10
 
-    File            = LOG_NOSTROMO
+//    File            = LOG_NOSTROMO
+        File            = LOG_$(VNAME)
 //    PATH            = /home/josh/logs/
     AsyncLog        = true
     FileTimeStamp   = true
@@ -127,7 +131,8 @@ ProcessConfig = iOS5000_Hover
     IterateMode = 0    // regular iterate and mail
     AppTick     = 1
 
-    Port        = /dev/ttyUSB2
+//    Port        = /dev/ttyUSB2
+    Port        = $(COMPASS_PORT)
     Speed       = 57600
     PreRotation = -15            // -15 for Boston (magnetic declination)
 
@@ -139,7 +144,8 @@ ProcessConfig = iRTKNAVI
     IterateMode = 0    // regular iterate and mail
     AppTick     = 1
     
-    HOST=192.168.1.103
+//    HOST=192.168.1.103
+    HOST=localhost
     PORT=50001
 }
 

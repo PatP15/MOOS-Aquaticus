@@ -1,6 +1,9 @@
 #!/bin/bash 
 
 BACKSEAT_IP="192.168.1.242"
+BACKSEAT_SHARE=""
+SHARE_PORT=""
+COMPASS_PORT=""
 TIME_WARP=1
 # set defaults
 HELP="no"
@@ -10,7 +13,7 @@ VNAME=""
 ALTIMETER="no_altimeter"
 SIMULATION=false
 HELM=false
-BACKSEAT_SHARE=""
+
 
 #-------------------------------------------------------
 #  Part 1: Process command-line arguments
@@ -30,6 +33,10 @@ for ARGI; do
         VNAME="NOSTROMO"
 	BACKSEAT_SHARE="9314"
         UNDEFINED_ARG=""
+	HOST_IP="192.168.1.103"
+	SERVER_PORT="9214"
+	SHARE_PORT="9414"
+	COMPASS_PORT="/dev/ttyUSB2"
     fi
     if [ "${ARGI}" = "--silvana" ] ; then
         VNAME="SILVANA"
@@ -37,7 +44,12 @@ for ARGI; do
     fi
     if [ "${ARGI}" = "--kestrel" ] ; then
         VNAME="KESTREL"
+	BACKSEAT_SHARE="9315"
         UNDEFINED_ARG=""
+	HOST_IP="192.168.1.105"
+	SERVER_PORT="9215"
+	SHARE_PORT="9415"
+	COMPASS_PORT="/dev/ttyUSB5"
     fi
     if [ "${ARGI:0:11}" = "--altimeter" ] ; then
         ALTIMETER="${ARGI#--altimeter=*}"
@@ -106,7 +118,9 @@ if $SIMULATION ; then
         
 else
     nsplug meta_vehicle_fld_rtk.moos targ_$VNAME.moos -f \
-        $VNAME=1 BACK_IP=$BACKSEAT_IP BACKSEAT_SHARE_PORT=$BACKSEAT_SHARE WARP=$TIME_WARP
+           VNAME=$VNAME SERVERHOST=$HOST_IP SERVERPORT=$SERVER_PORT SHARE_PORT=$SHARE_PORT \
+	   BACK_IP=$BACKSEAT_IP BACKSEAT_SHARE_PORT=$BACKSEAT_SHARE WARP=$TIME_WARP \
+	   COMPASS_PORT=$COMPASS_PORT
         
 fi
 

@@ -40,7 +40,7 @@ ProcessConfig = ANTLER
 
 #elseifdef VMODEL kayak
 
-#include plug_pShare_nostromo.moos
+#include plug_pShare_kayak.moos
 
 #endif
 

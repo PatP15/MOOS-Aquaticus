@@ -80,7 +80,17 @@ for ARGI; do
 	VMODEL="kayak"
         VPORT="9014"
         SHARE_LISTEN="9314"
+	FRONT_SEAT_IP="192.168.1.103"
+	FRONT_SEAT_SHARE="9414"
         echo "Nostromo vehicle selected."
+    elif [ "${ARGI}" = "--kestrel" -o "${ARGI}" = "-ke" ] ; then
+        VNAME="kestrel"
+	VMODEL="kayak"
+        VPORT="9015"
+        SHARE_LISTEN="9315"
+	FRONT_SEAT_IP="192.168.1.105"
+	FRONT_SEAT_SHARE="9415"
+        echo "Kestrel vehicle selected."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -114,6 +124,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --jing,       -J  : Jing vehicle."
     echo "  --kirk,       -k  : Kirk vehicle."
     echo "  --nostromo,   -n  : Nostromo vehicle."
+    echo "  --kestrel,   -ke  : Kestrel vehicle."
     echo "  --sim,        -s  : Simulation mode."
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
@@ -153,6 +164,8 @@ nsplug meta_vehicle.moos targ_${VNAME}.moos -f \
     WARP=$TIME_WARP              \
     SHARE_LISTEN=$SHARE_LISTEN   \
     SHORE_LISTEN=$SHORE_LISTEN   \
+    FRONT_SEAT_IP=$FRONT_SEAT_IP \
+    FRONT_SEAT_SHARE=$FRONT_SEAT_SHARE \
     SHORE_IP=$SHORE_IP           \
     M200_IP=$M200_IP             \
     HOSTIP_FORCE="localhost"     \
@@ -162,7 +175,7 @@ nsplug meta_vehicle.moos targ_${VNAME}.moos -f \
     VTYPE="kayak"                \
     VTEAM="blue"                 \
     START_POS=$START_POS         \
-    $SIM
+    $SIM                         
 
 echo "Assembling BHV file targ_${VNAME}.bhv"
 nsplug meta_vehicle.bhv targ_${VNAME}.bhv -f  \
