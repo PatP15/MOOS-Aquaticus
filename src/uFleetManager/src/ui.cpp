@@ -40,6 +40,7 @@ void UI::setTableFormats()
 	m_headers["main"].push_back("NET");
 	m_headers["main"].push_back("COMPASS");
 	m_headers["main"].push_back("GPS PDOP");
+	// m_headers["main"].push_back("BATT (A)");
 	m_headers["main"].push_back("B");
 	m_headers["main"].push_back("NET");
 	m_headers["main"].push_back("MOOSDB");
@@ -94,8 +95,12 @@ void UI::setTableFormats()
 	m_help["cmd_all"].push_back(make_pair("s#", "Start MOOS on machine #"));
 	m_help["cmd_all"].push_back(make_pair("K", "ktm on all machines"));
 	m_help["cmd_all"].push_back(make_pair("k#", "ktm on machine #"));
-	m_help["cmd_all"].push_back(make_pair("R", "restart MOOS on all machines"));
-	m_help["cmd_all"].push_back(make_pair("r#", "restart MOOS on machine #"));
+	m_help["cmd_all"].push_back(make_pair("R", "Restart MOOS on all machines"));
+	m_help["cmd_all"].push_back(make_pair("r#", "Restart MOOS on machine #"));
+	m_help["cmd_all"].push_back(make_pair("W", "Restart all machines"));
+	m_help["cmd_all"].push_back(make_pair("w#", "Restart machine #"));
+	m_help["cmd_all"].push_back(make_pair("D", "Turn off all machines"));
+	m_help["cmd_all"].push_back(make_pair("d#","Turn off machine #"));
 	m_help["main"].push_back(make_pair("C",
 																		 "Clear app's cache for all machines"));
 	m_help["main"].push_back(make_pair("c#",
@@ -164,17 +169,11 @@ string UI::accumulateStatus(vector<string> statuses,
 	}
 	// if S1 == bad_value OR S2 == bad_value OR ...
 	for(value=bad_values.begin(); value!=bad_values.end(); value++) {
-		// bool one_equal = false;
-		// string v;
 		for(status=statuses.begin(); status!=statuses.end(); status++) {
 			if (*status==*value) {
 				return(*value);
-				// one_equal = true;
-				// v=*value;
-				// break;
 			}
 		}
-		// if (one_equal) return(v);
 	}
 	return(default_value);
 }
@@ -186,7 +185,9 @@ string UI::accumulateStatus(vector<string> statuses,
 //      Note:
 
 bool UI::machineIsFiltered(vector<bool> statuses)
-{}
+{
+	return(false);
+}
 
 //--------------------------------------------------------------------
 // Procedure: checkMachineMail()
@@ -197,7 +198,7 @@ bool UI::machineIsFiltered(vector<bool> statuses)
 void UI::checkMachineMail()
 {
 	time_t new_time = time(0);
-	int time_between_status_requests = 5; // seconds
+	int time_between_status_requests = 3; // seconds
 	int time_between_mailbox_checks = 1; // seconds
 
 	vector<ManagedMoosMachine>::iterator m;
@@ -228,8 +229,8 @@ void UI::checkMachineMail()
 		m_last_status_request = new_time;
 	}
 
-	int elapsed_time_check_mail = 0;
-	if (true) {
+	int elapsed_time_check_mail = new_time - m_last_mail_check_request;
+	if (time_between_mailbox_checks < elapsed_time_check_mail) { // TODO was I filtering here?
 		for (m = m_machines.begin(); m != m_machines.end(); m++) {
 			m->checkPingMail();
 			m->checkSshMail();
@@ -261,6 +262,8 @@ void UI::actOnKeyPress(int c)
 	const regex ktm_one ("k\\d+");
 	const regex start_one ("s\\d+");
 	const regex clear_one ("c\\d+");
+	const regex hardware_restart_one ("w\\d+");
+	const regex hardware_shutdown_one ("d\\d+");
 
 	if(c!=ERR) {
 		bool command_match = false;
@@ -268,7 +271,7 @@ void UI::actOnKeyPress(int c)
 		// match special characters, such as ctrl-c
 		//--------------------------------------------------------------------
 		if (c==27||c==127) { // BACKSPACE, DELETE keys
-			if (m_key_feed.size() > 0) m_key_feed.pop_back();
+			if (m_key_feed.size() > 0) m_key_feed = "";
 		}
 		else if (c==CTRL('c')) {
 			m_keep_alive = false;
@@ -351,6 +354,28 @@ void UI::actOnKeyPress(int c)
 				int restart_index = stoi(m_key_feed.substr(1));
 				// machines[restart_index].restartHardware();
 				record = m_machines[restart_index].restartMOOS();
+				command_match = true;
+			}
+			else if (m_key_feed=="W") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					record = m->restartHardware();
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, hardware_restart_one)) {
+				int clear_index = stoi(m_key_feed.substr(1));
+				record = m_machines[clear_index].restartHardware();
+				command_match = true;
+			}
+			else if (m_key_feed=="D") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					record = m->stopHardware();
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, hardware_shutdown_one)) {
+				int clear_index = stoi(m_key_feed.substr(1));
+				record = m_machines[clear_index].stopHardware();
 				command_match = true;
 			}
 		}
@@ -498,6 +523,7 @@ int UI::printWindow(int line_number)
 
 			view_table << m->readCompassStatusMail();
 			view_table << m->readGpsPdopStatusMail();
+			// view_table << Status::NOIMPL;
 			view_table << "##"; // Back
 
 			view_table << bs_comm_status;
@@ -615,8 +641,9 @@ int UI::printWindow(int line_number)
 int UI::printKeyFeed(int key, int line_number)
 {
 	string prompt = "Input Stream:";
-	mvprintw(line_number++, 0, prompt.c_str());
+	mvprintw(line_number, 0, prompt.c_str());
 	if (m_is_commanding) mvprintw(line_number, prompt.size()+1, ": COMMAND MODE");
+	line_number++;
 	attron(A_BOLD);
 	mvprintw(line_number, 0, "%s", m_key_feed.c_str());
 
@@ -722,7 +749,7 @@ int UI::printComputerInfo(int line_number) {
 	mvprintw(line_number++, 0, "-----------------------------------------------");
 	string current_time = "Time: " + formatCommandTime(time(0));
 	mvprintw(line_number++, 0, current_time.c_str());
-	string ip = "My IP: NOT YET IMPLEMENTED";
+	string ip = "IP: " + Status::NOIMPL;
 	mvprintw(line_number++, 0, ip.c_str());
 	mvprintw(line_number++, 0, "-----------------------------------------------");
 
@@ -737,13 +764,16 @@ int UI::printComputerInfo(int line_number) {
 //   Returns:
 //      Note: Should be kept separate from UI instantiation. This is the "start
 //						the UI" method, which you may want to do some time after you
-//						instatiate it
+//						instantiate it
 
 void UI::buildUp ()
 {
 	initscr();
-	// raw();
-	halfdelay(1);
+	raw();
+	cbreak();
+
+	unsigned int input_milliseconds = 8; // hand tuned for responsiveness
+	halfdelay(input_milliseconds);
 	noecho();
 
 	vector<ManagedMoosMachine>::iterator m;
@@ -786,6 +816,12 @@ void UI::loop()
 	int key_press = -1; // input character
 	int print_i; // current line. Some prints, but not all, increment print_i
 	while(m_keep_alive) {
+		raw();
+		cbreak();
+
+		unsigned int input_milliseconds = 8; // hand tuned for responsiveness
+		halfdelay(input_milliseconds);
+		noecho();
 		clear();
 		// initialize variables
 		print_i = 0;

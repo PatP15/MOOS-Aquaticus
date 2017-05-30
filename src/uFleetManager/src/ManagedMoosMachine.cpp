@@ -995,57 +995,6 @@ pair<string, string> ManagedMoosMachine::restartMOOS(int t)
 }
 
 //--------------------------------------------------------------------
-// Procedure: restartHardwareBlocking()
-//   Purpose: Restart the designated machine
-//   Returns: Command name and exact command
-//      Note: Immediately returns 0 if run against the localhost. Blocks.
-
-pair<string, string> ManagedMoosMachine::restartHardwareBlocking()
-{
-	string summary = m_name + " restart hardware";
-	string command = Status::ISLOCAL;
-	if (targetIsLocal()) return(make_pair(summary, command));
-
-	// TODO - figure out how password handling works in curses
-	// NOTE: decision on to-do - de-sudo-protect shutdown and restart on PABLOs
-
-	//
-	// Magic bash script ahead
-	// Line-by-line explanations included
-	//
-
-	// # reboot; sudo password required. -t allows sending password (pseudo-tty)
-	// ssh -t MACHINE@pIP 'source ~/.profile; sudo reboot now'
-
-	// # wait until RasPi actually shuts down
-	// # from five trials, never exceeded 2 seconds.
-	// # Margin for maximum confidence; we shouldn't be debugging THIS code
-	// sleep 5
-
-	// # -o exits 0 after the first successful packet
-	// ping -o IP
-
-	// # wait until ssh server starts
-	// # from five trials, never exceeded 3 seconds.
-	// # Margin for maximum confidence; we shouldn't be debugging THIS code
-	// sleep 5
-
-	// # we livin
-	// ssh MACHINE@IP 'exit 42'
-	// echo $?
-
-	command = sshTrustPrefix() + "-t " + getFullAddress() +
-					  string(" 'source ~/.profile; sudo reboot now'\n") +
-					  string("sleep 5\n") +
-					  string("ping -o ") + m_machine_ip_address + "\n" +
-					  string("sleep 5\n") +
-					  sshTrustPrefix() + getFullAddress() + " 'exit 42'";
-
-	system_call(command);
-	return(make_pair(summary, command));
-}
-
-//--------------------------------------------------------------------
 // Procedure: restartHardware()
 //   Purpose: Restart the designated machine
 //   Returns: Command name and exact command
@@ -1059,43 +1008,39 @@ pair<string, string> ManagedMoosMachine::restartHardware()
 
 	if (targetIsLocal()) return(make_pair(summary, command));
 
-	// // TODO - figure out how password handling works in curses
+	command = sshTrustPrefix() + getFullAddress() + \
+					+ " \"source ~/.profile; reboot\"";
 
-	// //
-	// // Magic bash script ahead
-	// // Line-by-line explanations included
-	// //
+	string index = prepareUpdate(m_restart_hardware_results);
 
-	// // # reboot; sudo password required. -t allows sending password (pseudo-tty)
-	// // ssh -t MACHINE@pIP 'source ~/.profile; sudo reboot now'
+	system_call_dispatch_pipe(command, mailbox, index);
 
-	// // # wait until RasPi actually shuts down
-	// // # from five trials, never exceeded 2 seconds.
-	// // # Margin for maximum confidence; we shouldn't be debugging THIS code
-	// // sleep 5
+	clearCache();
+	return(make_pair(summary, command));
+}
 
-	// // # -o exits 0 after the first successful packet
-	// // ping -o IP
 
-	// // # wait until ssh server starts
-	// // # from five trials, never exceeded 3 seconds.
-	// // # Margin for maximum confidence; we shouldn't be debugging THIS code
-	// // sleep 5
+//--------------------------------------------------------------------
+// Procedure: stopHardware()
+//   Purpose: stop the designated machine
+//   Returns: Command name and exact command
+//      Note:
 
-	// // # we livin
-	// // ssh MACHINE@IP 'exit 42'
-	// // echo $?
+pair<string, string> ManagedMoosMachine::stopHardware() {
+	string summary = m_name + " shutdown hardware";
+	string command = Status::ISLOCAL;
+	string mailbox = serviceMailboxName("shutdownHardware");
 
-	// command = sshTrustPrefix() + "-t " + getFullAddress() +
-	// 					string(" 'source ~/.profile; sudo reboot now'\n") +
-	// 					string("sleep 5\n") +
-	// 					string("ping -o ") + m_machine_ip_address + "\n" +
-	// 					string("sleep 5\n") +
-	// 					sshTrustPrefix() + getFullAddress() + " 'exit 42'";
+	if (targetIsLocal()) return(make_pair(summary, command));
 
-	// TODO: add a mailbox, and then get an index from it for below
-	// system_call_dispatch_return(command, mailbox, index);
-	// clearCache();
+	command = sshTrustPrefix() + getFullAddress() + \
+					+ " \"source ~/.profile; shutdown now\"";
+
+	string index = prepareUpdate(m_shutdown_hardware_results);
+
+	system_call_dispatch_pipe(command, mailbox, index);
+
+	clearCache();
 	return(make_pair(summary, command));
 }
 
@@ -1176,6 +1121,9 @@ string ManagedMoosMachine::getTeam()
 	return m_team;
 }
 
+//--------------------------------------------------------------------
+// Procedure: getId()
+
 string ManagedMoosMachine::getId()
 {
 	string id = "";
@@ -1193,9 +1141,6 @@ string ManagedMoosMachine::getId()
 	}
 	return(id);
 }
-
-//--------------------------------------------------------------------
-// Procedure: getId()
 
 //--------------------------------------------------------------------
 // Procedure: setUsername()
@@ -1292,6 +1237,8 @@ pair<string, string> ManagedMoosMachine::clearCache()
 	clear_stamped_data(m_gps_pdop_results);
 	clear_stamped_data(m_front_seat_ping_results);
 	clear_stamped_data(m_front_seat_ssh_results);
+	clear_stamped_data(m_restart_hardware_results);
+	clear_stamped_data(m_shutdown_hardware_results);
 
 	vector<string>::iterator m;
 	for(m=m_mailboxes.begin(); m!=m_mailboxes.end(); m++) {
@@ -1323,6 +1270,8 @@ ManagedMoosMachine::ManagedMoosMachine(string name, string ip)
 	m_mailboxes.push_back(serviceMailboxName("aquaSvnRev"));
 	m_mailboxes.push_back(serviceMailboxName("moosSvnRev"));
 	m_mailboxes.push_back(serviceMailboxName("pabloSvnRev"));
+	m_mailboxes.push_back(serviceMailboxName("restartHardware"));
+	m_mailboxes.push_back(serviceMailboxName("shutdownHardware"));
 	vector<string>::iterator m;
 	for(m=m_mailboxes.begin(); m!=m_mailboxes.end(); m++) {
 		system_call("touch " + *m);

@@ -29,6 +29,8 @@ namespace Status {
 	// Test not applicable
 	static std::string NOTAPPLIC = "NA";
 	static std::string ISLOCAL = "LOC";
+
+	static std::string NOIMPL = "TODO";
 }
 
 #endif

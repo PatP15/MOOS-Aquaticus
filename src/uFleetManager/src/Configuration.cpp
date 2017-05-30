@@ -31,7 +31,7 @@ map<string, ManagedMoosMachine> Configuration::allDefaultMachines()
 	default_machines["Ida"] = ManagedMoosMachine("Ida", "192.168.9.100");
 	default_machines["Jing"] = ManagedMoosMachine("Jing", "192.168.10.100");
 	default_machines["Kirk"] = ManagedMoosMachine("Kirk", "192.168.11.100");
-	default_machines["manual"] = ManagedMoosMachine("Manual", "192.168.2.30");
+	default_machines["manual"] = ManagedMoosMachine("Manual", "192.168.2.26");
 
 	string gen_m200_loc = "~/moos-ivp-aquaticus/missions/aquaticus1.1/m200";
 	string gen_m200_launch_file = "launch_m200.sh";

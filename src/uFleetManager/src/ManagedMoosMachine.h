@@ -69,9 +69,8 @@ public: // Public methods (sending commands)
 	std::pair<std::string, std::string> stopMOOS();
 	std::pair<std::string, std::string> restartMOOS(int=2);
 
-	std::pair<std::string, std::string> restartHardwareBlocking();
 	std::pair<std::string, std::string> restartHardware();
-	std::pair<std::string, std::string> stopHardware() {return(std::make_pair("",""));};
+	std::pair<std::string, std::string> stopHardware();
 
 	std::pair<std::string, std::string> stopMOOSCommunity() {return(std::make_pair("",""));};
 
@@ -132,6 +131,8 @@ protected: // Variables
 	StampedData m_aquaticus_svn_revision_results;
 	StampedData m_moos_ivp_svn_revision_results;
 	StampedData m_pablo_svn_revision_results;
+	StampedData m_restart_hardware_results;
+	StampedData m_shutdown_hardware_results;
 };
 
 #endif
