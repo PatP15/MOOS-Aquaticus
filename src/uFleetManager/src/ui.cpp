@@ -33,50 +33,66 @@ using namespace std;
 
 void UI::setTableFormats()
 {
-	m_headers["main"].push_back("M#");
-	m_headers["main"].push_back("NAME");
-	m_headers["main"].push_back("ID");
-	m_headers["main"].push_back("F");
-	m_headers["main"].push_back("NET");
-	m_headers["main"].push_back("COMPASS");
-	m_headers["main"].push_back("GPS PDOP");
-	// m_headers["main"].push_back("BATT (A)");
-	m_headers["main"].push_back("B");
-	m_headers["main"].push_back("NET");
-	m_headers["main"].push_back("MOOSDB");
-	m_headers["main"].push_back("SVN");
-	m_headers["main"].push_back("TEAM");
+	vector<string> main1, main2;
 
-	m_headers["cmd_hist"].push_back("EXEC SUMMARY");
-	m_headers["cmd_hist"].push_back("TIME");
-	m_headers["cmd_hist"].push_back("FULL COMMAND");
+	// The following code is NOT FORMATTED ACCORDING TO NORMAL LAB CONVENTIONS
+	// I believe it is dramatically more readable and debuggable this way, but
+	// that is my opinion and can be overruled
 
-	m_headers["net"].push_back("M#");
-	m_headers["net"].push_back("NAME");
-	m_headers["net"].push_back("ID");
-	m_headers["net"].push_back("F");
-	m_headers["net"].push_back("PING");
-	m_headers["net"].push_back("SSH");
-	m_headers["net"].push_back("USER");
-	m_headers["net"].push_back("ADDR");
-	m_headers["net"].push_back("B");
-	m_headers["net"].push_back("PING");
-	m_headers["net"].push_back("SSH");
-	m_headers["net"].push_back("USER");
-	m_headers["net"].push_back("ADDR");
+	main1.push_back(""); main2.push_back("M#");
+	main1.push_back(""); main2.push_back("NAME");
+	main1.push_back(""); main2.push_back("ID");
+	main1.push_back("F"); main2.push_back("");
+	main1.push_back(""); main2.push_back("NET");
+	main1.push_back(""); main2.push_back("COMPASS");
+	main1.push_back(""); main2.push_back("GPS PDOP");
+	// main1.push_back(""); main2.push_back("BATT (A)");
+	main1.push_back("B"); main2.push_back("");
+	main1.push_back(""); main2.push_back("NET");
+	main1.push_back(""); main2.push_back("MOOSDB");
+	main1.push_back(""); main2.push_back("SVN");
+	main1.push_back(""); main2.push_back("TEAM");
+	m_headers["main"].push_back(main1);
+	m_headers["main"].push_back(main2);
 
-	m_headers["svn"].push_back("##");
-	m_headers["svn"].push_back("NAME");
-	m_headers["svn"].push_back("");
-	m_headers["svn"].push_back("MOOS-IVP");
-	m_headers["svn"].push_back("M");
-	m_headers["svn"].push_back("");
-	m_headers["svn"].push_back("AQUATICUS");
-	m_headers["svn"].push_back("A");
-	m_headers["svn"].push_back("");
-	m_headers["svn"].push_back("PABLO");
-	m_headers["svn"].push_back("P");
-	m_headers["svn"].push_back("");
+	vector<string> hist1;
+	hist1.push_back("EXEC SUMMARY");
+	hist1.push_back("TIME");
+	hist1.push_back("FULL COMMAND");
+	m_headers["cmd_hist"].push_back(hist1);
+
+	vector<string> net1, net2;
+	net1.push_back(""); net2.push_back("M#");
+	net1.push_back(""); net2.push_back("NAME");
+	net1.push_back(""); net2.push_back("ID");
+	net1.push_back("F"); net2.push_back("");
+	net1.push_back(""); net2.push_back("PING");
+	net1.push_back(""); net2.push_back("SSH");
+	net1.push_back(""); net2.push_back("USER");
+	net1.push_back(""); net2.push_back("ADDR");
+	net1.push_back("B"); net2.push_back("");
+	net1.push_back(""); net2.push_back("PING");
+	net1.push_back(""); net2.push_back("SSH");
+	net1.push_back(""); net2.push_back("USER");
+	net1.push_back(""); net2.push_back("ADDR");
+	m_headers["net"].push_back(net1);
+	m_headers["net"].push_back(net2);
+
+	vector<string> svn1, svn2;
+	svn1.push_back(""); svn2.push_back("#");
+	svn1.push_back(""); svn2.push_back("NAME");
+	svn1.push_back("\\"); svn2.push_back("\\");
+	svn1.push_back("MOOS-IVP"); svn2.push_back("REV");
+	svn1.push_back(""); svn2.push_back("CMP");
+	svn1.push_back("/"); svn2.push_back("/");
+	svn1.push_back("AQUATICUS"); svn2.push_back("REV");
+	svn1.push_back(""); svn2.push_back("CMP");
+	svn1.push_back("/"); svn2.push_back("/");
+	svn1.push_back("PABLO"); svn2.push_back("REV");
+	svn1.push_back(""); svn2.push_back("CMP");
+	svn1.push_back("/"); svn2.push_back("/");
+	m_headers["svn"].push_back(svn1);
+	m_headers["svn"].push_back(svn2);
 
 	m_help_headers.push_back("TOPIC");
 	m_help_headers.push_back("CMD");
@@ -91,16 +107,27 @@ void UI::setTableFormats()
 	m_help["nav"].push_back(make_pair("H", "Command history window"));
 	m_help["nav"].push_back(make_pair("v", "SVN revisions window"));
 	m_help["nav"].push_back(make_pair("n", "Network communications window"));
-	m_help["cmd_all"].push_back(make_pair("S", "Start MOOS on all machines"));
-	m_help["cmd_all"].push_back(make_pair("s#", "Start MOOS on machine #"));
-	m_help["cmd_all"].push_back(make_pair("K", "ktm on all machines"));
-	m_help["cmd_all"].push_back(make_pair("k#", "ktm on machine #"));
-	m_help["cmd_all"].push_back(make_pair("R", "Restart MOOS on all machines"));
-	m_help["cmd_all"].push_back(make_pair("r#", "Restart MOOS on machine #"));
-	m_help["cmd_all"].push_back(make_pair("W", "Restart all machines"));
-	m_help["cmd_all"].push_back(make_pair("w#", "Restart machine #"));
-	m_help["cmd_all"].push_back(make_pair("D", "Turn off all machines"));
-	m_help["cmd_all"].push_back(make_pair("d#","Turn off machine #"));
+	m_help["cmd_all"].push_back(make_pair("S/s#", "Start MOOS        (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("K/k#", "ktm               (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("R/r#", "Restart MOOS      (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("W/w#", "Restart hardware  (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("D/d#", "Turn off hardware (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("G/g#", "Restart vehicle   (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("F/f#", "Turn off vehicle  (all/machine #)"));
+	// m_help["cmd_all"].push_back(make_pair("S", "Start MOOS on all machines"));
+	// m_help["cmd_all"].push_back(make_pair("s#", "Start MOOS on machine #"));
+	// m_help["cmd_all"].push_back(make_pair("K", "ktm on all machines"));
+	// m_help["cmd_all"].push_back(make_pair("k#", "ktm on machine #"));
+	// m_help["cmd_all"].push_back(make_pair("R", "Restart MOOS on all machines"));
+	// m_help["cmd_all"].push_back(make_pair("r#", "Restart MOOS on machine #"));
+	// m_help["cmd_all"].push_back(make_pair("W", "Restart all machines"));
+	// m_help["cmd_all"].push_back(make_pair("w#", "Restart machine #"));
+	// m_help["cmd_all"].push_back(make_pair("D", "Turn off all machines"));
+	// m_help["cmd_all"].push_back(make_pair("d#","Turn off machine #"));
+	// m_help["cmd_all"].push_back(make_pair("G", "Restart all vehicles"));
+	// m_help["cmd_all"].push_back(make_pair("g#", "Restart vehicle #"));
+	// m_help["cmd_all"].push_back(make_pair("F", "Turn off all vehicles"));
+	// m_help["cmd_all"].push_back(make_pair("f#","Turn off vehicle #"));
 	m_help["main"].push_back(make_pair("C",
 																		 "Clear app's cache for all machines"));
 	m_help["main"].push_back(make_pair("c#",
@@ -255,7 +282,7 @@ void UI::checkMachineMail()
 
 void UI::actOnKeyPress(int c)
 {
-	pair<string, string> record;
+	vector<pair<string, string> > records;
 	vector<ManagedMoosMachine>::iterator m;
 	// conveniently, \\d+ only matches positive integers
 	const regex restart_one ("r\\d+");
@@ -264,6 +291,8 @@ void UI::actOnKeyPress(int c)
 	const regex clear_one ("c\\d+");
 	const regex hardware_restart_one ("w\\d+");
 	const regex hardware_shutdown_one ("d\\d+");
+	const regex vehicle_restart_one ("g\\d+");
+	const regex vehicle_shutdown_one ("f\\d+");
 
 	if(c!=ERR) {
 		bool command_match = false;
@@ -323,80 +352,109 @@ void UI::actOnKeyPress(int c)
 							(m->readSshMail()==Status::ISLOCAL))
 					{
 						// don't start MOOS twice...
-						if (m->readMoosdbMail()==Status::NODATA) record = m->startMOOS();
+						if (m->readMoosdbMail()==Status::NODATA)
+							records.push_back(m->startMOOS());
 					}
 				}
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, start_one)) {
 				int start_index = stoi(m_key_feed.substr(1));
-				record = m_machines[start_index].startMOOS();
+				records.push_back(m_machines[start_index].startMOOS());
 				command_match = true;
 			}
 			else if (m_key_feed=="K") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					record = m->stopMOOS();
+					records.push_back(m->stopMOOS());
 				}
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, ktm_one)) {
 				int ktm_index = stoi(m_key_feed.substr(1));
-				record = m_machines[ktm_index].stopMOOS();
+				records.push_back(m_machines[ktm_index].stopMOOS());
 				command_match = true;
 			}
 			else if (m_key_feed=="R") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					record = m->restartMOOS();
+					records.push_back(m->restartMOOS());
 				}
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, restart_one)) {
 				int restart_index = stoi(m_key_feed.substr(1));
 				// machines[restart_index].restartHardware();
-				record = m_machines[restart_index].restartMOOS();
+				records.push_back(m_machines[restart_index].restartMOOS());
 				command_match = true;
 			}
 			else if (m_key_feed=="W") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					record = m->restartHardware();
+					records.push_back(m->restartHardware());
 				}
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, hardware_restart_one)) {
 				int clear_index = stoi(m_key_feed.substr(1));
-				record = m_machines[clear_index].restartHardware();
+				records.push_back(m_machines[clear_index].restartHardware());
 				command_match = true;
 			}
 			else if (m_key_feed=="D") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					record = m->stopHardware();
+					records.push_back(m->stopHardware());
 				}
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, hardware_shutdown_one)) {
 				int clear_index = stoi(m_key_feed.substr(1));
-				record = m_machines[clear_index].stopHardware();
+				records.push_back(m_machines[clear_index].stopHardware());
 				command_match = true;
 			}
+			/////////////////////////////////////////////////////////
+			else if (m_key_feed=="G") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					records.push_back(m->restartVehicle());
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, vehicle_restart_one)) {
+				int clear_index = stoi(m_key_feed.substr(1));
+				records.push_back(m_machines[clear_index].restartVehicle());
+				command_match = true;
+			}
+			else if (m_key_feed=="F") {
+				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+					records.push_back(m->stopVehicle());
+				}
+				command_match = true;
+			}
+			else if (regex_match(m_key_feed, vehicle_shutdown_one)) {
+				int clear_index = stoi(m_key_feed.substr(1));
+				records.push_back(m_machines[clear_index].stopVehicle());
+				command_match = true;
+			}
+			/////////////////////////////////////////////////////////
 		}
 		if (m_key_feed=="C") {
 			for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-				record = m->clearCache();
+				records.push_back(m->clearCache());
 			}
 			command_match = true;
 		}
 		else if (regex_match(m_key_feed, clear_one)) {
 			int clear_index = stoi(m_key_feed.substr(1));
-			record = m_machines[clear_index].clearCache();
+			records.push_back(m_machines[clear_index].clearCache());
 			command_match = true;
 		}
 		if (command_match) {
 			m_key_feed = "";
 			c = -1;
-			// some commands, like switching windows, don't generate a record entry
-			if ((record.first!="")&&(record.second!="")) {
-				m_command_history.push_back(timeStampCommand(record));
+			vector<pair<string, string> >::iterator r;
+			for (r=records.begin(); r!=records.end(); r++) {
+				// some commands, like switching windows, don't generate a record entry
+				if ((r->first!="")&&(r->second!="")) {
+					m_command_history.push_back(timeStampCommand(*r));
+				}
 			}
+			records.clear();
 		}
 	}
 }
@@ -414,10 +472,13 @@ int UI::printWindow(int line_number)
 	//--------------------------------------------------------------------
 	// Make a copy of the window's headers. The copied table will be printed.
 	//--------------------------------------------------------------------
-	ACTable view_table = ACTable(m_headers[m_view].size(), m_padding_size);
+	ACTable view_table = ACTable(m_headers[m_view][0].size(), m_padding_size);
+	vector<vector<string> >::iterator hi;
 	vector<string>::iterator ti;
-	for (ti=m_headers[m_view].begin(); ti!=m_headers[m_view].end(); ti++) {
-		view_table << *ti;
+	for (hi=m_headers[m_view].begin(); hi!=m_headers[m_view].end(); hi++) {
+		for(ti=hi->begin(); ti!=hi->end(); ti++) {
+			view_table << *ti;
+		}
 	}
 
 	//--------------------------------------------------------------------
@@ -517,14 +578,14 @@ int UI::printWindow(int line_number)
 			view_table << to_string(this_machine_i);
 			view_table << m->getName();
 			view_table << m->getId();
-			view_table << "##"; // Front
+			view_table << "/"; // Front
 
 			view_table << fs_comm_status;
 
 			view_table << m->readCompassStatusMail();
 			view_table << m->readGpsPdopStatusMail();
 			// view_table << Status::NOIMPL;
-			view_table << "##"; // Back
+			view_table << "/"; // Back
 
 			view_table << bs_comm_status;
 
@@ -584,16 +645,16 @@ int UI::printWindow(int line_number)
 			view_table << to_string(this_machine_i);
 			view_table << m->getName();
 
-			view_table << "##";
+			view_table << "\\";
 			view_table << m->readMoosIvpSvnRevisionMail();
 			view_table << compare_to_newest(this_machine_i, moos_revisions);
-			view_table << "##";
+			view_table << "/";
 			view_table << m->readAquaticusSvnRevisionMail();
 			view_table << compare_to_newest(this_machine_i, aqua_revisions);
-			view_table << "##";
+			view_table << "/";
 			view_table << m->readPabloSvnRevisionMail();
 			view_table << compare_to_newest(this_machine_i, pablo_revisions);
-			view_table << "##";
+			view_table << "/";
 
 		}
 	}
@@ -603,12 +664,12 @@ int UI::printWindow(int line_number)
 			view_table << to_string(machine_i++);
 			view_table << m->getName();
 			view_table << m->getId();
-			view_table << "##"; // Front
+			view_table << "/"; // Front
 			view_table << m->readVehiclePingMail();
 			view_table << m->readVehicleSshMail();
 			view_table << m->getFrontSeatUsername();
 			view_table << m->getFrontSeatIp();
-			view_table << "##"; // Back
+			view_table << "/"; // Back
 			view_table << m->readPingMail();
 			view_table << m->readSshMail();
 			view_table << m->getUsername();

@@ -1,0 +1,42 @@
+################################################################################
+# Purpose: to enable shutting vehicles down and restarting them without sudo,
+# 				 enabling control by uFleetManager
+# Instructions: use the supplied command to open the permission files for
+#								editing, and then simply copy the following contents into this
+#								new file.
+# Notes: PABLO Master should have its permissions set up as of 04/23/17, but
+#				 old examples (or M300s, or new platforms entirely) will still need this
+################################################################################
+
+===============================
+RasPi (PABLO)
+===============================
+
+sudo visudo -f /etc/sudoers.d/shutdown
+-------------------------------
+student2680 host = (ALL) NOPASSWD: /sbin/shutdown now
+student2680 host = (ALL) NOPASSWD: /sbin/reboot
+
+-------------------------------
+-------------------------------
+
+sudoedit /etc/polkit-1/localauthority/50-local.d/reboot.pkla
+-------------------------------
+[Reboot]
+Identity=unix-user:student2680
+Action=org.freedesktop.login1.reboot
+ResultAny=yes
+
+[Shutdown]
+Identity=unix-user:student2680
+Action=org.freedesktop.login1.power-off
+ResultAny=yes
+
+===============================
+Ubuntu (M300 Front Seat)
+===============================
+
+sudo visudo -f /etc/sudoers.d/shutdown
+-------------------------------
+student ALL=NOPASSWD: /sbin/shutdown now
+student ALL=NOPASSWD: /sbin/reboot

@@ -49,7 +49,7 @@ protected: // Member variables (general)
 protected: // Member variables (input)
 	std::string m_key_feed; // accumulation of keystrokes, for matching commands
 protected: // Member variables (output)
-	std::map<std::string, std::vector<std::string> > m_headers;
+	std::map<std::string, std::vector<std::vector<std::string> > > m_headers;
 	std::vector<std::string> m_help_headers;
 	std::string m_view;
 	int m_padding_size;

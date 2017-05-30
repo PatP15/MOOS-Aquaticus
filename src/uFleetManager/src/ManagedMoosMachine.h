@@ -71,6 +71,8 @@ public: // Public methods (sending commands)
 
 	std::pair<std::string, std::string> restartHardware();
 	std::pair<std::string, std::string> stopHardware();
+	std::pair<std::string, std::string> restartVehicle();
+	std::pair<std::string, std::string> stopVehicle();
 
 	std::pair<std::string, std::string> stopMOOSCommunity() {return(std::make_pair("",""));};
 

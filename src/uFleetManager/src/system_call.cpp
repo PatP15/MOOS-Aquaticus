@@ -42,7 +42,7 @@ void _dispatch(string command, string timeout) {
 }
 
 //--------------------------------------------------------------------
-// Procedure: system_call_dispatch()
+// Procedure: system_call_dispatch_return()
 //   Purpose: Wrapped dispatch call that saves the returned value
 //   Returns:
 //      Note: It is crucial to write the index after the data; this is the app's
@@ -55,7 +55,7 @@ void system_call_dispatch_return(string command, string mailbox, string index) {
 }
 
 //--------------------------------------------------------------------
-// Procedure: dispatch_quick_writeback()
+// Procedure: system_call_dispatch_pipe()
 //   Purpose: Wrapped dispatch call that saves the piped results
 //   Returns:
 //      Note: A bash script such as "A > B" will clear B before A begins and

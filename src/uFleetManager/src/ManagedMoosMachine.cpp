@@ -1045,6 +1045,55 @@ pair<string, string> ManagedMoosMachine::stopHardware() {
 }
 
 //--------------------------------------------------------------------
+// Procedure: restartVehicle()
+//   Purpose: Restart the designated machine
+//   Returns: Command name and exact command
+//      Note:
+
+pair<string, string> ManagedMoosMachine::restartVehicle()
+{
+	string summary = m_name + " restart vehicle";
+	string command = Status::NOTAPPLIC;
+	string mailbox = serviceMailboxName("restartVehicle");
+
+	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
+
+	command = sshTrustPrefix() + getFrontSeatAddress() + " -t " + \
+					+ " \"source ~/.profile; sudo reboot\"";
+
+	string index = prepareUpdate(m_restart_hardware_results);
+
+	system_call_dispatch_pipe(command, mailbox, index);
+
+	clearCache();
+	return(make_pair(summary, command));
+}
+
+
+//--------------------------------------------------------------------
+// Procedure: stopVehicle()
+//   Purpose: stop the designated machine
+//   Returns: Command name and exact command
+//      Note:
+
+pair<string, string> ManagedMoosMachine::stopVehicle() {
+	string summary = m_name + " shutdown vehicle";
+	string command = Status::NOTAPPLIC;
+	string mailbox = serviceMailboxName("shutdownVehicle");
+
+	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
+
+	command = sshTrustPrefix() + getFrontSeatAddress() + " -t " + \
+					+ " \"source ~/.profile; shutdown now\"";
+
+	string index = prepareUpdate(m_shutdown_hardware_results);
+
+	system_call_dispatch_pipe(command, mailbox, index);
+
+	clearCache();
+	return(make_pair(summary, command));
+}
+//--------------------------------------------------------------------
 // Getters and Setters
 //--------------------------------------------------------------------
 
@@ -1077,7 +1126,7 @@ string ManagedMoosMachine::getUsername()
 }
 
 //--------------------------------------------------------------------
-// Procedure: getFrontSetAddress()
+// Procedure: getFrontSeatAddress()
 //   Purpose: Returns "" or "student@IP"
 //   Returns:
 //      Note:
