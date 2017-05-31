@@ -16,7 +16,8 @@ sudo visudo -f /etc/sudoers.d/shutdown
 -------------------------------
 student2680 host = (ALL) NOPASSWD: /sbin/shutdown now
 student2680 host = (ALL) NOPASSWD: /sbin/reboot
-
+-------------------------------
+Now 'reboot' and 'shutdown now' can be run from the command line or over ssh.
 -------------------------------
 -------------------------------
 
@@ -40,3 +41,6 @@ sudo visudo -f /etc/sudoers.d/shutdown
 -------------------------------
 student ALL=NOPASSWD: /sbin/shutdown now
 student ALL=NOPASSWD: /sbin/reboot
+-------------------------------
+'reboot' and 'shutdown now' can be run from the command line, but only with sudo
+in front. As a consequence, to be dispatched over ssh they need the '-t' flag.

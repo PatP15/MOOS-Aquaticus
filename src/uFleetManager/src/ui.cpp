@@ -17,6 +17,7 @@
 #include <regex>
 #include "utils.h"
 #include "Constants.h"
+#include <fstream>
 
 using namespace std;
 
@@ -216,6 +217,49 @@ bool UI::machineIsFiltered(vector<bool> statuses)
 	return(false);
 }
 
+
+//--------------------------------------------------------------------
+// Procedure: sendIPCheck()
+//   Purpose: Dispatch IP request to own computer
+//      Note: IP may change during operations, so a single up-front check is not
+// 						sufficient.
+
+void UI::sendIPCheck()
+{
+	string ip_block = "( ifconfig en0 || ifconfig eth0 )";
+	string get_line = " | grep 'inet '";
+	string parse_line = " | awk '{split($0,a,\" \"); print a[2]}'";
+	string write_back = " > /tmp/MOOSMAIL/ui_ip.mailbox";
+	string ip_command = ip_block + get_line + parse_line + write_back;
+	system_call(ip_command);
+}
+
+
+//--------------------------------------------------------------------
+// Procedure: readIPCheck()
+//   Purpose: Read IP mailbox and return a string
+//   Returns: an IP if one is found, ERROR otherwise
+
+string UI::readIPCheck()
+{
+	vector<string> lines;
+
+	ifstream mailbox("/tmp/MOOSMAIL/ui_ip.mailbox");
+	if (mailbox.is_open()) {
+		string line;
+		while (getline(mailbox, line)) lines.push_back(line);
+	}
+
+	const regex ip_format ("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
+
+	vector<string>::iterator i;
+	for (i=lines.begin(); i!=lines.end(); i++) {
+		string line = *i;
+		if (regex_match(line, ip_format)) return(line);
+	}
+	return(Status::ERROR);
+}
+
 //--------------------------------------------------------------------
 // Procedure: checkMachineMail()
 //   Purpose: call on the machines to check mail
@@ -231,6 +275,7 @@ void UI::checkMachineMail()
 	vector<ManagedMoosMachine>::iterator m;
 	int elapsed_time_dispatch = new_time - m_last_status_request;
 	if (time_between_status_requests < elapsed_time_dispatch) {
+		sendIPCheck();
 		for (m = m_machines.begin(); m != m_machines.end(); m++) {
 			m->dispatchPing();
 			m->dispatchSsh();
@@ -810,7 +855,7 @@ int UI::printComputerInfo(int line_number) {
 	mvprintw(line_number++, 0, "-----------------------------------------------");
 	string current_time = "Time: " + formatCommandTime(time(0));
 	mvprintw(line_number++, 0, current_time.c_str());
-	string ip = "IP: " + Status::NOIMPL;
+	string ip = "IP: " + readIPCheck();
 	mvprintw(line_number++, 0, ip.c_str());
 	mvprintw(line_number++, 0, "-----------------------------------------------");
 

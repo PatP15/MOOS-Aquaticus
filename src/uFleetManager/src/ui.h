@@ -34,6 +34,8 @@ protected: // Helper methods
 															 std::vector<std::string>,
 															 std::string);
 	bool machineIsFiltered(std::vector<bool>);
+	void sendIPCheck();
+	std::string readIPCheck();
 protected: // Action methods
 	void checkMachineMail();
 	void actOnKeyPress(int);
