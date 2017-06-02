@@ -2,7 +2,7 @@
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
 #-------------------------------------------------------
-TIME_WARP=15
+TIME_WARP=1
 JUST_MAKE="no"
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -23,9 +23,7 @@ done
 #-------------------------------------------------------
 #  Part 2: Create the .moos and .bhv files. 
 #-------------------------------------------------------
-VNAME1="archie"        
 VNAME2="evan"         
-#VNAME3="hunter"        
 VNAME4="mokai"        
 
 START_POS1="0,-10"       
@@ -52,22 +50,7 @@ SHORE_LISTEN="9300"
 SHORE_IP="localhost"
 
 #-------------------------------------------------------
-#  USV #1
-#-------------------------------------------------------
-
-nsplug meta_vehicle.moos targ_archie.moos -f WARP=$TIME_WARP \
-    VNAME=$VNAME1          SHARE_LISTEN="9301"              \
-    VPORT="9001"           SHORE_LISTEN=$SHORE_LISTEN       \
-    START_POS=$START_POS1  VARIATION=$VARIATION   \
-       VTYPE="kayak" SHORE_IP=$SHORE_IP
-
-nsplug meta_vehicle.bhv targ_archie.bhv -f VNAME=$VNAME1  \
-       START_POS=$START_POS1 LOITER_POS=$LOITER_POS1    \
-       WPT_ORDER=normal WPT_PTS=$WPT_PTS1 SPEED=$SPEED1 \
-              RETURN_POS=$RETURN_POS1
-
-#-------------------------------------------------------
-#  HUNTER = BETTY = TRAIL
+#  HUNTER = EVAN = TRAIL
 #-------------------------------------------------------
 nsplug meta_vehicle.moos targ_evan.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME2          SHARE_LISTEN="9302"              \
@@ -104,7 +87,7 @@ nsplug meta_vehicle_sim_mokai.moos targ_$VNAME4.moos -f WARP=$TIME_WARP \
    OVNAME=$VNAME4      START_POS=$START_POS4                 \
    VPORT="9004"       SHARE_LISTEN="9304"                   \
    VTYPE="kayak"    SHORE_LISTEN=$SHORE_LISTEN \
-SHORE_IP=$SHORE_IP
+SHORE_IP=$SHORE_IP TEAMMATE="evan"
 
 nsplug meta_$VNAME4.bhv targ_$VNAME4.bhv -f VNAME=$VNAME4  \
     VNAME=$VNAME4 START_POS=$START_POS4 
@@ -123,16 +106,9 @@ fi
 #-------------------------------------------------------
 #  Part 3: Launch the processes
 #-------------------------------------------------------
-printf "Launching $VNAME1 MOOS Community (WARP=%s) \n" $TIME_WARP
-#pAntler targ_${VNAME1}.moos >& /dev/null &
-sleep 0.25
 
 printf "Launching $VNAME2 MOOS Community (WARP=%s) \n" $TIME_WARP
 pAntler targ_${VNAME2}.moos >& /dev/null &
-sleep 0.25
-
-printf "Launching $VNAME3 MOOS Community (WARP=%s) \n" $TIME_WARP
-#pAntler targ_${VNAME3}.moos >& /dev/null &
 sleep 0.25
 
 printf "Launching $VNAME4 MOOS Community (WARP=%s) \n" $TIME_WARP

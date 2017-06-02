@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# M200_IP
-#  Emulator running on same machine as vehicle:     localhost
-#  Emulator running on different machine:           IP address of that machine (often 192.168.2.1)
-#  Actual evan vehicle:                             192.168.5.1
-#  Actual felix vehile:                             192.168.6.1
-#M200_IP="localhost"
-#M200_IP=192.168.5.1 #evan
-#M200_IP=192.168.6.1 #felix
-
 # SHORE_IP
 #  Emulation, shoreside running on same machine as vehicle: localhost
 #  Emulation, shoreside running on a different machine:     IP address of that machine (often 192.168.2.1)
@@ -20,15 +11,11 @@ SHORE_IP=192.168.1.155
 WARP=1
 HELP="no"
 JUST_BUILD="no"
-ARCHIE="no"
-BETTY="no"
-EVAN="no"
-FELIX="no"
-GUS="no"
 MOKAI="no"
 BAD_ARGS=""
 MOOS_FILE=""
 BHV_FILE=""
+TEAMMATE=""
 
 #-------------------------------------------------------
 #  Part 0: Geometry Configurations
@@ -109,111 +96,33 @@ for ARGI; do
       HELP="yes"
       UNDEFINED_ARG=""
     fi
-    if [ "${ARGI}" = "--archie" -o "${ARGI}" = "-a" ] ; then
-        M200_IP=192.168.1.171 #archie
-        ARCHIE="yes"
-        UNDEFINED_ARG=""
-        VNAME="archie"
-        VPORT="9001"
-        SHARE_LISTEN="9301"
-        LOITER_PT="x=50,y=10"
-        MOOS_FILE="targ_archie.moos"
-        BHV_FILE="targ_archie.bhv"
-        DOT_MOOS="meta_vehicle_m100.moos"
-        printf "ARCHIE vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERA}
-        SPEEDV=$SPEEDA
-        LOITER_POSV=$LOITER_POSA
-        WPT_PTSV=$WPT_PTSA
-        RETURN_POSV=$RETURN_POSA
-    fi
-    if [ "${ARGI}" = "--mokai" -o "${ARGI}" = "-m" ] ; then
-        M200_IP=192.168.1.206 #mokai
-        MOKAI="yes"
-        UNDEFINED_ARG=""
-        VNAME="mokai"
-        VPORT="9013"
-        SHARE_LISTEN="9313"
-        LOITER_PT="x=50,y=10"
-        MOOS_FILE="targ_mokai.moos"
-        BHV_FILE="targ_mokai.bhv"
-        DOT_MOOS="meta_vehicle_mokai.moos"
-        printf "MOKAI vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERA}
-        SPEEDV=$SPEEDA
-        LOITER_POSV=$LOITER_POSA
-        WPT_PTSV=$WPT_PTSA
-        RETURN_POSV=$RETURN_POSA
-    fi
-    if [ "${ARGI}" = "--betty" -o "${ARGI}" = "-b" ] ; then
-        M200_IP=192.168.1.172 #betty
-        BETTY="yes"
-        UNDEFINED_ARG=""
-        VNAME="betty"
-        VPORT="9002"
-        SHARE_LISTEN="9302"
-        LOITER_PT="x=50,y=10"
-        MOOS_FILE="targ_betty.moos"
-        BHV_FILE="targ_betty.bhv"
-        DOT_MOOS="meta_vehicle_m100.moos"
-        printf "BETTY vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERB}
-        SPEEDV=$SPEEDB
-        LOITER_POSV=$LOITER_POSB
-        WPT_PTSV=$WPT_PTSB
-        RETURN_POSV=$RETURN_POSB
-    fi
-
-    if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
-        M200_IP=192.168.6.1 #felix
-        FELIX="yes"
-        UNDEFINED_ARG=""
-        VNAME="felix"
-        VPORT="9006"
-        SHARE_LISTEN="9306"
-        LOITER_PT="x=50,y=10"
-        MOOS_FILE="targ_felix.moos"
-        BHV_FILE="targ_felix.bhv"
-        printf "FELIX vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERF}
-        SPEEDV=$SPEEDF
-        LOITER_POSV=$LOITER_POSF
-        WPT_PTSV=$WPT_PTSF
-        RETURN_POSV=$RETURN_POSF
-    fi
     if [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
-        M200_IP=192.168.5.1 #evan
-        EVAN="yes"
+        TEAMMATE="evan"
         UNDEFINED_ARG=""
-        VNAME="evan"
-        VPORT="9005"
-        SHARE_LISTEN="9305"
-        LOITER_PT="x=50,y=0"
-        MOOS_FILE="targ_evan.moos"
-        BHV_FILE="targ_evan.bhv"
-        printf "EVAN vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERE}
-        SPEEDV=$SPEEDE
-        LOITER_POSV=$LOITER_POSE
-        WPT_PTSV=$WPT_PTSE
-        RETURN_POSV=$RETURN_POSE
+    fi
+    if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
+        TEAMMATE="felix"
+        UNDEFINED_ARG=""
     fi
     if [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
-        M200_IP=192.168.7.1 #gus
-        GUS="yes"
+        TEAMMATE="gus"
         UNDEFINED_ARG=""
-        VNAME="gus"
-        VPORT="9007"
-        SHARE_LISTEN="9307"
-        LOITER_PT="x=50,y=0"
-        MOOS_FILE="targ_gus.moos"
-        BHV_FILE="targ_gus.bhv"
-        printf "GUS vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERE}
-        SPEEDV=$SPEEDE
-        LOITER_POSV=$LOITER_POSE
-        WPT_PTSV=$WPT_PTSE
-        RETURN_POSV=$RETURN_POSE
+    fi
+    if [ "${ARGI}" = "--hal" -o "${ARGI}" = "-H" ] ; then
+        TEAMMATE="hal"
+        UNDEFINED_ARG=""	
+    fi
+    if [ "${ARGI}" = "--ida" -o "${ARGI}" = "-i" ] ; then
+        TEAMMATE="ida"
+        UNDEFINED_ARG=""	
+    fi
+    if [ "${ARGI}" = "--jing" -o "${ARGI}" = "-J" ] ; then
+        TEAMMATE="jing"
+        UNDEFINED_ARG=""	
+    fi
+    if [ "${ARGI}" = "--kirk" -o "${ARGI}" = "-k" ] ; then
+        TEAMMATE="kirk"
+        UNDEFINED_ARG=""	
     fi
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
@@ -247,14 +156,34 @@ fi
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
     printf "Switches:                \n"
-    printf "  --evan, -e             evan vehicle only                     \n"
-    printf "  --felix, -f            felix vehicle only                    \n"
+    printf "  --evan, -e             evan vehicle teammate                     \n"
+    printf "  --felix, -f            felix vehicle teammate                     \n"
+    printf "  --gus, -g              gus vehicle teammate                     \n"
+    printf "  --hal, -H              hal vehicle teammate                     \n"
+    printf "  --ida, -i              ida vehicle teammate                     \n"
+    printf "  --jing, -j             jing vehicle teammate                     \n"
+    printf "  --kirk, -k             kirk vehicle teammate                     \n"
     printf "  --just_build, -j       \n"
     printf "  --help, -h             \n"
     exit 0;
 fi
 
 
+        MOKAI="yes"
+        UNDEFINED_ARG=""
+        VNAME="mokai"
+        VPORT="9013"
+        SHARE_LISTEN="9313"
+        LOITER_PT="x=50,y=10"
+        MOOS_FILE="targ_mokai.moos"
+        BHV_FILE="targ_mokai.bhv"
+        DOT_MOOS="meta_vehicle_mokai.moos"
+        printf "MOKAI vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERA}
+        SPEEDV=$SPEEDA
+        LOITER_POSV=$LOITER_POSA
+        WPT_PTSV=$WPT_PTSA
+        RETURN_POSV=$RETURN_POSA
 
 #-------------------------------------------------------
 #  Part 3: Create the .moos and .bhv files.
@@ -276,6 +205,7 @@ nsplug ${DOT_MOOS} ${MOOS_FILE} -f \
        HOSTIP_FORCE="localhost"   \
        LOITER_POS=$LOITER_POSV \
        VARIATION=$VARIATION   \
+       TEAMMATE=$TEAMMATE            \
        VTYPE="kayak"
 
 printf "Assembling BHV file $BHV_FILE\n"
