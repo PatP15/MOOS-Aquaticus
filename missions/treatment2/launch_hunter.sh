@@ -19,11 +19,13 @@ TRAIL_ANGLE1="330"
 WARP=1
 HELP="no"
 JUST_BUILD="no"
-ARCHIE="no"
-BETTY="no"
 EVAN="no"
 FELIX="no"
 GUS="no"
+HAL="no"
+IDA="no"
+JING="no"
+KIRK="no"
 BAD_ARGS=""
 MOOS_FILE=""
 BHV_FILE=""
@@ -106,61 +108,6 @@ for ARGI; do
 	HELP="yes"
 	UNDEFINED_ARG=""
     fi
- if [ "${ARGI}" = "--archie" -o "${ARGI}" = "-a" ] ; then
-	M200_IP=192.168.1.171 #archie
-        ARCHIE="yes"
-        UNDEFINED_ARG=""
-        VNAME="archie"
-        VPORT="9001"
-        SHARE_LISTEN="9301"
-        LOITER_PT="x=50,y=10"
-        MOOS_FILE="targ_archie.moos"
-	META_FILE="meta_vehicle_m100.moos"
-        BHV_FILE="targ_archie.bhv"
-        printf "ARCHIE vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERA}
-        SPEEDV=$SPEEDA
-        LOITER_POSV=$LOITER_POSA
-        WPT_PTSV=$WPT_PTSA
-	RETURN_POSV=$RETURN_POSA
- fi
- if [ "${ARGI}" = "--betty" -o "${ARGI}" = "-b" ] ; then
-	M200_IP=192.168.1.172 #betty
-        BETTY="yes"
-        UNDEFINED_ARG=""
-        VNAME="betty"
-        VPORT="9002"
-        SHARE_LISTEN="9302"
-        LOITER_PT="x=50,y=10"
-        MOOS_FILE="targ_betty.moos"
-	META_FILE="meta_vehicle_m100.moos"
-        BHV_FILE="targ_betty.bhv"
-        printf "BETTY vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERB}
-        SPEEDV=$SPEEDB
-        LOITER_POSV=$LOITER_POSB
-        WPT_PTSV=$WPT_PTSB
-	RETURN_POSV=$RETURN_POSB
-    fi
-
-    if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
-	M200_IP=192.168.6.1 #felix
-        FELIX="yes"
-        UNDEFINED_ARG=""
-        VNAME="felix"
-        VPORT="9006"
-        SHARE_LISTEN="9306"
-        LOITER_PT="x=50,y=10"
-	META_FILE="meta_vehicle_fld.moos"
-        MOOS_FILE="targ_felix.moos"
-        BHV_FILE="targ_felix.bhv"
-        printf "FELIX vehicle selected.\n"
-        WPT_ORDERV=${WPT_ORDERF}
-        SPEEDV=$SPEEDF
-        LOITER_POSV=$LOITER_POSF
-        WPT_PTSV=$WPT_PTSF
-	RETURN_POSV=$RETURN_POSF
-    fi
     if [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
 	M200_IP=192.168.5.1 #evan
         EVAN="yes"
@@ -178,6 +125,24 @@ for ARGI; do
         LOITER_POSV=$LOITER_POSE
         WPT_PTSV=$WPT_PTSE
 	RETURN_POSV=$RETURN_POSE
+    fi
+        if [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
+	M200_IP=192.168.6.1 #felix
+        FELIX="yes"
+        UNDEFINED_ARG=""
+        VNAME="felix"
+        VPORT="9006"
+        SHARE_LISTEN="9306"
+        LOITER_PT="x=50,y=10"
+	META_FILE="meta_vehicle_fld.moos"
+        MOOS_FILE="targ_felix.moos"
+        BHV_FILE="targ_felix.bhv"
+        printf "FELIX vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERF}
+        SPEEDV=$SPEEDF
+        LOITER_POSV=$LOITER_POSF
+        WPT_PTSV=$WPT_PTSF
+	RETURN_POSV=$RETURN_POSF
     fi
     if [ "${ARGI}" = "--gus" -o "${ARGI}" = "-g" ] ; then
 	M200_IP=192.168.7.1 #gus
@@ -197,7 +162,78 @@ for ARGI; do
         WPT_PTSV=$WPT_PTSE
 	RETURN_POSV=$RETURN_POSE
     fi
-
+    if [ "${ARGI}" = "--hal" -o "${ARGI}" = "-H" ] ; then
+	M200_IP=192.168.8.1 #hal
+        HAL="yes"
+        UNDEFINED_ARG=""
+        VNAME="hal"
+        VPORT="9008"
+        SHARE_LISTEN="9308"
+        LOITER_PT="x=50,y=10"
+	META_FILE="meta_vehicle_fld.moos"
+        MOOS_FILE="targ_hal.moos"
+        BHV_FILE="targ_hal.bhv"
+        printf "HAL vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERF}
+        SPEEDV=$SPEEDF
+        LOITER_POSV=$LOITER_POSF
+        WPT_PTSV=$WPT_PTSF
+	RETURN_POSV=$RETURN_POSF
+    fi
+    if [ "${ARGI}" = "--ida" -o "${ARGI}" = "-i" ] ; then
+	M200_IP=192.168.9.1 #ida
+        IDA="yes"
+        UNDEFINED_ARG=""
+        VNAME="ida"
+        VPORT="9009"
+        SHARE_LISTEN="9309"
+        LOITER_PT="x=50,y=10"
+	META_FILE="meta_vehicle_fld.moos"
+        MOOS_FILE="targ_ida.moos"
+        BHV_FILE="targ_ida.bhv"
+        printf "IDA vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERF}
+        SPEEDV=$SPEEDF
+        LOITER_POSV=$LOITER_POSF
+        WPT_PTSV=$WPT_PTSF
+	RETURN_POSV=$RETURN_POSF
+    fi
+    if [ "${ARGI}" = "--jing" -o "${ARGI}" = "-J" ] ; then
+	M200_IP=192.168.10.1 #jing
+        JING="yes"
+        UNDEFINED_ARG=""
+        VNAME="jing"
+        VPORT="9010"
+        SHARE_LISTEN="9310"
+        LOITER_PT="x=50,y=10"
+	META_FILE="meta_vehicle_fld.moos"
+        MOOS_FILE="targ_jing.moos"
+        BHV_FILE="targ_jing.bhv"
+        printf "JING vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERF}
+        SPEEDV=$SPEEDF
+        LOITER_POSV=$LOITER_POSF
+        WPT_PTSV=$WPT_PTSF
+	RETURN_POSV=$RETURN_POSF
+    fi
+    if [ "${ARGI}" = "--kirk" -o "${ARGI}" = "-k" ] ; then
+	M200_IP=192.168.11.1 #kirk
+        KIRK="yes"
+        UNDEFINED_ARG=""
+        VNAME="kirk"
+        VPORT="9011"
+        SHARE_LISTEN="9311"
+        LOITER_PT="x=50,y=10"
+	META_FILE="meta_vehicle_fld.moos"
+        MOOS_FILE="targ_kirk.moos"
+        BHV_FILE="targ_kirk.bhv"
+        printf "KIRK vehicle selected.\n"
+        WPT_ORDERV=${WPT_ORDERF}
+        SPEEDV=$SPEEDF
+        LOITER_POSV=$LOITER_POSF
+        WPT_PTSV=$WPT_PTSF
+	RETURN_POSV=$RETURN_POSF
+    fi
     if [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
 	JUST_BUILD="yes"
 	UNDEFINED_ARG=""
@@ -230,8 +266,13 @@ fi
 if [ "${HELP}" = "yes" ]; then
     printf "%s [SWITCHES]            \n" $0
     printf "Switches:                \n"
-    printf "  --evan, -e             evan vehicle only                     \n"
-    printf "  --felix, -f            felix vehicle only                    \n"
+    printf "  --evan, -e             evan vehicle hunter                     \n"
+    printf "  --felix, -f            felix vehicle hunter                     \n"
+    printf "  --gus, -g              gus vehicle hunter                     \n"
+    printf "  --hal, -H              hal vehicle hunter                     \n"
+    printf "  --ida, -i              ida vehicle hunter                     \n"
+    printf "  --jing, -J             jing vehicle hunter                     \n"
+    printf "  --kirk, -k             kirk vehicle hunter                     \n"
     printf "  --just_build, -j       \n" 
     printf "  --help, -h             \n" 
     exit 0;
