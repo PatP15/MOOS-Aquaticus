@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "ManagedMOOSMachine.h"
+#include "ManagedMoosMachine.h"
 
 class Configuration {
 public: // getters and setter

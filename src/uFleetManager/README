@@ -6,4 +6,4 @@ On a Mac:
 
 On Linux:
 
-	apt-get install ncurses
+	apt-get install libncurses5-dev

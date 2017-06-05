@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 #include "utils.h"
 
 class ManagedMoosMachine {
@@ -23,65 +24,54 @@ public: // Public methods (getting statuses)
 	// state-determining tests
 
 	// back seat, the machine itself
-	std::pair<std::string, std::string> dispatchPing(int=1);
-	std::pair<std::string, std::string> dispatchSsh(int=3);
+	CommandSummary dispatchPing(int=1);
+	CommandSummary dispatchSsh(int=3);
 	// front seat, the vehicle
-	std::pair<std::string, std::string> dispatchVehiclePing(int=1);
-	std::pair<std::string, std::string> dispatchVehicleSsh(int=3);
+	CommandSummary dispatchVehiclePing(int=1);
+	CommandSummary dispatchVehicleSsh(int=3);
 
-	std::pair<std::string, std::string> dispatchMoosdbCheck();
-	std::pair<std::string, std::string> dispatchCompassStatus();
-	std::pair<std::string, std::string> dispatchGpsPdop();
+	CommandSummary dispatchMoosdbCheck();
+	CommandSummary dispatchCompassStatus();
+	CommandSummary dispatchGpsPdop();
 
-	std::pair<std::string, std::string> dispatchAquaticusSvnRevision();
-	std::pair<std::string, std::string> dispatchMoosIvpSvnRevision();
-	std::pair<std::string, std::string> dispatchPabloSvnRevision();
+	CommandSummary dispatchSvnRevisionCheck(std::string);
+	// CommandSummary dispatchAquaticusSvnRevision();
+	// CommandSummary dispatchMoosIvpSvnRevision();
+	// CommandSummary dispatchPabloSvnRevision();
 
-	// move mail from files to variables
-	void checkPingMail();
-	void checkSshMail();
-	void checkVehiclePingMail();
-	void checkVehicleSshMail();
-	void checkMoosdbMail();
-	void checkCompassStatusMail();
-	void checkGpsPdopStatusMail();
+	// get mail, cache it, and return a status string
+	std::string checkPingMail();
+	std::string checkSshMail();
+	std::string checkVehiclePingMail();
+	std::string checkVehicleSshMail();
+	std::string checkMoosdbMail();
+	std::string checkCompassStatusMail();
+	std::string checkGpsPdopStatusMail();
 
-	void checkMoosIvpSvnRevisionMail();
-	void checkAquaticusSvnRevisionMail();
-	void checkPabloSvnRevisionMail();
-
-	// get mail from variables
-	std::string readPingMail();
-	std::string readSshMail();
-	std::string readVehiclePingMail();
-	std::string readVehicleSshMail();
-	std::string readMoosdbMail();
-	std::string readCompassStatusMail();
-	std::string readGpsPdopStatusMail();
-
-	std::string readMoosIvpSvnRevisionMail();
-	std::string readAquaticusSvnRevisionMail();
-	std::string readPabloSvnRevisionMail();
+	std::string checkSvnRevisionMail(std::string);
+	// std::string checkMoosIvpSvnRevisionMail();
+	// std::string checkAquaticusSvnRevisionMail();
+	// std::string checkPabloSvnRevisionMail();
 
 public: // Public methods (sending commands)
 	// deployment management
-	std::pair<std::string, std::string> startMOOS(int=2);
-	std::pair<std::string, std::string> stopMOOS();
-	std::pair<std::string, std::string> restartMOOS(int=2);
+	CommandSummary startMOOS(int=2);
+	CommandSummary stopMOOS();
+	CommandSummary restartMOOS(int=2);
 
-	std::pair<std::string, std::string> restartHardware();
-	std::pair<std::string, std::string> stopHardware();
-	std::pair<std::string, std::string> restartVehicle();
-	std::pair<std::string, std::string> stopVehicle();
+	CommandSummary reboot();
+	CommandSummary shutdown();
+	CommandSummary rebootVehicle();
+	CommandSummary shutdownVehicle();
 
-	std::pair<std::string, std::string> stopMOOSCommunity() {return(std::make_pair("",""));};
+	CommandSummary stopMOOSCommunity() {return(std::make_pair("",""));};
 
 	// restart hardware and MOOS
 	// TODO is restartMachine() really a good name?
-	std::pair<std::string, std::string> restartMachine() {return(std::make_pair("",""));};
+	CommandSummary restartMachine() {return(std::make_pair("",""));};
 
 public: // Public methods (local commands)
-	std::pair<std::string, std::string> clearCache();
+	CommandSummary clearCache();
 
 	// getters and setters
 	std::string getFullAddress();
@@ -107,6 +97,13 @@ protected: // Helper methods
 	std::string prepareUpdate(StampedData&);
 	std::string serviceMailboxName(std::string);
 	std::string sshTrustPrefix();
+	CommandSummary _dispatchGeneric(std::string,
+																	std::string,
+																	std::string,
+																	bool,
+																	bool,
+																	bool,
+																	std::string="");
 
 protected: // Variables
 	std::string m_name;
@@ -121,7 +118,9 @@ protected: // Variables
 	std::string m_target_script_args;
 
 	// buffering variables
-	std::vector<std::string> m_mailboxes;
+	std::map<std::string, std::string> m_mailboxes;
+	std::map<std::string, StampedData> m_mail;
+	// std::vector<std::string> m_mailboxes;
 
 	StampedData m_ping_results;
 	StampedData m_ssh_results;

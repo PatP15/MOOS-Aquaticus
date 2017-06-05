@@ -22,6 +22,8 @@ namespace Status {
 	// Bad
 	static std::string NOCONN = "!";
 	static std::string NOPUB = "NOPUB";
+	static std::string NOTFOUND = "NOTARG";
+	static std::string STALE = "STALE";
 
 	// Very bad (nonsensical)
 	static std::string ERROR = "ERR";

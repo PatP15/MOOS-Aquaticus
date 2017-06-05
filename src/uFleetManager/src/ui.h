@@ -27,13 +27,14 @@ public: // Public methods
 	void loop();
 protected: // Helper methods
 	void setTableFormats();
-	TimestampedCommand timeStampCommand(std::pair<std::string, std::string>);
+	TimestampedCommand timeStampCommand(CommandSummary);
 	std::string formatCommandTime(time_t);
 	std::string accumulateStatus(std::vector<std::string>,
 															 std::vector<std::string>,
 															 std::vector<std::string>,
 															 std::string);
-	bool machineIsFiltered(std::vector<bool>);
+	// bool filteredMachineList();
+	CommandSummary batchRecords(std::vector<CommandSummary>);
 	void sendIPCheck();
 	std::string readIPCheck();
 protected: // Action methods
@@ -44,6 +45,7 @@ protected: // Render methods
 	int printKeyFeed(int, int);
 	int printHelpText(int);
 	int printComputerInfo(int);
+	int printLastCommand(int);
 protected: // Member variables (general)
 	Configuration m_config;
 	std::vector<ManagedMoosMachine> m_machines;

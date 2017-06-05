@@ -37,7 +37,21 @@ int system_call(string command) {
 //			  result
 
 void _dispatch(string command, string timeout) {
-	string dispatched = "nohup `bash -c \'" + command + "\'` &>/dev/null &";
+	// Apple and Ubuntu have subtly different nohup syntax
+	string cmd_prefix, cmd_suffix;
+	#ifdef __APPLE__
+		cmd_prefix = "nohup `bash -c \'";
+		cmd_suffix = "\'` &>/dev/null &";
+	#else
+		#ifdef __LINUX__
+			cmd_prefix = "nohup bash -c \'";
+			cmd_suffix = "\' </dev/null &>/dev/null &";
+		#else
+			return; // WINDOWS NOT SUPPORTED
+		#endif
+	#endif
+
+	string dispatched = cmd_prefix + command + cmd_suffix;
 	system_call(dispatched + " " + timeout);
 }
 

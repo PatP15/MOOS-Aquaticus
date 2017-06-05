@@ -36,23 +36,22 @@ using namespace std;
 //      Note: ssh might succeed even if ping fails. "pinging" localhost
 //			  instantly returns.
 
-pair<string, string> ManagedMoosMachine::dispatchPing(int t)
+CommandSummary ManagedMoosMachine::dispatchPing(int t)
 {
 	string summary = m_name + "back seat ping";
 	string command = Status::ISLOCAL;
 	if (targetIsLocal()) return(make_pair(summary, command));
 
-	if (!ready_to_dispatch(m_ping_results)) return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["ping"]))
+		return(make_pair(summary, Status::STALE));
 
 	// ping flags; for more information, see the man page
 	// -o  : return after the first successful packet is received
 	// -t X: timeout after X seconds
 	command = "ping -o -t " + to_string(t) + " " + m_machine_ip_address;
-	string index = prepareUpdate(m_ping_results);
+	string index = prepareUpdate(m_mail["ping"]);
 
-	system_call_dispatch_return(command,
-															serviceMailboxName("backseat_ping"),
-															index);
+	system_call_dispatch_return(command, m_mailboxes["bs_ping"], index);
 
 	return(make_pair(summary, command));
 }
@@ -63,12 +62,13 @@ pair<string, string> ManagedMoosMachine::dispatchPing(int t)
 //   Returns: Command name and exact command
 //      Note: Immediately returns if target is localhost
 
-pair<string, string> ManagedMoosMachine::dispatchSsh(int t)
+CommandSummary ManagedMoosMachine::dispatchSsh(int t)
 {
 	string summary = m_name + "back seat ssh";
 	string command = Status::ISLOCAL;
 	if (targetIsLocal()) return(make_pair(summary, command));
-	if (!ready_to_dispatch(m_ssh_results)) return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["ssh"]))
+		return(make_pair(summary, Status::STALE));
 
 	// ssh flags; for more information, see the man page
 	// -o ConnectTimeout=X 			  : -o lets you specify an OPTION=VALUE pair
@@ -84,11 +84,9 @@ pair<string, string> ManagedMoosMachine::dispatchSsh(int t)
 	command = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) + " " \
 					+ getFullAddress() + " \"exit " + to_string(payload) + "\"";
 
-	string index = prepareUpdate(m_ssh_results);
+	string index = prepareUpdate(m_mail["ssh"]);
 
-	system_call_dispatch_return(command,
-															serviceMailboxName("backseat_ssh"),
-															index);
+	system_call_dispatch_return(command, m_mailboxes["bs_ssh"], index);
 
 	return(make_pair(summary, command));
 }
@@ -100,25 +98,23 @@ pair<string, string> ManagedMoosMachine::dispatchSsh(int t)
 //      Note: ssh might succeed even if ping fails. "pinging" localhost
 //			  instantly returns.
 
-pair<string, string> ManagedMoosMachine::dispatchVehiclePing(int t)
+CommandSummary ManagedMoosMachine::dispatchVehiclePing(int t)
 {
 	string summary = m_name + "front seat ping";
 	string command = Status::NOTAPPLIC;
 	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
 
-	if (!ready_to_dispatch(m_front_seat_ping_results))
-		return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["front_seat_ping"]))
+		return(make_pair(summary, Status::STALE));
 
 	// ping flags; for more information, see the man page
 	// -o  : return after the first successful packet is received
 	// -t X: timeout after X seconds
 	command = "ping -o -t " + to_string(t) + " " + m_front_seat_ip_address;
 
-	string index = prepareUpdate(m_front_seat_ping_results);
+	string index = prepareUpdate(m_mail["front_seat_ping"]);
 
-	system_call_dispatch_return(command,
-															serviceMailboxName("frontseat_ping"),
-															index);
+	system_call_dispatch_return(command, m_mailboxes["fs_ping"], index);
 
 	return(make_pair(summary, command));
 }
@@ -130,15 +126,15 @@ pair<string, string> ManagedMoosMachine::dispatchVehiclePing(int t)
 //   Returns: Command name and exact command
 //      Note: Immediately returns if target doesn't have a front seat
 
-pair<string, string> ManagedMoosMachine::dispatchVehicleSsh(int t)
+CommandSummary ManagedMoosMachine::dispatchVehicleSsh(int t)
 {
 	string summary = m_name + "front seat ssh";
 	string command = Status::NOTAPPLIC;
 
 	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
 
-	if (!ready_to_dispatch(m_front_seat_ssh_results))
-	 return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["front_seat_ssh"]))
+	 return(make_pair(summary, Status::STALE));
 
 	// ssh flags; for more information, see the man page
 	// -o ConnectTimeout=X 			  : -o lets you specify an OPTION=VALUE pair
@@ -154,11 +150,9 @@ pair<string, string> ManagedMoosMachine::dispatchVehicleSsh(int t)
 	command = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) + " " \
 					+ getFrontSeatAddress() + " \"exit " + to_string(payload) + "\"";
 
-	string index = prepareUpdate(m_front_seat_ssh_results);
+	string index = prepareUpdate(m_mail["front_seat_ssh"]);
 
-	system_call_dispatch_return(command,
-															serviceMailboxName("frontseat_ssh"),
-															index);
+	system_call_dispatch_return(command, m_mailboxes["fs_ssh"], index);
 	return(make_pair(summary, command));
 }
 
@@ -168,13 +162,14 @@ pair<string, string> ManagedMoosMachine::dispatchVehicleSsh(int t)
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::dispatchMoosdbCheck()
+CommandSummary ManagedMoosMachine::dispatchMoosdbCheck()
 {
 	string summary = m_name + " moosdb";
 	string command;
-	string mailbox = serviceMailboxName("moosdb");
+	string mailbox = m_mailboxes["moosdb"];
 
-	if (!ready_to_dispatch(m_moosdb_results)) return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["moosdb"]))
+		return(make_pair(summary, Status::STALE));
 
 	if (targetIsLocal()) {
 		command = "ps aux | grep '[0-9] MOOSDB'";
@@ -184,106 +179,46 @@ pair<string, string> ManagedMoosMachine::dispatchMoosdbCheck()
 					   + " \"ps aux\" | grep \"[0-9] MOOSDB\" 2>/dev/null";
 	}
 
-	string index = prepareUpdate(m_moosdb_results);
+	string index = prepareUpdate(m_mail["moosdb"]);
 
 	system_call_dispatch_pipe(command, mailbox, index, 10);
 	return(make_pair(summary, command));
 }
 
-//--------------------------------------------------------------------
-// Procedure: dispatchAquaticusSvnRevision()
-//   Purpose: Get the SVN revision of the moos-ivp-aquaticus tree
-//   Returns: Command name and exact command
-//      Note: Intentionally does not parse the "Revision: " out of the line,
-//			  so that getAquaticusSvnRevisionMail() can tell the difference between
-//			  errors and revision numbers.
-
-pair<string, string> ManagedMoosMachine::dispatchAquaticusSvnRevision()
-{
-	string summary = m_name + " aquaticus svn rev";
-	string command;
-	string mailbox = serviceMailboxName("aquaSvnRev");
-
-	if (!ready_to_dispatch(m_aquaticus_svn_revision_results))
-		return(make_pair(summary, "STALE"));
-
-	if (targetIsLocal()) {
-		command = "cd ~/moos-ivp-aquaticus\nsvn info | grep Revision";
-	}
-	else {
-		command = sshTrustPrefix() + getFullAddress() \
-				+ " \"cd ~/moos-ivp-aquaticus\nsvn info | grep Revision\" 2>/dev/null";
-	}
-
-	string index = prepareUpdate(m_aquaticus_svn_revision_results);
-
-	system_call_dispatch_pipe(command, mailbox, index, 10);
-	return(make_pair(summary, command));
-}
 
 //--------------------------------------------------------------------
-// Procedure: dispatchMoosIvpSvnRevision()
-//   Purpose: Get the SVN revision of the moos-ivp tree
+// Procedure: dispatchSvnRevisionCheck()
+//   Purpose: Get the SVN revision of the specified tree
 //   Returns: Command name and exact command
 //      Note: Intentionally does not parse the "Revision: " out of the line,
-//			  so that getMoosIvpSvnRevisionMail() can tell the difference between
-//			  errors and revision numbers.
+//			  		so that getAquaticusSvnRevisionMail() can tell the difference
+//						between errors and revision numbers.
+//
+//						Only accepts "moos", "aqua", or "pablo".
 
-pair<string, string> ManagedMoosMachine::dispatchMoosIvpSvnRevision()
+CommandSummary ManagedMoosMachine::dispatchSvnRevisionCheck(string tree)
 {
-	string summary = m_name + " moos-ivp svn rev";
-	string command;
-	string mailbox = serviceMailboxName("moosSvnRev");
+	string cmd;
+	string desc = "svn rev";
 
-	if (!ready_to_dispatch(m_moos_ivp_svn_revision_results))
-		return(make_pair(summary, "STALE"));
+	bool allowed_local = true;
+	bool front_seat = false;
+	bool clear = false;
 
-	if (targetIsLocal()) {
-		command = "cd ~/moos-ivp\nsvn info | grep Revision";
+	if (tree=="aqua") {
+		cmd = "pav-get-svn_rev_aqua";
+		desc = "aquaticus " + desc;
 	}
-	else {
-		command = sshTrustPrefix() + getFullAddress() \
-					+ " \"cd ~/moos-ivp\nsvn info | grep Revision\" 2>/dev/null";
+	else if (tree=="moos") {
+		cmd = "pav-get-svn_rev_moos";
+		desc = "moos-ivp " + desc;
 	}
-
-	string index = prepareUpdate(m_moos_ivp_svn_revision_results);
-
-	system_call_dispatch_pipe(command, mailbox, index, 10);
-	return(make_pair(summary, command));
-}
-
-//--------------------------------------------------------------------
-// Procedure: dispatchPabloSvnRevision()
-//   Purpose: Get the SVN revision of the pablo-common/pablo-common-aro tree
-//   Returns: Command name and exact command
-//      Note: Intentionally does not parse the "Revision: " out of the line,
-//			  so that getPabloSvnRevisionMail() can tell the difference between
-//			  errors and revision numbers.
-
-pair<string, string> ManagedMoosMachine::dispatchPabloSvnRevision()
-{
-	string summary = m_name + " pablo-common svn rev";
-	string command;
-	string mailbox = serviceMailboxName("pabloSvnRev");
-	string get_dir = string("cd ~/pablo-common-aro 2>/dev/null") \
-								 + string(" || ") \
-								 + string(" cd ~/pablo-common 2>/dev/null");
-
-	if (!ready_to_dispatch(m_pablo_svn_revision_results))
-		return(make_pair(summary, "STALE"));
-
-	if (targetIsLocal()) {
-		command = get_dir + "\nsvn info 2>/dev/null | grep Revision";
-	}
-	else {
-		command = sshTrustPrefix() + getFullAddress() \
-					+ " \"" + get_dir + "\nsvn info | grep Revision\" 2>/dev/null";
+	else if (tree=="pablo") {
+		cmd = "pav-get-svn_rev_pablo";
+		desc = "pablo-common " + desc;
 	}
 
-	string index = prepareUpdate(m_pablo_svn_revision_results);
-
-	system_call_dispatch_pipe(command, mailbox, index, 10);
-	return(make_pair(summary, command));
+	return(_dispatchGeneric(tree, cmd, desc, allowed_local, front_seat, clear));
 }
 
 //--------------------------------------------------------------------
@@ -292,15 +227,15 @@ pair<string, string> ManagedMoosMachine::dispatchPabloSvnRevision()
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::dispatchCompassStatus()
+CommandSummary ManagedMoosMachine::dispatchCompassStatus()
 {
 	// TODO make actually robust
 	string summary = m_name + " compass";
-	string mailbox = serviceMailboxName("compass");
+	string mailbox = m_mailboxes["compass"];
 	string command = Status::NOTAPPLIC;
 
-	if (!ready_to_dispatch(m_compass_results))
-		return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["compass"]))
+		return(make_pair(summary, Status::STALE));
 
 	if (m_front_seat_ip_address!="") {
 		string ssh_wrapper = sshTrustPrefix() + " " + getFrontSeatAddress();
@@ -308,7 +243,7 @@ pair<string, string> ManagedMoosMachine::dispatchCompassStatus()
 		string payload = "\"" + src + "\nrostopic echo /imu/compass_heading -n 5 \"";
 		string suppress_errors = "2>/dev/null";
 		string command = ssh_wrapper + " " + payload + " " + suppress_errors;
-		string index = prepareUpdate(m_compass_results);
+		string index = prepareUpdate(m_mail["compass"]);
 
 		system_call_dispatch_pipe(command, mailbox, index, 10);
 	}
@@ -322,15 +257,15 @@ pair<string, string> ManagedMoosMachine::dispatchCompassStatus()
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::dispatchGpsPdop()
+CommandSummary ManagedMoosMachine::dispatchGpsPdop()
 {
 	// TODO make actually robust
 	string summary = m_name + " GPS PDOP";
-	string mailbox = serviceMailboxName("GpsPdop");
+	string mailbox = m_mailboxes["gpspdop"];
 	string command = Status::NOTAPPLIC;
 
-	if (!ready_to_dispatch(m_gps_pdop_results))
-		return(make_pair(summary, "STALE"));
+	if (!ready_to_dispatch(m_mail["gps_pdop"]))
+		return(make_pair(summary, Status::STALE));
 
 	if (m_front_seat_ip_address!="") {
 		string ssh_wrapper = sshTrustPrefix() + " " + getFrontSeatAddress();
@@ -338,7 +273,7 @@ pair<string, string> ManagedMoosMachine::dispatchGpsPdop()
 		string payload = "\"" + src + "\nrostopic echo /navsat/rx -n 5 \"";
 		string suppress_errors = "2>/dev/null";
 		string command = ssh_wrapper + " " + payload + " " + suppress_errors;
-		string index = prepareUpdate(m_gps_pdop_results);
+		string index = prepareUpdate(m_mail["gps_pdop"]);
 
 		system_call_dispatch_pipe(command, mailbox, index, 10);
 	}
@@ -351,335 +286,255 @@ pair<string, string> ManagedMoosMachine::dispatchGpsPdop()
 // Procedure: checkPingMail()
 //   Purpose: Perform the check of the ping mailbox
 //   Returns:
-//      Note: Sets m_ping_results
+//      Note: Sets m_ping
 
-void ManagedMoosMachine::checkPingMail()
+string ManagedMoosMachine::checkPingMail()
 {
 	if (targetIsLocal()) {
-		m_ping_results.data = Status::ISLOCAL;
-		return;
+		m_mail["ping"].data = Status::ISLOCAL;
+		return(get_data_and_staleness(m_mail["ping"]));
 	}
 
-	vector<string> mail_list = readServiceMailbox("backseat_ping");
+	vector<string> mail_list = readServiceMailbox(m_mailboxes["bs_ping"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_ping_results, index)) {
+	if (receiveUpdate(m_mail["ping"], index)) {
 		if (mail_list.size() > 0) {
 			string mail = mail_list[0];
 			if(mail.size()==0) {
-				m_ping_results.data = Status::NODATA;
-				return;
+				m_mail["ping"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["ping"]));
 			}
 			try	{
-				if (0==stoi(mail)) m_ping_results.data = Status::GOOD;
-				else if (2==stoi(mail)) m_ping_results.data = Status::NOCONN;
-				else m_ping_results.data = Status::ERROR;
+				if (0==stoi(mail)) m_mail["ping"].data = Status::GOOD;
+				else if (2==stoi(mail)) m_mail["ping"].data = Status::NOCONN;
+				else m_mail["ping"].data = Status::ERROR;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_ping_results.data = Status::ERROR; // error
+				m_mail["ping"].data = Status::ERROR; // error
 			}
 		}
-		else m_ping_results.data = Status::NODATA; // No data yet
+		else m_mail["ping"].data = Status::NODATA; // No data yet
 	}
+
+	return(get_data_and_staleness(m_mail["ping"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkSshMail()
 //   Purpose: Perform the check of the ssh mailbox
 //   Returns:
-//      Note: Sets m_ssh_results
+//      Note: Sets m_ssh
 
-void ManagedMoosMachine::checkSshMail()
+string ManagedMoosMachine::checkSshMail()
 {
 	if (targetIsLocal()) {
-		m_ssh_results.data = Status::ISLOCAL;
-		return;
+		m_mail["ssh"].data = Status::ISLOCAL;
+		return(get_data_and_staleness(m_mail["ssh"]));
 	}
 
-	vector<string> mail_list = readServiceMailbox("backseat_ssh");
+	vector<string> mail_list = readServiceMailbox(m_mailboxes["bs_ssh"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_ssh_results, index)) {
+	if (receiveUpdate(m_mail["ssh"], index)) {
 		if (mail_list.size() > 0)
 		{
 			string mail = mail_list[0];
 			if (mail.size()==0) {
-				m_ssh_results.data = Status::NODATA;
-				return;
+				m_mail["ssh"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["ssh"]));
 			}
 			try {
 				// TODO: 42 is a magic number
-				if (mail=="42") m_ssh_results.data = Status::GOOD;
-				else m_ssh_results.data = Status::NOCONN;
+				if (mail=="42") m_mail["ssh"].data = Status::GOOD;
+				else m_mail["ssh"].data = Status::NOCONN;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_ssh_results.data = Status::ERROR;
+				m_mail["ssh"].data = Status::ERROR;
 			}
 		}
-		else m_ssh_results.data = Status::NODATA; // no data yet
+		else m_mail["ssh"].data = Status::NODATA; // no data yet
 	}
 
+	return(get_data_and_staleness(m_mail["ssh"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkPingMail()
 //   Purpose: Perform the check of the front seat ping mailbox
 //   Returns:
-//      Note: Sets m_front_seat_ping_results
+//      Note: Sets m_front_seat_ping
 
-void ManagedMoosMachine::checkVehiclePingMail()
+string ManagedMoosMachine::checkVehiclePingMail()
 {
 	if (m_front_seat_ip_address=="") {
-		m_front_seat_ping_results.data = Status::NOTAPPLIC;
-		return;
+		m_mail["front_seat_ping"].data = Status::NOTAPPLIC;
+		return(get_data_and_staleness(m_mail["front_seat_ping"]));
 	}
 
-	vector<string> mail_list = readServiceMailbox("frontseat_ping");
+	vector<string> mail_list = readServiceMailbox(m_mailboxes["fs_ping"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_front_seat_ping_results, index)) {
+	if (receiveUpdate(m_mail["front_seat_ping"], index)) {
 		if (mail_list.size() > 0) {
 			string mail = mail_list[0];
 			if(mail.size()==0) {
-				m_front_seat_ping_results.data = Status::NODATA;
-				return;
+				m_mail["front_seat_ping"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["front_seat_ping"]));
 			}
 			try	{
-				if (0==stoi(mail)) m_front_seat_ping_results.data = Status::GOOD;
-				else if (2==stoi(mail)) m_front_seat_ping_results.data = Status::NOCONN;
-				else m_front_seat_ping_results.data = Status::ERROR;
+				if (0==stoi(mail))
+					m_mail["front_seat_ping"].data = Status::GOOD;
+				else if (2==stoi(mail))
+					m_mail["front_seat_ping"].data = Status::NOCONN;
+				else
+					m_mail["front_seat_ping"].data = Status::ERROR;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_front_seat_ping_results.data = Status::ERROR; // error
+				m_mail["front_seat_ping"].data = Status::ERROR; // error
 			}
 		}
-		else m_front_seat_ping_results.data = Status::NODATA; // No data yet
+		else m_mail["front_seat_ping"].data = Status::NODATA; // No data yet
 	}
+	return(get_data_and_staleness(m_mail["front_seat_ping"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkVehicleSshMail()
 //   Purpose: Perform the check of the front seat ssh mailbox
 //   Returns:
-//      Note: Sets m_front_seat_ssh_results
+//      Note: Sets m_front_seat_ssh
 
-void ManagedMoosMachine::checkVehicleSshMail()
+string ManagedMoosMachine::checkVehicleSshMail()
 {
 	if (m_front_seat_ip_address=="") {
-		m_front_seat_ssh_results.data = Status::NOTAPPLIC;
-		return;
+		m_mail["front_seat_ssh"].data = Status::NOTAPPLIC;
+		return(get_data_and_staleness(m_mail["front_seat_ssh"]));
 	}
 
-	vector<string> mail_list = readServiceMailbox("frontseat_ssh");
+	vector<string> mail_list = readServiceMailbox(m_mailboxes["fs_ssh"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_front_seat_ssh_results, index)) {
+	if (receiveUpdate(m_mail["front_seat_ssh"], index)) {
 		if (mail_list.size() > 0)
 		{
 			string mail = mail_list[0];
 			if (mail.size()==0) {
-				m_front_seat_ssh_results.data = Status::NODATA;
-				return;
+				m_mail["front_seat_ssh"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["front_seat_ssh"]));
 			}
 			try {
 				// TODO: 42 is a magic number
-				if (mail=="42") m_front_seat_ssh_results.data = Status::GOOD;
-				else m_front_seat_ssh_results.data = Status::NOCONN;
+				if (mail=="42") m_mail["front_seat_ssh"].data = Status::GOOD;
+				else m_mail["front_seat_ssh"].data = Status::NOCONN;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_front_seat_ssh_results.data = Status::ERROR;
+				m_mail["front_seat_ssh"].data = Status::ERROR;
 			}
 		}
-		else m_front_seat_ssh_results.data = Status::NODATA; // no data yet
+		else m_mail["front_seat_ssh"].data = Status::NODATA; // no data yet
 	}
+	return(get_data_and_staleness(m_mail["front_seat_ssh"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkMoosdbMail()
 //   Purpose: Perform the check of the MOOSDB mailbox
 //   Returns:
-//      Note: Sets m_moosdb_results
+//      Note: Sets m_moosdb
 
-void ManagedMoosMachine::checkMoosdbMail()
+string ManagedMoosMachine::checkMoosdbMail()
 {
-	vector<string> mail_list = readServiceMailbox("moosdb");
+	vector<string> mail_list = readServiceMailbox(m_mailboxes["moosdb"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_moosdb_results, index)) {
+	if (receiveUpdate(m_mail["moosdb"], index)) {
 		if (mail_list.size()==1) {
 			string mail = mail_list[0];
-			if(mail.size()==0) m_moosdb_results.data = Status::NODATA;
-			else m_moosdb_results.data = Status::GOOD;
+			if(mail.size()==0) m_mail["moosdb"].data = Status::NODATA;
+			else m_mail["moosdb"].data = Status::GOOD;
 		}
-		else if (mail_list.size()>0) m_moosdb_results.data = "TOO MANY";
-		else m_moosdb_results.data = Status::NODATA;
+		else if (mail_list.size()>0) m_mail["moosdb"].data = "TOO MANY";
+		else m_mail["moosdb"].data = Status::NODATA;
 	}
+	return(get_data_and_staleness(m_mail["moosdb"]));
 }
 
+
 //--------------------------------------------------------------------
-// Procedure: checkAquaticusSvnRevisionMail()
+// Procedure: checkSvnRevisionMail()
 //   Purpose: Perform the check of the svn mailbox
 //   Returns:
-//      Note: Sets m_aquaticus_svn_revision_results
+//      Note:
 
-void ManagedMoosMachine::checkAquaticusSvnRevisionMail()
-{
-	vector<string> mail_list = readServiceMailbox("aquaSvnRev");
+string ManagedMoosMachine::checkSvnRevisionMail(string tree) {
+	vector<string> mail_list = readServiceMailbox(m_mailboxes[tree]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_aquaticus_svn_revision_results, index)) {
+	if (receiveUpdate(m_mail[tree], index)) {
 		if (mail_list.size()==0) {
-			m_aquaticus_svn_revision_results.data = Status::NODATA;
+			m_mail[tree].data = Status::NODATA;
 		}
 		else if (mail_list.size()==1) {
 			string mail = mail_list[0];
 			if(mail.size()==0) {
-				m_aquaticus_svn_revision_results.data = Status::NODATA;
-				return;
+				m_mail[tree].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail[tree]));
 			}
 
 			string delim = ": ";
 			size_t loc = mail.find(delim);
 
 			if (loc==string::npos) { // badly formated
-				m_aquaticus_svn_revision_results.data = Status::ERROR;
+				m_mail[tree].data = Status::ERROR;
 			}
 			else {
 				if (loc+delim.size()>mail.size()) {
-					m_aquaticus_svn_revision_results.data = Status::ERROR;
+					m_mail[tree].data = Status::ERROR;
 				}
 				try {
 					size_t point = loc + delim.size();
-					m_aquaticus_svn_revision_results.data = mail.substr(point);
+					m_mail[tree].data = mail.substr(point);
 				}
 				catch (...) { // exception &e / type error only? / TODO?
 					// badly formatted
-					m_aquaticus_svn_revision_results.data = Status::ERROR;
+					m_mail[tree].data = Status::ERROR;
 				}
 			}
 		}
 		// very badly formatted
-		else m_aquaticus_svn_revision_results.data = Status::ERROR;
+		else m_mail[tree].data = Status::ERROR;
 	}
-}
-//--------------------------------------------------------------------
-// Procedure: checkMoosIvpSvnRevisionMail()
-//   Purpose: Perform the check of the svn mailbox
-//   Returns:
-//      Note: Sets m_moos_ivp_svn_revision_results
-
-void ManagedMoosMachine::checkMoosIvpSvnRevisionMail()
-{
-	vector<string> mail_list = readServiceMailbox("moosSvnRev");
-	index_t index = grabIndex(mail_list);
-
-	if (receiveUpdate(m_moos_ivp_svn_revision_results, index)) {
-		if (mail_list.size()==0) {
-			m_moos_ivp_svn_revision_results.data = Status::NODATA;
-		}
-		else if (mail_list.size()==1) {
-			string mail = mail_list[0];
-			if(mail.size()==0) {
-				m_moos_ivp_svn_revision_results.data = Status::NODATA;
-				return;
-			}
-
-			string delim = ": ";
-			size_t loc = mail.find(delim);
-
-			if (loc==string::npos) { // badly formated
-				m_moos_ivp_svn_revision_results.data = Status::ERROR;
-			}
-			else {
-				if (loc+delim.size()>mail.size()) {
-					m_moos_ivp_svn_revision_results.data = Status::ERROR;
-				}
-				try {
-					size_t point = loc + delim.size();
-					m_moos_ivp_svn_revision_results.data = mail.substr(point);
-				}
-				catch (...) { // exception &e / type error only? / TODO?
-					// badly formatted
-					m_moos_ivp_svn_revision_results.data = Status::ERROR;
-				}
-			}
-		}
-		// very badly formatted
-		else m_moos_ivp_svn_revision_results.data = Status::ERROR;
-	}
-}
-//--------------------------------------------------------------------
-// Procedure: checkPabloSvnRevisionMail()
-//   Purpose: Perform the check of the svn mailbox
-//   Returns:
-//      Note: Sets m_pablo_svn_revision_results
-
-void ManagedMoosMachine::checkPabloSvnRevisionMail()
-{
-	vector<string> mail_list = readServiceMailbox("pabloSvnRev");
-	index_t index = grabIndex(mail_list);
-
-	if (receiveUpdate(m_pablo_svn_revision_results, index)) {
-		if (mail_list.size()==0) m_pablo_svn_revision_results.data = Status::NODATA;
-		else if (mail_list.size()==1) {
-			string mail = mail_list[0];
-			if(mail.size()==0) {
-				m_pablo_svn_revision_results.data = Status::NODATA;
-				return;
-			}
-
-			string delim = ": ";
-			size_t loc = mail.find(delim);
-
-			if (loc==string::npos) {
-				m_pablo_svn_revision_results.data = Status::ERROR; // badly formated
-			}
-			else {
-				if (loc+delim.size()>mail.size()) {
-					m_pablo_svn_revision_results.data = Status::ERROR;
-				}
-				try {
-					size_t point = loc + delim.size();
-					m_pablo_svn_revision_results.data = mail.substr(point);
-				}
-				catch (...) { // exception &e / type error only? / TODO?
-					// badly formatted
-					m_pablo_svn_revision_results.data = Status::ERROR;
-				}
-			}
-		}
-		// very badly formatted
-		else m_pablo_svn_revision_results.data = Status::ERROR;
-	}
+	return(get_data_and_staleness(m_mail[tree]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkCompassStatusMail()
 //   Purpose: Perform the check of the compass mailbox
 //   Returns:
-//      Note: Sets m_compass_results
+//      Note: Sets m_compass
 
-void ManagedMoosMachine::checkCompassStatusMail()
+string ManagedMoosMachine::checkCompassStatusMail()
 {
 	string nopub = "WARNING: topic [/imu/compass_heading] does not appear to be published yet";
 	string hsplit = "---";
 	string delim = ": ";
 
-	vector<string> mail = readServiceMailbox("compass");
+	vector<string> mail = readServiceMailbox(m_mailboxes["compass"]);
 	index_t index = grabIndex(mail);
 
-	if (receiveUpdate(m_compass_results, index)) {
+	if (receiveUpdate(m_mail["compass"], index)) {
 		int expected_results = 5;
 		int observed_results = 0;
 
 		if (getFrontSeatAddress()=="") {
-			m_compass_results.data = Status::NODATA;
+			m_mail["compass"].data = Status::NODATA;
 		}
 		else if (mail.size()==0) {
-			m_compass_results.data = Status::NODATA; // no data yet
+			m_mail["compass"].data = Status::NODATA; // no data yet
 		}
 		else if (mail[0]==nopub) { // not publishing; likely hardware related
-			m_compass_results.data = Status::NOPUB;
+			m_mail["compass"].data = Status::NOPUB;
 		}
 		else {
 			//expected format is repetitions of
@@ -696,57 +551,58 @@ void ManagedMoosMachine::checkCompassStatusMail()
 				if (line.size()==0) continue;
 				else if (regex_match(line, hline_pattern)) continue;
 				else if (regex_match(line, nan_pattern)) {
-					m_compass_results.data = "NaN";
-					return;
+					m_mail["compass"].data = "NaN";
+					return(get_data_and_staleness(m_mail["compass"]));
 				}
 				else if (regex_match(line, data_pattern)) observed_results++;
 				else {
-					m_compass_results.data = Status::ERROR; // badly formatted
-					return;
+					m_mail["compass"].data = Status::ERROR; // badly formatted
+					return(get_data_and_staleness(m_mail["compass"]));
 				}
 			}
 			if (observed_results<expected_results) {
-				m_compass_results.data = Status::NODATA;
+				m_mail["compass"].data = Status::NODATA;
 			}
 			else if (observed_results==expected_results) {
-				m_compass_results.data = Status::GOOD;
+				m_mail["compass"].data = Status::GOOD;
 			}
 			else {
-				m_compass_results.data = Status::ERROR;
+				m_mail["compass"].data = Status::ERROR;
 			}
 		}
 	}
+	return(get_data_and_staleness(m_mail["compass"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkGpsPdopStatusMail()
 //   Purpose: Perform the check of the compass mailbox
 //   Returns:
-//      Note: Sets m_compass_results
+//      Note: Sets m_compass
 
-void ManagedMoosMachine::checkGpsPdopStatusMail()
+string ManagedMoosMachine::checkGpsPdopStatusMail()
 {
 	string nopub = "WARNING: topic [/navsat/rx] does not appear to be published yet";
 	string hsplit = "---";
 	string delim = ": ";
 
 	int GPGSA_PDOP_index = 15; // per GPS spec
-	vector<string> mail = readServiceMailbox("GpsPdop");
+	vector<string> mail = readServiceMailbox(m_mailboxes["gpspdop"]);
 	index_t index = grabIndex(mail);
 
-	if (receiveUpdate(m_gps_pdop_results, index)) {
+	if (receiveUpdate(m_mail["gps_pdop"], index)) {
 		if (getFrontSeatAddress()=="") {
-			m_gps_pdop_results.data = Status::NODATA;
+			m_mail["gps_pdop"].data = Status::NODATA;
 		}
 		else if (mail.size()==0) {
-			m_gps_pdop_results.data = Status::NODATA; // no data yet
+			m_mail["gps_pdop"].data = Status::NODATA; // no data yet
 		}
 		else if (mail[0]==nopub) { // not publishing; likely hardware related
-			m_gps_pdop_results.data = Status::NOPUB;
+			m_mail["gps_pdop"].data = Status::NOPUB;
 		}
 		else {
 			// no messages seen
-			m_gps_pdop_results.data = Status::NODATA;
+			m_mail["gps_pdop"].data = Status::NODATA;
 
 			// look for the GPGSA message, and return its PDOP
 			const regex gpgsa_pattern ("^.*GPGSA.*$");
@@ -766,133 +622,23 @@ void ManagedMoosMachine::checkGpsPdopStatusMail()
 					}
 
 					if (gpgsa_msg.size()<GPGSA_PDOP_index+1) {
-						m_gps_pdop_results.data = Status::ERROR;
+						m_mail["gps_pdop"].data = Status::ERROR;
 					}
 					else {
-						m_gps_pdop_results.data = gpgsa_msg[GPGSA_PDOP_index];
+						m_mail["gps_pdop"].data = gpgsa_msg[GPGSA_PDOP_index];
 					}
 					break;
 				}
 				else if (regex_match(line, msg_pattern)) {
 					// seen some messages; if no GPGSA messages have been seen, this will
 					// return error, otherwise it will be overwritten and returned
-					m_gps_pdop_results.data = Status::ERROR;
+					m_mail["gps_pdop"].data = Status::ERROR;
 				}
 			}
 		}
 	}
+	return(get_data_and_staleness(m_mail["gps_pdop"]));
 }
-
-//--------------------------------------------------------------------
-// Procedure: readPingMail()
-//   Purpose: Read the internal status variable, m_ping_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readPingMail()
-{
-	return(get_data_and_staleness(m_ping_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readSshMail()
-//   Purpose: Read the internal status variable, m_ssh_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readSshMail()
-{
-	return(get_data_and_staleness(m_ssh_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readVehiclePingMail()
-//   Purpose: Read the internal status variable, m_ping_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readVehiclePingMail()
-{
-	return(get_data_and_staleness(m_front_seat_ping_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readVehicleSshMail()
-//   Purpose: Read the internal status variable, m_ssh_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readVehicleSshMail()
-{
-	return(get_data_and_staleness(m_front_seat_ssh_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readMoosdbMail()
-//   Purpose: Read the internal status variable, m_moosdb_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readMoosdbMail()
-{
-	return(get_data_and_staleness(m_moosdb_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readAquaticusSvnRevisionMail()
-//   Purpose: Read the internal status variable, m_svn_revision_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readAquaticusSvnRevisionMail()
-{
-	return(get_data_and_staleness(m_aquaticus_svn_revision_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readMoosIvpSvnRevisionMail()
-//   Purpose: Read the internal status variable, m_moos_ivp_svn_revision_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readMoosIvpSvnRevisionMail()
-{
-	return(get_data_and_staleness(m_moos_ivp_svn_revision_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readPabloRevisionMail()
-//   Purpose: Read the internal status variable, m_pablo_svn_revision_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readPabloSvnRevisionMail()
-{
-	return(get_data_and_staleness(m_pablo_svn_revision_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readCompassStatusMail()
-//   Purpose: Read the internal status variable, m_compass_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readCompassStatusMail()
-{
-	return(get_data_and_staleness(m_compass_results));
-}
-
-//--------------------------------------------------------------------
-// Procedure: readGpsPdopStatusMail()
-//   Purpose: Read the internal status variable, m_gps_pdop_results
-//   Returns:
-//      Note:
-
-string ManagedMoosMachine::readGpsPdopStatusMail()
-{
-	return(get_data_and_staleness(m_gps_pdop_results));
-}
-
 
 //--------------------------------------------------------------------
 // Management actions
@@ -904,10 +650,10 @@ string ManagedMoosMachine::readGpsPdopStatusMail()
 //   Returns: Command name and exact command
 //      Note: Doesn't check any dependencies, such as pinging or ssh testing.
 
-pair<string, string> ManagedMoosMachine::startMOOS(int t)
+CommandSummary ManagedMoosMachine::startMOOS(int t)
 {
 	string summary = m_name + " start MOOS";
-	string mailbox = serviceMailboxName("startMOOS");
+	string mailbox = serviceMailboxName(m_mailboxes["startMOOS"]);
 	string command;
 
 	if (targetIsLocal()) {
@@ -939,7 +685,7 @@ pair<string, string> ManagedMoosMachine::startMOOS(int t)
 		command = ssh_prefix + " \"" + remote + "\"";
 	}
 
-	string index = prepareUpdate(m_moosdb_results);
+	string index = prepareUpdate(m_mail["moosdb"]);
 
 	system_call_dispatch_return(command, mailbox, index);
 	return(make_pair(summary, command));
@@ -951,10 +697,10 @@ pair<string, string> ManagedMoosMachine::startMOOS(int t)
 //   Returns: Command name and exact command
 //      Note: A thin wrapper around ktm
 
-pair<string, string> ManagedMoosMachine::stopMOOS()
+CommandSummary ManagedMoosMachine::stopMOOS()
 {
 	string summary = m_name + " stop MOOS";
-	string mailbox = serviceMailboxName("stopMOOS");
+	string mailbox = serviceMailboxName(m_mailboxes["stopMOOS"]);
 	string command;
 
 	if (targetIsLocal()) {
@@ -970,8 +716,8 @@ pair<string, string> ManagedMoosMachine::stopMOOS()
 							" " + suppress_output;
 	}
 
-	string index = prepareUpdate(m_moosdb_results);
-	m_moosdb_results.data = Status::NODATA;
+	string index = prepareUpdate(m_mail["moosdb"]);
+	m_mail["moosdb"].data = Status::NODATA;
 
 	system_call_dispatch_return(command, mailbox, index);
 
@@ -985,33 +731,33 @@ pair<string, string> ManagedMoosMachine::stopMOOS()
 //      Note: Thin, passes arguments through. Same verbosity for starting and
 // 			  stopping MOOS
 
-pair<string, string> ManagedMoosMachine::restartMOOS(int t)
+CommandSummary ManagedMoosMachine::restartMOOS(int t)
 {
 	string summary = m_name + " restart MOOS";
-	pair<string, string> stop_res = stopMOOS();
-	pair<string, string> start_res = startMOOS(t);
+	CommandSummary stop_res = stopMOOS();
+	CommandSummary start_res = startMOOS(t);
 
 	return(make_pair(summary, stop_res.second + "\n\n" + start_res.second));
 }
 
 //--------------------------------------------------------------------
-// Procedure: restartHardware()
-//   Purpose: Restart the designated machine
+// Procedure: reboot()
+//   Purpose: Reboot the designated machine
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::restartHardware()
+CommandSummary ManagedMoosMachine::reboot()
 {
 	string summary = m_name + " restart hardware";
 	string command = Status::ISLOCAL;
-	string mailbox = serviceMailboxName("restartHardware");
+	string mailbox = m_mailboxes["reboot"];
 
 	if (targetIsLocal()) return(make_pair(summary, command));
 
 	command = sshTrustPrefix() + getFullAddress() + \
 					+ " \"source ~/.profile; reboot\"";
 
-	string index = prepareUpdate(m_restart_hardware_results);
+	string index = prepareUpdate(m_mail["reboot"]);
 
 	system_call_dispatch_pipe(command, mailbox, index);
 
@@ -1019,24 +765,23 @@ pair<string, string> ManagedMoosMachine::restartHardware()
 	return(make_pair(summary, command));
 }
 
-
 //--------------------------------------------------------------------
-// Procedure: stopHardware()
-//   Purpose: stop the designated machine
+// Procedure: shutdownHardware()
+//   Purpose: Shutdown the designated machine
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::stopHardware() {
+CommandSummary ManagedMoosMachine::shutdown() {
 	string summary = m_name + " shutdown hardware";
 	string command = Status::ISLOCAL;
-	string mailbox = serviceMailboxName("shutdownHardware");
+	string mailbox = m_mailboxes["shutdown"];
 
 	if (targetIsLocal()) return(make_pair(summary, command));
 
 	command = sshTrustPrefix() + getFullAddress() + \
 					+ " \"source ~/.profile; shutdown now\"";
 
-	string index = prepareUpdate(m_shutdown_hardware_results);
+	string index = prepareUpdate(m_mail["shutdown"]);
 
 	system_call_dispatch_pipe(command, mailbox, index);
 
@@ -1045,23 +790,23 @@ pair<string, string> ManagedMoosMachine::stopHardware() {
 }
 
 //--------------------------------------------------------------------
-// Procedure: restartVehicle()
-//   Purpose: Restart the designated machine
+// Procedure: rebootVehicle()
+//   Purpose: Reboot the (front seat) machine
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::restartVehicle()
+CommandSummary ManagedMoosMachine::rebootVehicle()
 {
 	string summary = m_name + " restart vehicle";
 	string command = Status::NOTAPPLIC;
-	string mailbox = serviceMailboxName("restartVehicle");
+	string mailbox = m_mailboxes["reboot_vehicle"];
 
 	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
 
 	command = sshTrustPrefix() + getFrontSeatAddress() + " -t " + \
 					+ " \"source ~/.profile; sudo reboot\"";
 
-	string index = prepareUpdate(m_restart_hardware_results);
+	string index = prepareUpdate(m_mail["reboot"]);
 
 	system_call_dispatch_pipe(command, mailbox, index);
 
@@ -1069,30 +814,84 @@ pair<string, string> ManagedMoosMachine::restartVehicle()
 	return(make_pair(summary, command));
 }
 
-
 //--------------------------------------------------------------------
-// Procedure: stopVehicle()
-//   Purpose: stop the designated machine
+// Procedure: shutdownVehicle()
+//   Purpose: Shutdown the designated machine
 //   Returns: Command name and exact command
 //      Note:
 
-pair<string, string> ManagedMoosMachine::stopVehicle() {
+CommandSummary ManagedMoosMachine::shutdownVehicle() {
 	string summary = m_name + " shutdown vehicle";
 	string command = Status::NOTAPPLIC;
-	string mailbox = serviceMailboxName("shutdownVehicle");
+	string mailbox = m_mailboxes["shutdown_vehicle"];
 
 	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
 
 	command = sshTrustPrefix() + getFrontSeatAddress() + " -t " + \
 					+ " \"source ~/.profile; shutdown now\"";
 
-	string index = prepareUpdate(m_shutdown_hardware_results);
+	string index = prepareUpdate(m_mail["shutdown"]);
 
 	system_call_dispatch_pipe(command, mailbox, index);
 
 	clearCache();
 	return(make_pair(summary, command));
 }
+
+//--------------------------------------------------------------------
+// Procedure: dispatchGeneric()
+//   Purpose: Remotely call generic pavlab commands
+// Arguments: name  : the common name of the function
+//						cmd   : the full name of the function or alias
+//						desc  : a human readable description of cmd
+//						ready :
+//						args  : any extra arguments that cmd needs
+//						clear : if true, clear the cache after sending cmd (e.g. reboot)
+//   Returns:
+//      Note:
+
+CommandSummary ManagedMoosMachine::_dispatchGeneric(string name,
+																										string cmd,
+																										string desc,
+																									  bool allowed_local,
+																									  bool runs_on_front_seat,
+																									  bool clear,
+																									  string args)
+{
+	string summary = m_name + " " + desc;
+	string command = Status::NOTAPPLIC;
+
+	if (targetIsLocal()) {
+		if (allowed_local) {
+			command = "source ~/.profile\n" + cmd + " " + args;
+			string index = prepareUpdate(m_mail[name]);
+			system_call_dispatch_pipe(command, m_mailboxes[name], index);
+			if(clear) clearCache();
+		}
+		else {
+			command = Status::ISLOCAL;
+		}
+	}
+	else if (runs_on_front_seat) {
+		if (getFrontSeatAddress()=="") return(make_pair(summary, Status::NOTFOUND));
+		else command = sshTrustPrefix() + getFrontSeatAddress();
+	}
+	else {
+		command = sshTrustPrefix() + getFullAddress();
+
+		if (!ready_to_dispatch(m_mail[name]))
+			return(make_pair(summary, Status::STALE));
+
+		command = sshTrustPrefix() + getFullAddress() \
+					+ " \"source ~/.profile\n" + cmd + " " + args + "\"";
+
+		string index = prepareUpdate(m_mail[name]);
+		system_call_dispatch_pipe(command, m_mailboxes[name], index);
+		if(clear) clearCache();
+	}
+	return(make_pair(summary, command));
+}
+
 //--------------------------------------------------------------------
 // Getters and Setters
 //--------------------------------------------------------------------
@@ -1273,27 +1072,20 @@ void ManagedMoosMachine::setTeam(string team)
 //   Returns: Command name and exact command
 //      Note: Clears both the C++ variable buffer and the UNIX file buffer
 
-pair<string, string> ManagedMoosMachine::clearCache()
+CommandSummary ManagedMoosMachine::clearCache()
 {
 	string summary = m_name + " clear cache";
-	clear_stamped_data(m_ping_results);
-	clear_stamped_data(m_ssh_results);
-	clear_stamped_data(m_moosdb_results);
-	clear_stamped_data(m_aquaticus_svn_revision_results);
-	clear_stamped_data(m_moos_ivp_svn_revision_results);
-	clear_stamped_data(m_pablo_svn_revision_results);
-	clear_stamped_data(m_compass_results);
-	clear_stamped_data(m_gps_pdop_results);
-	clear_stamped_data(m_front_seat_ping_results);
-	clear_stamped_data(m_front_seat_ssh_results);
-	clear_stamped_data(m_restart_hardware_results);
-	clear_stamped_data(m_shutdown_hardware_results);
 
-	vector<string>::iterator m;
-	for(m=m_mailboxes.begin(); m!=m_mailboxes.end(); m++) {
-		system_call("echo \"\" > " + *m);
+	map<string, StampedData>::iterator mail;
+	for(mail=m_mail.begin(); mail!=m_mail.end(); mail++) {
+		clear_stamped_data(mail->second);
 	}
-	return(make_pair(summary, "--"));
+
+	map<string, string>::iterator mailbox;
+	for(mailbox=m_mailboxes.begin(); mailbox!=m_mailboxes.end(); mailbox++) {
+		system_call("echo \"\" > " + mailbox->second);
+	}
+	return(make_pair(summary, Status::NOTAPPLIC));
 }
 
 //--------------------------------------------------------------------
@@ -1307,23 +1099,42 @@ ManagedMoosMachine::ManagedMoosMachine(string name, string ip)
 	m_name=name;
 	if(ip!="") setIP(ip);
 
-	m_mailboxes.push_back(serviceMailboxName("backseat_ping"));
-	m_mailboxes.push_back(serviceMailboxName("backseat_ssh"));
-	m_mailboxes.push_back(serviceMailboxName("frontseat_ping"));
-	m_mailboxes.push_back(serviceMailboxName("frontseat_ssh"));
-	m_mailboxes.push_back(serviceMailboxName("moosdb"));
-	m_mailboxes.push_back(serviceMailboxName("compass"));
-	m_mailboxes.push_back(serviceMailboxName("GpsPdop"));
-	m_mailboxes.push_back(serviceMailboxName("startMOOS"));
-	m_mailboxes.push_back(serviceMailboxName("stopMOOS"));
-	m_mailboxes.push_back(serviceMailboxName("aquaSvnRev"));
-	m_mailboxes.push_back(serviceMailboxName("moosSvnRev"));
-	m_mailboxes.push_back(serviceMailboxName("pabloSvnRev"));
-	m_mailboxes.push_back(serviceMailboxName("restartHardware"));
-	m_mailboxes.push_back(serviceMailboxName("shutdownHardware"));
-	vector<string>::iterator m;
+	StampedData blank;
+	m_mail["ping"] = blank;
+	m_mail["ssh"] = blank;
+	m_mail["moosdb"] = blank;
+	m_mail["aqua"] = blank;
+	m_mail["moos"] = blank;
+	m_mail["pablo"] = blank;
+	m_mail["compass"] = blank;
+	m_mail["gps_pdop"] = blank;
+	m_mail["front_seat_ping"] = blank;
+	m_mail["front_seat_ssh"] = blank;
+	m_mail["reboot"] = blank;
+	m_mail["shutdown"] = blank;
+	m_mail["reboot_vehicle"] = blank;
+	m_mail["shutdown_vehicle"] = blank;
+
+	m_mailboxes["bs_ping"] = serviceMailboxName("backseat_ping");
+	m_mailboxes["bs_ssh"] = serviceMailboxName("backseat_ssh");
+	m_mailboxes["fs_ping"] = serviceMailboxName("frontseat_ping");
+	m_mailboxes["fs_ssh"] = serviceMailboxName("frontseat_ssh");
+	m_mailboxes["moosdb"] = serviceMailboxName("moosdb");
+	m_mailboxes["compass"] = serviceMailboxName("compass");
+	m_mailboxes["gpspdop"] = serviceMailboxName("GpsPdop");
+	m_mailboxes["startMOOS"] = serviceMailboxName("startMOOS");
+	m_mailboxes["stopMOOS"] = serviceMailboxName("stopMOOS");
+	m_mailboxes["aqua"] = serviceMailboxName("aquaSvnRev");
+	m_mailboxes["moos"] = serviceMailboxName("moosSvnRev");
+	m_mailboxes["pablo"] = serviceMailboxName("pabloSvnRev");
+	m_mailboxes["reboot"] = serviceMailboxName("reboot");
+	m_mailboxes["shutdown"] = serviceMailboxName("shutdown");
+	m_mailboxes["reboot_vehicle"] = serviceMailboxName("rebootVehicle");
+	m_mailboxes["shutdown_vehicle"] = serviceMailboxName("shutdownVehicle");
+
+	map<string, string>::iterator m;
 	for(m=m_mailboxes.begin(); m!=m_mailboxes.end(); m++) {
-		system_call("touch " + *m);
+		system_call("touch " + m->second);
 	}
 
 	clearCache();
@@ -1364,10 +1175,9 @@ bool ManagedMoosMachine::targetIsLocal()
 
 vector<string> ManagedMoosMachine::readServiceMailbox(string service)
 {
-	string mailbox_name = serviceMailboxName(service);
 	vector<string> lines;
 
-	ifstream mailbox(mailbox_name);
+	ifstream mailbox(service);
 
 	if (mailbox.is_open()) {
 		string line;
@@ -1467,24 +1277,27 @@ string ManagedMoosMachine::serviceMailboxName(string service)
 //						you're confident that you're safe.
 
 string ManagedMoosMachine::sshTrustPrefix() {
-	vector<const regex> valid_ip_patterns;
+	vector<regex> valid_ip_patterns;
 	// front seats
 	const regex pavlab_front_seats ("^192\\.168\\.\\d{1,3}\\.1$");
 	// back seats
 	const regex pavlab_back_seats ("^192\\.168\\.\\d{1,3}\\.100$");
 	// PABLOs plugged directly into computer
 	const regex pavlab_direct_to_pablos ("^192\\.168\\.2\\.\\d{1,3}$");
+	// PABLO Master
+	const regex pavlab_pablo_master ("^128\\.30\\.28\\.55$");
 
 	valid_ip_patterns.push_back(pavlab_front_seats);
 	valid_ip_patterns.push_back(pavlab_back_seats);
 	valid_ip_patterns.push_back(pavlab_direct_to_pablos);
+	valid_ip_patterns.push_back(pavlab_pablo_master);
 
 	string trusting_ssh = string("ssh -q") \
 						 					+ string(" -o UserKnownHostsFile=/dev/null") \
 						 					+ string(" -o StrictHostKeyChecking=no ");
 	string unstrusting_ssh = "ssh ";
 
-	vector<const regex>::iterator i;
+	vector<regex>::iterator i;
 	for(i=valid_ip_patterns.begin(); i!=valid_ip_patterns.end(); i++) {
 		const regex pattern = *i;
 		if (regex_match(m_machine_ip_address, pattern)) return(trusting_ssh);

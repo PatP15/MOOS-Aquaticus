@@ -12,6 +12,7 @@
 #include <string>
 
 typedef long index_t;
+typedef std::pair<std::string, std::string> CommandSummary;
 
 struct StampedData {
 	std::string data; // payload
