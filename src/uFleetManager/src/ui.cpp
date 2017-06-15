@@ -43,23 +43,24 @@ void UI::setTableFormats()
 	main1.push_back(""); main2.push_back("M#");
 	main1.push_back(""); main2.push_back("NAME");
 	main1.push_back(""); main2.push_back("ID");
-	main1.push_back("F"); main2.push_back("");
-	main1.push_back(""); main2.push_back("NET");
-	main1.push_back(""); main2.push_back("COMPASS");
-	main1.push_back(""); main2.push_back("GPS PDOP");
-	// main1.push_back(""); main2.push_back("BATT (A)");
-	main1.push_back("B"); main2.push_back("");
-	main1.push_back(""); main2.push_back("NET");
-	main1.push_back(""); main2.push_back("MOOSDB");
 	main1.push_back(""); main2.push_back("SVN");
-	main1.push_back(""); main2.push_back("TEAM");
+	main1.push_back(""); main2.push_back("");
+	main1.push_back("F"); main2.push_back("NET");
+	main1.push_back("B"); main2.push_back("NET");
+	main1.push_back(""); main2.push_back("");
+
+	main1.push_back(""); main2.push_back("COMPASS");
+	main1.push_back(""); main2.push_back("GPS");
+	// main1.push_back(""); main2.push_back("BATT (A)");
+	main1.push_back(""); main2.push_back("MOOSDB");
+
 	m_headers["main"].push_back(main1);
 	m_headers["main"].push_back(main2);
 
 	vector<string> hist1;
 	hist1.push_back("EXEC SUMMARY");
 	hist1.push_back("TIME");
-	hist1.push_back("FULL COMMAND");
+	hist1.push_back("FULL COMMAND*");
 	m_headers["cmd_hist"].push_back(hist1);
 
 	vector<string> net1, net2;
@@ -80,7 +81,7 @@ void UI::setTableFormats()
 	m_headers["net"].push_back(net2);
 
 	vector<string> svn1, svn2;
-	svn1.push_back(""); svn2.push_back("#");
+	svn1.push_back(""); svn2.push_back("M#");
 	svn1.push_back(""); svn2.push_back("NAME");
 	svn1.push_back("\\"); svn2.push_back("\\");
 	svn1.push_back("MOOS-IVP"); svn2.push_back("REV");
@@ -89,11 +90,31 @@ void UI::setTableFormats()
 	svn1.push_back("AQUATICUS"); svn2.push_back("REV");
 	svn1.push_back(""); svn2.push_back("CMP");
 	svn1.push_back("/"); svn2.push_back("/");
+	svn1.push_back("COLREGS"); svn2.push_back("REV");
+	svn1.push_back(""); svn2.push_back("CMP");
+	svn1.push_back("/"); svn2.push_back("/");
 	svn1.push_back("PABLO"); svn2.push_back("REV");
+	svn1.push_back(""); svn2.push_back("CMP");
+	svn1.push_back("/"); svn2.push_back("/");
+	svn1.push_back("MOKAI"); svn2.push_back("REV");
 	svn1.push_back(""); svn2.push_back("CMP");
 	svn1.push_back("/"); svn2.push_back("/");
 	m_headers["svn"].push_back(svn1);
 	m_headers["svn"].push_back(svn2);
+
+	vector<string> moos1, moos2;
+	moos1.push_back(""); moos2.push_back("M#");
+	moos1.push_back(""); moos2.push_back("NAME");
+	moos1.push_back(""); moos2.push_back("ID");
+	moos1.push_back("A"); moos2.push_back("");
+	moos1.push_back(""); moos2.push_back("MOOSDB");
+	// moos1.push_back(""); moos2.push_back("TEAM");
+	// moos1.push_back(""); moos2.push_back("MISSION*");
+	moos1.push_back("E"); moos2.push_back("");
+	moos1.push_back(""); moos2.push_back("TEAM");
+	moos1.push_back(""); moos2.push_back("MISSION*");
+	m_headers["MOOS"].push_back(moos1);
+	m_headers["MOOS"].push_back(moos2);
 
 	m_help_headers.push_back("TOPIC");
 	m_help_headers.push_back("CMD");
@@ -102,12 +123,14 @@ void UI::setTableFormats()
 	// a command is a pair of strings; the command itself and a description
 	// each window (keys of the map) has a list (the vector) of commands
 	m_help["all"].push_back(make_pair("h", "Toggle full help tooltips"));
+	m_help["all"].push_back(make_pair("V", "Toggle UI verbosity"));
 	m_help["all"].push_back(make_pair("ctrl-a", "Toggle commanding mode"));
 	m_help["all"].push_back(make_pair("ctrl-c", "Quit"));
 	m_help["nav"].push_back(make_pair("m", "Main window"));
 	m_help["nav"].push_back(make_pair("H", "Command history window"));
 	m_help["nav"].push_back(make_pair("v", "SVN revisions window"));
 	m_help["nav"].push_back(make_pair("n", "Network communications window"));
+	m_help["nav"].push_back(make_pair("M", "MOOS window"));
 	m_help["cmd_all"].push_back(make_pair("S/s#", "Start MOOS        (all/machine #)"));
 	m_help["cmd_all"].push_back(make_pair("K/k#", "ktm               (all/machine #)"));
 	m_help["cmd_all"].push_back(make_pair("R/r#", "Restart MOOS      (all/machine #)"));
@@ -306,7 +329,12 @@ void UI::checkMachineMail()
 				m->dispatchSvnRevisionCheck("moos");
 				m->dispatchSvnRevisionCheck("aqua");
 				m->dispatchSvnRevisionCheck("pablo");
+				m->dispatchSvnRevisionCheck("colregs");
+				m->dispatchSvnRevisionCheck("mokai");
 			}
+
+			m->dispatchCompassStatus();
+			m->dispatchGpsPdop();
 
 			// front seat, if applicable and up
 			if ((m->checkVehicleSshMail()==Status::GOOD)) {
@@ -316,24 +344,6 @@ void UI::checkMachineMail()
 		}
 		m_last_status_request = new_time;
 	}
-
-	// int elapsed_time_check_mail = new_time - m_last_mail_check_request;
-	// if (time_between_mailbox_checks < elapsed_time_check_mail) { // TODO was I filtering here?
-	// 	for (m = m_machines.begin(); m != m_machines.end(); m++) {
-	// 		m->checkPingMail();
-	// 		m->checkSshMail();
-	// 		m->checkVehiclePingMail();
-	// 		m->checkVehicleSshMail();
-	// 		m->checkMoosdbMail();
-	// 		m->checkCompassStatusMail();
-	// 		m->checkGpsPdopStatusMail();
-
-	// 		// svn
-	// 		m->checkMoosIvpSvnRevisionMail();
-	// 		m->checkAquaticusSvnRevisionMail();
-	// 		m->checkPabloSvnRevisionMail();
-	// 	}
-	// }
 }
 //--------------------------------------------------------------------
 // Procedure: actOnKeyPress()
@@ -387,6 +397,10 @@ void UI::actOnKeyPress(int c)
 			m_view_full_help ^= true; // toggle
 			command_match = true;
 		}
+		else if (m_key_feed=="V") {
+			m_verbose ^= true; // toggle
+			command_match = true;
+		}
 		else if (m_key_feed=="m") {
 			m_view = "main";
 			command_match = true;
@@ -403,6 +417,10 @@ void UI::actOnKeyPress(int c)
 			m_view = "net";
 			command_match = true;
 		}
+		else if (m_key_feed=="M") {
+			m_view = "MOOS";
+			command_match = true;
+		}
 		//--------------------------------------------------------------------
 		// match exact machine commands
 		//--------------------------------------------------------------------
@@ -415,9 +433,10 @@ void UI::actOnKeyPress(int c)
 					{
 						// don't start MOOS twice...
 						if (m->checkMoosdbMail()==Status::NODATA)
-							record = m->startMOOS();
+							records.push_back(m->startMOOS());
 					}
 				}
+				record = batchRecords(records);
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, start_one)) {
@@ -535,11 +554,25 @@ int UI::printWindow(int line_number)
 	//--------------------------------------------------------------------
 	// Print the window name
 	//--------------------------------------------------------------------
+
 	string window_name = "Window: " + m_view;
-	mvprintw(line_number++, 0, window_name.c_str());
+	string is_verbose = "Verbose: ";
+	string is_commanding = "Commanding: ";
+	if (m_verbose) is_verbose += "Y";
+	else is_verbose += "N";
+	if (m_is_commanding) is_commanding += "Y";
+	else is_commanding += "N";
+	int buffer = 4;
+	int position = 0;
+	mvprintw(line_number, position, window_name.c_str());
+	position += window_name.size() + buffer;
+	mvprintw(line_number, position, is_verbose.c_str());
+	position += is_verbose.size() + buffer;
+	mvprintw(line_number++, position, is_commanding.c_str());
+	mvprintw(line_number++, 0, "-----------------------------------------------");
+	line_number++;
 
 	vector<ManagedMoosMachine>::iterator m;
-
 	//--------------------------------------------------------------------
 	// Make a copy of the window's headers. The copied table will be printed.
 	//--------------------------------------------------------------------
@@ -560,7 +593,8 @@ int UI::printWindow(int line_number)
 	view_table.addHeaderLines();
 
 	// gather all svn revisions; report which machine(s) are relatively newest
-	vector<int> moos_revisions, aqua_revisions, pablo_revisions;
+	vector<int> moos_revisions, aqua_revisions, pablo_revisions,
+							colregs_revisions, mokai_revisions;
 	for (m = m_machines.begin(); m != m_machines.end(); m++) {
 		string raw_svn_rev;
 		raw_svn_rev = m->checkSvnRevisionMail("moos");
@@ -588,6 +622,24 @@ int UI::printWindow(int line_number)
 				 pablo_revisions.push_back(stoi(raw_svn_rev));
 			} catch (...) {
 				pablo_revisions.push_back(-2);
+			}
+		}
+		raw_svn_rev = m->checkSvnRevisionMail("colregs");
+		if (raw_svn_rev==Status::NODATA) colregs_revisions.push_back(-1);
+		else {
+			try {
+				 colregs_revisions.push_back(stoi(raw_svn_rev));
+			} catch (...) {
+				colregs_revisions.push_back(-2);
+			}
+		}
+		raw_svn_rev = m->checkSvnRevisionMail("mokai");
+		if (raw_svn_rev==Status::NODATA) mokai_revisions.push_back(-1);
+		else {
+			try {
+				 mokai_revisions.push_back(stoi(raw_svn_rev));
+			} catch (...) {
+				mokai_revisions.push_back(-2);
 			}
 		}
 	}
@@ -645,31 +697,58 @@ int UI::printWindow(int line_number)
 
 			if ((m_config.m_filter_by_liveness)&&(fs_down&&bs_down)) continue;
 
+			//--------------------------------------------------------------------
+			// Static info
+			//--------------------------------------------------------------------
 			view_table << to_string(this_machine_i);
 			view_table << m->getName();
 			view_table << m->getId();
-			view_table << "/"; // Front
 
-			view_table << fs_comm_status;
-
-			view_table << m->checkCompassStatusMail();
-			view_table << m->checkGpsPdopStatusMail();
-			// view_table << Status::NOIMPL;
-			view_table << "/"; // Back
-
-			view_table << bs_comm_status;
-
-			view_table << m->checkMoosdbMail();
-
+			//--------------------------------------------------------------------
+			// SVN - changes few times per mission
+			//--------------------------------------------------------------------
 			vector<string> svn_sum;
+			string pablo_svn = compare_to_newest(this_machine_i, pablo_revisions);
+			string mokai_svn = compare_to_newest(this_machine_i, mokai_revisions);
+			bool pablo_has_svn_results = ((pablo_svn!=Status::NODATA)&&
+																		(pablo_svn!=Status::ERROR));
+			bool mokai_has_svn_results = ((mokai_svn!=Status::NODATA)&&
+																		(mokai_svn!=Status::ERROR));
+			if (pablo_has_svn_results) svn_sum.push_back(pablo_svn);
+			if (mokai_has_svn_results) svn_sum.push_back(mokai_svn);
+			if ((! pablo_has_svn_results)&&(! mokai_has_svn_results)) {
+				if ((pablo_svn==Status::ERROR)||(mokai_svn==Status::ERROR))
+					svn_sum.push_back(Status::ERROR);
+				else
+					svn_sum.push_back(Status::NODATA);
+			}
+
 			svn_sum.push_back(compare_to_newest(this_machine_i, aqua_revisions));
 			svn_sum.push_back(compare_to_newest(this_machine_i, moos_revisions));
-			svn_sum.push_back(compare_to_newest(this_machine_i, pablo_revisions));
-
+			svn_sum.push_back(compare_to_newest(this_machine_i, colregs_revisions));
 			view_table << accumulateStatus(svn_sum, svn_good, svn_bad, default_err);
 
-			if (m->getTeam() == "") view_table << "-";
-			else view_table << m->getTeam();
+			//--------------------------------------------------------------------
+			// Network status - may change frequently within a mission
+			//--------------------------------------------------------------------
+			view_table << "\\";
+			view_table << fs_comm_status;
+			view_table << bs_comm_status;
+			view_table << "/";
+
+			//--------------------------------------------------------------------
+			// Sensor status
+			//--------------------------------------------------------------------
+			view_table << m->checkCompassStatusMail();
+			view_table << m->checkGpsPdopStatusMail();
+			// view_table << Status::NOIMPL; // battery
+
+			//--------------------------------------------------------------------
+			// Mission status
+			//--------------------------------------------------------------------
+			string moosdb = m->checkMoosdbMail();
+			if (m->getTeam() != "") moosdb += " (" + m->getTeam() + ")";
+			view_table << moosdb;
 		}
 	}
 	else if (m_view=="cmd_hist") {
@@ -690,22 +769,27 @@ int UI::printWindow(int line_number)
 				time_t raw_time = m_command_history[hist_i].timestamp;
 				view_table << formatCommandTime(raw_time);
 
-				string full_command = m_command_history[hist_i].command;
-				vector<string> splitlines = parseString(full_command, '\n');
-				if (splitlines.size()==1) {
-					view_table << full_command;
-				}
-				else {
-					vector<string>::iterator line;
-					for(line=splitlines.begin(); line!=splitlines.end(); line++) {
-						if (*line!="") {
-							if (line!=splitlines.begin()) {
-								view_table << "";
-								view_table << "";
+				if (m_verbose) { // verbose mode
+					string full_command = m_command_history[hist_i].command;
+					vector<string> splitlines = parseString(full_command, '\n');
+					if (splitlines.size()==1) {
+						view_table << full_command;
+					}
+					else {
+						vector<string>::iterator line;
+						for(line=splitlines.begin(); line!=splitlines.end(); line++) {
+							if (*line!="") {
+								if (line!=splitlines.begin()) {
+									view_table << "";
+									view_table << "";
+								}
+								view_table << *line;
 							}
-							view_table << *line;
 						}
 					}
+				}
+				else { // non verbose mode
+					view_table << "<toggle verbosity>";
 				}
 			}
 		}
@@ -724,10 +808,15 @@ int UI::printWindow(int line_number)
 			view_table << m->checkSvnRevisionMail("aqua");
 			view_table << compare_to_newest(this_machine_i, aqua_revisions);
 			view_table << "/";
+			view_table << m->checkSvnRevisionMail("colregs");
+			view_table << compare_to_newest(this_machine_i, colregs_revisions);
+			view_table << "/";
 			view_table << m->checkSvnRevisionMail("pablo");
 			view_table << compare_to_newest(this_machine_i, pablo_revisions);
 			view_table << "/";
-
+			view_table << m->checkSvnRevisionMail("mokai");
+			view_table << compare_to_newest(this_machine_i, mokai_revisions);
+			view_table << "/";
 		}
 	}
 	else if (m_view=="net") {
@@ -746,6 +835,22 @@ int UI::printWindow(int line_number)
 			view_table << m->checkSshMail();
 			view_table << m->getUsername();
 			view_table << m->getIp();
+		}
+	}
+	else if (m_view=="MOOS") {
+		for (m = m_machines.begin(); m != m_machines.end(); m++) {
+			int this_machine_i = machine_i++;
+			view_table << to_string(this_machine_i);
+			view_table << m->getName();
+			view_table << m->getId();
+			view_table << "\\"; // Actual
+			view_table << m->checkMoosdbMail();
+			view_table << "/"; // Expected
+			view_table << m->getTeam();
+			string mission;
+			if (m_verbose) mission = m->getFullMission();
+			else mission = m->getLaunchFile();
+			view_table << mission;
 		}
 	}
 
@@ -985,9 +1090,8 @@ void UI::loop()
 
 		// header
 		string header = "MOOS Fleet Manager";
-		mvprintw(print_i, 0, header.c_str());
-		if (m_is_commanding) mvprintw(print_i, header.size()+1, ": COMMAND MODE");
-		print_i+=2;
+		mvprintw(print_i++, 0, header.c_str());
+		print_i++;
 
 		checkMachineMail();
 		actOnKeyPress(key_press);
@@ -1019,4 +1123,5 @@ UI::UI(Configuration config) {
 	m_view_full_help = false;
 	m_keep_alive = true;
 	m_is_commanding = false;
+	m_verbose = false;
 }

@@ -7,10 +7,16 @@
 /*****************************************************************/
 
 #include "Configuration.h"
+#include "MBUtils.h"
+#include <cassert>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <map>
+#include "utils.h"
 #include <regex>
 
 using namespace std;
-
 
 //--------------------------------------------------------------------
 // Procedure: allDefaultMachines()
@@ -24,43 +30,26 @@ map<string, ManagedMoosMachine> Configuration::allDefaultMachines()
 {
 	map<string, ManagedMoosMachine> default_machines;
 
-	default_machines["Evan"] = ManagedMoosMachine("Evan", "192.168.5.100");
-	default_machines["Felix"] = ManagedMoosMachine("Felix", "192.168.6.100");
-	default_machines["Gus"] = ManagedMoosMachine("Gus", "192.168.7.100");
-	default_machines["Hal"] = ManagedMoosMachine("Hal", "192.168.8.100");
-	default_machines["Ida"] = ManagedMoosMachine("Ida", "192.168.9.100");
-	default_machines["Jing"] = ManagedMoosMachine("Jing", "192.168.10.100");
-	default_machines["Kirk"] = ManagedMoosMachine("Kirk", "192.168.11.100");
-	default_machines["manual"] = ManagedMoosMachine("Manual", "192.168.2.26");
-
-	string gen_m200_loc = "~/moos-ivp-aquaticus/missions/aquaticus1.1/m200";
-	string gen_m200_launch_file = "launch_m200.sh";
-	string gen_m200_args = "-s";
+	default_machines["evan"] = ManagedMoosMachine("Evan", "192.168.5.100");
+	default_machines["felix"] = ManagedMoosMachine("Felix", "192.168.6.100");
+	default_machines["gus"] = ManagedMoosMachine("Gus", "192.168.7.100");
+	default_machines["hal"] = ManagedMoosMachine("Hal", "192.168.8.100");
+	default_machines["ida"] = ManagedMoosMachine("Ida", "192.168.9.100");
+	default_machines["jing"] = ManagedMoosMachine("Jing", "192.168.10.100");
+	default_machines["kirk"] = ManagedMoosMachine("Kirk", "192.168.11.100");
+	default_machines["manual"] = ManagedMoosMachine("Manual", "192.168.1.192");
+	default_machines["master"] = ManagedMoosMachine(
+		"Master",
+		"pablo-master.csail.mit.edu");
 
 	map<string, ManagedMoosMachine>::iterator m;
 	for(m=default_machines.begin(); m!=default_machines.end(); m++) {
 		m->second.setUsername("student2680");
-		m->second.setTargetScripts(gen_m200_loc,
-														   gen_m200_launch_file,
-														   gen_m200_args);
 	}
+	default_machines["manual"].setUsername("student");
 
 	// a local shoreside
 	default_machines["shore"] = ManagedMoosMachine("Local", "localhost");
-	default_machines["shore"].setTargetScripts(
-		"~/moos-ivp-aquaticus/trunk/missions/aquaticus1.1/shoreside",
-		"launch_shoreside.sh",
-		"");
-
-	// pablo-master, which lives in Mike's office in CSAIL
-	// for testing only
-	default_machines["master"] = ManagedMoosMachine(
-		"Master", // TODO - fix this evil hack
-		"pablo-master.csail.mit.edu");
-	default_machines["master"].setUsername("student2680");
-	default_machines["master"].setTargetScripts(gen_m200_loc,
-												  										gen_m200_launch_file,
-								   				  									gen_m200_args);
 
 	return(default_machines);
 }
@@ -80,70 +69,114 @@ Configuration::Configuration(int argc, char* argv[]) {
 	m_other_configs["mailbox_dir"] = "/tmp";
 	vector<string> machine_names;
 	m_filter_by_liveness = false;
+	bool loaded_config = false;
 
 	for(int i=1; i<argc; i++) {
 		string s = string(argv[i]);
-		// TODO: tolower is not unicode compliant
-		transform(s.begin(), s.end(), s.begin(), ::tolower);
-		if (s=="--all") {
-			map<string, ManagedMoosMachine>::iterator i;
-			for(i=default_machines.begin(); i!=default_machines.end(); i++) {
-				string name = i->first;
-				if ((name!="master")&&(name!="manual")) machine_names.push_back(name);
+		s = lowercase(s);
+
+		if (s=="--file") {
+			assert(i<argc-1); // need to actually specify the file!
+			// const regex moos_files (".*\\.moos$");
+			string filename = argv[++i];
+			// printf("%d\t%d\n", regex_match(filename, moos_files), regex_match("foo", moos_files));
+
+			// open the config file and read it in
+			map<string, string> key_value_pairs;
+			vector<string> lines;
+			ifstream config_file(filename);
+			if (config_file.is_open()) {
+				string line;
+				while (getline(config_file, line)) lines.push_back(line);
+			}
+			if (lines.size() > 0) loaded_config = true;
+
+			vector<string>::iterator line;
+			for(line=lines.begin(); line!=lines.end(); line++) {
+				string key = biteStringX(*line, '=');
+				string val = *line;
+				if ((key!="")&&(val!="")) {
+					if (key=="ProcessConfig") assert(val=="uFleetManager");
+					else key_value_pairs[key] = val;
+				}
+			}
+
+			string mission;
+			if (key_value_pairs.find("mission")!=key_value_pairs.end()) {
+				mission = key_value_pairs["mission"];
+			}
+			vector<string> machines;
+			if (key_value_pairs.find("machines")!=key_value_pairs.end()) {
+				machines = parseString(key_value_pairs["machines"], ' ');
+			}
+			vector<string>::iterator m_name;
+			for(m_name=machines.begin(); m_name!=machines.end(); m_name++) {
+				string name = *m_name;
+				// name[0] = toupper(name[0]);
+				machine_names.push_back(name);
+
+				if (key_value_pairs.find(name)!=key_value_pairs.end()) {
+					string launch, args;
+					launch = tokStringParse(key_value_pairs[name], "launch", ',', ':');
+					args = tokStringParse(key_value_pairs[name], "args", ',', ':');
+
+					if (key_value_pairs.find("blue")!=key_value_pairs.end()) {
+						vector<string> blue_team;
+						blue_team = parseString(key_value_pairs["blue"], ' ');
+						vector<string>::iterator i;
+						for(i=blue_team.begin(); i!=blue_team.end(); i++) {
+							if(name==*i) default_machines[name].setTeam("blue");
+						}
+					}
+					if (key_value_pairs.find("red")!=key_value_pairs.end()) {
+						vector<string> red_team;
+						red_team = parseString(key_value_pairs["red"], ' ');
+						vector<string>::iterator i;
+						for(i=red_team.begin(); i!=red_team.end(); i++) {
+							if(name==*i) default_machines[name].setTeam("red");
+						}
+					}
+
+					default_machines[name].setTargetScripts(mission, launch, args);
+
+				}
 			}
 			break;
 		}
-		else if (s=="--up") {
-			m_filter_by_liveness = true;
-			map<string, ManagedMoosMachine>::iterator i;
-			for(i=default_machines.begin(); i!=default_machines.end(); i++) {
-				string name = i->first;
-				if ((name!="master")&&(name!="manual")) machine_names.push_back(name);
-			}
-			break;
-		}
-		else if ((s=="-e")||(s=="--evan")) {
-			machine_names.push_back("Evan");
-		}
-		else if ((s=="-f")||(s=="--felix")) {
-			machine_names.push_back("Felix");
-		}
-		else if ((s=="-g")||(s=="--gus")) {
-			machine_names.push_back("Gus");
-		}
-		else if ((s=="-h")||(s=="--hal")) {
-			machine_names.push_back("Hal");
-		}
-		else if ((s=="-i")||(s=="--ida")) {
-			machine_names.push_back("Ida");
-		}
-		else if ((s=="-j")||(s=="--jing")) {
-			machine_names.push_back("Jing");
-		}
-		else if ((s=="-k")||(s=="--kirk")) {
-			machine_names.push_back("Kirk");
-		}
-		else if (s=="--shore") {
-			machine_names.push_back("shore");
-		}
-		else if ((s=="-pm")||(s=="--master")) {
-			machine_names.push_back("master");
-		}
-		// TODO teams
-		// TODO script locations?
+
+		// else if (s=="--all") {
+		// 	map<string, ManagedMoosMachine>::iterator i;
+		// 	for(i=default_machines.begin(); i!=default_machines.end(); i++) {
+		// 		string name = i->first;
+		// 		if ((name!="master")&&(name!="manual")) machine_names.push_back(name);
+		// 	}
+		// 	break;
+		// }
+		// else if (s=="--up") {
+		// 	m_filter_by_liveness = true;
+		// 	map<string, ManagedMoosMachine>::iterator i;
+		// 	for(i=default_machines.begin(); i!=default_machines.end(); i++) {
+		// 		string name = i->first;
+		// 		if ((name!="master")&&(name!="manual")) machine_names.push_back(name);
+		// 	}
+		// 	break;
+		// }
 		else {
-			// TODO default behavior
-			// crash?
-			// pause?
+			printf("Parameter %s is not recognized!\n", s.c_str());
 		}
 	}
 
-	// if(machine_names.size()==0) {
-
-	// 	machine_names.push_back("shore");
-	// }
-	machine_names.push_back("master");
-	machine_names.push_back("manual");
+	// default behavior:
+	// load everyone
+	// make no attempt to set MOOS mission; this limits the MOOS commands that can
+	// be run, but there are no "safe" default assumptions.
+	if (!loaded_config) {
+		map<string, ManagedMoosMachine>::iterator def;
+		for(def=default_machines.begin(); def!=default_machines.end(); def++) {
+			string name = def->first;
+			machine_names.push_back(name);
+		}
+	}
 
 	sort(machine_names.begin(), machine_names.end());
 
@@ -151,7 +184,7 @@ Configuration::Configuration(int argc, char* argv[]) {
 	for(i=machine_names.begin(); i!=machine_names.end(); i++) {
 		string name = *i;
 		ManagedMoosMachine machine = default_machines[name];
-		machine.setTeam("blue"); // TODO fix
+		// machine.setTeam("blue"); // TODO fix
 		m_machines.push_back(machine);
 	}
 }

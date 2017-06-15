@@ -1,0 +1,87 @@
+\documentclass[11pt]{article}
+\author{Raphael Segal}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{enumerate}% http://ctan.org/pkg/enumerate
+\usepackage{hyperref}
+\usepackage{fixltx2e}
+\usepackage{csquotes}
+\usepackage{cancel}
+\usepackage{listings}
+
+\oddsidemargin0cm
+\topmargin-2cm     %I recommend adding these three lines to increase the 
+\textwidth16.5cm   %amount of usable space on the page (and save trees)
+\textheight23.5cm  
+
+\newcommand{\question}[2] {\vspace{.25in} \hrule\vspace{0.5em}
+\noindent{\bf #1: #2} \vspace{0.5em}
+\hrule \vspace{.10in}}
+\renewcommand{\part}[1] {\vspace{.10in} {\bf (#1)}}
+
+\newcommand{\OPT}{\textit{OPT}}
+\newcommand{\OPTlp}{\textit{OPT\texorpdfstring{\textsubscript{LP}}}}
+\newcommand{\cmdline}[1]{\vspace{.5em} $\:$\\ \begin{minipage}{\dimexpr\textwidth-2cm}
+\texttt{#1}
+\end{minipage} $\:$\\ \vspace{-.5em} }
+\newcommand{\course}{\texttt{MIT 2.680} }
+\newcommand{\lab}{PAVLAB }
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\title{uFleetManager Guide}
+ 
+\begin{document}
+\maketitle
+\section{Purpose}
+This guide is intended to explain to a member of the PAVLAB how to use and improve the fleet manager app. Those members are expected to have a basic familiarity with MOOS-IvP, C++, and Bash.
+\section{Usage}
+\subsubsection{Dependencies}
+\texttt{uFleetManager} was developed for Mac. It is in principle compatible with Linux, but that has never been demonstrated.
+
+Currently, the only dependency is \texttt{ncurses}. On a Mac, use Macports or Homebrew like so:
+\cmdline{port install ncurses}
+The usage is slightly more complicated on Linux. Without having gotten it working, it's hard to say for sure, but it looks like \texttt{libncurses5-dev} is the correct version. So on Ubuntu, the usage would be
+\cmdline{apt-get install libncurses5-dev}
+\subsection{Installation}
+\texttt{uFleetManager} is bundled in the \texttt{moos-ivp-aquaticus} tree. Assuming you haven't already, install \texttt{moos-ivp-aquaticus} in your home directory.
+\subsubsection{Download ARO}
+Most users will use the Anonymous Read Only version of \texttt{moos-ivp-aquaticus}: 
+\cmdline{svn co https://oceanai.mit.edu/svn/moos-ivp-aquaticus-aro-trunk/trunk moos-ivp-aquaticus}
+\subsubsection{Download for Editing}
+A few users will have edit and commit privileges; speak to Dr. Benjamin.
+\subsubsection{Enable}
+Open \texttt{$\sim$/moos-ivp-aquaticus/src/CMakeLists.txt} and in the \texttt{BUILD$\_$ALL} section, find the line \texttt{ADD$\_$SUBDIRECTORY(uFleetManager)} and uncomment it. Remember to recomment it before committing code, and check it after pulling down new code.
+\subsection{Running the Fleet Manager}
+Build the fleet manager with the aquaticus build script:
+\cmdline{$\sim$/moos-ivp-aquaticus/build.sh}
+Run it with
+\cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager}
+With no arguments, the fleet manager will monitor all known machines, but not be able to launch missions. To add a mission, write a config file (see Config Files) and include it with \texttt{--file}:
+\cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager --file /path/to/foobar.moos}
+\subsection{Views}
+\begin{tabular}{r|cl}
+View Name & Nav Key & Description\\
+\hline
+Main & m & Main window, provides a ready/not ready summary of vehicle state.\\
+Network & n & Vehicle addresses and whether ping and ssh test succeed\\
+SVN Revisions & v & Lists revisions and summarizes which trees are most up-to-date for\\&& \texttt{moos-ivp}, \texttt{moos-ivp-aquaticus}, \texttt{moos-ivp-colregs}, and \texttt{pablo-common}\\
+Command History & H & Lists the commands dispatched by the operator\\
+MOOS-IvP & M & Lists mission configuration and details about the specified mission\\
+\end{tabular}
+\subsection{Commands}
+\subsection{Config files}
+\section{Modifying the Fleet Manager}
+\subsection{Adding New Windows}
+\subsection{Adding New Topics to a Window}
+\subsection{Adding New Commands}
+\subsubsection{Standard PAVLAB Commands}
+\subsubsection{Special Commands}
+\end{document}

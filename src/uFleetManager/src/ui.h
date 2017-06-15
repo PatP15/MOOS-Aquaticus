@@ -59,6 +59,7 @@ protected: // Member variables (output)
 	int m_padding_size;
 	bool m_view_full_help;
 	bool m_is_commanding;
+	bool m_verbose;
 	std::vector<TimestampedCommand> m_command_history;
 	std::map<std::string,
 				 std::vector<std::pair<std::string, std::string> > > m_help;

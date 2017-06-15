@@ -14,6 +14,7 @@
 #include "Constants.h"
 #include <sys/types.h>
 #include <ifaddrs.h>
+#include <ctype.h>
 
 using namespace std;
 
@@ -170,6 +171,12 @@ bool ready_to_dispatch(StampedData & s, time_t timeout)
 	}
 }
 
+//--------------------------------------------------------------------
+// Procedure:
+//   Purpose:
+//   Returns:
+//      Note:
+
 string get_my_ip() {
 	string my_ip;
 	struct ifaddrs * ifaces;
@@ -177,4 +184,16 @@ string get_my_ip() {
 
  	freeifaddrs(ifaces);
  	return(my_ip);
+}
+
+//--------------------------------------------------------------------
+// Procedure:
+//   Purpose:
+//   Returns:
+//      Note:
+
+string lowercase(string s) {
+	// TODO: tolower is not unicode compliant
+	transform(s.begin(), s.end(), s.begin(), std::tolower);
+	return(s);
 }

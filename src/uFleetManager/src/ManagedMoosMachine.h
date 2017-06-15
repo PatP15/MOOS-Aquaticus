@@ -83,6 +83,8 @@ public: // Public methods (local commands)
 	std::string getName();
 	std::string getTeam();
 	std::string getId();
+	std::string getFullMission();
+	std::string getLaunchFile();
 
 	void setUsername(std::string);
 	void setIP(std::string);
@@ -97,13 +99,15 @@ protected: // Helper methods
 	std::string prepareUpdate(StampedData&);
 	std::string serviceMailboxName(std::string);
 	std::string sshTrustPrefix();
-	CommandSummary _dispatchGeneric(std::string,
-																	std::string,
-																	std::string,
-																	bool,
-																	bool,
-																	bool,
-																	std::string="");
+	CommandSummary _dispatchPavCmd(std::string,
+																 std::string,
+																 std::string,
+																 bool,
+																 bool,
+																 bool,
+																 std::string,
+																 std::string="");
+	std::string getFullMissionPath();
 
 protected: // Variables
 	std::string m_name;
@@ -120,7 +124,6 @@ protected: // Variables
 	// buffering variables
 	std::map<std::string, std::string> m_mailboxes;
 	std::map<std::string, StampedData> m_mail;
-	// std::vector<std::string> m_mailboxes;
 
 	StampedData m_ping_results;
 	StampedData m_ssh_results;
@@ -132,6 +135,7 @@ protected: // Variables
 	StampedData m_aquaticus_svn_revision_results;
 	StampedData m_moos_ivp_svn_revision_results;
 	StampedData m_pablo_svn_revision_results;
+	StampedData m_colregs_svn_revision_results;
 	StampedData m_restart_hardware_results;
 	StampedData m_shutdown_hardware_results;
 };

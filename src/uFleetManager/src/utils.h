@@ -27,6 +27,7 @@ std::string compare_to_largest(unsigned int, std::vector<int>);
 std::string compare_to_newest(unsigned int, std::vector<int>);
 
 std::string get_my_ip();
+std::string lowercase(std::string);
 
 void clear_stamped_data(StampedData&);
 std::string get_data_and_staleness(StampedData, time_t=15);

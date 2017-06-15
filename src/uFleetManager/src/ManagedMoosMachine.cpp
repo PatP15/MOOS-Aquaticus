@@ -20,9 +20,6 @@
 #include <regex>
 #include "Constants.h"
 
-#define ROS_SOURCE "source /etc/ros/setup.bash;"
-#define BASH_SOURCE "source ~/.bashrc"
-
 using namespace std;
 
 //--------------------------------------------------------------------
@@ -64,31 +61,18 @@ CommandSummary ManagedMoosMachine::dispatchPing(int t)
 
 CommandSummary ManagedMoosMachine::dispatchSsh(int t)
 {
-	string summary = m_name + "back seat ssh";
-	string command = Status::ISLOCAL;
-	if (targetIsLocal()) return(make_pair(summary, command));
-	if (!ready_to_dispatch(m_mail["ssh"]))
-		return(make_pair(summary, Status::STALE));
+	string desc = "back seat ssh";
+	string name = "bs_ssh";
+	string cmd = "pav_test_ssh.sh";
+	string return_type = "return";
 
-	// ssh flags; for more information, see the man page
-	// -o ConnectTimeout=X 			  : -o lets you specify an OPTION=VALUE pair
-	// the string after the user@addr : executes the string as a command
+	bool allowed_local = false;
+	bool front_seat = false;
+	bool clear = false;
 
-	// send a payload with a random number that isn't likely to be a false
-	// positive. If ssh exits with that number, the whole process is a success.
-
-	// TODO : actually random?
-	// see http://support.attachmate.com/techdocs/2487.html for allowed codes
-	int payload = 42; // guaranteed to be random: https://xkcd.com/221/
-
-	command = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) + " " \
-					+ getFullAddress() + " \"exit " + to_string(payload) + "\"";
-
-	string index = prepareUpdate(m_mail["ssh"]);
-
-	system_call_dispatch_return(command, m_mailboxes["bs_ssh"], index);
-
-	return(make_pair(summary, command));
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
@@ -104,7 +88,7 @@ CommandSummary ManagedMoosMachine::dispatchVehiclePing(int t)
 	string command = Status::NOTAPPLIC;
 	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
 
-	if (!ready_to_dispatch(m_mail["front_seat_ping"]))
+	if (!ready_to_dispatch(m_mail["fs_ping"]))
 		return(make_pair(summary, Status::STALE));
 
 	// ping flags; for more information, see the man page
@@ -112,7 +96,7 @@ CommandSummary ManagedMoosMachine::dispatchVehiclePing(int t)
 	// -t X: timeout after X seconds
 	command = "ping -o -t " + to_string(t) + " " + m_front_seat_ip_address;
 
-	string index = prepareUpdate(m_mail["front_seat_ping"]);
+	string index = prepareUpdate(m_mail["fs_ping"]);
 
 	system_call_dispatch_return(command, m_mailboxes["fs_ping"], index);
 
@@ -128,32 +112,18 @@ CommandSummary ManagedMoosMachine::dispatchVehiclePing(int t)
 
 CommandSummary ManagedMoosMachine::dispatchVehicleSsh(int t)
 {
-	string summary = m_name + "front seat ssh";
-	string command = Status::NOTAPPLIC;
+	string desc = "front seat ssh";
+	string name = "fs_ssh";
+	string cmd = "exit 42";
+	string return_type = "return";
 
-	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
+	bool allowed_local = false;
+	bool front_seat = true;
+	bool clear = false;
 
-	if (!ready_to_dispatch(m_mail["front_seat_ssh"]))
-	 return(make_pair(summary, Status::STALE));
-
-	// ssh flags; for more information, see the man page
-	// -o ConnectTimeout=X 			  : -o lets you specify an OPTION=VALUE pair
-	// the string after the user@addr : executes the string as a command
-
-	// send a payload with a random number that isn't likely to be a false
-	// positive. If ssh exits with that number, the whole process is a success.
-
-	// TODO : actually random?
-	// see http://support.attachmate.com/techdocs/2487.html for allowed codes
-	int payload = 42; // guaranteed to be random: https://xkcd.com/221/
-
-	command = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) + " " \
-					+ getFrontSeatAddress() + " \"exit " + to_string(payload) + "\"";
-
-	string index = prepareUpdate(m_mail["front_seat_ssh"]);
-
-	system_call_dispatch_return(command, m_mailboxes["fs_ssh"], index);
-	return(make_pair(summary, command));
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
@@ -164,25 +134,18 @@ CommandSummary ManagedMoosMachine::dispatchVehicleSsh(int t)
 
 CommandSummary ManagedMoosMachine::dispatchMoosdbCheck()
 {
-	string summary = m_name + " moosdb";
-	string command;
-	string mailbox = m_mailboxes["moosdb"];
+	string desc = "moosdb";
+	string name = "moosdb";
+	string cmd = "pav_count_moosdb_running.sh";
+	string return_type = "pipe";
 
-	if (!ready_to_dispatch(m_mail["moosdb"]))
-		return(make_pair(summary, Status::STALE));
+	bool allowed_local = true;
+	bool front_seat = false;
+	bool clear = false;
 
-	if (targetIsLocal()) {
-		command = "ps aux | grep '[0-9] MOOSDB'";
-	}
-	else {
-		command = sshTrustPrefix() + getFullAddress() \
-					   + " \"ps aux\" | grep \"[0-9] MOOSDB\" 2>/dev/null";
-	}
-
-	string index = prepareUpdate(m_mail["moosdb"]);
-
-	system_call_dispatch_pipe(command, mailbox, index, 10);
-	return(make_pair(summary, command));
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 
@@ -200,25 +163,36 @@ CommandSummary ManagedMoosMachine::dispatchSvnRevisionCheck(string tree)
 {
 	string cmd;
 	string desc = "svn rev";
+	string return_type = "pipe";
 
 	bool allowed_local = true;
 	bool front_seat = false;
 	bool clear = false;
 
 	if (tree=="aqua") {
-		cmd = "pav-get-svn_rev_aqua";
+		cmd = "pav_get_svn_rev_aqua.sh 2>/dev/null";
 		desc = "aquaticus " + desc;
 	}
 	else if (tree=="moos") {
-		cmd = "pav-get-svn_rev_moos";
+		cmd = "pav_get_svn_rev_moos.sh 2>/dev/null";
 		desc = "moos-ivp " + desc;
 	}
 	else if (tree=="pablo") {
-		cmd = "pav-get-svn_rev_pablo";
+		cmd = "pav_get_svn_rev_pablo.sh 2>/dev/null";
 		desc = "pablo-common " + desc;
 	}
+	else if (tree=="colregs") {
+		cmd = "pav_get_svn_rev_colregs.sh 2>/dev/null";
+		desc = "colregs " + desc;
+	}
+	else if (tree=="mokai") {
+		cmd = "pav_get_svn_rev_mokai.sh 2>/dev/null";
+		desc = "mokai " + desc;
+	}
 
-	return(_dispatchGeneric(tree, cmd, desc, allowed_local, front_seat, clear));
+	return(_dispatchPavCmd(tree, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
@@ -229,56 +203,54 @@ CommandSummary ManagedMoosMachine::dispatchSvnRevisionCheck(string tree)
 
 CommandSummary ManagedMoosMachine::dispatchCompassStatus()
 {
-	// TODO make actually robust
-	string summary = m_name + " compass";
-	string mailbox = m_mailboxes["compass"];
-	string command = Status::NOTAPPLIC;
+	string desc = "compass";
+	string name = "compass";
 
-	if (!ready_to_dispatch(m_mail["compass"]))
-		return(make_pair(summary, Status::STALE));
+	// string src = "source /etc/ros/setup.bash\n";
+	// string payload = "rostopic echo /imu/compass_heading -n 5 2>/dev/null";
+	// string cmd = src + payload;
 
-	if (m_front_seat_ip_address!="") {
-		string ssh_wrapper = sshTrustPrefix() + " " + getFrontSeatAddress();
-		string src = ROS_SOURCE;
-		string payload = "\"" + src + "\nrostopic echo /imu/compass_heading -n 5 \"";
-		string suppress_errors = "2>/dev/null";
-		string command = ssh_wrapper + " " + payload + " " + suppress_errors;
-		string index = prepareUpdate(m_mail["compass"]);
+	// the PABLO takes an address, because it needs to ssh into its front seat
+	// the Mokai doesn't, but its front seat address is the empty string
+	string cmd = "pav_get_compass_heading.sh " + getFrontSeatAddress();
 
-		system_call_dispatch_pipe(command, mailbox, index, 10);
-	}
+	string return_type = "pipe";
 
-	return(make_pair(summary, command));
+	bool allowed_local = false;
+	bool front_seat = false;//true;
+	bool clear = false;
+
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
-// Procedure: dispatchGpsPdop()
+// Procedure: dispatchgps_pdop()
 //   Purpose: Test if the GPS is on and publish its PDOP
 //   Returns: Command name and exact command
 //      Note:
 
 CommandSummary ManagedMoosMachine::dispatchGpsPdop()
 {
-	// TODO make actually robust
-	string summary = m_name + " GPS PDOP";
-	string mailbox = m_mailboxes["gpspdop"];
-	string command = Status::NOTAPPLIC;
+	string desc = "gps_pdop";
+	string name = "gps_pdop";
 
-	if (!ready_to_dispatch(m_mail["gps_pdop"]))
-		return(make_pair(summary, Status::STALE));
+	// string src = "source /etc/ros/setup.bash\n";
+	// string payload = "rostopic echo /navsat/rx -n 5 2>/dev/null";
+	// string cmd = src + payload;
 
-	if (m_front_seat_ip_address!="") {
-		string ssh_wrapper = sshTrustPrefix() + " " + getFrontSeatAddress();
-		string src = ROS_SOURCE;
-		string payload = "\"" + src + "\nrostopic echo /navsat/rx -n 5 \"";
-		string suppress_errors = "2>/dev/null";
-		string command = ssh_wrapper + " " + payload + " " + suppress_errors;
-		string index = prepareUpdate(m_mail["gps_pdop"]);
+	string cmd = "pav_get_gps_pdop.sh " + getFrontSeatAddress();
 
-		system_call_dispatch_pipe(command, mailbox, index, 10);
-	}
+	string return_type = "pipe";
 
-	return(make_pair(summary, command));
+	bool allowed_local = false;
+	bool front_seat = false;//true;
+	bool clear = false;
+
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 
@@ -329,112 +301,112 @@ string ManagedMoosMachine::checkPingMail()
 string ManagedMoosMachine::checkSshMail()
 {
 	if (targetIsLocal()) {
-		m_mail["ssh"].data = Status::ISLOCAL;
-		return(get_data_and_staleness(m_mail["ssh"]));
+		m_mail["bs_ssh"].data = Status::ISLOCAL;
+		return(get_data_and_staleness(m_mail["bs_ssh"]));
 	}
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["bs_ssh"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_mail["ssh"], index)) {
+	if (receiveUpdate(m_mail["bs_ssh"], index)) {
 		if (mail_list.size() > 0)
 		{
 			string mail = mail_list[0];
 			if (mail.size()==0) {
-				m_mail["ssh"].data = Status::NODATA;
-				return(get_data_and_staleness(m_mail["ssh"]));
+				m_mail["bs_ssh"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["bs_ssh"]));
 			}
 			try {
 				// TODO: 42 is a magic number
-				if (mail=="42") m_mail["ssh"].data = Status::GOOD;
-				else m_mail["ssh"].data = Status::NOCONN;
+				if (mail=="42") m_mail["bs_ssh"].data = Status::GOOD;
+				else m_mail["bs_ssh"].data = Status::NOCONN;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_mail["ssh"].data = Status::ERROR;
+				m_mail["bs_ssh"].data = Status::ERROR;
 			}
 		}
-		else m_mail["ssh"].data = Status::NODATA; // no data yet
+		else m_mail["bs_ssh"].data = Status::NODATA; // no data yet
 	}
 
-	return(get_data_and_staleness(m_mail["ssh"]));
+	return(get_data_and_staleness(m_mail["bs_ssh"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkPingMail()
 //   Purpose: Perform the check of the front seat ping mailbox
 //   Returns:
-//      Note: Sets m_front_seat_ping
+//      Note: Sets m_fs_ping
 
 string ManagedMoosMachine::checkVehiclePingMail()
 {
 	if (m_front_seat_ip_address=="") {
-		m_mail["front_seat_ping"].data = Status::NOTAPPLIC;
-		return(get_data_and_staleness(m_mail["front_seat_ping"]));
+		m_mail["fs_ping"].data = Status::NOTAPPLIC;
+		return(get_data_and_staleness(m_mail["fs_ping"]));
 	}
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["fs_ping"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_mail["front_seat_ping"], index)) {
+	if (receiveUpdate(m_mail["fs_ping"], index)) {
 		if (mail_list.size() > 0) {
 			string mail = mail_list[0];
 			if(mail.size()==0) {
-				m_mail["front_seat_ping"].data = Status::NODATA;
-				return(get_data_and_staleness(m_mail["front_seat_ping"]));
+				m_mail["fs_ping"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["fs_ping"]));
 			}
 			try	{
 				if (0==stoi(mail))
-					m_mail["front_seat_ping"].data = Status::GOOD;
+					m_mail["fs_ping"].data = Status::GOOD;
 				else if (2==stoi(mail))
-					m_mail["front_seat_ping"].data = Status::NOCONN;
+					m_mail["fs_ping"].data = Status::NOCONN;
 				else
-					m_mail["front_seat_ping"].data = Status::ERROR;
+					m_mail["fs_ping"].data = Status::ERROR;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_mail["front_seat_ping"].data = Status::ERROR; // error
+				m_mail["fs_ping"].data = Status::ERROR; // error
 			}
 		}
-		else m_mail["front_seat_ping"].data = Status::NODATA; // No data yet
+		else m_mail["fs_ping"].data = Status::NODATA; // No data yet
 	}
-	return(get_data_and_staleness(m_mail["front_seat_ping"]));
+	return(get_data_and_staleness(m_mail["fs_ping"]));
 }
 
 //--------------------------------------------------------------------
 // Procedure: checkVehicleSshMail()
 //   Purpose: Perform the check of the front seat ssh mailbox
 //   Returns:
-//      Note: Sets m_front_seat_ssh
+//      Note: Sets m_fs_ssh
 
 string ManagedMoosMachine::checkVehicleSshMail()
 {
 	if (m_front_seat_ip_address=="") {
-		m_mail["front_seat_ssh"].data = Status::NOTAPPLIC;
-		return(get_data_and_staleness(m_mail["front_seat_ssh"]));
+		m_mail["fs_ssh"].data = Status::NOTAPPLIC;
+		return(get_data_and_staleness(m_mail["fs_ssh"]));
 	}
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["fs_ssh"]);
 	index_t index = grabIndex(mail_list);
 
-	if (receiveUpdate(m_mail["front_seat_ssh"], index)) {
+	if (receiveUpdate(m_mail["fs_ssh"], index)) {
 		if (mail_list.size() > 0)
 		{
 			string mail = mail_list[0];
 			if (mail.size()==0) {
-				m_mail["front_seat_ssh"].data = Status::NODATA;
-				return(get_data_and_staleness(m_mail["front_seat_ssh"]));
+				m_mail["fs_ssh"].data = Status::NODATA;
+				return(get_data_and_staleness(m_mail["fs_ssh"]));
 			}
 			try {
 				// TODO: 42 is a magic number
-				if (mail=="42") m_mail["front_seat_ssh"].data = Status::GOOD;
-				else m_mail["front_seat_ssh"].data = Status::NOCONN;
+				if (mail=="42") m_mail["fs_ssh"].data = Status::GOOD;
+				else m_mail["fs_ssh"].data = Status::NOCONN;
 			}
 			catch (...) { // exception &e / type error only? / TODO?
-				m_mail["front_seat_ssh"].data = Status::ERROR;
+				m_mail["fs_ssh"].data = Status::ERROR;
 			}
 		}
-		else m_mail["front_seat_ssh"].data = Status::NODATA; // no data yet
+		else m_mail["fs_ssh"].data = Status::NODATA; // no data yet
 	}
-	return(get_data_and_staleness(m_mail["front_seat_ssh"]));
+	return(get_data_and_staleness(m_mail["fs_ssh"]));
 }
 
 //--------------------------------------------------------------------
@@ -467,7 +439,8 @@ string ManagedMoosMachine::checkMoosdbMail()
 //   Returns:
 //      Note:
 
-string ManagedMoosMachine::checkSvnRevisionMail(string tree) {
+string ManagedMoosMachine::checkSvnRevisionMail(string tree)
+{
 	vector<string> mail_list = readServiceMailbox(m_mailboxes[tree]);
 	index_t index = grabIndex(mail_list);
 
@@ -520,6 +493,8 @@ string ManagedMoosMachine::checkCompassStatusMail()
 	string hsplit = "---";
 	string delim = ": ";
 
+	string mokai = "OS5000";
+
 	vector<string> mail = readServiceMailbox(m_mailboxes["compass"]);
 	index_t index = grabIndex(mail);
 
@@ -527,14 +502,14 @@ string ManagedMoosMachine::checkCompassStatusMail()
 		int expected_results = 5;
 		int observed_results = 0;
 
-		if (getFrontSeatAddress()=="") {
-			m_mail["compass"].data = Status::NODATA;
-		}
-		else if (mail.size()==0) {
+		if (mail.size()==0) {
 			m_mail["compass"].data = Status::NODATA; // no data yet
 		}
 		else if (mail[0]==nopub) { // not publishing; likely hardware related
 			m_mail["compass"].data = Status::NOPUB;
+		}
+		else if (mail[0]==mokai) {
+			m_mail["compass"].data = Status::GOOD;
 		}
 		else {
 			//expected format is repetitions of
@@ -575,7 +550,7 @@ string ManagedMoosMachine::checkCompassStatusMail()
 }
 
 //--------------------------------------------------------------------
-// Procedure: checkGpsPdopStatusMail()
+// Procedure: checkgps_pdopStatusMail()
 //   Purpose: Perform the check of the compass mailbox
 //   Returns:
 //      Note: Sets m_compass
@@ -586,19 +561,21 @@ string ManagedMoosMachine::checkGpsPdopStatusMail()
 	string hsplit = "---";
 	string delim = ": ";
 
+	string mokai = "GPSUBLOX";
+
 	int GPGSA_PDOP_index = 15; // per GPS spec
-	vector<string> mail = readServiceMailbox(m_mailboxes["gpspdop"]);
+	vector<string> mail = readServiceMailbox(m_mailboxes["gps_pdop"]);
 	index_t index = grabIndex(mail);
 
 	if (receiveUpdate(m_mail["gps_pdop"], index)) {
-		if (getFrontSeatAddress()=="") {
-			m_mail["gps_pdop"].data = Status::NODATA;
-		}
-		else if (mail.size()==0) {
+		if (mail.size()==0) {
 			m_mail["gps_pdop"].data = Status::NODATA; // no data yet
 		}
 		else if (mail[0]==nopub) { // not publishing; likely hardware related
 			m_mail["gps_pdop"].data = Status::NOPUB;
+		}
+		else if (mail[0]==mokai) {
+			m_mail["gps_pdop"].data = Status::GOOD;
 		}
 		else {
 			// no messages seen
@@ -629,7 +606,8 @@ string ManagedMoosMachine::checkGpsPdopStatusMail()
 					}
 					break;
 				}
-				else if (regex_match(line, msg_pattern)) {
+				else if ((regex_match(line, msg_pattern))&&
+								 (m_mail["gps_pdop"].data==Status::NODATA)) {
 					// seen some messages; if no GPGSA messages have been seen, this will
 					// return error, otherwise it will be overwritten and returned
 					m_mail["gps_pdop"].data = Status::ERROR;
@@ -652,43 +630,53 @@ string ManagedMoosMachine::checkGpsPdopStatusMail()
 
 CommandSummary ManagedMoosMachine::startMOOS(int t)
 {
-	string summary = m_name + " start MOOS";
-	string mailbox = serviceMailboxName(m_mailboxes["startMOOS"]);
-	string command;
+	string desc = "start MOOS";
+	string name = "start_moos";
+	string cmd = "cd " + m_target_script_dir + "; bash " \
+						 + m_target_script_name + " " + m_target_script_args;
+	string return_type = "return";
 
-	if (targetIsLocal()) {
-		// line by line explanation
+	bool allowed_local = true;
+	bool front_seat = false;
+	bool clear = false;
 
-		// save the current directory and change to the specified one
-		// execute the named command, with any arguments
-		// save the exit code
-		// change back to the old directory, return the result
+	return(_dispatchPavCmd(name, cmd, desc,
+											 allowed_local, front_seat, clear,
+											 return_type));
 
-		command = "cd " + m_target_script_dir + "\n" + \
-						  "bash " + m_target_script_name + " " + \
-						  m_target_script_args + " &>/dev/null &\n" + \
-						  "RESULT=$( echo $? )\nexit $RESULT;";
-	}
-	else { // target is not local, send commands via ssh
+	// if (targetIsLocal()) {
+	// 	// line by line explanation
 
-		// ssh flags; for more information, see the man page
-		// -o OPTION=VALUE 		  : named options and their values
-		// string after user@addr : remotely executes the string as a command
-		string ssh_prefix = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) \
-											+ " " + getFullAddress();
+	// 	// save the current directory and change to the specified one
+	// 	// execute the named command, with any arguments
+	// 	// save the exit code
+	// 	// change back to the old directory, return the result
 
-		string remote = "source ~/.profile\ncd " + m_target_script_dir + "\n" + \
-							  	  "bash " + m_target_script_name + " " + \
-							  	  m_target_script_args + " &>/dev/null\n" + \
-							      "exit $?";
+	// 	command = "cd " + m_target_script_dir + "\n" + \
+	// 					  "bash " + m_target_script_name + " " + \
+	// 					  m_target_script_args + " &>/dev/null &\n" + \
+	// 					  "RESULT=$( echo $? )\nexit $RESULT;";
+	// }
+	// else { // target is not local, send commands via ssh
 
-		command = ssh_prefix + " \"" + remote + "\"";
-	}
+	// 	// ssh flags; for more information, see the man page
+	// 	// -o OPTION=VALUE 		  : named options and their values
+	// 	// string after user@addr : remotely executes the string as a command
+	// 	string ssh_prefix = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) \
+	// 										+ " " + getFullAddress();
 
-	string index = prepareUpdate(m_mail["moosdb"]);
+	// 	string remote = "source ~/.profile\ncd " + m_target_script_dir + "\n" + \
+	// 						  	  "bash " + m_target_script_name + " " + \
+	// 						  	  m_target_script_args + " &>/dev/null\n" + \
+	// 						      "exit $?";
 
-	system_call_dispatch_return(command, mailbox, index);
-	return(make_pair(summary, command));
+	// 	command = ssh_prefix + " \"" + remote + "\"";
+	// }
+
+	// string index = prepareUpdate(m_mail["moosdb"]);
+
+	// system_call_dispatch_return(command, mailbox, index);
+	// return(make_pair(summary, command));
 }
 
 //--------------------------------------------------------------------
@@ -699,29 +687,18 @@ CommandSummary ManagedMoosMachine::startMOOS(int t)
 
 CommandSummary ManagedMoosMachine::stopMOOS()
 {
-	string summary = m_name + " stop MOOS";
-	string mailbox = serviceMailboxName(m_mailboxes["stopMOOS"]);
-	string command;
+	string desc = "stop MOOS";
+	string name = "stop_moos";
+	string cmd = "pav_stop_moos.sh";
+	string return_type = "return";
 
-	if (targetIsLocal()) {
-		command = "source ~/.bashrc\nktm";
-	}
-	else { // remote
-		string ssh_with_args = sshTrustPrefix() + "-o ConnectTimeout=2";
-		string payload = "\"source ~/.profile\nktm\"";
-		string suppress_output = "&>/dev/null";
-		string addr = getFullAddress();
+	bool allowed_local = true;
+	bool front_seat = false;
+	bool clear = false;
 
-		command = ssh_with_args + " " + addr + " " + payload; + \
-							" " + suppress_output;
-	}
-
-	string index = prepareUpdate(m_mail["moosdb"]);
-	m_mail["moosdb"].data = Status::NODATA;
-
-	system_call_dispatch_return(command, mailbox, index);
-
-	return(make_pair(summary, command));
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
@@ -748,21 +725,18 @@ CommandSummary ManagedMoosMachine::restartMOOS(int t)
 
 CommandSummary ManagedMoosMachine::reboot()
 {
-	string summary = m_name + " restart hardware";
-	string command = Status::ISLOCAL;
-	string mailbox = m_mailboxes["reboot"];
+	string desc = "reboot back seat";
+	string name = "reboot";
+	string cmd = "pav_reboot_computer.sh";
+	string return_type = "return";
 
-	if (targetIsLocal()) return(make_pair(summary, command));
+	bool allowed_local = false;
+	bool front_seat = false;
+	bool clear = true;
 
-	command = sshTrustPrefix() + getFullAddress() + \
-					+ " \"source ~/.profile; reboot\"";
-
-	string index = prepareUpdate(m_mail["reboot"]);
-
-	system_call_dispatch_pipe(command, mailbox, index);
-
-	clearCache();
-	return(make_pair(summary, command));
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
@@ -772,21 +746,18 @@ CommandSummary ManagedMoosMachine::reboot()
 //      Note:
 
 CommandSummary ManagedMoosMachine::shutdown() {
-	string summary = m_name + " shutdown hardware";
-	string command = Status::ISLOCAL;
-	string mailbox = m_mailboxes["shutdown"];
+	string desc = "shutdown back seat";
+	string name = "shutdown";
+	string cmd = "pav_shutdown_computer.sh";
+	string return_type = "return";
 
-	if (targetIsLocal()) return(make_pair(summary, command));
+	bool allowed_local = false;
+	bool front_seat = false;
+	bool clear = true;
 
-	command = sshTrustPrefix() + getFullAddress() + \
-					+ " \"source ~/.profile; shutdown now\"";
-
-	string index = prepareUpdate(m_mail["shutdown"]);
-
-	system_call_dispatch_pipe(command, mailbox, index);
-
-	clearCache();
-	return(make_pair(summary, command));
+	return(_dispatchPavCmd(name, cmd, desc,
+												 allowed_local, front_seat, clear,
+												 return_type));
 }
 
 //--------------------------------------------------------------------
@@ -797,7 +768,7 @@ CommandSummary ManagedMoosMachine::shutdown() {
 
 CommandSummary ManagedMoosMachine::rebootVehicle()
 {
-	string summary = m_name + " restart vehicle";
+	string summary = m_name + " reboot front seat";
 	string command = Status::NOTAPPLIC;
 	string mailbox = m_mailboxes["reboot_vehicle"];
 
@@ -821,16 +792,16 @@ CommandSummary ManagedMoosMachine::rebootVehicle()
 //      Note:
 
 CommandSummary ManagedMoosMachine::shutdownVehicle() {
-	string summary = m_name + " shutdown vehicle";
+	string summary = m_name + " shutdown front seat";
 	string command = Status::NOTAPPLIC;
 	string mailbox = m_mailboxes["shutdown_vehicle"];
 
 	if (getFrontSeatAddress()=="") return(make_pair(summary, command));
 
 	command = sshTrustPrefix() + getFrontSeatAddress() + " -t " + \
-					+ " \"source ~/.profile; shutdown now\"";
+					+ " \"source ~/.profile; sudo shutdown now\"";
 
-	string index = prepareUpdate(m_mail["shutdown"]);
+	string index = prepareUpdate(m_mail["shutdown_vehicle"]);
 
 	system_call_dispatch_pipe(command, mailbox, index);
 
@@ -839,56 +810,89 @@ CommandSummary ManagedMoosMachine::shutdownVehicle() {
 }
 
 //--------------------------------------------------------------------
-// Procedure: dispatchGeneric()
+// Procedure: _dispatchPavCmd()
 //   Purpose: Remotely call generic pavlab commands
-// Arguments: name  : the common name of the function
-//						cmd   : the full name of the function or alias
-//						desc  : a human readable description of cmd
-//						ready :
-//						args  : any extra arguments that cmd needs
-//						clear : if true, clear the cache after sending cmd (e.g. reboot)
-//   Returns:
+// Arguments: name  						: the common name of the function
+//						cmd   						: the full name of the function or alias
+//						desc  						: a human readable description of cmd
+//						allowed_local 		: this function may run on the user's own
+//																computer
+//						runs_on_fron_seat : this function is sent to a secondary address,
+//																e.g. the M300 front seat
+//						clear 						: clear the cache after running this function
+//						args  						: any extra arguments that cmd needs
+//						clear 						: if true, clear the cache after sending cmd
+//																(e.g. reboot)
 //      Note:
 
-CommandSummary ManagedMoosMachine::_dispatchGeneric(string name,
+CommandSummary ManagedMoosMachine::_dispatchPavCmd(string name,
 																										string cmd,
 																										string desc,
 																									  bool allowed_local,
 																									  bool runs_on_front_seat,
 																									  bool clear,
+																									  string return_type,
 																									  string args)
 {
 	string summary = m_name + " " + desc;
 	string command = Status::NOTAPPLIC;
 
+	//--------------------------------------------------------------------
+	// Don't spam; wait until the old message is received
+	//--------------------------------------------------------------------
+	if (!ready_to_dispatch(m_mail[name]))
+		return(make_pair(summary, Status::STALE));
+
+	//--------------------------------------------------------------------
+	// Handle the case of running commands against your own machine
+	//--------------------------------------------------------------------
 	if (targetIsLocal()) {
 		if (allowed_local) {
 			command = "source ~/.profile\n" + cmd + " " + args;
-			string index = prepareUpdate(m_mail[name]);
-			system_call_dispatch_pipe(command, m_mailboxes[name], index);
-			if(clear) clearCache();
 		}
 		else {
-			command = Status::ISLOCAL;
+			return(make_pair(summary, Status::ISLOCAL));
 		}
 	}
-	else if (runs_on_front_seat) {
-		if (getFrontSeatAddress()=="") return(make_pair(summary, Status::NOTFOUND));
-		else command = sshTrustPrefix() + getFrontSeatAddress();
-	}
+	//--------------------------------------------------------------------
+	// Handle the case of running commands against other machines
+	//--------------------------------------------------------------------
 	else {
-		command = sshTrustPrefix() + getFullAddress();
+		//--------------------------------------------------------------------
+		// Handle a secondary computer, e.g. the M300 Heron front seat
+		//--------------------------------------------------------------------
+		if (runs_on_front_seat) {
+			if (getFrontSeatAddress()=="")
+				return(make_pair(summary, Status::NOTFOUND));
+			else command = sshTrustPrefix() + getFrontSeatAddress();
+		}
+		//--------------------------------------------------------------------
+		// The "normal" case
+		//--------------------------------------------------------------------
+		else {
+			if (getFullAddress()=="") return(make_pair(summary, Status::NOTFOUND));
+			else command = sshTrustPrefix() + getFullAddress();
+		}
 
-		if (!ready_to_dispatch(m_mail[name]))
-			return(make_pair(summary, Status::STALE));
-
-		command = sshTrustPrefix() + getFullAddress() \
-					+ " \"source ~/.profile\n" + cmd + " " + args + "\"";
-
-		string index = prepareUpdate(m_mail[name]);
-		system_call_dispatch_pipe(command, m_mailboxes[name], index);
-		if(clear) clearCache();
+		command += " -o ConnectTimeout=3 \"source ~/.profile\n" \
+						 + cmd + " " + args + "\"";
 	}
+	string index = prepareUpdate(m_mail[name]);
+
+	//--------------------------------------------------------------------
+	// Select the correct return type; a piped string or a returned integer
+	//--------------------------------------------------------------------
+	if (return_type=="pipe")
+		system_call_dispatch_pipe(command, m_mailboxes[name], index);
+	else if (return_type=="return")
+		system_call_dispatch_return(command, m_mailboxes[name], index);
+
+	//--------------------------------------------------------------------
+	// Clear the cache for commands that reset the state (e.g. reboots and
+	// shutdowns)
+	//--------------------------------------------------------------------
+	if(clear) clearCache();
+
 	return(make_pair(summary, command));
 }
 
@@ -989,6 +993,33 @@ string ManagedMoosMachine::getId()
 	}
 	return(id);
 }
+
+
+//--------------------------------------------------------------------
+// Procedure: getFullMission()
+//   Purpose: return full command as dispatched by startMOOS
+
+string ManagedMoosMachine::getFullMission()
+{
+	if ((getFullMissionPath()!="")&&(m_target_script_args!="")) {
+		return(getFullMissionPath() + " " + m_target_script_args);
+	}
+	else return("");
+}
+
+
+//--------------------------------------------------------------------
+// Procedure: getLaunchFile()
+//   Purpose: returns launch file name, without the full path
+//			Note: a more terse companion to getFullMission()
+string ManagedMoosMachine::getLaunchFile()
+{
+	if ((getFullMissionPath()!="")&&(m_target_script_args!="")) {
+		return(m_target_script_name + " " + m_target_script_args);
+	}
+	else return("");
+}
+
 
 //--------------------------------------------------------------------
 // Procedure: setUsername()
@@ -1106,10 +1137,14 @@ ManagedMoosMachine::ManagedMoosMachine(string name, string ip)
 	m_mail["aqua"] = blank;
 	m_mail["moos"] = blank;
 	m_mail["pablo"] = blank;
+	m_mail["mokai"] = blank;
+	m_mail["colregs"] = blank;
 	m_mail["compass"] = blank;
 	m_mail["gps_pdop"] = blank;
-	m_mail["front_seat_ping"] = blank;
-	m_mail["front_seat_ssh"] = blank;
+	m_mail["start_moos"] = blank;
+	m_mail["stop_moos"] = blank;
+	m_mail["fs_ping"] = blank;
+	m_mail["fs_ssh"] = blank;
 	m_mail["reboot"] = blank;
 	m_mail["shutdown"] = blank;
 	m_mail["reboot_vehicle"] = blank;
@@ -1121,12 +1156,14 @@ ManagedMoosMachine::ManagedMoosMachine(string name, string ip)
 	m_mailboxes["fs_ssh"] = serviceMailboxName("frontseat_ssh");
 	m_mailboxes["moosdb"] = serviceMailboxName("moosdb");
 	m_mailboxes["compass"] = serviceMailboxName("compass");
-	m_mailboxes["gpspdop"] = serviceMailboxName("GpsPdop");
-	m_mailboxes["startMOOS"] = serviceMailboxName("startMOOS");
-	m_mailboxes["stopMOOS"] = serviceMailboxName("stopMOOS");
+	m_mailboxes["gps_pdop"] = serviceMailboxName("gpsPdop");
+	m_mailboxes["start_moos"] = serviceMailboxName("startMOOS");
+	m_mailboxes["stop_moos"] = serviceMailboxName("stopMOOS");
 	m_mailboxes["aqua"] = serviceMailboxName("aquaSvnRev");
 	m_mailboxes["moos"] = serviceMailboxName("moosSvnRev");
 	m_mailboxes["pablo"] = serviceMailboxName("pabloSvnRev");
+	m_mailboxes["colregs"] = serviceMailboxName("colregsSvnRev");
+	m_mailboxes["mokai"] = serviceMailboxName("mokaiSvnRev");
 	m_mailboxes["reboot"] = serviceMailboxName("reboot");
 	m_mailboxes["shutdown"] = serviceMailboxName("shutdown");
 	m_mailboxes["reboot_vehicle"] = serviceMailboxName("rebootVehicle");
@@ -1304,4 +1341,13 @@ string ManagedMoosMachine::sshTrustPrefix() {
 	}
 	// IP isn't in the safe set, use the normal ssh
 	return(unstrusting_ssh);
+}
+
+
+//--------------------------------------------------------------------
+// Procedure: getFullMissionPath()
+
+string ManagedMoosMachine::getFullMissionPath()
+{
+	return(m_target_script_dir + "/" + m_target_script_name);
 }
