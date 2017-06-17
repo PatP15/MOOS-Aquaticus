@@ -206,18 +206,12 @@ CommandSummary ManagedMoosMachine::dispatchCompassStatus()
 	string desc = "compass";
 	string name = "compass";
 
-	// string src = "source /etc/ros/setup.bash\n";
-	// string payload = "rostopic echo /imu/compass_heading -n 5 2>/dev/null";
-	// string cmd = src + payload;
-
-	// the PABLO takes an address, because it needs to ssh into its front seat
-	// the Mokai doesn't, but its front seat address is the empty string
 	string cmd = "pav_get_compass_heading.sh " + getFrontSeatAddress();
 
 	string return_type = "pipe";
 
 	bool allowed_local = false;
-	bool front_seat = false;//true;
+	bool front_seat = false;
 	bool clear = false;
 
 	return(_dispatchPavCmd(name, cmd, desc,
@@ -236,16 +230,12 @@ CommandSummary ManagedMoosMachine::dispatchGpsPdop()
 	string desc = "gps_pdop";
 	string name = "gps_pdop";
 
-	// string src = "source /etc/ros/setup.bash\n";
-	// string payload = "rostopic echo /navsat/rx -n 5 2>/dev/null";
-	// string cmd = src + payload;
-
 	string cmd = "pav_get_gps_pdop.sh " + getFrontSeatAddress();
 
 	string return_type = "pipe";
 
 	bool allowed_local = false;
-	bool front_seat = false;//true;
+	bool front_seat = false;
 	bool clear = false;
 
 	return(_dispatchPavCmd(name, cmd, desc,
@@ -632,9 +622,9 @@ CommandSummary ManagedMoosMachine::startMOOS(int t)
 {
 	string desc = "start MOOS";
 	string name = "start_moos";
-	string cmd = "cd " + m_target_script_dir + "; bash " \
+	string cmd = "cd " + m_target_script_dir + "\nbash " \
 						 + m_target_script_name + " " + m_target_script_args;
-	string return_type = "return";
+	string return_type = "pipe";
 
 	bool allowed_local = true;
 	bool front_seat = false;
@@ -643,40 +633,6 @@ CommandSummary ManagedMoosMachine::startMOOS(int t)
 	return(_dispatchPavCmd(name, cmd, desc,
 											 allowed_local, front_seat, clear,
 											 return_type));
-
-	// if (targetIsLocal()) {
-	// 	// line by line explanation
-
-	// 	// save the current directory and change to the specified one
-	// 	// execute the named command, with any arguments
-	// 	// save the exit code
-	// 	// change back to the old directory, return the result
-
-	// 	command = "cd " + m_target_script_dir + "\n" + \
-	// 					  "bash " + m_target_script_name + " " + \
-	// 					  m_target_script_args + " &>/dev/null &\n" + \
-	// 					  "RESULT=$( echo $? )\nexit $RESULT;";
-	// }
-	// else { // target is not local, send commands via ssh
-
-	// 	// ssh flags; for more information, see the man page
-	// 	// -o OPTION=VALUE 		  : named options and their values
-	// 	// string after user@addr : remotely executes the string as a command
-	// 	string ssh_prefix = sshTrustPrefix() + "-o ConnectTimeout=" + to_string(t) \
-	// 										+ " " + getFullAddress();
-
-	// 	string remote = "source ~/.profile\ncd " + m_target_script_dir + "\n" + \
-	// 						  	  "bash " + m_target_script_name + " " + \
-	// 						  	  m_target_script_args + " &>/dev/null\n" + \
-	// 						      "exit $?";
-
-	// 	command = ssh_prefix + " \"" + remote + "\"";
-	// }
-
-	// string index = prepareUpdate(m_mail["moosdb"]);
-
-	// system_call_dispatch_return(command, mailbox, index);
-	// return(make_pair(summary, command));
 }
 
 //--------------------------------------------------------------------

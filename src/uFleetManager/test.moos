@@ -4,14 +4,14 @@ ProcessConfig = uFleetManager
 	#machines = felix ida master evan kirk jing
 	#machines = master manual shore
 	#machines = master
-	machines = ida
+	machines = kirk mokai1 mokai2
 
 	/// Mission directory, common to all ///
 	mission = ~/moos-ivp-aquaticus/missions/aquaticus1.1/m200
 
 	/// Teams; red and blue ///
-	blue = kirk ida
-	red = evan felix
+	//blue = kirk ida
+	//red = evan felix
 
 	/// Vehicles; should be exactly one line per entry in 'machines' ///
 	// if there are entries in 'machines' that aren't here, they wont be able to

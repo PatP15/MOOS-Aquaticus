@@ -28,9 +28,9 @@
 
 \newcommand{\OPT}{\textit{OPT}}
 \newcommand{\OPTlp}{\textit{OPT\texorpdfstring{\textsubscript{LP}}}}
-\newcommand{\cmdline}[1]{\vspace{.5em} $\:$\\ \begin{minipage}{\dimexpr\textwidth-2cm}
+\newcommand{\cmdline}[1]{\vspace{.2em} $\:$\\ \begin{minipage}{\dimexpr\textwidth-2cm}
 \texttt{#1}
-\end{minipage} $\:$\\ \vspace{-.5em} }
+\end{minipage} $\:$\\ \vspace{-.2em} }
 \newcommand{\course}{\texttt{MIT 2.680} }
 \newcommand{\lab}{PAVLAB }
 
@@ -43,7 +43,7 @@
 \section{Purpose}
 This guide is intended to explain to a member of the PAVLAB how to use and improve the fleet manager app. Those members are expected to have a basic familiarity with MOOS-IvP, C++, and Bash.
 \section{Usage}
-\subsubsection{Dependencies}
+\subsection{Dependencies}
 \texttt{uFleetManager} was developed for Mac. It is in principle compatible with Linux, but that has never been demonstrated.
 
 Currently, the only dependency is \texttt{ncurses}. On a Mac, use Macports or Homebrew like so:
@@ -66,22 +66,240 @@ Run it with
 \cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager}
 With no arguments, the fleet manager will monitor all known machines, but not be able to launch missions. To add a mission, write a config file (see Config Files) and include it with \texttt{--file}:
 \cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager --file /path/to/foobar.moos}
+\subsection{Layout}
+\includegraphics[scale=0.5]{/Users/raphaelsegal/Desktop/uFleetManager_Layout.png}
+\begin{description}
+\item[Blue] Header; displays the state of the app
+\item[Red] Window; displays the view indicated in the header (see below for details on each view).
+\item[Yellow] Help; displays the currently available command set.
+\item[Green] My Machine; displays own computer information. 'Time' is the one topic that is expected to change frequently and consistently, and therefore can be used to determine if the app has crashed.
+\item[Grey] Last command; displays the last command issued. 
+\item[Purple] Input; shows currently input characters
+\end{description}
+\subsubsection{Header}
+\includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_Header.png}
+
+Displays three state variables: the current view, whether verbosity is toggled on or off, and whether commanding is toggled on or off. Sections with multiple levels of verbosity have an asterisk after their headers, and will be noted below.
+\subsubsection{Windows}
+See the Views section below.
+\subsubsection{Help}
+\includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_HelpBasic.png}
+
+The minimal set of options.
+
+\includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_HelpCommon.png}
+
+The full set of options outside of commanding mode; contains the common set, navigation commands, and the command to clear the local cache of information requests.
+
+\includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_HelpCommands.png}
+
+The full set of options, including those in commanding mode.
+
+\subsubsection{My Machine}
+\includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_Self.png}
+
+Stats about your own machine. \texttt{Time} serves as a responsive UI element, demonstrating that the app is actually refreshing. \texttt{MY IP} is helpful if you're running the shoreside on your computer and need to update the machine's UI, but it also indicates which wifi network you're on; if the first block is 10 you're probably on MIT-GUEST, if the wifi is 192.168.1.X, you're probably on kayak-local.
+\subsubsection{Footer}
+\includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_Footer.png}
+
+Information about keys you're currently inputting, and the executive summary of the command you've most recently input.
 \subsection{Views}
 \begin{tabular}{r|cl}
 View Name & Nav Key & Description\\
 \hline
 Main & m & Main window, provides a ready/not ready summary of vehicle state.\\
 Network & n & Vehicle addresses and whether ping and ssh test succeed\\
-SVN Revisions & v & Lists revisions and summarizes which trees are most up-to-date for\\&& \texttt{moos-ivp}, \texttt{moos-ivp-aquaticus}, \texttt{moos-ivp-colregs}, and \texttt{pablo-common}\\
+SVN Revisions & v & Lists revisions and summarizes which trees are most up-to-date for\\&& \texttt{moos-ivp}, \texttt{moos-ivp-aquaticus}, \texttt{moos-ivp-colregs}, \texttt{pablo-common},\\
+&& and \texttt{mokai-common}\\
 Command History & H & Lists the commands dispatched by the operator\\
 MOOS-IvP & M & Lists mission configuration and details about the specified mission\\
 \end{tabular}
+\subsubsection{Main}
+\includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Main.png}
+
+\begin{tabular}{l|ll}
+Topic & Explanation & Comments\\
+\hline
+M\# & Machine \#; the \# in the Commands section & Limited to $0<=M\#<10$\\
+Name & Vehicle Name & List hard coded in Configuration class\\
+ID & Lab vehicle id system, alpha=1, bravo=2, ... & \\
+SVN & Summary; worst status from all its svn trees & OLD and NEW are relative amongst vehicles\\
+&& e.g. if even one of your trees is out of date,\\
+&& then your summary will be OLD. \\ && See SVN view for more detail\\
+F NET & Front Seat network summary & ssh and ping; see Network view for more detail\\
+B NET & Back Seat network summary & same as F NET.\\
+&& Single-computer robots are back seats\\
+COMPASS & Reports if vehicle's compass is up & M300 common failure mode is NaNs\\&&Mokai common failure mode is disconnects\\
+GPS & Reports GPS status & M300 reports PDOP\\&& Mokai only reports connectedness\\
+MOOSDB &Counts the MOOSDB processes running & 1 is the only sane value\\&&Also lists the vehicle's team, if one is given; \\&& see the MOOS-IvP section\\
+\end{tabular}
+\subsubsection{Network}
+\includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Net.png}
+
+\begin{tabular}{l|ll}
+Topic & Explanation & Comments\\
+\hline
+M\# && See the Main view\\
+Name && See the Main view\\
+ID && See the Main view\\
+F & Front Seat block & \\
+PING & Is ADDR reachable by ping & NA indicates no front seat expected\\
+SSH & If USER@ADDR can run a simple test command & NA indicates no front seat expected\\
+USER & The front seat username\\
+ADDR & The front seat address\\
+B & Back Seat block & Single-computer vehicles are considered \\&& back seats\\
+PING & Is ADDR reachable by ping & \\
+SSH & If USER@ADDR can run a simple test command & \\
+USER & The back seat username\\
+ADDR & The back seat address\\
+\end{tabular}
+\subsubsection{SVN}
+\includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Svn.png}
+
+\begin{tabular}{l|ll}
+Topic & Explanation & Comments\\
+\hline
+M\# && See the Main view\\
+Name && See the Main view\\
+ABC REV & Revision number of the copy of ABC & \\
+ABC CMP & ABC tree is comparatively OLD or NEW(est) & Contacting a new machine may change \\&&who is newest\\
+\end{tabular}
+The tracked trees are \texttt{moos-ivp}, \texttt{moos-ivp-aquaticus}, \texttt{moos-ivp-colregs}, \texttt{pablo-common} and \texttt{mokai-common}. The PABLO and Mokai trees tend to not coexist, so they are special cased on the Main view such that having one but not the other will not bubble up an error.
+\subsubsection{History}
+\includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Hist.png}
+
+\begin{tabular}{l|ll}
+Topic & Explanation & Comments\\
+\hline
+EXEC SUMMARY & Explains the command & Most recent is is displayed in the footer\\
+TIME & Time command was dispatched & Local computer time\\
+Full Command & Full command as sent over the wire & Often very large; toggle verbosity to read
+\end{tabular}
+
+Only the last ten commands are displayed. 
+\subsubsection{MOOS-IvP}
+\includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Moos.png}
+
+\begin{tabular}{l|ll}
+Topic & Explanation & Comments\\
+\hline
+M\# && See the Main view\\
+Name && See the Main view\\
+ID && See the Main view\\
+A & Actual results block & Values here read off the target machine\\
+MOOSDB && See the Main view\\&&Note that team isn't included here, unlike in the Main view\\
+E & Expected results block & Values here are what uFleetManager would dispatch\\
+Team & Team that the machine is on & Read from config\\
+Mission & Launch file and args & If this is blank, startMOOS doesn't dispatch anything\\ && Toggle verbosity to see full path\\
+
+\end{tabular}
 \subsection{Commands}
+Note: many of these commands require the operator's fleet manager to be in "commanding mode"; they will be indicated by a star next to their name in this list.
+
+\begin{tabular}{r|ll}
+Command & Key Feed & Description\\
+\hline
+Quit & ctrl-c & Close uFleetManager\\
+Help & ctrl-h & Toggle help text; default is most hidden\\
+CMD mode & ctrl-a & Toggle command mode; default is not in command\\
+Verbose mode & V & Toggle verbose mode; default is terse\\
+Clear & Backspace & Clear key feed\\ 
+Start MOOS* & S & Start MOOS on each available machine, if possible\\
+& s\# & Start MOOS on machine \#, if possible\\
+Stop MOOS* & K & Stop MOOS on all available machines (aka \texttt{ktm})\\
+& k\# & Stop MOOS on machine \#\\
+Restart MOOS* & R & Equivalent to the sequence \texttt{K S}\\
+& r\# & Equivalent to the sequence \texttt{k\# s\#}\\
+Reboot Machine* & W & Reboot all the machines (back seats)\\
+& w\# & Reboot machine \#'s back seat\\
+Shutdown Machine* & D & Shutdown all the machines (back seats)\\
+& d\# & Shutdown machine \#'s back seat\\
+Reboot Vehicle* & G & Reboot each of the machines' front seats, if they have them\\
+& g\# & Reboot machine* \#'s front seat, if it has one\\
+Shutdown Vehicle* & F & Shutdown each of the machines' front seats, if they have them\\
+& f\# & Shutdown machine \#'s front seat, if it has one
+\end{tabular}
 \subsection{Config files}
 \section{Modifying the Fleet Manager}
-\subsection{Adding New Windows}
-\subsection{Adding New Topics to a Window}
-\subsection{Adding New Commands}
+\subsection{Adding Views}
+There are four places in \texttt{ui.cpp} that need to be modified to add a view; the help text, the table formatting, the navigation character handlers, and the view render block.
+\begin{description}
+\item[Help Text] Find the block in \texttt{UI::setTableFormats()} of additions to \texttt{m\_help["nav"]}; the syntax is a struct of three strings; 
+\cmdline{\{view name, navigation character, help text description\}}
+\item[Table Formats] Find the blocks in \texttt{UI::setTableFormats()} like
+
+\cmdline{foo.push\_back("BLAH")}
+\cmdline{foo.push\_back("BLAH BLAH")}
+\cmdline{m\_headers["foobar"].push\_back(foo)}
+
+The map \texttt{m\_headers} stores the headers for each view. A header is a vector of vectors of strings; the outer vector stores rows to feed to ACTables, and the inner vector stores the strings to put in each column of the table. Sections that have multiple header rows should be specified as
+
+\cmdline{foo1.push\_back("BLAH"); foo2.push\_back("DUH")}
+\cmdline{foo1.push\_back("BLAH BLAH"); foo2.push\_back("DUH DUH")}
+\cmdline{m\_headers["foobar"].push\_back(foo1);}
+\cmdline{m\_headers["foobar"].push\_back(foo2);}
+
+the first block would result in a table formatted like
+
+\begin{tabular}{l|l}
+BLAH & BLAH BLAH\\
+\hline
+...&...\\
+\end{tabular}
+
+while the second block would result in a table formatted like
+
+\begin{tabular}{l|l}
+BLAH & BLAH BLAH\\
+DUH & DUH DUH\\
+\hline
+...&...\\
+\end{tabular}
+
+Usually one or two lines is sufficient; the first line to delineate sections and the second line for column headers. Add your own section, consistent with what you put in the Help Text section. You will revisit this in Adding Topics to a View.
+
+\item[Character Handlers] Find the block in \texttt{UI::actOnKeyPress()} with sequences like
+\cmdline{else if (m\_key\_feed=="M") \{}
+\cmdline{	m\_view = "MOOS";}
+\cmdline{	command\_match = true;}
+\cmdline{\}}
+and add you own, consistent with the information you put in the Help Text section
+\item[View Render] Find the block in \texttt{UI::printWindow()} that looks like 
+\cmdline{if (m\_view=="FOO") \{}
+\cmdline{	view\_table << something}
+\cmdline{\}}
+\cmdline{else if (m\_view=="BAR") \{}
+\cmdline{	view\_table << something else}
+\cmdline{\}}
+\cmdline{...}
+and add a similar block checking for your new view. See the next section for how to fill out that block.
+\end{description}
+\subsection{Adding Topics to a View}
+There are two places in \texttt{ui.cpp} that need to be modified to add a column to a view; the table formatting block and the view rendering block.
+\begin{description}
+\item[Table Formats] Find your block in \texttt{UI::setTableFormats()}, the same as your Table Formats block from Adding Views. Add a string to all the inner vectors. Disallowed\footnote{Used by ACTables for formatting.} strings include "{\textbackslash}n" and "$|$", and allowable strings include "", "\textbackslash", "/", and "\#".
+\item[View Render] Find your block in \texttt{UI::printWindow()}, the same as your View Render block from Adding Views. The \texttt{n}th line such as \texttt{view\_table << something} will fill the \texttt{n}th column of the table as ordered in Table Formats.
+\end{description}
+\subsection{Adding Commands}
+The interface for the UI to call vehicle commands, to get information or to take action, is public ManagedMoosMachine methods.
+
+Commands are fired off into the void, with a file to write results back to. These files are opened and read synchronously with the local machine, with a small proability\footnote{Determined by the duty cycle of file IO} of reading partially written data\footnote{uFleetManager's networking layer is written such that in that case, the message ID is the last thing written, and only once it is complete will the app do anything with that data. In formal terms, this satisfies only the Consistency pillar of CAP. If the user clears the cache agggressively, it also weakly satisfies Partition Tolerance.}. This architecture approximates threading\footnote{This architecture was selected in keeping with Dr. Benjamin's standing instructions that any user with basic C++ and Bash experience should be able to understand any code in the lab. The PAVLAB considers threading a non-basic feature.}, but does not require maintainers to understand threading per se.
+\subsubsection{Dispatching}
 \subsubsection{Standard PAVLAB Commands}
 \subsubsection{Special Commands}
+\subsubsection{Reading Mail}
+\subsubsection{Required Variables and Caching}
+\subsection{Miscellaneous}
+\subsubsection{Tips and Tricks}
+\section{Configuring Machines to work with the Fleet Manager}
+\subsection{SSH Keys}
+\subsection{Shell Startup and Sources}
+\subsection{Software}
+\subsection{Permissions}
+\section{Debugging}
+\begin{tabular}{l|l|l}
+Symptom & Issue & Resolution\\
+\hline
+Semicolons in command (see History) & Needs to be {\textbackslash}n & Replace in relevant\\&& ManagedMoosMachine dispatcher function.
+\end{tabular}
 \end{document}

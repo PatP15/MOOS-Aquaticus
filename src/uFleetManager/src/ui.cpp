@@ -123,25 +123,23 @@ void UI::setTableFormats()
 	// a command is a pair of strings; the command itself and a description
 	// each window (keys of the map) has a list (the vector) of commands
 	m_help["all"].push_back(make_pair("h", "Toggle full help tooltips"));
-	m_help["all"].push_back(make_pair("V", "Toggle UI verbosity"));
-	m_help["all"].push_back(make_pair("ctrl-a", "Toggle commanding mode"));
-	m_help["all"].push_back(make_pair("ctrl-c", "Quit"));
+	m_help["common"].push_back(make_pair("V", "Toggle UI verbosity"));
+	m_help["common"].push_back(make_pair("ctrl-a", "Toggle commanding mode"));
+	m_help["common"].push_back(make_pair("ctrl-c", "Quit"));
+	m_help["common"].push_back(make_pair("Backspace", "Clear input stream"));
+	m_help["common"].push_back(make_pair("C/c#", "Clear uFleetManager's cache (all/machine #)"));
 	m_help["nav"].push_back(make_pair("m", "Main window"));
 	m_help["nav"].push_back(make_pair("H", "Command history window"));
 	m_help["nav"].push_back(make_pair("v", "SVN revisions window"));
 	m_help["nav"].push_back(make_pair("n", "Network communications window"));
 	m_help["nav"].push_back(make_pair("M", "MOOS window"));
-	m_help["cmd_all"].push_back(make_pair("S/s#", "Start MOOS        (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("K/k#", "ktm               (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("R/r#", "Restart MOOS      (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("W/w#", "Restart hardware  (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("D/d#", "Turn off hardware (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("G/g#", "Restart vehicle   (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("F/f#", "Turn off vehicle  (all/machine #)"));
-	m_help["main"].push_back(make_pair("C",
-																		 "Clear app's cache for all machines"));
-	m_help["main"].push_back(make_pair("c#",
-																		 "Clear app's cache for machines #"));
+	m_help["cmd_all"].push_back(make_pair("S/s#", "Start MOOS                  (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("K/k#", "Stop MOOS                   (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("R/r#", "Restart MOOS                (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("W/w#", "Reboot hardware             (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("D/d#", "Shutdown hardware           (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("G/g#", "Reboot vehicle              (all/machine #)"));
+	m_help["cmd_all"].push_back(make_pair("F/f#", "Shutdown vehicle            (all/machine #)"));
 }
 
 //--------------------------------------------------------------------
@@ -331,15 +329,14 @@ void UI::checkMachineMail()
 				m->dispatchSvnRevisionCheck("pablo");
 				m->dispatchSvnRevisionCheck("colregs");
 				m->dispatchSvnRevisionCheck("mokai");
-			}
 
-			m->dispatchCompassStatus();
-			m->dispatchGpsPdop();
+				m->dispatchCompassStatus();
+				m->dispatchGpsPdop();
+			}
 
 			// front seat, if applicable and up
 			if ((m->checkVehicleSshMail()==Status::GOOD)) {
-				m->dispatchCompassStatus();
-				m->dispatchGpsPdop();
+				// commands sent directly to the front seat go here
 			}
 		}
 		m_last_status_request = new_time;
@@ -924,12 +921,14 @@ int UI::printHelpText(int line_number)
 	help_topics.push_back("all");
 	if (m_view_full_help) {
 		help_topics.push_back("nav");
+		help_topics.push_back("common");
+
 
 		// add this window as a section, if it has any commands
 		if (m_help[m_view].size()>0) help_topics.push_back(m_view);
 
 		// add commands if in the right windows and commanding mode
-		if ((m_view=="main")&&(m_is_commanding)) help_topics.push_back("cmd_all");
+		if (m_is_commanding) help_topics.push_back("cmd_all");
 	}
 
 	//--------------------------------------------------------------------

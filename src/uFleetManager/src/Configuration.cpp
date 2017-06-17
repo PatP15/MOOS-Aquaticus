@@ -37,7 +37,8 @@ map<string, ManagedMoosMachine> Configuration::allDefaultMachines()
 	default_machines["ida"] = ManagedMoosMachine("Ida", "192.168.9.100");
 	default_machines["jing"] = ManagedMoosMachine("Jing", "192.168.10.100");
 	default_machines["kirk"] = ManagedMoosMachine("Kirk", "192.168.11.100");
-	default_machines["manual"] = ManagedMoosMachine("Manual", "192.168.1.192");
+	default_machines["mokai1"] = ManagedMoosMachine("Aqua1", "192.168.1.191");
+	default_machines["mokai2"] = ManagedMoosMachine("Aqua2", "192.168.1.192");
 	default_machines["master"] = ManagedMoosMachine(
 		"Master",
 		"pablo-master.csail.mit.edu");
@@ -46,7 +47,8 @@ map<string, ManagedMoosMachine> Configuration::allDefaultMachines()
 	for(m=default_machines.begin(); m!=default_machines.end(); m++) {
 		m->second.setUsername("student2680");
 	}
-	default_machines["manual"].setUsername("student");
+	default_machines["mokai1"].setUsername("student");
+	default_machines["mokai2"].setUsername("student");
 
 	// a local shoreside
 	default_machines["shore"] = ManagedMoosMachine("Local", "localhost");
