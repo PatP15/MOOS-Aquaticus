@@ -911,14 +911,7 @@ int UI::printKeyFeed(int key, int line_number)
 	mvprintw(line_number, 0, prompt.c_str());
 	if (m_is_commanding) mvprintw(line_number, prompt.size()+1, ": COMMAND MODE");
 	line_number++;
-	attron(A_BOLD);
 	mvprintw(line_number, 0, "%s", m_key_feed.c_str());
-
-	int size = m_key_feed.size();
-	if (m_key_feed.size() > 0) {
-		if (key > 0) mvprintw(line_number, size, " (%3d)", key);
-	}
-	attroff(A_BOLD);
 	// move cursor to the end of the key feed
 	mvprintw(line_number, m_key_feed.size(), "");
 
@@ -979,16 +972,11 @@ int UI::printHelpText(int line_number)
 		vector<HelpEntry> commands = m_help[topic];
 		vector<HelpEntry>::iterator hi;
 		for(hi=commands.begin(); hi!=commands.end(); hi++) {
-			if((topic=="nav")&&(hi->view==m_view)) {
-				help_view << "=====>";
-				help_view << "*";
-				help_view << hi->desc;
-			}
-			else {
-				help_view << "";
-				help_view << hi->key;
-				help_view << hi->desc;
-			}
+			if((topic=="nav")&&(hi->view==m_view)) help_view << "=====>";
+			else help_view << "";
+
+			help_view << hi->key;
+			help_view << hi->desc;
 		}
 	}
 
