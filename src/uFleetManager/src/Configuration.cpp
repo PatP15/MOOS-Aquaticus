@@ -37,8 +37,9 @@ map<string, ManagedMoosMachine> Configuration::allDefaultMachines()
 	default_machines["ida"] = ManagedMoosMachine("Ida", "192.168.9.100");
 	default_machines["jing"] = ManagedMoosMachine("Jing", "192.168.10.100");
 	default_machines["kirk"] = ManagedMoosMachine("Kirk", "192.168.11.100");
-	default_machines["mokai1"] = ManagedMoosMachine("Aqua1", "192.168.1.191");
-	default_machines["mokai2"] = ManagedMoosMachine("Aqua2", "192.168.1.192");
+	default_machines["aqua1"] = ManagedMoosMachine("Aqua1", "192.168.1.191");
+	default_machines["aqua2"] = ManagedMoosMachine("Aqua2", "192.168.1.192");
+	default_machines["aqua3"] = ManagedMoosMachine("Aqua3", "192.168.1.193");
 	default_machines["master"] = ManagedMoosMachine(
 		"Master",
 		"pablo-master.csail.mit.edu");
@@ -47,8 +48,9 @@ map<string, ManagedMoosMachine> Configuration::allDefaultMachines()
 	for(m=default_machines.begin(); m!=default_machines.end(); m++) {
 		m->second.setUsername("student2680");
 	}
-	default_machines["mokai1"].setUsername("student");
-	default_machines["mokai2"].setUsername("student");
+	default_machines["aqua1"].setUsername("student");
+	default_machines["aqua2"].setUsername("student");
+	default_machines["aqua3"].setUsername("student");
 
 	// a local shoreside
 	default_machines["shore"] = ManagedMoosMachine("Local", "localhost");
@@ -104,8 +106,8 @@ Configuration::Configuration(int argc, char* argv[]) {
 			}
 
 			string mission;
-			if (key_value_pairs.find("mission")!=key_value_pairs.end()) {
-				mission = key_value_pairs["mission"];
+			if (key_value_pairs.find("all_mission_dir")!=key_value_pairs.end()) {
+				mission = key_value_pairs["all_mission_dir"];
 			}
 			vector<string> machines;
 			if (key_value_pairs.find("machines")!=key_value_pairs.end()) {
@@ -118,9 +120,16 @@ Configuration::Configuration(int argc, char* argv[]) {
 				machine_names.push_back(name);
 
 				if (key_value_pairs.find(name)!=key_value_pairs.end()) {
-					string launch, args;
+					string my_mission, launch, args, my_dir, is_rel;
 					launch = tokStringParse(key_value_pairs[name], "launch", ',', ':');
+					my_dir = tokStringParse(key_value_pairs[name], "dir", ',', ':');
+					is_rel = tokStringParse(key_value_pairs[name], "dir_rel", ',', ':');
 					args = tokStringParse(key_value_pairs[name], "args", ',', ':');
+
+					if (my_dir!="") {
+						if (is_rel=="true") my_mission = mission + my_dir;
+						else my_mission = my_dir;
+					}
 
 					if (key_value_pairs.find("blue")!=key_value_pairs.end()) {
 						vector<string> blue_team;
@@ -139,7 +148,7 @@ Configuration::Configuration(int argc, char* argv[]) {
 						}
 					}
 
-					default_machines[name].setTargetScripts(mission, launch, args);
+					default_machines[name].setTargetScripts(my_mission, launch, args);
 
 				}
 			}

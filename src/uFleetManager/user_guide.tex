@@ -177,6 +177,8 @@ Full Command & Full command as sent over the wire & Often very large; toggle ver
 \end{tabular}
 
 Only the last ten commands are displayed. 
+
+Note: the astersik in the header indicates that the topic has multiple verbosity modes.
 \subsubsection{MOOS-IvP}
 \includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Moos.png}
 
@@ -191,8 +193,10 @@ MOOSDB && See the Main view\\&&Note that team isn't included here, unlike in the
 E & Expected results block & Values here are what uFleetManager would dispatch\\
 Team & Team that the machine is on & Read from config\\
 Mission & Launch file and args & If this is blank, startMOOS doesn't dispatch anything\\ && Toggle verbosity to see full path\\
-
 \end{tabular}
+
+Note: the astersik in the header indicates that the topic has multiple verbosity modes.
+
 \subsection{Commands}
 Note: many of these commands require the operator's fleet manager to be in "commanding mode"; they will be indicated by a star next to their name in this list.
 
@@ -281,13 +285,63 @@ There are two places in \texttt{ui.cpp} that need to be modified to add a column
 \item[View Render] Find your block in \texttt{UI::printWindow()}, the same as your View Render block from Adding Views. The \texttt{n}th line such as \texttt{view\_table << something} will fill the \texttt{n}th column of the table as ordered in Table Formats.
 \end{description}
 \subsection{Adding Commands}
-The interface for the UI to call vehicle commands, to get information or to take action, is public ManagedMoosMachine methods.
+The interface for the UI to call vehicle commands, to get information or to take action, is public \texttt{ManagedMoosMachine} methods.
 
 Commands are fired off into the void, with a file to write results back to. These files are opened and read synchronously with the local machine, with a small proability\footnote{Determined by the duty cycle of file IO} of reading partially written data\footnote{uFleetManager's networking layer is written such that in that case, the message ID is the last thing written, and only once it is complete will the app do anything with that data. In formal terms, this satisfies only the Consistency pillar of CAP. If the user clears the cache agggressively, it also weakly satisfies Partition Tolerance.}. This architecture approximates threading\footnote{This architecture was selected in keeping with Dr. Benjamin's standing instructions that any user with basic C++ and Bash experience should be able to understand any code in the lab. The PAVLAB considers threading a non-basic feature.}, but does not require maintainers to understand threading per se.
 \subsubsection{Dispatching}
+At the high level, the fleet manager is a big wrapper for sending commands over \texttt{ssh};
+
+\cmdline{ssh ADDR "remote\_cmd"}
+
+The complexity in sending commands is in letting go of it so the app can return to its thread of execution. The normal way to execute commands from \texttt{C++} is with the \texttt{system\_call()} function\footnote{system\_call() has known security issues, be very careful using it unless you're absolutely sure you know the pedigree of the scripts you're calling with it.}, which is fine for local, synchronous commands. However, that naive approach is not sufficient to have many asynchronous commands in flight at the same time. The solution involves \texttt{nohup} (no hangup) and \texttt{\&}, and is implemented in the \texttt{\_dispatch()} function in \texttt{system\_call.cpp}\footnote{Note, I left some vestigal code about timeouts - I was leaking background processes, and attempting to solve that by sending out the scripts with a kill switch on a timer. Instead, the eventual solution was to use message indices and only send out a new request once the old one returned, I just haven't had time to clean up that bit of code.}.
+
+The robust interface from \texttt{system\_call.cpp} is two functions, \texttt{system\_call\_dispatch\_pipe()} and \texttt{system\_call\_dispatch\_return()}. Both of them dispatch commands and capture an output from the script via \texttt{ssh} and write it to a named mailbox; \texttt{\_pipe()} captures from \texttt{stdout}, where \texttt{\_return()} captures the script's return value.
+
+When you're adding a new public method to \texttt{ManagedMoosMachine}, it will be essentially a wrapper around either \texttt{system\_call\_dispatch\_pipe()} or \texttt{system\_call\_dispatch\_return()}. There are two common ways to do so; standard PAVLAB commands, and one-off commands. All else being equal, standard commands are preferable.
+
 \subsubsection{Standard PAVLAB Commands}
+
+The standard PAVLAB way of interfacing with lab machines outside of MOOS-IvP itself is via a \textit{machine}-common directory. Currently we are maintaining \texttt{pablo-common} and \texttt{mokai-common}, and they each contain a directory called FleetManagerScripts with the lab's standard scripts. Commands have a simple naming scheme: "pav\_\textit{action}\_\textit{object}.sh". Some examples are 
+
+\begin{description}
+\item \texttt{pav\_test\_ssh.sh}
+\item \texttt{pav\_get\_svn\_rev\_moos.sh}
+\item \texttt{pav\_up\_svn\_moos.sh}
+\item \texttt{pav\_reboot\_computer.sh}
+\end{description}
+
+The sole exception is \texttt{pav\_not\_implemented.sh}, the placeholder implementation, which lacks a verb (such as "is").
+
+All machines should have their relevant kind of \textit{machine}-common tree, but they will have the Anonymous Read Only version, \textit{machine}-common-aro\footnote{This allows anyone to call update and to use the scripts, but not to push changes. To push changes, talk to Dr. Benjamin about getting access to the \textit{machine}-common repos}.
+
+There is a special helper function in \texttt{ManagedMoosMachine} to streamline calling those standard PAVLAB commands, \texttt{\_dispatchPavCmd()}.
+
 \subsubsection{Special Commands}
+
+Some commands do not lend themselves to the common and standardized system. For example, \texttt{ping} makes no sense to be hosted remotely. Rebooting computers can be configured to run without a password on some operating systems (e.g. Raspian) but it's not clear on others (e.g. Ubuntu) so one-off versions are sometimes needed.
+
+In that case, compose the script in code and use the appropriate dispatcher (\texttt{system\_call\_dispatch\_pipe()} or \texttt{system\_call\_dispatch\_return()}) to run it. 
+
+One interesting caveat is that unlike normal scripts, where instructions are separated by semicolons, in these scripts the instructions must be separated by newlines.
+
 \subsubsection{Reading Mail}
+
+Dispatched commands will, once they conclude, yield a result to a mailbox file. Mailbox files are files in the directory \texttt{/tmp/MOOSMAIL}. The usual naming is \texttt{/tmp/MOOSMAIL/}\textit{Machine}\texttt{\_}\textit{commandName}\texttt{.mailbox}. For ease of use, use the \texttt{ManagedMoosMachine} helper function \texttt{serviceMailboxName()}.
+
+Once that result is put in the mailbox, you'll want to read it. At its core, we're just reading lines out of the mailbox and parsing them. By checking for message indices, this step also serves as a caching and synchronizing step.
+
+Consider a new \texttt{ManagedMoosMachine} public method, \texttt{checkFooServiceMail()}; its implementation might look something like this:
+
+\cmdline{vector<string> mail\_list = readServiceMailbox(m\_mailboxes["fooService"]);}
+\cmdline{index\_t index = grabIndex(mail\_list);}
+\cmdline{if (receiveUpdate(m\_mail["fooService"], index)) \{}
+\cmdline{	// do parsing here...}
+\cmdline{	m\_mail["fooService"].data = /* a result string */}
+\cmdline{\}}
+\cmdline{return(get\_data\_and\_staleness(m\_mail["fooService"]));}
+
+When returning a status, consider looking in the \texttt{Status} namespace in \texttt{Constants.h}. These statuses are shared throughout the app, allowing them to be reasoned over in the UI. 
+
 \subsubsection{Required Variables and Caching}
 \subsection{Miscellaneous}
 \subsubsection{Tips and Tricks}

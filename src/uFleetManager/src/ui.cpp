@@ -121,25 +121,44 @@ void UI::setTableFormats()
 	m_help_headers.push_back("DESCRIPTION");
 
 	// a command is a pair of strings; the command itself and a description
-	// each window (keys of the map) has a list (the vector) of commands
-	m_help["all"].push_back(make_pair("h", "Toggle full help tooltips"));
-	m_help["common"].push_back(make_pair("V", "Toggle UI verbosity"));
-	m_help["common"].push_back(make_pair("ctrl-a", "Toggle commanding mode"));
-	m_help["common"].push_back(make_pair("ctrl-c", "Quit"));
-	m_help["common"].push_back(make_pair("Backspace", "Clear input stream"));
-	m_help["common"].push_back(make_pair("C/c#", "Clear uFleetManager's cache (all/machine #)"));
-	m_help["nav"].push_back(make_pair("m", "Main window"));
-	m_help["nav"].push_back(make_pair("H", "Command history window"));
-	m_help["nav"].push_back(make_pair("v", "SVN revisions window"));
-	m_help["nav"].push_back(make_pair("n", "Network communications window"));
-	m_help["nav"].push_back(make_pair("M", "MOOS window"));
-	m_help["cmd_all"].push_back(make_pair("S/s#", "Start MOOS                  (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("K/k#", "Stop MOOS                   (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("R/r#", "Restart MOOS                (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("W/w#", "Reboot hardware             (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("D/d#", "Shutdown hardware           (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("G/g#", "Reboot vehicle              (all/machine #)"));
-	m_help["cmd_all"].push_back(make_pair("F/f#", "Shutdown vehicle            (all/machine #)"));
+	// each window (keys of the map) has a list (the vector) of
+	HelpEntry help = {"", "h", "Toggle full help tooltips"};
+	HelpEntry verb = {"", "V", "Toggle UI verbosity"};
+	HelpEntry cmding = {"", "ctrl-a", "Toggle commanding mode"};
+	HelpEntry quit = {"", "ctrl-c", "Quit"};
+	HelpEntry clear = {"", "Backspace", "Clear input stream"};
+	HelpEntry cache = 			{"", "C/c#", "Clear uFleetManager's cache (all/machine #)"};
+	HelpEntry nav_main = {"main", "m", "Main window"};
+	HelpEntry nav_hist = {"cmd_hist", "H", "Command history window"};
+	HelpEntry nav_svn = {"svn", "v", "SVN revisions window"};
+	HelpEntry nav_net = {"net", "n", "Network communications window"};
+	HelpEntry nav_moos = {"MOOS", "M", "MOOS window"};
+	HelpEntry start = 			{"", "S/s#", "Start MOOS                  (all/machine #)"};
+	HelpEntry stop = 				{"", "K/k#", "Stop MOOS                   (all/machine #)"};
+	HelpEntry restart = 		{"", "R/r#", "Restart MOOS                (all/machine #)"};
+	HelpEntry reboot_m = 		{"", "W/w#", "Reboot back seat            (all/machine #)"};
+	HelpEntry shutdown_m = 	{"", "D/d#", "Shutdown back seat          (all/machine #)"};
+	HelpEntry reboot_v = 		{"", "G/g#", "Reboot front seat           (all/machine #)"};
+	HelpEntry shutdown_v = 	{"", "F/f#", "Shutdown front seat         (all/machine #)"};
+
+	m_help["all"].push_back(help);
+	m_help["common"].push_back(verb);
+	m_help["common"].push_back(cmding);
+	m_help["common"].push_back(quit);
+	m_help["common"].push_back(clear);
+	m_help["common"].push_back(cache);
+	m_help["nav"].push_back(nav_main);
+	m_help["nav"].push_back(nav_hist);
+	m_help["nav"].push_back(nav_svn);
+	m_help["nav"].push_back(nav_net);
+	m_help["nav"].push_back(nav_moos);
+	m_help["cmd_all"].push_back(start);
+	m_help["cmd_all"].push_back(stop);
+	m_help["cmd_all"].push_back(restart);
+	m_help["cmd_all"].push_back(reboot_m);
+	m_help["cmd_all"].push_back(shutdown_m);
+	m_help["cmd_all"].push_back(reboot_v);
+	m_help["cmd_all"].push_back(shutdown_v);
 }
 
 //--------------------------------------------------------------------
@@ -549,7 +568,7 @@ void UI::actOnKeyPress(int c)
 int UI::printWindow(int line_number)
 {
 	//--------------------------------------------------------------------
-	// Print the window name
+	// Print the state variables
 	//--------------------------------------------------------------------
 
 	string window_name = "Window: " + m_view;
@@ -569,7 +588,19 @@ int UI::printWindow(int line_number)
 	mvprintw(line_number++, 0, "-----------------------------------------------");
 	line_number++;
 
-	vector<ManagedMoosMachine>::iterator m;
+	//--------------------------------------------------------------------
+	// Select which statuses to check
+	//--------------------------------------------------------------------
+	// this block could be used to stagger file checks in order to increase UI
+	// responsiveness. It does not seem necessary to do so at this time, but this
+	// block is being left as a hook in to do so.
+	bool check_net, check_svn, check_sensors, check_moos;
+	check_net = true;
+	check_svn = true; //bool (m_mailbox_check_staggering_index % 3);
+	check_sensors = true; //bool ((m_mailbox_check_staggering_index+1) % 3);
+	check_moos = true; //bool ((m_mailbox_check_staggering_index+2) % 3);
+	m_mailbox_check_staggering_index++;
+
 	//--------------------------------------------------------------------
 	// Make a copy of the window's headers. The copied table will be printed.
 	//--------------------------------------------------------------------
@@ -592,9 +623,10 @@ int UI::printWindow(int line_number)
 	// gather all svn revisions; report which machine(s) are relatively newest
 	vector<int> moos_revisions, aqua_revisions, pablo_revisions,
 							colregs_revisions, mokai_revisions;
+	vector<ManagedMoosMachine>::iterator m;
 	for (m = m_machines.begin(); m != m_machines.end(); m++) {
 		string raw_svn_rev;
-		raw_svn_rev = m->checkSvnRevisionMail("moos");
+		raw_svn_rev = m->checkSvnRevisionMail("moos", check_svn);
 		if (raw_svn_rev==Status::NODATA) moos_revisions.push_back(-1);
 		else {
 			try {
@@ -603,7 +635,7 @@ int UI::printWindow(int line_number)
 				moos_revisions.push_back(-2);
 			}
 		}
-		raw_svn_rev = m->checkSvnRevisionMail("aqua");
+		raw_svn_rev = m->checkSvnRevisionMail("aqua", check_svn);
 		if (raw_svn_rev==Status::NODATA) aqua_revisions.push_back(-1);
 		else {
 			try {
@@ -612,7 +644,7 @@ int UI::printWindow(int line_number)
 				aqua_revisions.push_back(-2);
 			}
 		}
-		raw_svn_rev = m->checkSvnRevisionMail("pablo");
+		raw_svn_rev = m->checkSvnRevisionMail("pablo", check_svn);
 		if (raw_svn_rev==Status::NODATA) pablo_revisions.push_back(-1);
 		else {
 			try {
@@ -621,7 +653,7 @@ int UI::printWindow(int line_number)
 				pablo_revisions.push_back(-2);
 			}
 		}
-		raw_svn_rev = m->checkSvnRevisionMail("colregs");
+		raw_svn_rev = m->checkSvnRevisionMail("colregs", check_svn);
 		if (raw_svn_rev==Status::NODATA) colregs_revisions.push_back(-1);
 		else {
 			try {
@@ -630,7 +662,7 @@ int UI::printWindow(int line_number)
 				colregs_revisions.push_back(-2);
 			}
 		}
-		raw_svn_rev = m->checkSvnRevisionMail("mokai");
+		raw_svn_rev = m->checkSvnRevisionMail("mokai", check_svn);
 		if (raw_svn_rev==Status::NODATA) mokai_revisions.push_back(-1);
 		else {
 			try {
@@ -667,16 +699,16 @@ int UI::printWindow(int line_number)
 		for (m = m_machines.begin(); m != m_machines.end(); m++) {
 			int this_machine_i = machine_i++;
 			vector<string> fs_comms;
-			fs_comms.push_back(m->checkVehiclePingMail());
-			fs_comms.push_back(m->checkVehicleSshMail());
+			fs_comms.push_back(m->checkVehiclePingMail(check_net));
+			fs_comms.push_back(m->checkVehicleSshMail(check_net));
 			string fs_comm_status = accumulateStatus(fs_comms,
 																							 comms_good,
 																							 comms_bad,
 																							 default_err);
 
 			vector<string> bs_comms;
-			bs_comms.push_back(m->checkPingMail());
-			bs_comms.push_back(m->checkSshMail());
+			bs_comms.push_back(m->checkPingMail(check_net));
+			bs_comms.push_back(m->checkSshMail(check_net));
 
 			string bs_comm_status = accumulateStatus(bs_comms,
 																							 comms_good,
@@ -736,14 +768,14 @@ int UI::printWindow(int line_number)
 			//--------------------------------------------------------------------
 			// Sensor status
 			//--------------------------------------------------------------------
-			view_table << m->checkCompassStatusMail();
-			view_table << m->checkGpsPdopStatusMail();
+			view_table << m->checkCompassStatusMail(check_sensors);
+			view_table << m->checkGpsPdopStatusMail(check_sensors);
 			// view_table << Status::NOIMPL; // battery
 
 			//--------------------------------------------------------------------
 			// Mission status
 			//--------------------------------------------------------------------
-			string moosdb = m->checkMoosdbMail();
+			string moosdb = m->checkMoosdbMail(check_moos);
 			if (m->getTeam() != "") moosdb += " (" + m->getTeam() + ")";
 			view_table << moosdb;
 		}
@@ -799,19 +831,19 @@ int UI::printWindow(int line_number)
 			view_table << m->getName();
 
 			view_table << "\\";
-			view_table << m->checkSvnRevisionMail("moos");
+			view_table << m->checkSvnRevisionMail("moos", check_svn);
 			view_table << compare_to_newest(this_machine_i, moos_revisions);
 			view_table << "/";
-			view_table << m->checkSvnRevisionMail("aqua");
+			view_table << m->checkSvnRevisionMail("aqua", check_svn);
 			view_table << compare_to_newest(this_machine_i, aqua_revisions);
 			view_table << "/";
-			view_table << m->checkSvnRevisionMail("colregs");
+			view_table << m->checkSvnRevisionMail("colregs", check_svn);
 			view_table << compare_to_newest(this_machine_i, colregs_revisions);
 			view_table << "/";
-			view_table << m->checkSvnRevisionMail("pablo");
+			view_table << m->checkSvnRevisionMail("pablo", check_svn);
 			view_table << compare_to_newest(this_machine_i, pablo_revisions);
 			view_table << "/";
-			view_table << m->checkSvnRevisionMail("mokai");
+			view_table << m->checkSvnRevisionMail("mokai", check_svn);
 			view_table << compare_to_newest(this_machine_i, mokai_revisions);
 			view_table << "/";
 		}
@@ -823,13 +855,13 @@ int UI::printWindow(int line_number)
 			view_table << m->getName();
 			view_table << m->getId();
 			view_table << "/"; // Front
-			view_table << m->checkVehiclePingMail();
-			view_table << m->checkVehicleSshMail();
+			view_table << m->checkVehiclePingMail(check_net);
+			view_table << m->checkVehicleSshMail(check_net);
 			view_table << m->getFrontSeatUsername();
 			view_table << m->getFrontSeatIp();
 			view_table << "/"; // Back
-			view_table << m->checkPingMail();
-			view_table << m->checkSshMail();
+			view_table << m->checkPingMail(check_net);
+			view_table << m->checkSshMail(check_net);
 			view_table << m->getUsername();
 			view_table << m->getIp();
 		}
@@ -841,7 +873,7 @@ int UI::printWindow(int line_number)
 			view_table << m->getName();
 			view_table << m->getId();
 			view_table << "\\"; // Actual
-			view_table << m->checkMoosdbMail();
+			view_table << m->checkMoosdbMail(check_moos);
 			view_table << "/"; // Expected
 			view_table << m->getTeam();
 			string mission;
@@ -944,13 +976,19 @@ int UI::printHelpText(int line_number)
 		help_view << "";
 
 		// add the commands
-		vector<pair<string, string> > commands = m_help[topic];
-		vector<pair<string, string> >::iterator hi;
+		vector<HelpEntry> commands = m_help[topic];
+		vector<HelpEntry>::iterator hi;
 		for(hi=commands.begin(); hi!=commands.end(); hi++) {
-			//TODO// if((topic=="nav")&&(hi->fi==m_view)) continue;
-			help_view << "";
-			help_view << hi->first;
-			help_view << hi->second;
+			if((topic=="nav")&&(hi->view==m_view)) {
+				help_view << "=====>";
+				help_view << "*";
+				help_view << hi->desc;
+			}
+			else {
+				help_view << "";
+				help_view << hi->key;
+				help_view << hi->desc;
+			}
 		}
 	}
 
@@ -1123,4 +1161,5 @@ UI::UI(Configuration config) {
 	m_keep_alive = true;
 	m_is_commanding = false;
 	m_verbose = false;
+	m_mailbox_check_staggering_index = 0;
 }

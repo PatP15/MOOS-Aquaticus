@@ -40,15 +40,15 @@ public: // Public methods (getting statuses)
 	// CommandSummary dispatchPabloSvnRevision();
 
 	// get mail, cache it, and return a status string
-	std::string checkPingMail();
-	std::string checkSshMail();
-	std::string checkVehiclePingMail();
-	std::string checkVehicleSshMail();
-	std::string checkMoosdbMail();
-	std::string checkCompassStatusMail();
-	std::string checkGpsPdopStatusMail();
+	std::string checkPingMail(bool=true);
+	std::string checkSshMail(bool=true);
+	std::string checkVehiclePingMail(bool=true);
+	std::string checkVehicleSshMail(bool=true);
+	std::string checkMoosdbMail(bool=true);
+	std::string checkCompassStatusMail(bool=true);
+	std::string checkGpsPdopStatusMail(bool=true);
 
-	std::string checkSvnRevisionMail(std::string);
+	std::string checkSvnRevisionMail(std::string, bool=true);
 	// std::string checkMoosIvpSvnRevisionMail();
 	// std::string checkAquaticusSvnRevisionMail();
 	// std::string checkPabloSvnRevisionMail();

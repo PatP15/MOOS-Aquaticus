@@ -17,6 +17,12 @@ struct TimestampedCommand {
 	time_t timestamp;
 };
 
+struct HelpEntry {
+	std::string view;
+	std::string key;
+	std::string desc;
+};
+
 class UI {
 public: // Constructor and Destructor
 	UI(Configuration);
@@ -61,9 +67,9 @@ protected: // Member variables (output)
 	bool m_is_commanding;
 	bool m_verbose;
 	std::vector<TimestampedCommand> m_command_history;
-	std::map<std::string,
-				 std::vector<std::pair<std::string, std::string> > > m_help;
+	std::map<std::string, std::vector<HelpEntry> > m_help;
 	time_t m_last_status_request;
 	time_t m_last_mail_check_request;
 	bool m_filtering_by_liveness;
+	int m_mailbox_check_staggering_index;
 };

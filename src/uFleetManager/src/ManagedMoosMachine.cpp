@@ -250,12 +250,14 @@ CommandSummary ManagedMoosMachine::dispatchGpsPdop()
 //   Returns:
 //      Note: Sets m_ping
 
-string ManagedMoosMachine::checkPingMail()
+string ManagedMoosMachine::checkPingMail(bool check_cache)
 {
 	if (targetIsLocal()) {
 		m_mail["ping"].data = Status::ISLOCAL;
 		return(get_data_and_staleness(m_mail["ping"]));
 	}
+
+	if (! check_cache) return(m_mail["ping"].data);
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["bs_ping"]);
 	index_t index = grabIndex(mail_list);
@@ -288,12 +290,13 @@ string ManagedMoosMachine::checkPingMail()
 //   Returns:
 //      Note: Sets m_ssh
 
-string ManagedMoosMachine::checkSshMail()
+string ManagedMoosMachine::checkSshMail(bool check_cache)
 {
 	if (targetIsLocal()) {
 		m_mail["bs_ssh"].data = Status::ISLOCAL;
 		return(get_data_and_staleness(m_mail["bs_ssh"]));
 	}
+	if (! check_cache) return(m_mail["bs_ssh"].data);
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["bs_ssh"]);
 	index_t index = grabIndex(mail_list);
@@ -327,12 +330,13 @@ string ManagedMoosMachine::checkSshMail()
 //   Returns:
 //      Note: Sets m_fs_ping
 
-string ManagedMoosMachine::checkVehiclePingMail()
+string ManagedMoosMachine::checkVehiclePingMail(bool check_cache)
 {
 	if (m_front_seat_ip_address=="") {
 		m_mail["fs_ping"].data = Status::NOTAPPLIC;
 		return(get_data_and_staleness(m_mail["fs_ping"]));
 	}
+	if (! check_cache) return(m_mail["fs_ping"].data);
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["fs_ping"]);
 	index_t index = grabIndex(mail_list);
@@ -367,12 +371,13 @@ string ManagedMoosMachine::checkVehiclePingMail()
 //   Returns:
 //      Note: Sets m_fs_ssh
 
-string ManagedMoosMachine::checkVehicleSshMail()
+string ManagedMoosMachine::checkVehicleSshMail(bool check_cache)
 {
 	if (m_front_seat_ip_address=="") {
 		m_mail["fs_ssh"].data = Status::NOTAPPLIC;
 		return(get_data_and_staleness(m_mail["fs_ssh"]));
 	}
+	if (! check_cache) return(m_mail["fs_ssh"].data);
 
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["fs_ssh"]);
 	index_t index = grabIndex(mail_list);
@@ -405,8 +410,10 @@ string ManagedMoosMachine::checkVehicleSshMail()
 //   Returns:
 //      Note: Sets m_moosdb
 
-string ManagedMoosMachine::checkMoosdbMail()
+string ManagedMoosMachine::checkMoosdbMail(bool check_cache)
 {
+	if (! check_cache) return(m_mail["moosdb"].data);
+
 	vector<string> mail_list = readServiceMailbox(m_mailboxes["moosdb"]);
 	index_t index = grabIndex(mail_list);
 
@@ -429,8 +436,10 @@ string ManagedMoosMachine::checkMoosdbMail()
 //   Returns:
 //      Note:
 
-string ManagedMoosMachine::checkSvnRevisionMail(string tree)
+string ManagedMoosMachine::checkSvnRevisionMail(string tree, bool check_cache)
 {
+	if (! check_cache) return(m_mail[tree].data);
+
 	vector<string> mail_list = readServiceMailbox(m_mailboxes[tree]);
 	index_t index = grabIndex(mail_list);
 
@@ -477,13 +486,15 @@ string ManagedMoosMachine::checkSvnRevisionMail(string tree)
 //   Returns:
 //      Note: Sets m_compass
 
-string ManagedMoosMachine::checkCompassStatusMail()
+string ManagedMoosMachine::checkCompassStatusMail(bool check_cache)
 {
 	string nopub = "WARNING: topic [/imu/compass_heading] does not appear to be published yet";
 	string hsplit = "---";
 	string delim = ": ";
 
 	string mokai = "OS5000";
+
+	if (! check_cache) return(m_mail["compass"].data);
 
 	vector<string> mail = readServiceMailbox(m_mailboxes["compass"]);
 	index_t index = grabIndex(mail);
@@ -545,15 +556,18 @@ string ManagedMoosMachine::checkCompassStatusMail()
 //   Returns:
 //      Note: Sets m_compass
 
-string ManagedMoosMachine::checkGpsPdopStatusMail()
+string ManagedMoosMachine::checkGpsPdopStatusMail(bool check_cache)
 {
 	string nopub = "WARNING: topic [/navsat/rx] does not appear to be published yet";
 	string hsplit = "---";
 	string delim = ": ";
 
 	string mokai = "GPSUBLOX";
-
 	int GPGSA_PDOP_index = 15; // per GPS spec
+
+	if (! check_cache) return(m_mail["gps_pdop"].data);
+
+
 	vector<string> mail = readServiceMailbox(m_mailboxes["gps_pdop"]);
 	index_t index = grabIndex(mail);
 
@@ -768,8 +782,10 @@ CommandSummary ManagedMoosMachine::shutdownVehicle() {
 //--------------------------------------------------------------------
 // Procedure: _dispatchPavCmd()
 //   Purpose: Remotely call generic pavlab commands
-// Arguments: name  						: the common name of the function
-//						cmd   						: the full name of the function or alias
+// Arguments: name  						: the name of the function, as used to look up
+//																its variables
+//						cmd   						: the full name of the function or alias, for
+//																running remotely
 //						desc  						: a human readable description of cmd
 //						allowed_local 		: this function may run on the user's own
 //																computer
@@ -1279,11 +1295,13 @@ string ManagedMoosMachine::sshTrustPrefix() {
 	const regex pavlab_direct_to_pablos ("^192\\.168\\.2\\.\\d{1,3}$");
 	// PABLO Master
 	const regex pavlab_pablo_master ("^128\\.30\\.28\\.55$");
+	const regex pavlab_mokai_computers ("^192\\.168\\.1\\.19\\d$");
 
 	valid_ip_patterns.push_back(pavlab_front_seats);
 	valid_ip_patterns.push_back(pavlab_back_seats);
 	valid_ip_patterns.push_back(pavlab_direct_to_pablos);
 	valid_ip_patterns.push_back(pavlab_pablo_master);
+	valid_ip_patterns.push_back(pavlab_mokai_computers);
 
 	string trusting_ssh = string("ssh -q") \
 						 					+ string(" -o UserKnownHostsFile=/dev/null") \
