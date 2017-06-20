@@ -113,6 +113,7 @@ SVN Revisions & v & Lists revisions and summarizes which trees are most up-to-da
 && and \texttt{mokai-common}\\
 Command History & H & Lists the commands dispatched by the operator\\
 MOOS-IvP & M & Lists mission configuration and details about the specified mission\\
+Previous & p & Go to previous view\\
 \end{tabular}
 \subsubsection{Main}
 \includegraphics[scale=0.4]{/Users/raphaelsegal/Desktop/uFleetManager_Main.png}
@@ -198,7 +199,7 @@ Mission & Launch file and args & If this is blank, startMOOS doesn't dispatch an
 Note: the astersik in the header indicates that the topic has multiple verbosity modes.
 
 \subsection{Commands}
-Note: many of these commands require the operator's fleet manager to be in "commanding mode"; they will be indicated by a star next to their name in this list.
+Many of these commands require the operator's fleet manager to be in "commanding mode"; they will be indicated by a * next to their name in this list. Some of these commands require confirmation; they will be indiciated with a \$ next to their name in this list.
 
 \begin{tabular}{r|ll}
 Command & Key Feed & Description\\
@@ -210,17 +211,17 @@ Verbose mode & V & Toggle verbose mode; default is terse\\
 Clear & Backspace & Clear key feed\\ 
 Start MOOS* & S & Start MOOS on each available machine, if possible\\
 & s\# & Start MOOS on machine \#, if possible\\
-Stop MOOS* & K & Stop MOOS on all available machines (aka \texttt{ktm})\\
+Stop MOOS*\$ & K & Stop MOOS on all available machines (aka \texttt{ktm})\\
 & k\# & Stop MOOS on machine \#\\
-Restart MOOS* & R & Equivalent to the sequence \texttt{K S}\\
+Restart MOOS*\$ & R & Equivalent to the sequence \texttt{K S}\\
 & r\# & Equivalent to the sequence \texttt{k\# s\#}\\
-Reboot Machine* & W & Reboot all the machines (back seats)\\
+Reboot Machine*\$ & W & Reboot all the machines (back seats)\\
 & w\# & Reboot machine \#'s back seat\\
-Shutdown Machine* & D & Shutdown all the machines (back seats)\\
+Shutdown Machine*\$ & D & Shutdown all the machines (back seats)\\
 & d\# & Shutdown machine \#'s back seat\\
-Reboot Vehicle* & G & Reboot each of the machines' front seats, if they have them\\
-& g\# & Reboot machine* \#'s front seat, if it has one\\
-Shutdown Vehicle* & F & Shutdown each of the machines' front seats, if they have them\\
+Reboot Vehicle*\$ & G & Reboot each of the machines' front seats, if they have them\\
+& g\# & Reboot machine \#'s front seat, if it has one\\
+Shutdown Vehicle*\$ & F & Shutdown each of the machines' front seats, if they have them\\
 & f\# & Shutdown machine \#'s front seat, if it has one
 \end{tabular}
 \subsection{Config files}

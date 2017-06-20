@@ -423,7 +423,10 @@ void UI::actOnKeyPress(int c)
 		}
 		// if buffered a command that requires a confirmation, wait for yes or no
 		else if (m_confirming_previous_command) {
-			if ((c=='y')||(c=='Y')) m_confirmed_previous = true;
+			if ((c=='y')||(c=='Y')) {
+				m_confirmed_previous = true;
+				m_confirming_previous_command = false;
+			}
 			else if ((c=='n')||(c=='N')) {
 				m_confirming_previous_command = false;
 				m_buffered_command = "";
@@ -517,15 +520,9 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, start_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = stoi(command.substr(1));
-					if ((0<=index)&&(index<m_machines.size())) {
-						record = m_machines[index].startMOOS();
-					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
+				int index = stoi(command.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].startMOOS();
 				}
 			}
 			else if (command=="K") {
@@ -543,15 +540,16 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, ktm_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = indexFromChar(command[1]);
-					if ((0<=index)&&(index<m_machines.size())) {
-						record = m_machines[index].stopMOOS();
+				int index = indexFromChar(command[1]);
+				if ((0<=index)&&(index<m_machines.size())) {
+					if (m_confirmed_previous) {
+
+							record = m_machines[index].stopMOOS();
+						}
+					else {
+						m_buffered_command = command;
+						m_confirming_previous_command = true;
 					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
 				}
 			}
 			else if (command=="R") {
@@ -569,15 +567,15 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, restart_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = indexFromChar(command[1]);
-					if ((0<=index)&&(index<m_machines.size())) {
+				int index = indexFromChar(command[1]);
+				if ((0<=index)&&(index<m_machines.size())) {
+					if (m_confirmed_previous) {
 						record = m_machines[index].restartMOOS();
 					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
+					else {
+						m_buffered_command = command;
+						m_confirming_previous_command = true;
+					}
 				}
 			}
 			else if (command=="W") {
@@ -595,15 +593,15 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, hardware_restart_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = indexFromChar(command[1]);
-					if ((0<=index)&&(index<m_machines.size())) {
+				int index = indexFromChar(command[1]);
+				if ((0<=index)&&(index<m_machines.size())) {
+					if (m_confirmed_previous) {
 						record = m_machines[index].reboot();
 					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
+					else {
+						m_buffered_command = command;
+						m_confirming_previous_command = true;
+					}
 				}
 			}
 			else if (command=="D") {
@@ -621,15 +619,15 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, hardware_shutdown_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = indexFromChar(command[1]);
-					if ((0<=index)&&(index<m_machines.size())) {
+				int index = indexFromChar(command[1]);
+				if ((0<=index)&&(index<m_machines.size())) {
+					if (m_confirmed_previous) {
 						record = m_machines[index].shutdown();
 					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
+					else {
+						m_buffered_command = command;
+						m_confirming_previous_command = true;
+					}
 				}
 			}
 			else if (command=="G") {
@@ -647,15 +645,15 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, vehicle_restart_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = indexFromChar(command[1]);
-					if ((0<=index)&&(index<m_machines.size())) {
+				int index = indexFromChar(command[1]);
+				if ((0<=index)&&(index<m_machines.size())) {
+					if (m_confirmed_previous) {
 						record = m_machines[index].rebootVehicle();
 					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
+					else {
+						m_buffered_command = command;
+						m_confirming_previous_command = true;
+					}
 				}
 			}
 			else if (command=="F") {
@@ -673,15 +671,15 @@ void UI::actOnKeyPress(int c)
 			}
 			else if (regex_match(command, vehicle_shutdown_one)) {
 				command_match = true;
-				if (m_confirmed_previous) {
-					int index = indexFromChar(command[1]);
-					if ((0<=index)&&(index<m_machines.size())) {
+				int index = indexFromChar(command[1]);
+				if ((0<=index)&&(index<m_machines.size())) {
+					if (m_confirmed_previous) {
 						record = m_machines[index].shutdownVehicle();
 					}
-				}
-				else {
-					m_buffered_command = command;
-					m_confirming_previous_command = true;
+					else {
+						m_buffered_command = command;
+						m_confirming_previous_command = true;
+					}
 				}
 			}
 		}
@@ -704,6 +702,8 @@ void UI::actOnKeyPress(int c)
 				m_command_history.push_back(timeStampCommand(record));
 				record.first = "";
 				record.second = "";
+			}
+			if (m_confirmed_previous) {
 				m_confirmed_previous = false;
 				m_confirming_previous_command = false;
 				m_buffered_command = "";
@@ -1068,7 +1068,8 @@ int UI::printWindow(int line_number)
 int UI::printKeyFeed(int key, int line_number)
 {
 	string prompt;
-	if (m_confirming_previous_command) prompt = "Confirm Command [y/n]:";
+	if (m_confirming_previous_command)
+		prompt = "Confirm Command " + m_buffered_command + " [y/n]:";
 	else {
 		prompt = "Listening";
 		if (m_is_commanding) prompt += " [COMMAND MODE]:";
@@ -1316,5 +1317,7 @@ UI::UI(Configuration config) {
 	m_is_commanding = false;
 	m_verbose = false;
 	m_mailbox_check_staggering_index = 0;
+	m_confirmed_previous = false;
 	m_confirming_previous_command = false;
+	m_buffered_command = "";
 }

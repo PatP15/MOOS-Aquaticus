@@ -78,4 +78,5 @@ protected: // Member variables (output)
 	bool m_confirmed_previous;
 	std::string m_buffered_command;
 	int m_mailbox_check_staggering_index;
+	std::string foo;
 };

@@ -139,13 +139,13 @@ string get_data_and_staleness(StampedData s, time_t staleness_time)
 	time_t current_time = time(0);
 	time_t elapsed_time = current_time - s.received;
 	string data = s.data;
-	// if ((data!=Status.NODATA)&&
-	// 		(data!=Status.NOTAPPLIC)&&
-	// 		(data!=Status.ISLOCAL)&&
-	// 		(elapsed_time > staleness_time)) {
-	// 	string staleness_suffix = " (" + to_string(elapsed_time) + ")";
-	// 	data += staleness_suffix;
-	// }
+	if ((data!=Status::NODATA)&&
+			(data!=Status::NOTAPPLIC)&&
+			(data!=Status::ISLOCAL)&&
+			(elapsed_time > staleness_time)) {
+		string staleness_suffix = " (" + to_string(elapsed_time) + ")";
+		data += staleness_suffix;
+	}
 	return(data);
 }
 
