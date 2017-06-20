@@ -74,5 +74,8 @@ protected: // Member variables (output)
 	time_t m_last_status_request;
 	time_t m_last_mail_check_request;
 	bool m_filtering_by_liveness;
+	bool m_confirming_previous_command;
+	bool m_confirmed_previous;
+	std::string m_buffered_command;
 	int m_mailbox_check_staggering_index;
 };

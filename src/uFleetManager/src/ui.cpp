@@ -411,20 +411,33 @@ void UI::actOnKeyPress(int c)
 
 	if(c!=ERR) {
 		bool command_match = false;
+		bool clear_key_feed = false;
+		bool m_confirmed_previous = false;
 		//--------------------------------------------------------------------
 		// match special characters, such as ctrl-c
 		//--------------------------------------------------------------------
-		if (c==27||c==127) { // BACKSPACE, DELETE keys
-			if (m_key_feed.size() > 0) m_key_feed = "";
-		}
 		// match quit
-		else if (c==CTRL('c')) {
+		if (c==CTRL('c')) {
 			m_keep_alive = false;
 			return;
+		}
+		// if buffered a command that requires a confirmation, wait for yes or no
+		else if (m_confirming_previous_command) {
+			if ((c=='y')||(c=='Y')) m_confirmed_previous = true;
+			else if ((c=='n')||(c=='N')) {
+				m_confirming_previous_command = false;
+				m_buffered_command = "";
+			}
+			clear_key_feed = true;
+		}
+		// match backspace and delete
+		else if (c==27||c==127) {
+			clear_key_feed = true;
 		}
 		// match commanding toggle
 		else if (c==CTRL('a')) {
 			m_is_commanding ^= true; // toggle
+			clear_key_feed = true;
 		}
 		else if (c==KEY_RESIZE) {
 			// do nothing, don't add to key feed
@@ -440,11 +453,11 @@ void UI::actOnKeyPress(int c)
 		//--------------------------------------------------------------------
 		if (m_key_feed=="h") {
 			m_view_full_help ^= true; // toggle
-			command_match = true;
+			clear_key_feed = true;
 		}
 		else if (m_key_feed=="V") {
 			m_verbose ^= true; // toggle
-			command_match = true;
+			clear_key_feed = true;
 		}
 		//--------------------------------------------------------------------
 		// match view changes
@@ -452,39 +465,44 @@ void UI::actOnKeyPress(int c)
 		else if (m_key_feed=="m") {
 			m_view_prev = m_view;
 			m_view = "main";
-			command_match = true;
+			clear_key_feed = true;
 		}
 		else if (m_key_feed=="H") {
 			m_view_prev = m_view;
 			m_view = "cmd_hist";
-			command_match = true;
+			clear_key_feed = true;
 		}
 		else if (m_key_feed=="v") {
 			m_view_prev = m_view;
 			m_view = "svn";
-			command_match = true;
+			clear_key_feed = true;
 		}
 		else if (m_key_feed=="n") {
 			m_view_prev = m_view;
 			m_view = "net";
-			command_match = true;
+			clear_key_feed = true;
 		}
 		else if (m_key_feed=="M") {
 			m_view_prev = m_view;
 			m_view = "MOOS";
-			command_match = true;
+			clear_key_feed = true;
 		}
 		else if (m_key_feed=="p") {
 			string view_prev = m_view_prev;
 			m_view_prev = m_view;
 			m_view = view_prev;
-			command_match = true;
+			clear_key_feed = true;
 		}
 		//--------------------------------------------------------------------
 		// match exact machine commands
 		//--------------------------------------------------------------------
 		if (m_is_commanding) {
-			if (m_key_feed=="S") {
+			string command;
+			if (m_confirmed_previous) command = m_buffered_command;
+			else command = m_key_feed;
+
+			if (command=="S") {
+				command_match = true;
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
 					// if is connected or is local
 					if ((m->checkSshMail()==Status::GOOD)||
@@ -496,155 +514,206 @@ void UI::actOnKeyPress(int c)
 					}
 				}
 				record = batchRecords(records);
-				command_match = true;
 			}
-			else if (regex_match(m_key_feed, start_one)) {
-				int index = stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].startMOOS();
-					command_match = true;
+			else if (regex_match(command, start_one)) {
+				command_match = true;
+				if (m_confirmed_previous) {
+					int index = stoi(command.substr(1));
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].startMOOS();
+					}
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
-			else if (m_key_feed=="K") {
-				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					records.push_back(m->stopMOOS());
-				}
-				record = batchRecords(records);
+			else if (command=="K") {
 				command_match = true;
-			}
-			else if (regex_match(m_key_feed, ktm_one)) {
-				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].stopMOOS();
-					command_match = true;
+				if (m_confirmed_previous) {
+					for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+						records.push_back(m->stopMOOS());
+					}
+					record = batchRecords(records);
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
-			else if (m_key_feed=="R") {
-				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					records.push_back(m->restartMOOS());
-				}
-				record = batchRecords(records);
+			else if (regex_match(command, ktm_one)) {
 				command_match = true;
-			}
-			else if (regex_match(m_key_feed, restart_one)) {
-				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].restartMOOS();
-					command_match = true;
+				if (m_confirmed_previous) {
+					int index = indexFromChar(command[1]);
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].stopMOOS();
+					}
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
-			else if (m_key_feed=="W") {
-				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					records.push_back(m->reboot());
-				}
-				record = batchRecords(records);
+			else if (command=="R") {
 				command_match = true;
-			}
-			else if (regex_match(m_key_feed, hardware_restart_one)) {
-				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].reboot();
-					command_match = true;
+				if (m_confirmed_previous) {
+					for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+						records.push_back(m->restartMOOS());
+					}
+					record = batchRecords(records);
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
-			else if (m_key_feed=="D") {
-				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					records.push_back(m->shutdown());
-				}
-				record = batchRecords(records);
+			else if (regex_match(command, restart_one)) {
 				command_match = true;
-			}
-			else if (regex_match(m_key_feed, hardware_shutdown_one)) {
-				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].shutdown();
-					command_match = true;
+				if (m_confirmed_previous) {
+					int index = indexFromChar(command[1]);
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].restartMOOS();
+					}
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
-			else if (m_key_feed=="G") {
-				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					records.push_back(m->rebootVehicle());
-				}
-				record = batchRecords(records);
+			else if (command=="W") {
 				command_match = true;
-			}
-			else if (regex_match(m_key_feed, vehicle_restart_one)) {
-				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].rebootVehicle();
-					command_match = true;
+				if (m_confirmed_previous) {
+					for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+						records.push_back(m->reboot());
+					}
+					record = batchRecords(records);
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
-			else if (m_key_feed=="F") {
-				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
-					records.push_back(m->shutdownVehicle());
-				}
-				record = batchRecords(records);
+			else if (regex_match(command, hardware_restart_one)) {
 				command_match = true;
-			}
-			else if (regex_match(m_key_feed, vehicle_shutdown_one)) {
-				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
-				if ((0<=index)&&(index<m_machines.size())) {
-					record = m_machines[index].shutdownVehicle();
-					command_match = true;
+				if (m_confirmed_previous) {
+					int index = indexFromChar(command[1]);
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].reboot();
+					}
 				}
 				else {
-					c = -1;
-					m_key_feed = "";
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
+				}
+			}
+			else if (command=="D") {
+				command_match = true;
+				if (m_confirmed_previous) {
+					for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+						records.push_back(m->shutdown());
+					}
+					record = batchRecords(records);
+				}
+				else {
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
+				}
+			}
+			else if (regex_match(command, hardware_shutdown_one)) {
+				command_match = true;
+				if (m_confirmed_previous) {
+					int index = indexFromChar(command[1]);
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].shutdown();
+					}
+				}
+				else {
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
+				}
+			}
+			else if (command=="G") {
+				command_match = true;
+				if (m_confirmed_previous) {
+					for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+						records.push_back(m->rebootVehicle());
+					}
+					record = batchRecords(records);
+				}
+				else {
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
+				}
+			}
+			else if (regex_match(command, vehicle_restart_one)) {
+				command_match = true;
+				if (m_confirmed_previous) {
+					int index = indexFromChar(command[1]);
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].rebootVehicle();
+					}
+				}
+				else {
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
+				}
+			}
+			else if (command=="F") {
+				command_match = true;
+				if (m_confirmed_previous) {
+					for(m=m_machines.begin(); m!=m_machines.end(); m++) {
+						records.push_back(m->shutdownVehicle());
+					}
+					record = batchRecords(records);
+				}
+				else {
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
+				}
+			}
+			else if (regex_match(command, vehicle_shutdown_one)) {
+				command_match = true;
+				if (m_confirmed_previous) {
+					int index = indexFromChar(command[1]);
+					if ((0<=index)&&(index<m_machines.size())) {
+						record = m_machines[index].shutdownVehicle();
+					}
+				}
+				else {
+					m_buffered_command = command;
+					m_confirming_previous_command = true;
 				}
 			}
 		}
 		if (m_key_feed=="C") {
+			command_match = true;
 			for(m=m_machines.begin(); m!=m_machines.end(); m++) {
 				records.push_back(m->clearCache());
 			}
 			record = batchRecords(records);
-			command_match = true;
 		}
 		else if (regex_match(m_key_feed, clear_one)) {
-			int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+			command_match = true;
+			int index = indexFromChar(m_key_feed[1]);
 			if ((0<=index)&&(index<m_machines.size())) {
 				record = m_machines[index].clearCache();
-				command_match = true;
-			}
-			else {
-				c = -1;
-				m_key_feed = "";
 			}
 		}
 		if (command_match) {
-			m_key_feed = "";
-			c = -1;
 			if ((record.first!="")&&(record.second!="")) {
 				m_command_history.push_back(timeStampCommand(record));
 				record.first = "";
 				record.second = "";
+				m_confirmed_previous = false;
+				m_confirming_previous_command = false;
+				m_buffered_command = "";
 			}
 			records.clear();
+			clear_key_feed = true;
+		}
+		if (clear_key_feed) {
+			m_key_feed = "";
+			c = -1;
 		}
 	}
 }
@@ -998,10 +1067,16 @@ int UI::printWindow(int line_number)
 
 int UI::printKeyFeed(int key, int line_number)
 {
-	string prompt = "Input Stream:";
-	mvprintw(line_number, 0, prompt.c_str());
-	if (m_is_commanding) mvprintw(line_number, prompt.size()+1, ": COMMAND MODE");
-	line_number++;
+	string prompt;
+	if (m_confirming_previous_command) prompt = "Confirm Command [y/n]:";
+	else {
+		prompt = "Listening";
+		if (m_is_commanding) prompt += " [COMMAND MODE]:";
+		else prompt += ":";
+	}
+	// display prompt
+	mvprintw(line_number++, 0, prompt.c_str());
+	// display current key feed
 	mvprintw(line_number, 0, "%s", m_key_feed.c_str());
 	// move cursor to the end of the key feed
 	mvprintw(line_number, m_key_feed.size(), "");
@@ -1241,4 +1316,5 @@ UI::UI(Configuration config) {
 	m_is_commanding = false;
 	m_verbose = false;
 	m_mailbox_check_staggering_index = 0;
+	m_confirming_previous_command = false;
 }

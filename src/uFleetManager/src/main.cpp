@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 	UI ui = UI(config);
 
 	// the UI identifies machines by their number. To support enter-key-less
-	// commands, the total number of machines is capped at 36 - numbers + letters.
+	// commands, the total number of machines is capped at 36: numbers + letters.
 	//
 	// To expand this in the future, either an explicit confirm key (e.g. 'enter'
 	// to send commands) needs to be reimplemented, or the workflow needs to be
