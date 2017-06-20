@@ -951,8 +951,9 @@ string ManagedMoosMachine::getTeam()
 string ManagedMoosMachine::getId()
 {
 	string id = "";
-	const regex pavlab_back_seats ("^192\\.168\\.\\d{1,3}\\.100$");
-	if (regex_match(m_machine_ip_address, pavlab_back_seats)) {
+	const regex pavlab_m300_back_seats ("^192\\.168\\.\\d{1,3}\\.100$");
+	const regex pavlab_mokai_latops ("^192\\.168\\.1\\.19\\d$");
+	if (regex_match(m_machine_ip_address, pavlab_m300_back_seats)) {
 		stringstream ip_stream (m_machine_ip_address);
 
 		vector<string> ip_parts;
@@ -962,6 +963,11 @@ string ManagedMoosMachine::getId()
 			ip_parts.push_back(s);
 		}
 		id = ip_parts[2]; // 192.168.VEH_ID.100
+	}
+	else if (regex_match(m_machine_ip_address, pavlab_mokai_latops)) {
+		int size = m_machine_ip_address.size();
+		string last_char = m_machine_ip_address.substr(size - 1); // 192.168.1.19i
+		id = "19" + last_char;
 	}
 	return(id);
 }
@@ -1279,7 +1285,7 @@ string ManagedMoosMachine::serviceMailboxName(string service)
 //      Note: Be paranoid with this function. Add IPs to match against VERY
 //						CONSERVATIVELY
 //
-// 			What: The "trusting" version ignores the old ssh host key and don't
+// 			What: The "trusting" version ignores the old ssh host key and doesn't
 // 						store a new one. This prevents warnings about a potential
 //						man-in-the-middle attack every time we reflash a PABLO. However,
 //						it actually does expose us to those attacks, so only use it when
@@ -1295,6 +1301,7 @@ string ManagedMoosMachine::sshTrustPrefix() {
 	const regex pavlab_direct_to_pablos ("^192\\.168\\.2\\.\\d{1,3}$");
 	// PABLO Master
 	const regex pavlab_pablo_master ("^128\\.30\\.28\\.55$");
+	// Mokai laptops
 	const regex pavlab_mokai_computers ("^192\\.168\\.1\\.19\\d$");
 
 	valid_ip_patterns.push_back(pavlab_front_seats);

@@ -43,6 +43,8 @@ protected: // Helper methods
 	CommandSummary batchRecords(std::vector<CommandSummary>);
 	void sendIPCheck();
 	std::string readIPCheck();
+	std::string charFromIndex(int);
+	int indexFromChar(char);
 protected: // Action methods
 	void checkMachineMail();
 	void actOnKeyPress(int);
@@ -62,6 +64,7 @@ protected: // Member variables (output)
 	std::map<std::string, std::vector<std::vector<std::string> > > m_headers;
 	std::vector<std::string> m_help_headers;
 	std::string m_view;
+	std::string m_view_prev;
 	int m_padding_size;
 	bool m_view_full_help;
 	bool m_is_commanding;

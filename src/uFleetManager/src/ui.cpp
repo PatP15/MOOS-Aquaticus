@@ -133,6 +133,7 @@ void UI::setTableFormats()
 	HelpEntry nav_svn = {"svn", "v", "SVN revisions window"};
 	HelpEntry nav_net = {"net", "n", "Network communications window"};
 	HelpEntry nav_moos = {"MOOS", "M", "MOOS window"};
+	HelpEntry nav_prev = {"prev", "p", "Previous view"};
 	HelpEntry start = 			{"", "S/s#", "Start MOOS                  (all/machine #)"};
 	HelpEntry stop = 				{"", "K/k#", "Stop MOOS                   (all/machine #)"};
 	HelpEntry restart = 		{"", "R/r#", "Restart MOOS                (all/machine #)"};
@@ -152,6 +153,7 @@ void UI::setTableFormats()
 	m_help["nav"].push_back(nav_svn);
 	m_help["nav"].push_back(nav_net);
 	m_help["nav"].push_back(nav_moos);
+	m_help["nav"].push_back(nav_prev);
 	m_help["cmd_all"].push_back(start);
 	m_help["cmd_all"].push_back(stop);
 	m_help["cmd_all"].push_back(restart);
@@ -316,6 +318,31 @@ string UI::readIPCheck()
 	return(Status::ERROR);
 }
 
+
+//--------------------------------------------------------------------
+// Procedure: charFromIndex()
+//   Purpose: Transforms the range 0-35 to the range 0-9a-z
+
+string UI::charFromIndex(int i)
+{
+	char a[10]; // seems large enough
+	if ((0<=i)&&(i<10)) sprintf(a, "%c", '0' + i);// ('0' /*+ i*/); // '0'-'9'
+	else if ((10<=i)&&(i<36)) sprintf(a, "%c", 'a' + (i-10)); //c = ('a' /*+ (i-10)*/); // 'a'-'z'
+	else sprintf(a, "%c", -1);
+	string s (a);
+	return(s.substr(0));
+}
+
+//--------------------------------------------------------------------
+// Procedure: indexFromChar()
+//   Purpose: Transforms the range 0-9a-z to the range 0-35
+
+int UI::indexFromChar(char c)
+{
+	if (isdigit(c)) return(c - '0'); // '0'-'9' -> 0-9
+	else return(c - 'a' + 10); // 'a'-'z' -> 10-35
+}
+
 //--------------------------------------------------------------------
 // Procedure: checkMachineMail()
 //   Purpose: call on the machines to check mail
@@ -373,14 +400,14 @@ void UI::actOnKeyPress(int c)
 	vector<CommandSummary> records;
 	vector<ManagedMoosMachine>::iterator m;
 	// conveniently, \\d+ only matches positive integers
-	const regex restart_one ("r\\d+");
-	const regex ktm_one ("k\\d+");
-	const regex start_one ("s\\d+");
-	const regex clear_one ("c\\d+");
-	const regex hardware_restart_one ("w\\d+");
-	const regex hardware_shutdown_one ("d\\d+");
-	const regex vehicle_restart_one ("g\\d+");
-	const regex vehicle_shutdown_one ("f\\d+");
+	const regex restart_one ("r\\w+");
+	const regex ktm_one ("k\\w+");
+	const regex start_one ("s\\w+");
+	const regex clear_one ("c\\w+");
+	const regex hardware_restart_one ("w\\w+");
+	const regex hardware_shutdown_one ("d\\w+");
+	const regex vehicle_restart_one ("g\\w+");
+	const regex vehicle_shutdown_one ("f\\w+");
 
 	if(c!=ERR) {
 		bool command_match = false;
@@ -390,10 +417,12 @@ void UI::actOnKeyPress(int c)
 		if (c==27||c==127) { // BACKSPACE, DELETE keys
 			if (m_key_feed.size() > 0) m_key_feed = "";
 		}
+		// match quit
 		else if (c==CTRL('c')) {
 			m_keep_alive = false;
 			return;
 		}
+		// match commanding toggle
 		else if (c==CTRL('a')) {
 			m_is_commanding ^= true; // toggle
 		}
@@ -407,7 +436,7 @@ void UI::actOnKeyPress(int c)
 			m_key_feed += c;
 		}
 		//--------------------------------------------------------------------
-		// match special UI commands
+		// match state changes
 		//--------------------------------------------------------------------
 		if (m_key_feed=="h") {
 			m_view_full_help ^= true; // toggle
@@ -417,24 +446,38 @@ void UI::actOnKeyPress(int c)
 			m_verbose ^= true; // toggle
 			command_match = true;
 		}
+		//--------------------------------------------------------------------
+		// match view changes
+		//--------------------------------------------------------------------
 		else if (m_key_feed=="m") {
+			m_view_prev = m_view;
 			m_view = "main";
 			command_match = true;
 		}
 		else if (m_key_feed=="H") {
+			m_view_prev = m_view;
 			m_view = "cmd_hist";
 			command_match = true;
 		}
 		else if (m_key_feed=="v") {
+			m_view_prev = m_view;
 			m_view = "svn";
 			command_match = true;
 		}
 		else if (m_key_feed=="n") {
+			m_view_prev = m_view;
 			m_view = "net";
 			command_match = true;
 		}
 		else if (m_key_feed=="M") {
+			m_view_prev = m_view;
 			m_view = "MOOS";
+			command_match = true;
+		}
+		else if (m_key_feed=="p") {
+			string view_prev = m_view_prev;
+			m_view_prev = m_view;
+			m_view = view_prev;
 			command_match = true;
 		}
 		//--------------------------------------------------------------------
@@ -456,9 +499,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, start_one)) {
-				int start_index = stoi(m_key_feed.substr(1));
-				record = m_machines[start_index].startMOOS();
-				command_match = true;
+				int index = stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].startMOOS();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 			else if (m_key_feed=="K") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
@@ -468,9 +517,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, ktm_one)) {
-				int ktm_index = stoi(m_key_feed.substr(1));
-				record = m_machines[ktm_index].stopMOOS();
-				command_match = true;
+				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].stopMOOS();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 			else if (m_key_feed=="R") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
@@ -480,10 +535,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, restart_one)) {
-				int restart_index = stoi(m_key_feed.substr(1));
-				// machines[restart_index].restartHardware();
-				record = m_machines[restart_index].restartMOOS();
-				command_match = true;
+				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].restartMOOS();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 			else if (m_key_feed=="W") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
@@ -493,9 +553,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, hardware_restart_one)) {
-				int clear_index = stoi(m_key_feed.substr(1));
-				record = m_machines[clear_index].reboot();
-				command_match = true;
+				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].reboot();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 			else if (m_key_feed=="D") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
@@ -505,9 +571,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, hardware_shutdown_one)) {
-				int clear_index = stoi(m_key_feed.substr(1));
-				record = m_machines[clear_index].shutdown();
-				command_match = true;
+				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].shutdown();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 			else if (m_key_feed=="G") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
@@ -517,9 +589,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, vehicle_restart_one)) {
-				int clear_index = stoi(m_key_feed.substr(1));
-				record = m_machines[clear_index].rebootVehicle();
-				command_match = true;
+				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].rebootVehicle();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 			else if (m_key_feed=="F") {
 				for(m=m_machines.begin(); m!=m_machines.end(); m++) {
@@ -529,9 +607,15 @@ void UI::actOnKeyPress(int c)
 				command_match = true;
 			}
 			else if (regex_match(m_key_feed, vehicle_shutdown_one)) {
-				int clear_index = stoi(m_key_feed.substr(1));
-				record = m_machines[clear_index].shutdownVehicle();
-				command_match = true;
+				int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+				if ((0<=index)&&(index<m_machines.size())) {
+					record = m_machines[index].shutdownVehicle();
+					command_match = true;
+				}
+				else {
+					c = -1;
+					m_key_feed = "";
+				}
 			}
 		}
 		if (m_key_feed=="C") {
@@ -542,9 +626,15 @@ void UI::actOnKeyPress(int c)
 			command_match = true;
 		}
 		else if (regex_match(m_key_feed, clear_one)) {
-			int clear_index = stoi(m_key_feed.substr(1));
-			record = m_machines[clear_index].clearCache();
-			command_match = true;
+			int index = indexFromChar(m_key_feed[1]);// stoi(m_key_feed.substr(1));
+			if ((0<=index)&&(index<m_machines.size())) {
+				record = m_machines[index].clearCache();
+				command_match = true;
+			}
+			else {
+				c = -1;
+				m_key_feed = "";
+			}
 		}
 		if (command_match) {
 			m_key_feed = "";
@@ -729,7 +819,7 @@ int UI::printWindow(int line_number)
 			//--------------------------------------------------------------------
 			// Static info
 			//--------------------------------------------------------------------
-			view_table << to_string(this_machine_i);
+			view_table << charFromIndex(this_machine_i);
 			view_table << m->getName();
 			view_table << m->getId();
 
@@ -827,7 +917,7 @@ int UI::printWindow(int line_number)
 		int machine_i = 0;
 		for (m = m_machines.begin(); m != m_machines.end(); m++) {
 			int this_machine_i = machine_i++;
-			view_table << to_string(this_machine_i);
+			view_table << charFromIndex(this_machine_i);
 			view_table << m->getName();
 
 			view_table << "\\";
@@ -851,7 +941,8 @@ int UI::printWindow(int line_number)
 	else if (m_view=="net") {
 		int machine_i = 0;
 		for (m = m_machines.begin(); m != m_machines.end(); m++) {
-			view_table << to_string(machine_i++);
+			int this_machine_i = machine_i++;
+			view_table << charFromIndex(this_machine_i);//to_string(machine_i++);
 			view_table << m->getName();
 			view_table << m->getId();
 			view_table << "/"; // Front
@@ -869,7 +960,7 @@ int UI::printWindow(int line_number)
 	else if (m_view=="MOOS") {
 		for (m = m_machines.begin(); m != m_machines.end(); m++) {
 			int this_machine_i = machine_i++;
-			view_table << to_string(this_machine_i);
+			view_table << charFromIndex(this_machine_i);//to_string(this_machine_i);
 			view_table << m->getName();
 			view_table << m->getId();
 			view_table << "\\"; // Actual
@@ -914,7 +1005,6 @@ int UI::printKeyFeed(int key, int line_number)
 	mvprintw(line_number, 0, "%s", m_key_feed.c_str());
 	// move cursor to the end of the key feed
 	mvprintw(line_number, m_key_feed.size(), "");
-
 
 	// move past key feed, and add one line of padding
 	return(line_number+2);
@@ -1055,8 +1145,8 @@ int UI::printLastCommand(int line_number)
 void UI::buildUp ()
 {
 	initscr();
-	raw();
-	cbreak();
+	// raw();
+	// cbreak();
 
 	unsigned int input_milliseconds = 8; // hand tuned for responsiveness
 	halfdelay(input_milliseconds);
@@ -1079,7 +1169,7 @@ void UI::buildUp ()
 // Procedure: tearDown()
 //   Purpose: Cleanly close the UI app.
 //   Returns:
-//      Note:
+//      Note: Seems to only run on seg fault. See main.cpp
 
 void UI::tearDown ()
 {
@@ -1144,6 +1234,7 @@ UI::UI(Configuration config) {
 	m_machines = m_config.getMachines();
 	m_filtering_by_liveness = config.m_filter_by_liveness;
 	m_view = "main";
+	m_view_prev = "main";
 	m_padding_size = 2;
 	m_view_full_help = false;
 	m_keep_alive = true;

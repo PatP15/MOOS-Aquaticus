@@ -24,14 +24,14 @@ int main(int argc, char* argv[]) {
 	UI ui = UI(config);
 
 	// the UI identifies machines by their number. To support enter-key-less
-	// commands, the total number of machines is capped at 10.
+	// commands, the total number of machines is capped at 36 - numbers + letters.
 	//
 	// To expand this in the future, either an explicit confirm key (e.g. 'enter'
 	// to send commands) needs to be reimplemented, or the workflow needs to be
 	// redesigned (e.g. go onto the machine's page, execute the command, go back
 	// to the main page. That frees up lots of keys on the main page.)
 
-	int max_machines = 10;
+	int max_machines = 36;
 	int machine_count = config.getMachines().size();
 	if (machine_count>max_machines) {
 		printf("Selected %d machines, but the UI can only support %d.\n",
