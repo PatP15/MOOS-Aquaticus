@@ -13,6 +13,11 @@
 #include <map>
 #include "utils.h"
 
+struct Mail {
+	StampedData cache;
+	std::string mailbox;
+};
+
 class ManagedMoosMachine {
 
 public: // Constructors and Destructors
@@ -35,9 +40,6 @@ public: // Public methods (getting statuses)
 	CommandSummary dispatchGpsPdop();
 
 	CommandSummary dispatchSvnRevisionCheck(std::string);
-	// CommandSummary dispatchAquaticusSvnRevision();
-	// CommandSummary dispatchMoosIvpSvnRevision();
-	// CommandSummary dispatchPabloSvnRevision();
 
 	// get mail, cache it, and return a status string
 	std::string checkPingMail(bool=true);
@@ -49,9 +51,6 @@ public: // Public methods (getting statuses)
 	std::string checkGpsPdopStatusMail(bool=true);
 
 	std::string checkSvnRevisionMail(std::string, bool=true);
-	// std::string checkMoosIvpSvnRevisionMail();
-	// std::string checkAquaticusSvnRevisionMail();
-	// std::string checkPabloSvnRevisionMail();
 
 public: // Public methods (sending commands)
 	// deployment management
@@ -121,23 +120,8 @@ protected: // Variables
 	std::string m_target_script_name;
 	std::string m_target_script_args;
 
-	// buffering variables
-	std::map<std::string, std::string> m_mailboxes;
-	std::map<std::string, StampedData> m_mail;
+	std::map<std::string, Mail> m_mail;
 
-	StampedData m_ping_results;
-	StampedData m_ssh_results;
-	StampedData m_front_seat_ping_results;
-	StampedData m_front_seat_ssh_results;
-	StampedData m_moosdb_results;
-	StampedData m_compass_results;
-	StampedData m_gps_pdop_results;
-	StampedData m_aquaticus_svn_revision_results;
-	StampedData m_moos_ivp_svn_revision_results;
-	StampedData m_pablo_svn_revision_results;
-	StampedData m_colregs_svn_revision_results;
-	StampedData m_restart_hardware_results;
-	StampedData m_shutdown_hardware_results;
 };
 
 #endif

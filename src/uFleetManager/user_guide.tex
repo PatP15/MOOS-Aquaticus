@@ -46,9 +46,9 @@ This guide is intended to explain to a member of the PAVLAB how to use and impro
 \subsection{Dependencies}
 \texttt{uFleetManager} was developed for Mac. It is in principle compatible with Linux, but that has never been demonstrated.
 
-Currently, the only dependency is \texttt{ncurses}. On a Mac, use Macports or Homebrew like so:
+Currently, the only dependency is \texttt{ncurses}. On a Mac, get it with either Macports or Homebrew;
 \cmdline{port install ncurses}
-The usage is slightly more complicated on Linux. Without having gotten it working, it's hard to say for sure, but it looks like \texttt{libncurses5-dev} is the correct version. So on Ubuntu, the usage would be
+The usage is slightly more complicated on Linux. Without having gotten it working, it's hard to say for sure, but it looks like \texttt{libncurses5-dev} is the correct version. So on Ubuntu, get it with
 \cmdline{apt-get install libncurses5-dev}
 \subsection{Installation}
 \texttt{uFleetManager} is bundled in the \texttt{moos-ivp-aquaticus} tree. Assuming you haven't already, install \texttt{moos-ivp-aquaticus} in your home directory.
@@ -56,17 +56,28 @@ The usage is slightly more complicated on Linux. Without having gotten it workin
 Most users will use the Anonymous Read Only version of \texttt{moos-ivp-aquaticus}: 
 \cmdline{svn co https://oceanai.mit.edu/svn/moos-ivp-aquaticus-aro-trunk/trunk moos-ivp-aquaticus}
 \subsubsection{Download for Editing}
-A few users will have edit and commit privileges; speak to Dr. Benjamin.
+A few users will have edit and commit privileges; speak to Dr. Benjamin. Then get the codebase with
+\cmdline{svn co svn+ssh://[YOUR\_USERNAME]@oceanai.mit.edu/home/svn/repos/moos-ivp-aquaticus/trunk moos-ivp-aquaticus}
 \subsubsection{Enable}
+At the time of writing, this code is considered experimental and therefore disabled by default.
+
 Open \texttt{$\sim$/moos-ivp-aquaticus/src/CMakeLists.txt} and in the \texttt{BUILD$\_$ALL} section, find the line \texttt{ADD$\_$SUBDIRECTORY(uFleetManager)} and uncomment it. Remember to recomment it before committing code, and check it after pulling down new code.
-\subsection{Running the Fleet Manager}
-Build the fleet manager with the aquaticus build script:
+\subsection{Starting the Fleet Manager}
+Build the fleet manager with the normal aquaticus build script, e.g.:
 \cmdline{$\sim$/moos-ivp-aquaticus/build.sh}
-Run it with
+You'll be looking for the \texttt{uFleetManager} executable in \texttt{$\sim$/moos-ivp-aquaticus/bin} 
+
+There are two use cases; with or without a config file. You can run \texttt{uFleetManager} with no arguments, e.g.
 \cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager}
-With no arguments, the fleet manager will monitor all known machines, but not be able to launch missions. To add a mission, write a config file (see Config Files) and include it with \texttt{--file}:
-\cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager --file /path/to/foobar.moos}
-\subsection{Layout}
+and that will let you observe all the lab vehicles but wont let you launch a MOOS-IvP mission.
+
+To only observe specific vehicles, and to run a particular MOOS-IvP mission, you'll want to run it with a config file;
+\cmdline{$\sim$/moos-ivp-aquaticus/bin/uFleetManager --file /path/to/my\_config\_file.moos}
+Refer to the Config Files section for how to write a configuration file.
+
+\subsection{Fleet Maanger Layout}
+Once you start the Fleet Manager, you should see something like this, without the highlight colors.
+
 \includegraphics[scale=0.5]{/Users/raphaelsegal/Desktop/uFleetManager_Layout.png}
 \begin{description}
 \item[Blue] Header; displays the state of the app
@@ -98,7 +109,7 @@ The full set of options, including those in commanding mode.
 \subsubsection{My Machine}
 \includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_Self.png}
 
-Stats about your own machine. \texttt{Time} serves as a responsive UI element, demonstrating that the app is actually refreshing. \texttt{MY IP} is helpful if you're running the shoreside on your computer and need to update the machine's UI, but it also indicates which wifi network you're on; if the first block is 10 you're probably on MIT-GUEST, if the wifi is 192.168.1.X, you're probably on kayak-local.
+Stats about your own machine. \texttt{Time} serves as a responsive UI element, demonstrating that the app is actually refreshing. \texttt{MY IP} is helpful if you're running the shoreside on your computer and need to update the machine's UI, but it also indicates which wifi network you're on; if the first block is 10 you're probably on MIT-GUEST, if the wifi is 192.168.1.X, you're probably on kayak-local. You will only be able to talk to the robots on kayak-local.
 \subsubsection{Footer}
 \includegraphics[scale=0.6]{/Users/raphaelsegal/Desktop/uFleetManager_Footer.png}
 
@@ -199,7 +210,7 @@ Mission & Launch file and args & If this is blank, startMOOS doesn't dispatch an
 Note: the astersik in the header indicates that the topic has multiple verbosity modes.
 
 \subsection{Commands}
-Many of these commands require the operator's fleet manager to be in "commanding mode"; they will be indicated by a * next to their name in this list. Some of these commands require confirmation; they will be indiciated with a \$ next to their name in this list.
+Many of these commands require the operator's fleet manager to be in "commanding mode"; they will be indicated by a * next to their name in this list. Some of these commands require confirmation; they will be indicated with a \$ next to their name in this list.
 
 \begin{tabular}{r|ll}
 Command & Key Feed & Description\\
@@ -225,6 +236,40 @@ Shutdown Vehicle*\$ & F & Shutdown each of the machines' front seats, if they ha
 & f\# & Shutdown machine \#'s front seat, if it has one
 \end{tabular}
 \subsection{Config files}
+Config files use standard \texttt{.moos} file syntax. The minimal config file looks like this
+
+\cmdline{ProcessConfig = uFleetManager}
+\cmdline{\{}
+\cmdline{	machines = alpha bravo charlie}
+\cmdline{\}}
+
+and this would direct the Fleet Manager to watch three known vehicles; \texttt{Alpha}, \texttt{Bravo}, and \texttt{Charlie}, without specifying their mission or team.
+
+To specify their team, add team variables like so:
+
+\cmdline{ProcessConfig = uFleetManager}
+\cmdline{\{}
+\cmdline{	machines = alpha bravo charlie}
+\cmdline{	red = alpha}
+\cmdline{	blue = bravo delta}
+\cmdline{\}}
+
+This will result in \texttt{Alpha} and \texttt{Bravo} being assigned teams (which will show up in the \texttt{main} and \texttt{MOOS} views), \texttt{Charlie} will not have a team, and \texttt{Delta}'s team would be ignored because \texttt{Delta} isn't called out in \texttt{machines}.
+
+To specify a mission directory, add the full path;
+
+\cmdline{	all\_mission\_dir = $\sim$/some/fully/qualified/path/}
+
+To specify vehicle-specific arguments for vehicle \texttt{foobar}, add a variable with its name;
+
+\cmdline{	foobar = launch:launch.sh, dir:some/other/path, dir\_rel:true, args:-s}
+
+Which would instruct \texttt{foobar} to use the \texttt{launch.sh} launch file when given the command to launch MOOS-IvP by the Fleet Manager, and to look for it at \texttt{$\sim$/some/fully/qualified/path/some/other/path}, and pass it the argument \texttt{-s}. If \texttt{dir\_rel} was given \texttt{false}, then the Fleet Manager would go instead to \texttt{some/other/path} and look for \texttt{launch.sh} there.
+
+As before, specifying the arguments for \texttt{foobar} will be ignored if \texttt{foobar} isn't in the \texttt{machines} list.
+
+Comments are \texttt{//}.
+
 \section{Modifying the Fleet Manager}
 \subsection{Adding Views}
 There are four places in \texttt{ui.cpp} that need to be modified to add a view; the help text, the table formatting, the navigation character handlers, and the view render block.
@@ -302,7 +347,7 @@ When you're adding a new public method to \texttt{ManagedMoosMachine}, it will b
 
 \subsubsection{Standard PAVLAB Commands}
 
-The standard PAVLAB way of interfacing with lab machines outside of MOOS-IvP itself is via a \textit{machine}-common directory. Currently we are maintaining \texttt{pablo-common} and \texttt{mokai-common}, and they each contain a directory called FleetManagerScripts with the lab's standard scripts. Commands have a simple naming scheme: "pav\_\textit{action}\_\textit{object}.sh". Some examples are 
+The standard PAVLAB way of interfacing with lab machines outside of MOOS-IvP itself is via a \textit{machine}-common directory. Currently we are maintaining two lab \texttt{svn} repos, \texttt{pablo-common} and \texttt{mokai-common}, and they each contain a directory called FleetManagerScripts with the lab's standard scripts. Commands have a simple naming scheme: "pav\_\textit{action}\_\textit{object}.sh". Some examples are 
 
 \begin{description}
 \item \texttt{pav\_test\_ssh.sh}
@@ -315,7 +360,7 @@ The sole exception is \texttt{pav\_not\_implemented.sh}, the placeholder impleme
 
 All machines should have their relevant kind of \textit{machine}-common tree, but they will have the Anonymous Read Only version, \textit{machine}-common-aro\footnote{This allows anyone to call update and to use the scripts, but not to push changes. To push changes, talk to Dr. Benjamin about getting access to the \textit{machine}-common repos}.
 
-There is a special helper function in \texttt{ManagedMoosMachine} to streamline calling those standard PAVLAB commands, \texttt{\_dispatchPavCmd()}.
+There is a special helper function in \texttt{ManagedMoosMachine} to streamline calling those standard PAVLAB commands, \texttt{\_dispatchPavCmd()}. There are several good examples of its usage in the \texttt{ManagedMoosMachine} class.
 
 \subsubsection{Special Commands}
 
@@ -344,6 +389,7 @@ Consider a new \texttt{ManagedMoosMachine} public method, \texttt{checkFooServic
 When returning a status, consider looking in the \texttt{Status} namespace in \texttt{Constants.h}. These statuses are shared throughout the app, allowing them to be reasoned over in the UI. 
 
 \subsubsection{Required Variables and Caching}
+
 \subsection{Miscellaneous}
 \subsubsection{Tips and Tricks}
 \section{Configuring Machines to work with the Fleet Manager}
@@ -355,6 +401,10 @@ When returning a status, consider looking in the \texttt{Status} namespace in \t
 \begin{tabular}{l|l|l}
 Symptom & Issue & Resolution\\
 \hline
-Semicolons in command (see History) & Needs to be {\textbackslash}n & Replace in relevant\\&& ManagedMoosMachine dispatcher function.
+Semicolons in command (see History) & Needs to be {\textbackslash}n & Replace in relevant\\&& ManagedMoosMachine dispatcher function.\\
+App responds slowly & Resource starved & Check CPU usage\\
+&& Check process count\\
+&& Try closing Google Chrome\\
+&& or other resource-hogging programs.
 \end{tabular}
 \end{document}
