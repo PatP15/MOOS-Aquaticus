@@ -378,33 +378,128 @@ Once that result is put in the mailbox, you'll want to read it. At its core, we'
 
 Consider a new \texttt{ManagedMoosMachine} public method, \texttt{checkFooServiceMail()}; its implementation might look something like this:
 
-\cmdline{vector<string> mail\_list = readServiceMailbox(m\_mailboxes["fooService"]);}
+\cmdline{vector<string> mail\_list = readServiceMailbox(m\_mail["fooService"].mailbox);}
 \cmdline{index\_t index = grabIndex(mail\_list);}
-\cmdline{if (receiveUpdate(m\_mail["fooService"], index)) \{}
+\cmdline{if (receiveUpdate(m\_mail["fooService"].cache, index)) \{}
 \cmdline{	// do parsing here...}
-\cmdline{	m\_mail["fooService"].data = /* a result string */}
+\cmdline{	m\_mail["fooService"].cache.data = /* a result string */}
 \cmdline{\}}
-\cmdline{return(get\_data\_and\_staleness(m\_mail["fooService"]));}
+\cmdline{return(get\_data\_and\_staleness(m\_mail["fooService"].cache));}
 
 When returning a status, consider looking in the \texttt{Status} namespace in \texttt{Constants.h}. These statuses are shared throughout the app, allowing them to be reasoned over in the UI. 
 
 \subsubsection{Required Variables and Caching}
+The infrastucture of the \texttt{ManagedMoosMachine} is in the \texttt{m\_mail} map; it contains the cache (of type \texttt{StampedData}, refer to \texttt{Utils.h}) and the mailbox file name.
 
+To add a new required variable, find the \texttt{ManagedMoosMachine} constructor, all you have to do is add a line like
+
+\cmdline{m\_mail["foobar"].mailbox = serviceMailboxName("fooBar");}
+
+near the others that follow that pattern.
+
+Bracket lookup adds foobar to the \texttt{m\_mail} map, and then sets the name of the mailbox it uses for script writebacks. Below, it loops through all \texttt{m\_mail} entries (which now includes foobar) and adds a blank \texttt{StampedData} struct. After rebuilding and running, if you look in the mailbox directory (by default, \texttt{/tmp/MOOSMAIL}), you should now see an \texttt{Alpha\_fooBar.mailbox}, a \texttt{Bravo\_fooBar.mailbox}, etc. Their contents will be whatever you asked to be written back, plus an index at the end:
+\cmdline{MOOS\_MANAGER\_MESSAGE\_INDEX:N}
+which is part of the networking solution described in Adding Commands and Dispatching. Once you call \texttt{grabIndex()}, that line will be stripped out and you will only be presented with the payload.
 \subsection{Miscellaneous}
+\begin{enumerate}
+\item To add new vehicles, look to \texttt{Configuration.cpp}
+\end{enumerate}
 \subsubsection{Tips and Tricks}
+\begin{enumerate}
+\item If you're getting strange status results, always check the actual contents of the mailbox:
+
+\cmdline{cat /tmp/MOOSMAIL/that.mailbox}
+
+or if you want to get really fancy
+
+\cmdline{while true; do cat /tmp/MOOSMAIL/that.mailbox; sleep 1; clear; done}
+\item If you're trying to debug script output that's going to stdout once and then disappearing, try adding a \texttt{sleep(seconds);} to the main render loop in \texttt{ui.cpp}. In fact, there's one already there commented out for just that eventuality. 
+\end{enumerate}
 \section{Configuring Machines to work with the Fleet Manager}
 \subsection{SSH Keys}
+In order to script commands over ssh, the target machine needs your ssh public key to allow you to log on with no password. 
+
+The \textit{machine}\texttt{-common} repos have scripts that should update the target machine's \texttt{$\sim$/.ssh/authorized\_keys} with your public key if it's added into the \textit{machine}\texttt{-common/}\textit{machine}\texttt{\_authorized\_keys} file.
+
+For machines that don't have a \textit{machine}\texttt{-common} repo, or if you can't get a hold of someone with editing privileges, you can add it in manually.
 \subsection{Shell Startup and Sources}
+In order to have the PAVLAB commands available both for interactive shells that you start when you log in and the non-interactive shells that \texttt{uFleetManager} starts, you need to source it in the right place in your \texttt{$\sim$/.profile} or \texttt{$\sim$/.bashrc} files. Many of them have blocks like:
+
+\cmdline{\# If not running interactively, don't do anything}
+\cmdline{case \$- in}
+\cmdline{    *i*) ;;}
+\cmdline{      *) return;;}
+\cmdline{esac}
+
+Your block must be before anything like that. Your block should look much like this:
+
+\cmdline{\# Source the svn-controlled bashrc or cshrc}
+\cmdline{if [ \$SHELL = "/bin/bash" ]; then}
+\cmdline{    . "\$HOME/pablo-common-aro/dot\_bashrc"}
+\cmdline{elif [ \$SHELL = "/bin/csh" ]; then}
+\cmdline{    . "\$HOME/pablo-common-aro/dot\_cshrc"}
+\cmdline{fi}
+
+Substituting \texttt{pablo-common}, \texttt{mokai-common}, or \texttt{mokai-common-aro} as appropriate.
+
 \subsection{Software}
+All target machines should have a copy, ARO or otherwise, of at least one \textit{machine}\texttt{-common} tree like \texttt{pablo-common} or \texttt{mokai-common}.
+
+Target machines should also have MOOS-IvP and any other MOOS-IvP trees (e.g. Aquaticus and Colregs) necessary for the missions.
 \subsection{Permissions}
+A few select commands require special permissions, namely shutting down and rebooting computers. Each operating system has different amounts that you can deprotect those two commands, and we have explored those for Raspbian and Ubuntu:
+\begin{description}
+\item[Raspbian] Run 
+
+\cmdline{sudo visudo -f /etc/sudoers.d/shutdown}
+
+and add the lines
+
+\cmdline{student2680 host = (ALL) NOPASSWD: /sbin/shutdown now}
+\cmdline{student2680 host = (ALL) NOPASSWD: /sbin/reboot}
+
+then run
+
+\cmdline{sudoedit /etc/polkit-1/localauthority/50-local.d/reboot.pkla}
+
+and add the lines
+
+\cmdline{[Shutdown]}
+\cmdline{Identity=unix-user:student2680}
+\cmdline{Action=org.freedesktop.login1.power-off}
+\cmdline{ResultAny=yes}
+
+\cmdline{[Reboot]}
+\cmdline{Identity=unix-user:student2680}
+\cmdline{Action=org.freedesktop.login1.reboot}
+\cmdline{ResultAny=yes}
+
+and now the two commands \texttt{shutdown now} and \texttt{reboot} are completely unprotected by \texttt{sudo}
+\item[Ubuntu] Run
+
+\cmdline{sudo visudo -f /etc/sudoers.d/shutdown}
+
+and then add the lines
+
+\cmdline{student ALL=NOPASSWD: /sbin/shutdown now}
+\cmdline{student ALL=NOPASSWD: /sbin/reboot}
+
+and now the two commands \texttt{shutdown now} and \texttt{reboot} can be run with \texttt{sudo}, so \texttt{sudo shutdown now} and \texttt{sudo reboot}, but will not require a password. When run over \texttt{ssh}, it still requires \texttt{sudo} in the command and the \texttt{-t} argument to \texttt{ssh}, but will not require a password.
+\end{description}
 \section{Debugging}
 \begin{tabular}{l|l|l}
-Symptom & Issue & Resolution\\
+Symptom & Likely Issue & Resolution\\
 \hline
 Semicolons in command (see History) & Needs to be {\textbackslash}n & Replace in relevant\\&& ManagedMoosMachine dispatcher function.\\
 App responds slowly & Resource starved & Check CPU usage\\
 && Check process count\\
 && Try closing Google Chrome\\
-&& or other resource-hogging programs.
+&& or other resource-hogging programs\\
+&& Restart uFleetManager\\
+No machines seen & On wrong network & Switch to kayak-local\\
+& Wifi is down & Check that the Bullet is on and working\\
+Password requests in \texttt{stdout} & Target needs ssh keys & Add your public key to \\ 
+&&\texttt{$\sim$/.ssh/authorized\_keys} on the\\
+&& target machine
 \end{tabular}
 \end{document}
