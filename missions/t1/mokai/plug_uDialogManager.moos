@@ -19,5 +19,5 @@ uProcessConfig = uDialogManager
   sentence = $(TEAMMATE)_Status    : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE),var_name=BOT_DIALOG_REQUEST,string_val=STATUS:src=$(VNAME)"
 
   sentence = tag  : TAG_REQUEST       = "vname = $(VNAME)"
-  sentence = grab {NOCONFIRM} : FLAG_GRAB_REQUEST = "vname = $(VNAME)"
+  sentence = grab { NOCONFIRM } : FLAG_GRAB_REQUEST = "vname = $(VNAME)"
 }
