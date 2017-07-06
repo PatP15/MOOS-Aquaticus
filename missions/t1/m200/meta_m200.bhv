@@ -209,8 +209,8 @@ Behavior = BHV_Defense
   condition               = MODE==PASSIVE
   runflag                 = BOT_DIALOG_STATUS=Defending
   
-  flag_x =-58
-  flag_y =-71
+  flag_x =50
+  flag_y =-24
 
   speed                   = 2  //default
   distance_from_flag      = 10 //default
