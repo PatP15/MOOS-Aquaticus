@@ -1,5 +1,5 @@
 //------------------------------------------------
-uProcessConfig = uDialogManager
+ProcessConfig = uDialogManager
 {
   AppTick   = 4
   CommsTick = 4
