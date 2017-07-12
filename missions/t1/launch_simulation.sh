@@ -22,7 +22,8 @@ for ARGI; do
         TIME_WARP=$ARGI
         echo "Time warp set up to $TIME_WARP."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
-        JUST_BUILD="yes"
+        JUST_BUILD="-j" 
+        # Pass $JUST_BUILD directly to the launch commands, this will be blank if not just building
         echo "Just building files; no vehicle launch."
     else
         CMD_ARGS=$CMD_ARGS" "$ARGI
@@ -47,9 +48,9 @@ fi
 if [[ -z $NO_M200 ]]; then
   cd ./m200
   # Evan Blue
-  ./launch_m200.sh $TIME_WARP -e -b -s > /dev/null &
+  ./launch_m200.sh $TIME_WARP $JUST_BUILD -e -b -s > /dev/null &
   # Felix Red
-  ./launch_m200.sh $TIME_WARP -f -r -s > /dev/null &
+  ./launch_m200.sh $TIME_WARP $JUST_BUILD -f -r -s > /dev/null &
   cd ..
 fi
 
@@ -59,9 +60,9 @@ fi
 if [[ -z $NO_MOKAI ]]; then
   cd ./mokai
   # w/ Evan Blue
-  ./launch_mokai.sh $TIME_WARP -e -b -ss >& /dev/null &
+  ./launch_mokai.sh $TIME_WARP $JUST_BUILD -e -b -ss >& /dev/null &
   # w/ Felix Red
-  ./launch_mokai.sh $TIME_WARP -f -r -ss >& /dev/null &
+  ./launch_mokai.sh $TIME_WARP $JUST_BUILD -f -r -ss >& /dev/null &
   cd ..
 fi
 
@@ -70,7 +71,7 @@ fi
 #-------------------------------------------------------
 if [[ -z $NO_SHORESIDE ]]; then
   cd ./shoreside
-  ./launch_shoreside.sh $TIME_WARP >& /dev/null &
+  ./launch_shoreside.sh $TIME_WARP $JUST_BUILD >& /dev/null &
   cd ..
 fi
 
