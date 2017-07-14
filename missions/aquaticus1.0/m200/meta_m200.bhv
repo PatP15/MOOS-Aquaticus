@@ -151,32 +151,6 @@ Behavior = BHV_Waypoint
 
   points                  = $(GRAB_POS)
 }
-//#############################################################################
-Behavior = BHV_Waypoint
-{
-  name                    = right_waypt_grab
-  pwt                     = 50
-  perpetual               = true
-
-//################################################################
-Behavior = BHV_Waypoint
-{
-  name                    = left_waypt_grab
-  pwt                     = 50
-  perpetual               = true
-
-  condition               = MODE == ATTACKING_LEFT 
-  runflag                 = BOT_DIALOG_STATUS=Attacking
-  endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
-  endflag                 = TAGGED=true
-
-  speed                   = 5 // meters per second
-  capture_line            = false
-  capture_radius          = 5.0
-  slip_radius             = 5.0
-
-  points                  = $(GRABL_POS):$(GRAB_POS)
-}
 
 //#########################################
 Behavior = BHV_Waypoint
@@ -216,7 +190,7 @@ Behavior = BHV_Waypoint
   capture_radius          = 5.0
   slip_radius             = 5.0
 
-  points                  = $(GRAB_L_POS):$(GRAB_POS)
+  points                  = $(GRABL_POS):$(GRAB_POS)
 }
 //#############################################################################
 Behavior = BHV_AvdColregsV2
