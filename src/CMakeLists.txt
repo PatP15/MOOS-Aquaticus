@@ -41,16 +41,22 @@ ADD_SUBDIRECTORY(iGPS)
   ADD_SUBDIRECTORY(uFldZoneEvent)
   ADD_SUBDIRECTORY(uFldTagManager)
   ADD_SUBDIRECTORY(uFldFlagManager)
-ADD_SUBDIRECTORY(lib_NMEAParse)
-ADD_SUBDIRECTORY(lib_gpsParser)
-ADD_SUBDIRECTORY(pBotDialog)
-ADD_SUBDIRECTORY(app_catauthkeys)
-ADD_SUBDIRECTORY(iM200)
-ADD_SUBDIRECTORY(pRangeEvent)
-#ADD_SUBDIRECTORY(pPingResponder)
-ADD_SUBDIRECTORY(pAttackCommander)
-#ADD_SUBDIRECTORY(pTimeWatch)
-ADD_SUBDIRECTORY(iMetaCompass)
+  ADD_SUBDIRECTORY(lib_NMEAParse)
+  ADD_SUBDIRECTORY(lib_gpsParser)
+  ADD_SUBDIRECTORY(pBotDialog)
+  ADD_SUBDIRECTORY(app_catauthkeys)
+  ADD_SUBDIRECTORY(pRangeEvent)
+  ADD_SUBDIRECTORY(pAttackCommander)
+  ADD_SUBDIRECTORY(iMetaCompass)
+  ADD_SUBDIRECTORY(iM200)
+
+
+#  ADD_SUBDIRECTORY(pPingResponder)
+#  ADD_SUBDIRECTORY(pTimeWatch)
+#  ADD_SUBDIRECTORY(iIMU_RazorAHRS)
+#  ADD_SUBDIRECTORY(pShorePing)
+#  ADD_SUBDIRECTORY(pPingDisplay)
+
 
 
 ##############################################################################
