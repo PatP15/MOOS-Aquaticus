@@ -198,6 +198,7 @@ fi
 
 echo "Launching $VNAME MOOS Community "
 pAntler targ_${VNAME}.moos >& /dev/null &
+
 uMAC targ_${VNAME}.moos
 
 echo "Killing all processes ..."
