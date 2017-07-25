@@ -32,3 +32,20 @@ TARGET_LINK_LIBRARIES(BHV_OpRegionRecover
    geometry 
    ${SYSTEM_LIBS} )
 
+
+#--------------------------------------------------------
+#                                             BHV_Defense
+#--------------------------------------------------------
+ADD_LIBRARY(BHV_Defense SHARED
+   BHV_Defense.cpp)
+TARGET_LINK_LIBRARIES(BHV_Defense
+   helmivp
+   behaviors
+   ivpbuild
+   logic
+   ivpcore
+   bhvutil
+   mbutil
+   geometry
+   ${SYSTEM_LIBS} )
+
