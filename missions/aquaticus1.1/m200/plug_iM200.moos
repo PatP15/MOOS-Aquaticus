@@ -11,11 +11,7 @@ ProcessConfig = iM200
                                // When true, vehicle in direct-thrust mode.
                                // When false, vehicle in rudder-thrust mode.
 
-#ifdef VMODEL M300 
-  HEADING_OFFSET = 179.9       // Offset to add to published heading
-#else
   HEADING_OFFSET = 0.0         // Offset to add to published heading
-#endif
 	
   PUBLISH_RAW    = true        // When true, publish all messages from
                                // front seat to M200_RAW_NMEA
