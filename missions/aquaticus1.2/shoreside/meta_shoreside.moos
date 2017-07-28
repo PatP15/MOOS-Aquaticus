@@ -45,14 +45,14 @@ ProcessConfig = uFldFlagManager
 //  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
 //  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
 
-  grab_post = var=SAY_MOOS, sval={file=sounds/grab_post_$VNAME}
-  grab_post = var=SAY_MOOS_ALL, sval={file=sounds/grab_post_$VNAME}
+  grab_post = var=SAY_MOOS, sval={file=sounds/grab_post_$VNAME.wav}
+  grab_post = var=SAY_MOOS_ALL, sval={file=sounds/grab_post_$VNAME.wav}
 
 //  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
 //  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
 
-  lose_post = var=SAY_MOOS, sval={file=sounds/lose_post_$FLAG}
-  lose_post = var=SAY_MOOS_ALL, sval={file=sounds/lose_post_$FLAG}
+  lose_post = var=SAY_MOOS, sval={file=sounds/lose_post_$FLAG.wav}
+  lose_post = var=SAY_MOOS_ALL, sval={file=sounds/lose_post_$FLAG.wav}
 
   near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
   near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
@@ -69,8 +69,8 @@ ProcessConfig = uFldFlagManager
 //	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
 //	goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
 
-	goal_post = var=SAY_MOOS, sval={file=sounds/goal_post_$VTEAM}
-	goal_post = var=SAY_MOOS_ALL, sval={file=sounds/goal_post_$VTEAM}
+	goal_post = var=SAY_MOOS, sval={file=sounds/goal_post_$VTEAM.wav}
+	goal_post = var=SAY_MOOS_ALL, sval={file=sounds/goal_post_$VTEAM.wav}
 
 }
 
@@ -97,15 +97,15 @@ ProcessConfig = uFldTagManager
 //  human_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
 //  human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
 
-  human_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET
-  human_tag_post   = SAY_MOOS=file=tag_post_$TARGET
+  human_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
+  human_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
 
   // human_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
 //  robot_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
 //  robot_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
 
-  robot_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET
-  robot_tag_post   = SAY_MOOS=file=tag_post_$TARGET
+  robot_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
+  robot_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
 
   // robot_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
 
@@ -123,14 +123,14 @@ ProcessConfig = uFldTagManager
 
 //  human_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
 //  human_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
-  human_untag_post = SAY_MOOS_ALL=file=sounds/untag_$TARGET
-  human_untag_post = SAY_MOOS=file=sounds/untag_$TARGET
+  human_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
+  human_untag_post = SAY_MOOS=file=sounds/untag_post_$TARGET.wav
   human_untag_post = TAGGED_$UP_TARGET=false
   
 //  robot_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
 //  robot_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
-  robot_untag_post = SAY_MOOS_ALL=file=sounds/untag_$TARGET
-  robot_untag_post = SAY_MOOS=say=file=sounds/untag_$TARGET
+  robot_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
+  robot_untag_post = SAY_MOOS=say=file=sounds/untag_post_$TARGET.wav
   robot_untag_post = TAGGED_$UP_TARGET=false
 
   team_one=red
