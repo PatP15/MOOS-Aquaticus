@@ -60,8 +60,8 @@ ProcessConfig = uFldFlagManager
   away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
   away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
 
-  deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
-  deny_post = var=SAY_MOOS_$UP_VNAME, sval={say={Grab denied $REASON}}
+  deny_post = var=SAY_MOOS, sval={file=sounds/$REASON.wav}
+  deny_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/$REASON.wav}
 
   home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
   home_post = var=FLAG_RESET, sval={vname=$VNAME}
