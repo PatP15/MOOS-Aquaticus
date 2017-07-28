@@ -140,8 +140,7 @@ for arg in "${@:3}"; do
     elif [ "${arg:0:10}" = "--start-a=" ] ; then
         START_POS_A="${arg#--start-a=*}"
     else
-        echo "Undefined argument:" $arg
-        echo "Error invalid switch!"
+        echo "Undefined switch:" $arg
         HELP="yes"
     fi
 done
