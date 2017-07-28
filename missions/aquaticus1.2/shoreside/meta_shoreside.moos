@@ -130,7 +130,7 @@ ProcessConfig = uFldTagManager
 //  robot_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
 //  robot_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
   robot_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
-  robot_untag_post = SAY_MOOS=say=file=sounds/untag_post_$TARGET.wav
+  robot_untag_post = SAY_MOOS=file=sounds/untag_post_$TARGET.wav
   robot_untag_post = TAGGED_$UP_TARGET=false
 
   team_one=red
