@@ -326,7 +326,7 @@ Behavior = BHV_Trail
   pwt                     = 100
   condition               = MODE == COVERING
   runflag                 = BOT_DIALOG_STATUS=Covering
-  contact                 = mokai_$(VTEAM)
+  contact                 = $(VTEAM)_one
   decay                   = 15,30
   extrapolate             = false
   on_no_contact_ok        = true
@@ -340,6 +340,8 @@ Behavior = BHV_Trail
   trail_angle             = 0
   trail_angle_type        = relative
   trail_range             = 15
+
+  updates                 = COVER_UPDATES
 }
 
 //#############################################################################
@@ -349,7 +351,7 @@ Behavior = BHV_Trail
   pwt                     = 100
   condition               = MODE == TRAILING
   runflag                 = BOT_DIALOG_STATUS=Trailing
-  contact                 = mokai_$(VTEAM)
+  contact                 = $(VTEAM)_one
   decay                   = 15,30
   extrapolate             = false
   on_no_contact_ok        = true
@@ -363,4 +365,6 @@ Behavior = BHV_Trail
   trail_angle             = 180
   trail_angle_type        = relative
   trail_range             = 15
+
+  updates                 = TRAIL_UPDATES
 }
