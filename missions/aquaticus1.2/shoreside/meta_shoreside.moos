@@ -281,29 +281,29 @@ ProcessConfig = pMarineViewer
   op_vertex = x=82,   y=-56, lwidth=1,lcolor=yellow,looped=true,group=moa
 
 
-  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
-  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
-  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
+  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
+  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK, var=ACTION, sval=ATTACK, receivers=evan:felix:gus:hal:ida:jing
-  cmd = label=ATTACK, var=AGGRESSIVE, sval=true, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK, var=AGGRESSIVE, sval=true, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=evan:felix:gus:hal:ida:jing
-  cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=COVER, var=ACTION, sval=COVER, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=COVER, var=ACTION, sval=COVER, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=TRAIL, var=ACTION, sval=TRAIL, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=TRAIL, var=ACTION, sval=TRAIL, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=STATION, var=ACTION,  sval=STATION,  receivers=all:evan:felix:gus:hal:ida:jing
+  cmd = label=STATION, var=ACTION,  sval=STATION,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 }
 
 //--------------------------------------------------------

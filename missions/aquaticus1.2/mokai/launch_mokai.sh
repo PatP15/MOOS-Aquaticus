@@ -7,7 +7,7 @@ TIME_WARP=1
 HELP="no"
 JUST_BUILD="no"
 START_POS="0,0,0"
-VNAME="mokai"
+VNAME=""
 VTEAM=""
 VPORT="9013"
 SHARE_LISTEN="9313"
@@ -17,99 +17,178 @@ TEAMMATE1=""
 TEAMMATE2=""
 VOICE="ON"
 
-for ARGI; do
-    if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-        HELP="yes"
-    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
-        TIME_WARP=$ARGI
-    elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
+case "$1" in
+    r1|red_one)
         VTEAM="red"
-        START_POS="50,-24,240"
-        GRAB_POS="-58,-71"
-        UNTAG_POS="50,-24"
-        RETURN_POS="50,-24"
+        VNAME="red_one"
+        VPORT="9011"
+        SHARE_LISTEN="9311"
+        echo "Vehical set to red one."
+        ;;
+    r2|red_two)
+        VTEAM="red"
+        VNAME="red_two"
+        VPORT="9012"
+        SHARE_LISTEN="9312"
+        echo "Vehical set to red two."
+        ;;
+    r3|red_three)
+        VTEAM="red"
+        VNAME="red_three"
         VPORT="9013"
         SHARE_LISTEN="9313"
-        BUTTON="5"
-        echo "Red team selected."
-    elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
-        VTEAM="blue"
-        START_POS="-58,-71,60"
-        GRAB_POS="50,-24"
-        UNTAG_POS="-58,-71"
-        RETURN_POS="-58,-71"
+        echo "Vehical set to red two."
+        ;;
+    r4|red_four)
+        VTEAM="red"
+        VNAME="red_four"
         VPORT="9014"
         SHARE_LISTEN="9314"
-        BUTTON="4"
-        echo "Blue team selected."
-    elif [ "${ARGI}" = "--w-evan" -o "${ARGI}" = "-e" ] ; then
-        if [[ -z $TEAMMATE1 ]]; then
-            TEAMMATE1="evan"
-        else TEAMMATE2="evan";
-        fi
-    elif [ "${ARGI}" = "--w-felix" -o "${ARGI}" = "-f" ] ; then
-        if [[ -z $TEAMMATE1 ]] ; then
-            TEAMMATE1="felix"
-        else TEAMMATE2="felix";
-        fi
-    elif [ "${ARGI}" = "--w-gus" -o "${ARGI}" = "-g" ] ; then
-        if [[ -z $TEAMMATE1 ]] ; then
-            TEAMMATE1="gus"
-        else TEAMMATE2="gus";
-        fi
-    elif [ "${ARGI}" = "--w-hal" -o "${ARGI}" = "-H" ] ; then
-        if [[ -z $TEAMMATE1 ]] ; then
-            TEAMMATE1="hal"
-        else TEAMMATE2="hal";
-        fi
-    elif [ "${ARGI}" = "--w-ida" -o "${ARGI}" = "-i" ] ; then
-        if [[ -z $TEAMMATE1 ]] ; then
-            TEAMMATE1="ida"
-        else TEAMMATE2="ida";
-        fi
-    elif [ "${ARGI}" = "--w-jing" -o "${ARGI}" = "-J" ] ; then
-        if [[ -z $TEAMMATE1 ]] ; then
-            TEAMMATE1="jing"
-        else TEAMMATE2="jing";
-        fi
-    elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
+        echo "Vehical set to red two."
+        ;;
+    b1|blue_one)
+        VTEAM="blue"
+        VNAME="blue_one"
+        VPORT="9011"
+        SHARE_LISTEN="9311"
+        echo "Vehical set to blue one."
+        ;;
+    b2|blue_two)
+        VTEAM="blue"
+        VNAME="blue_two"
+        VPORT="9012"
+        SHARE_LISTEN="9312"
+        echo "Vehical set to blue two."
+        ;;
+    b3|blue_three)
+        VTEAM="blue"
+        VNAME="blue_three"
+        VPORT="9013"
+        SHARE_LISTEN="9313"
+        echo "Vehical set to blue three."
+        ;;
+    b4|blue_four)
+        VTEAM="blue"
+        VNAME="blue_four"
+        VPORT="9014"
+        SHARE_LISTEN="9314"
+        echo "Vehical set to blue four."
+        ;;
+    *)
+        HELP="yes"
+        echo "Error invalid positional argument!"
+        ;;
+esac
+
+for arg in "${@:2:2}"; do
+    REQUESTED_TEAMMATE=""
+    case "$arg" in
+        r1|red_one)
+            REQUESTED_TEAMMATE="red_one"
+            ;;
+        r2|red_two)
+            REQUESTED_TEAMMATE="red_two"
+            ;;
+        r3|red_three)
+            REQUESTED_TEAMMATE="red_three"
+            ;;
+        r4|red_four)
+            REQUESTED_TEAMMATE="red_four"
+            ;;
+        b1|blue_one)
+            REQUESTED_TEAMMATE="blue_one"
+            ;;
+        b2|blue_two)
+            REQUESTED_TEAMMATE="blue_two"
+            ;;
+        b3|blue_three)
+            REQUESTED_TEAMMATE="blue_three"
+            ;;
+        b4|blue_four)
+            REQUESTED_TEAMMATE="blue_four"
+            ;;
+        *)
+            HELP="yes"
+            echo "Error invalid teammate name!"
+            ;;
+    esac
+    
+       
+    if [ -z $TEAMMATE1 ]; then
+        TEAMMATE1=$REQUESTED_TEAMMATE
+        echo $TEAMMATE1 "assigned as teammate1."
+    else
+        TEAMMATE2=$REQUESTED_TEAMMATE
+        echo $TEAMMATE2 "assigned as teammate2"
+    fi
+done
+	
+for arg in "${@:4}"; do
+    if [ "${arg}" = "--help" -o "${arg}" = "-H" ] ; then
+        HELP="yes"
+    elif [ "${arg//[^0-9]/}" = "$arg" -a "$TIME_WARP" = 1 ]; then
+        TIME_WARP=$arg
+    elif [ "${arg}" = "--just_build" -o "${arg}" = "-J" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
-    elif [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
+    elif [ "${arg}" = "--sim" -o "${arg}" = "-s" ] ; then
         SIM="SIM=FULL"
         echo "Full simulation mode ON."
-    elif [ "${ARGI}" = "--semi-sim" -o "${ARGI}" = "-ss" ] ; then
+    elif [ "${arg}" = "--semi-sim" -o "${arg}" = "-ss" ] ; then
         SIM="SIM=SEMI"
         echo "Semi simulation mode ON."
-    elif [ "${ARGI}" = "--voice-on" -o "${ARGI}" = "-von" ] ; then
+    elif [ "${arg}" = "--voice-on" -o "${arg}" = "-von" ] ; then
         VOICE="ON"
         echo "Voice recognition ON."
-    elif [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
+    elif [ "${arg}" = "--voice-off" -o "${arg}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
     else
-      echo "Undefined argument:" $ARGI
-      echo "Please use -h for help."
-      exit 1
+        echo "Undefined switch:" $arg
+        HELP="yes"
     fi
 done
 
+if [ "${VTEAM}" = "red" ]; then
+    START_POS="50,-24,240"
+    GRAB_POS="-58,-71"
+    UNTAG_POS="50,-24"
+    RETURN_POS="50,-24"
+    BUTTON="5"
+    echo "Red team selected."
+elif [ "${VTEAM}" = "blue" ]; then
+    START_POS="-58,-71,60"
+    GRAB_POS="50,-24"
+    UNTAG_POS="-58,-71"
+    RETURN_POS="-58,-71"
+    BUTTON="4"
+    echo "Blue team selected."
+fi
+
 if [ "${HELP}" = "yes" ]; then
-    echo "$0 [SWITCHES]"
-    echo "  --blue,       -b    : Blue team"
-    echo "  --red,        -r    : Red team"
-    echo "  --w-evan,     -e    : Evan  as a teammate."
-    echo "  --w-felix,    -f    : Felix as a teammate."
-    echo "  --w-gus,      -g    : Gus   as a teammate."
-    echo "  --w-hal,      -H    : Hal   as a teammate."
-    echo "  --w-ida,      -i    : Ida   as a teammate."
-    echo "  --w-jing,     -J    : Jing  as a teammate."
+    echo ""
+    echo "$0 <vehical_name> <teammate1_name> <teammate2_name> [SWITCHES]"
+
+    echo ""
+    echo "POSSIBLE VEHICAL OR TEAMMATE NAMES:"
+    echo "  blue_one,     b1    : Vehical one on blue team."
+    echo "  blue_two,     b2    : Vehical two on blue team."
+    echo "  blue_three,   b3    : Vehical three on blue team."
+    echo "  blue_four,    b4    : Vehical four on blue team."
+
+    echo "  red_one,      r1    : Vehical one on red team."
+    echo "  red_two,      r2    : Vehical two on red team."
+    echo "  red_three,    r3    : Vehical three on red team."
+    echo "  red_four,     r4    : Vehical four on red team."
+
+    echo ""
+    echo "POSSIBLE SWITCHES:"
     echo "  --semi-sim,   -ss   : Semi-autonomous simulation (w/ joysticks)"
     echo "  --sim,        -s    : Full simulation"
     echo "  --voice-on,   -von  : Voice recognition on"
     echo "  --voice-off,  -voff : Voice recognition off"
-    echo "  --just_build, -j"
-    echo "  --help,       -h"
+    echo "  --just_build, -J"
+    echo "  --help,       -H"
     exit 0;
 fi
 
@@ -134,7 +213,7 @@ fi
 echo "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos ."
 
 nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
-       VNAME="${VNAME}_${VTEAM}"    \
+       VNAME="${VNAME}"             \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$TIME_WARP              \
@@ -153,7 +232,7 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
 echo "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv ."
 
 nsplug meta_mokai.bhv targ_${VNAME}_${VTEAM}.bhv -f  \
-       VNAME="${VNAME}_${VTEAM}"    \
+       VNAME="${VNAME}"             \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$WARP                   \

@@ -2,7 +2,7 @@
 TIME_WARP=4
 
 CMD_ARGS=""
-NO_M200=""
+NO_HERON=""
 NO_MOKAI=""
 NO_SHORESIDE=""
 
@@ -16,8 +16,8 @@ for ARGI; do
         NO_SHORESIDE="true"
     elif [ "${ARGI}" = "--no_mokai" -o "${ARGI}" = "-nmo" ] ; then
         NO_MOKAI="true"
-    elif [ "${ARGI}" = "--no_m200" -o "${ARGI}" = "-nm2" ] ; then
-        NO_M200="true"
+    elif [ "${ARGI}" = "--no_heron" -o "${ARGI}" = "-nh" ] ; then
+        NO_HERON="true"
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
         echo "Time warp set up to $TIME_WARP."
@@ -34,26 +34,26 @@ if [ "${HELP}" = "yes" ]; then
   echo "$0 [SWITCHES]"
   echo "  XX                  : Time warp"
   echo "  --no_shoreside, -ns"
-  echo "  --no_mokai, -nm"
-  echo "  --no_m200, -nm2"
+  echo "  --no_mokai, -nmo"
+  echo "  --no_heron, -nh"
   echo "  --just_build, -j"
   echo "  --help, -h"
   exit 0;
 fi
 
 #-------------------------------------------------------
-#  Part 2: Launching M200s
+#  Part 2: Launching herons
 #-------------------------------------------------------
-if [[ -z $NO_M200 ]]; then
-  cd ./m200
+if [[ -z $NO_HERON ]]; then
+  cd ./heron
   # Evan Blue
-  ./launch_m200.sh $TIME_WARP -e -b -s > /dev/null &
+  ./launch_heron.sh e r3 $TIME_WARP -s > /dev/null &
   # Felix Red
-  ./launch_m200.sh $TIME_WARP -f -r -s > /dev/null &
+  ./launch_heron.sh f r4 $TIME_WARP -s > /dev/null &
   # Hal Blue
-  ./launch_m200.sh $TIME_WARP -H -b -s > /dev/null &
+  ./launch_heron.sh h b3 $TIME_WARP -s > /dev/null &
   # Ida Red
-  ./launch_m200.sh $TIME_WARP -i -r -s > /dev/null &
+  ./launch_heron.sh i b4 $TIME_WARP -s > /dev/null &
   cd ..
 fi
 
@@ -62,10 +62,14 @@ fi
 #-------------------------------------------------------
 if [[ -z $NO_MOKAI ]]; then
   cd ./mokai
-  # w/ Evan Blue
-  ./launch_mokai.sh $TIME_WARP -e -H -b -ss >& /dev/null &
-  # w/ Felix Red
-  ./launch_mokai.sh $TIME_WARP -f -i -r -ss >& /dev/null &
+  # Blue one
+  ./launch_mokai.sh b1 b3 b4 $TIME_WARP -ss >& /dev/null &
+  # Blue one
+  ./launch_mokai.sh b2 b3 b4 $TIME_WARP -ss >& /dev/null &
+  # Red one
+  ./launch_mokai.sh r1 r3 r4 $TIME_WARP -ss >& /dev/null &
+  # Blue one
+  ./launch_mokai.sh r2 r3 r4 $TIME_WARP -ss >& /dev/null &
   cd ..
 fi
 
