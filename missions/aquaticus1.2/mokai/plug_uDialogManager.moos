@@ -4,6 +4,9 @@ ProcessConfig = uDialogManager
   AppTick   = 4
   CommsTick = 4
 
+ //Indicate whether to use local text-to-speech (TTS) or pre-recorded wave files
+ Use_Wav_Files=Yes
+
   sentence = $(TEAMMATE1)_Deploy : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE1),var_name = DEPLOY,string_val = true" + NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE1),var_name = MOOS_MANUAL_OVERRIDE,string_val = false"
   sentence = $(TEAMMATE1)_Return : NODE_MESSAGE_LOCAL = "src_node = $(VNAME),dest_node = $(TEAMMATE1),var_name = RETURN,string_val = true"
 
