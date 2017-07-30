@@ -4,11 +4,12 @@
 /*   FILE: DialogManager_Info_3_0.cpp                               */
 /*   DATE: August 17th, 2015                                    */
 /*   UPDATED: Aug. 10 2016                                 */
+/*   UPDATED: July 28 2017                                 */
 /****************************************************************/
 
 #include <cstdlib>
 #include <iostream>
-#include "DialogManager_Info_3_0.h"
+#include "DialogManager_Info_4_0.h"
 #include "ColorParse.h"
 #include "ReleaseInfo.h"
 
@@ -21,7 +22,7 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The uDialogManager_3_0 application is used for controlling the    "); 
+  blk("  The uDialogManager_4_0 application is used for controlling the    "); 
   blk("  dialog between speech recognition and the user.  It's main    ");
   blk("  function is to correct for errors in speech.              ");
   blk("                                                                ");
@@ -34,7 +35,7 @@ void showHelpAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("Usage: uDialogManager v3.0 file.moos [OPTIONS]                   ");
+  blu("Usage: uDialogManager v4.0 file.moos [OPTIONS]                   ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
@@ -74,6 +75,10 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("  ");
+  blk("  //indicate whether to use local text-to-speech (TTS) or       ");
+  blk("  //pre-recorded wave files. Options are yes or no              ");
+  blk("  Use_Wav_Files=Yes                                             ");
+  blk("  ");
   blk("  //list of vars and values to publish given speech sentence    ");
   blk("  //var-value pairs are '+' separated                           ");
   blk("  sentence = Arnold_Deploy : DEPLOY = true + MOOS_MANUAL_OVERRIDE = false + RETURN = false");
@@ -112,7 +117,7 @@ void showInterfaceAndExit()
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
   blk("  SPEECH_COMMANDED   = an acknowledged command                    ");
-  blk("  SAY_MOOS           = sent to iSay for spoken dialogue to user                  ");
+  blk("  SAY_MOOS           = sent to iSay for spoken dialogue or use of wave files to user ");
   blk(" ");
   blk("  any other var value pair publications can be defined per speech rec sentence in the .moos file ");
   exit(0);
@@ -123,7 +128,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uDialogManager 3.0", "gpl");
+  showReleaseInfo("uDialogManager 4.0", "gpl");
   exit(0);
 }
 

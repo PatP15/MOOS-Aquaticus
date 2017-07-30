@@ -1,10 +1,15 @@
 //------------------------------------------------
 // uDialogManager config block
 
-ProcessConfig = uDialogManager_3_0
+ProcessConfig = uDialogManager_4_0
 {
    AppTick   = 4
    CommsTick = 4
+
+   //Use_Wav_Files=Yes indicates using pre-existing wav files instead of local text-to-speech TTS capability
+   //for speech dialog.  Options are yes or no.
+   Use_Wav_Files=Yes
+
 
    //robot Betty's nickname is Arnold
    //Nickname = betty:arnold

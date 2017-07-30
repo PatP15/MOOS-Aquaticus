@@ -4,12 +4,13 @@
 /*    FILE: DialogManager.cpp                               */
 /*    DATE: Aug. 17 2015                                   */
 /*    UPDATED: Aug. 10 2016                                 */
+/*    UPDATED: July 28 2017                                 */
 /************************************************************/
 
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "DialogManager_3_0.h"
+#include "DialogManager_4_0.h"
 #include "unistd.h"
 
 using namespace std;
@@ -149,12 +150,24 @@ void DialogManager::triggerAckSequence(string sval)
   }
   else{
     //    ackStatement = "Error Wrong Ack";
-    ackStatement = "Try One More Time, " +  m_confirm_word[m_commanded_string] + " or " +  m_decline_word[m_commanded_string];
+    ackStatement = "Try one more time, " +  m_confirm_word[m_commanded_string] + " or " +  m_decline_word[m_commanded_string];
     m_state = WAIT_ACK;
     m_number_ack_attempts += 1;
   }
 
-  m_Comms.Notify("SAY_MOOS",ackStatement);
+  if(m_use_wave_files == "YES") { //format string for using wave files
+    //replace spaces with underscores for file convention
+    std::string fileAckStatement;
+    fileAckStatement = tolower(ackStatement);
+    fileAckStatement = spacesToUnderscores(fileAckStatement);
+    fileAckStatement = "file=sounds/" + fileAckStatement;
+    fileAckStatement += ".wav";
+    m_Comms.Notify("SAY_MOOS",fileAckStatement);
+  }
+  else {
+    m_Comms.Notify("SAY_MOOS",ackStatement);
+  }
+  
   string keepConversation;
   keepConversation = "DM: " + ackStatement;
   m_conversation.push_back(keepConversation);
@@ -183,7 +196,15 @@ void DialogManager::triggerCommandSequence(string sval)
   }
   else {
 
-    string newSVal = "say={";
+    
+    string newSVal;
+    if(m_use_wave_files == "YES") {
+     newSVal = "file=sounds/";
+    }
+    else {
+      newSVal = "say={";
+    }
+    
     string toKeepConversation = "DM: ";
     
     //search through possible speech sentences defined in .moos file
@@ -191,7 +212,7 @@ void DialogManager::triggerCommandSequence(string sval)
     it = m_actions.find(sval);
     if(it == m_actions.end()) {
       //Speech Sentence to Variable Assignment not defined!
-      newSVal += "Command not defined";
+      newSVal += "command not defined";
       toKeepConversation += " Command Not Defined";
       m_state = WAIT_COMMAND;
     }
@@ -205,7 +226,7 @@ void DialogManager::triggerCommandSequence(string sval)
 	//this sentence has a NOCONFIRM option set
 	bool posted =  triggerVariablePosts();
 
-	newSVal += "Command sent";
+	newSVal += "command sent";
 	toKeepConversation += "Command Sent";
 	//Place FSM into wait for next command
 	m_state = WAIT_COMMAND;
@@ -213,7 +234,7 @@ void DialogManager::triggerCommandSequence(string sval)
       else {
 	std::string svalLowered = tolower(sval);
 	//Append question to command
-	newSVal += "Did you mean " + svalLowered;
+	newSVal += "did you mean " + svalLowered;
         toKeepConversation = "DM: Did you mean " + svalLowered;
 
 	//Place FSM into wait for acknowledgement state
@@ -221,7 +242,14 @@ void DialogManager::triggerCommandSequence(string sval)
       }
     }
 
-    newSVal +="}, rate=200";
+    if(m_use_wave_files == "YES") {
+      newSVal = spacesToUnderscores(newSVal);
+      newSVal +=".wav";
+    }
+    else {
+      newSVal +="}, rate=200";
+    }
+    
     //Send verification question
     m_Comms.Notify("SAY_MOOS",newSVal);
     m_conversation.push_back(toKeepConversation);
@@ -283,10 +311,12 @@ bool DialogManager::OnStartUp()
     else if(param == "SENTENCE") {
       handled = handleActionAssignments(line);
     }
+    else if(param == "USE_WAV_FILES") {
+      handled = handleWaveFiles(line);
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
-
   }
   
   registerVariables();	
@@ -447,6 +477,51 @@ bool DialogManager::handleActionAssignments(std::string line) {
     return (true);
 }
 
+
+//-------------------------------------------------------
+// Procedure: spacesToUnderscores
+std::string DialogManager::spacesToUnderscores(std::string line) {
+  //search for spaces and replace with underscores
+  std::size_t found = line.find(' ');
+  while(found!=std::string::npos) {
+    line.replace(found,1,"_");
+
+    //check again for _'s that should be changed to an underscore
+    found = line.find(' ');
+  }
+
+  std::string augmentedLine = line;
+
+  return augmentedLine;
+}
+
+//-------------------------------------------------------
+// Procedure: handleWaveFiles
+
+bool DialogManager::handleWaveFiles(std::string line) {
+  //decide whether to use local text-to-speech or wav files
+  //we are expecting a sentence that is formated as
+  //USE_WAV_FILES=YES or =NO
+  //std::string variableName = toupper(biteStringX(line,'='));
+  std::string variableName = toupper(line);
+
+  if(line == "") { //config warning as missing proper format
+    return false;
+  }
+
+    //if(variableName == "USE_WAV_FILES") { //correctly formed variable name
+    if(variableName == "YES" || variableName == "NO") { //proper option selected
+      m_use_wave_files = variableName;
+      return true;
+    }
+    else {  //wrong options
+      return false;
+    }
+    //  else { //porly formed variable name
+    //return false;
+    //}
+}
+
 //---------------------------------------------------------
 // Procedure: registerVariables
 
@@ -479,6 +554,8 @@ bool DialogManager::buildReport()
   m_msgs << actab.getFormattedString();
   */
 
+  m_msgs << "USE_WAV_FILES = " << m_use_wave_files << endl;
+  
   //List action of speech sentences to variables published
   for(std::map<string,std::list<var_value> >::iterator it = m_actions.begin(); it!=m_actions.end(); ++it) {
     m_msgs << endl << endl << "Sentence Action: " << it->first ;

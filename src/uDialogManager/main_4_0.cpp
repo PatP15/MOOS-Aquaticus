@@ -4,13 +4,14 @@
 /*    FILE: main_3_0.cpp                                        */
 /*    DATE: August 17th, 2015                               */
 /*    UPDATED: Aug. 10 2016                                 */
+/*    UPDATED: July 28 2017                                 */
 /************************************************************/
 
 #include <string>
 #include "MBUtils.h"
 #include "ColorParse.h"
-#include "DialogManager_3_0.h"
-#include "DialogManager_Info_3_0.h"
+#include "DialogManager_4_0.h"
+#include "DialogManager_Info_4_0.h"
 
 using namespace std;
 

@@ -4,10 +4,11 @@
 /*    FILE: DialogManager.h                                 */
 /*    DATE: August 17th, 2015                               */
 /*    UPDATED: Aug. 10 2016                                 */
+/*    UPDATED: July 28 2017                                 */
 /************************************************************/
 
-#ifndef DialogManager_3_0_HEADER
-#define DialogManager_3_0_HEADER
+#ifndef DialogManager_4_0_HEADER
+#define DialogManager_4_0_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include <string>
@@ -43,8 +44,10 @@ class DialogManager : public AppCastingMOOSApp
   void triggerAckSequence(std::string sval);
   bool handleNickNameAssignments(std::string line);
   bool handleActionAssignments(std::string line);
+  bool handleWaveFiles(std::string line);
   bool triggerVariablePosts();
-
+  std::string spacesToUnderscores(std::string line);
+  
  private: // Configuration variables
   int m_number_ack_attempts;
   std::map<std::string,std::string> m_nicknames;
@@ -54,6 +57,7 @@ class DialogManager : public AppCastingMOOSApp
   std::map<std::string,std::string> m_decline_word;
 
  private: // State variables
+  std::string m_use_wave_files;
   std::string m_commanded_string;
   std::vector<std::string> m_conversation;
   enum type_name {
