@@ -8,7 +8,7 @@ VTEAM1="red"
 VTEAM2="blue"
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
-BLUE_FLAG="x=-58,y=-71"
+BLUE_FLAG="x=-52,y=-70"
 RED_FLAG="x=50,y=-24"
 
 for ARGI; do

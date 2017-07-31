@@ -151,16 +151,16 @@ done
 
 if [ "${VTEAM}" = "red" ]; then
     START_POS="50,-24,240"
-    GRAB_POS="-58,-71"
+    GRAB_POS="-52,-70"
     UNTAG_POS="50,-24"
     RETURN_POS="50,-24"
     BUTTON="5"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
-    START_POS="-58,-71,60"
+    START_POS="-52,-70,60"
     GRAB_POS="50,-24"
-    UNTAG_POS="-58,-71"
-    RETURN_POS="-58,-71"
+    UNTAG_POS="-52,-70"
+    RETURN_POS="-52,-70"
     BUTTON="4"
     echo "Blue team selected."
 fi

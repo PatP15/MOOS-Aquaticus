@@ -146,7 +146,7 @@ for arg in "${@:3}"; do
 done
 
 if [ "${VTEAM}" = "red" ]; then
-    GRAB_POS="-58,-71"
+    GRAB_POS="-52,-70"
     GRABR_POS="-46,-42"
     GRABL_POS="-29,-83"
     UNTAG_POS="50,-24"
@@ -157,9 +157,9 @@ elif [ "${VTEAM}" = "blue" ]; then
     GRAB_POS="50,-24"
     GRABR_POS="42,-55"
     GRABL_POS="19,-11"
-    UNTAG_POS="-58,-71"
+    UNTAG_POS="-52,-70"
     RETURN_POS="5,0"
-    START_POS="-58,-71,60"
+    START_POS="-52,-70,60"
     echo "Blue team selected."
 fi
    
