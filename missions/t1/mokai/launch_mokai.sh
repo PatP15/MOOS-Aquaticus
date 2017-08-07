@@ -28,7 +28,7 @@ for ARGI; do
         RETURN_POS="50,-24"
         VPORT="9013"
         SHARE_LISTEN="9313"
-        BUTTON="5"
+        BUTTON="1"
         echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
@@ -38,7 +38,7 @@ for ARGI; do
         RETURN_POS="-58,-71"
         VPORT="9014"
         SHARE_LISTEN="9314"
-        BUTTON="4"
+        BUTTON="2"
         echo "Blue team selected."
     elif [ "${ARGI}" = "--w-evan" -o "${ARGI}" = "-e" ] ; then
         TEAMMATE="evan"

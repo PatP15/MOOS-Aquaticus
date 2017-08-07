@@ -49,3 +49,33 @@ TARGET_LINK_LIBRARIES(BHV_Defense
    geometry
    ${SYSTEM_LIBS} )
 
+#--------------------------------------------------------
+#                                       BHV_Defense_Collab
+#--------------------------------------------------------
+ADD_LIBRARY(BHV_Defense_Collab SHARED
+   BHV_Defense_Collab.cpp NodeReport.cpp)
+TARGET_LINK_LIBRARIES(BHV_Defense_Collab
+   helmivp
+   behaviors
+   ivpbuild
+   logic
+   ivpcore
+   bhvutil
+   mbutil
+   geometry
+   ${SYSTEM_LIBS} )
+#--------------------------------------------------------
+#                                       BHV_Defense_Collab
+#--------------------------------------------------------
+ADD_LIBRARY(BHV_Cover SHARED
+   BHV_Cover.cpp NodeReport.cpp)
+TARGET_LINK_LIBRARIES(BHV_Cover
+   helmivp
+   behaviors
+   ivpbuild
+   logic
+   ivpcore
+   bhvutil
+   mbutil
+   geometry
+   ${SYSTEM_LIBS} )

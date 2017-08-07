@@ -1,5 +1,5 @@
 #!/bin/bash
-TIME_WARP=4
+TIME_WARP=1
 
 CMD_ARGS=""
 NO_M200=""

@@ -25,9 +25,11 @@ done
 #-------------------------------------------------------
 VNAME1="charlie"           # The first vehicle Community
 VNAME2="dana"
+TEAM1="red"
+TEAM2="red"
 
-START_POS1="75,-100"
-START_POS2="100,-100"
+START_POS1="-75,-100"
+START_POS2="75,-100"
 LOITER_POS1="x=100,y=-100"
 LOITER_POS2="x=50,y=-75"
 
@@ -42,7 +44,7 @@ nsplug meta_vehicle.moos targ_$VNAME1.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME1          SHARE_LISTEN="9301"              \
     VPORT="9001"           SHORE_LISTEN=$SHORE_LISTEN       \
     START_POS=$START_POS1  FLAG_X=$FLAG_X1                  \
-    FLAG_Y=$FLAG_Y1
+    FLAG_Y=$FLAG_Y1 
 
 nsplug meta_vehicle.moos targ_$VNAME2.moos -f WARP=$TIME_WARP \
     VNAME=$VNAME2          SHARE_LISTEN="9302"              \
@@ -56,11 +58,11 @@ nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP \
 
 nsplug meta_vehicle.bhv targ_$VNAME1.bhv -f VNAME=$VNAME1     \
     START_POS=$START_POS1 LOITER_POS=$LOITER_POS1              \
-    FLAG_X=$FLAG_X1   FLAG_Y=$FLAG_Y1
+    FLAG_X=$FLAG_X1   FLAG_Y=$FLAG_Y1 TEAM=$TEAM1
  
 nsplug meta_vehicle.bhv targ_$VNAME2.bhv -f VNAME=$VNAME2     \
     START_POS=$START_POS2 LOITER_POS=$LOITER_POS2              \
-    FLAG_X=$FLAG_X2  FLAG_Y=$FLAG_Y2
+    FLAG_X=$FLAG_X2  FLAG_Y=$FLAG_Y2 TEAM=$TEAM2
 
 if [ ${JUST_MAKE} = "yes" ] ; then
     exit 0

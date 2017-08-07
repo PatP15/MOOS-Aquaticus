@@ -46,7 +46,7 @@ Behavior = BHV_Loiter
    post_suffix = A
          speed = 2
      clockwise = true
-        radius = 8.0
+        radius = 12.0
      nm_radius = 15.0
        polygon = radial:: $(LOITER_POS), radius=30, pts=8, snap=1, label=$(VNAME)_LOITER
   visual_hints = nextpt_color=white, nextpt_lcolor=khaki
@@ -70,8 +70,6 @@ Behavior = BHV_Waypoint
      points = $(START_POS)
      repeat = 10
        lead = 8
-
-
 }
 
 //----------------------------------------------
@@ -94,17 +92,16 @@ Behavior = BHV_StationKeep
 }
 
 //-----------------------------------------------
-Behavior = BHV_Defense
+Behavior = BHV_Defense_Collab
 {
    name      = defend
    pwt       = 100
    condition = MODE==DEFENDING
    inactiveflag = DEFENDING=false
    activeflag   = DEFENDING=true
-
+   team		= red
    flag_x = $(FLAG_X)
    flag_y = $(FLAG_Y)
-
    speed  = 2			//default
    distance_from_flag = 10	//default
 }

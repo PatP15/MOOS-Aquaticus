@@ -1,6 +1,6 @@
 initialize DEPLOY     = false
 initialize RETURN     = false
-initialize ACTION     = DEFEND
+initialize ACTION     = $(BEH)
 initialize TAGGED     = false
 initialize AGGRESSIVE = false
 
@@ -202,18 +202,19 @@ Behavior = BHV_Waypoint
 //}
 
 
-Behavior = BHV_Defense
+Behavior = BHV_Defense_Collab
 {
   name                    = defend
   pwt                     = 100
   condition               = MODE==PASSIVE
   runflag                 = BOT_DIALOG_STATUS=Defending
   
-  flag_x =50
-  flag_y =-24
-
+  flag = $(FLAG)
+  enemy_flag = $(EFLAG)
+  team	 = $(VTEAM)
+  enemies= $(ENEMIES)
   speed                   = 2  //default
-  distance_from_flag      = 10 //default
+  distance_from_flag      = 20 //default
 
 }
 
@@ -262,3 +263,20 @@ Behavior = BHV_StationKeep
   visual_hints            = vertex_color = red // default
 }
 
+//#############################################################################
+Behavior = BHV_Cover
+{
+  name                    = cover
+  pwt                     = 100
+  condition               = MODE==COVERING
+  runflag                 = BOT_DIALOG_STATUS=Covering
+  
+  team	 = $(VTEAM)
+  enemies= $(ENEMIES)
+  requestor = mokai_$(VTEAM)
+  enemy_flag= $(EFLAG)
+
+  speed                   = 2  //default
+  distance_from_flag      = 10 //default
+
+}

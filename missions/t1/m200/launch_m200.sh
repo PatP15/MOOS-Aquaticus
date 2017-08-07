@@ -11,6 +11,7 @@ JUST_BUILD="no"
 VTEAM=""
 VNAME=""
 VMODEL="M200"
+CNAME=""
 
 START_POS="56,16,240"
 RETURN_POS="5,0"
@@ -31,12 +32,15 @@ for ARGI; do
     elif [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
         M200_IP=192.168.5.1 #evan
         VNAME="evan"
+	ENEMIES="FELIX,MOKAI_RED,MOKAI_BLUE"
         VPORT="9005"
         SHARE_LISTEN="9305"
         echo "EVAN vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--felix" -o "${ARGI}" = "-f" ] ; then
         M200_IP=192.168.6.1 #felix
         VNAME="felix"
+	CNAME="FELIX"
+	ENEMIES="EVAN,MOKAI_RED,MOKAI_BLUE"
         VPORT="9006"
         SHARE_LISTEN="9306"
         echo "FELIX vehicle selected as HUNTER."
@@ -75,21 +79,27 @@ for ARGI; do
         echo "Simulation mode ON."
     elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         VTEAM="red"
+	UP_VTEAM="RED"
         GRAB_POS="-58,-71"
 	GRABR_POS="-46,-42"
 	GRABL_POS="-29,-83"
         UNTAG_POS="50,-24"
         RETURN_POS="5,0"
         START_POS="50,-24,240"
+	EFLAG="-58,-71"
+	BEH="COVER"
         echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
+	UP_VTEAM="BLUE"
         GRAB_POS="50,-24"
 	GRABR_POS="42,-55"
         GRABL_POS="19,-11"
         UNTAG_POS="-58,-71"
         RETURN_POS="5,0"
         START_POS="-58,-71,60"
+	EFLAG="50,-24"
+	BEH="DEFEND"
         echo "Blue team selected."
     elif [ "${ARGI:0:10}" = "--start-x=" ] ; then
         START_POS_X="${ARGI#--start-x=*}"
@@ -160,6 +170,7 @@ echo "Assembling MOOS file targ_${VNAME}.moos"
 nsplug meta_m200.moos targ_${VNAME}.moos -f \
     VNAME=$VNAME                 \
     VPORT=$VPORT                 \
+    CNAME=$CNAME                 \
     WARP=$TIME_WARP              \
     SHARE_LISTEN=$SHARE_LISTEN   \
     SHORE_LISTEN=$SHORE_LISTEN   \
@@ -180,11 +191,16 @@ nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
         VTEAM=$VTEAM                \
+	UP_VTEAM=$UP_VTEAM \
         VNAME=$VNAME                \
         GRAB_POS=$GRAB_POS     \
         GRABR_POS=$GRABR_POS   \
         GRABL_POS=$GRABL_POS    \
-        UNTAG_POS=$UNTAG_POS   
+        UNTAG_POS=$UNTAG_POS \
+	ENEMIES=$ENEMIES             \
+	FLAG=$START_POS     \
+	EFLAG=$EFLAG \
+	BEH=$BEH
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then

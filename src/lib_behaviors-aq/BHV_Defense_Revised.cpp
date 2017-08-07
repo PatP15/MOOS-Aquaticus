@@ -230,6 +230,12 @@ IvPFunction* BHV_Defense::onRunState()
   double dx1 = m_oppX-m_flagX;
   double dy1 = m_oppY-m_flagY;
   
+  if(hypot(dx1,dy1) < 2*m_dist_from_flag){
+    dx = m_oppX-m_osX;
+    dy = m_oppY-m_osY;
+    m_move=true;
+  }
+  
   m_angle = 90-atan(abs(dy)/abs(dx))*180/PI;
   
   
@@ -268,6 +274,13 @@ IvPFunction* BHV_Defense::onRunState()
     m_move=false;
   }
   //otherwise use just enough speed to allow it to turn to face the correct direction
+  else {
+    double temp=m_speed;
+    m_speed = .1;
+    ipf = buildFunctionWithZAIC();
+    m_speed = temp;
+  }
+  
   if(ipf)
     ipf->setPWT(m_priority_wt);
 
