@@ -215,7 +215,7 @@ void BHV_Cover::getOppCoords(string node)
     m_protX = new_report.nav_x;
     m_protY = new_report.nav_y;
     m_protH= new_report.heading;
-    postWMessage("got requestor coordinates: "+new_report.name);
+    // postWMessage("got requestor coordinates: "+new_report.name);
   }
 }
 
@@ -244,7 +244,6 @@ IvPFunction* BHV_Cover::onRunState()
     m_curr_node_report = getBufferStringVal("NODE_REPORT_"+m_enemy_list[i], check3);
     if(!check3){
       postWMessage("BHV_DEFENSE ERROR: Node_report not found in info_buffer!");
-      return 0;
     }
     else
       getOppCoords(m_curr_node_report);

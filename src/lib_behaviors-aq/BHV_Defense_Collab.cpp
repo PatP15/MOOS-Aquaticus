@@ -236,12 +236,12 @@ IvPFunction* BHV_Defense_Collab::onRunState()
 
   for(int i=0; i<m_enemy_list.size();i++){
     m_curr_node_report = getBufferStringVal("NODE_REPORT_"+m_enemy_list[i], check3);
-    getOppCoords(m_curr_node_report);
-  }
-  
-  if(!check3){
-    postWMessage("BHV_DEFENSE ERROR: Node_report not found in info_buffer!");
-    return 0;
+    if(!check3){
+      postWMessage("BHV_DEFENSE ERROR: Node_report not found in info_buffer!");
+    }
+    else{
+      getOppCoords(m_curr_node_report);
+    }
   }
 
 
