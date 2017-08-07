@@ -1,7 +1,7 @@
 #!/bin/bash
 TIME_WARP=1
 
-SHORE_IP=192.168.1.155
+SHORE_IP="192.168.1.226" #155 for normal shoreside
 SHORE_LISTEN="9300"
 
 TRAIL_RANGE="3"
@@ -62,6 +62,7 @@ for ARGI; do
         VNAME="ida"
 	VMODEL="M300"
         VPORT="9009"
+	ENEMIES=""
         SHARE_LISTEN="9309"
         echo "IDA vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--jing" -o "${ARGI}" = "-J" ] ; then
@@ -87,7 +88,7 @@ for ARGI; do
         RETURN_POS="5,0"
         START_POS="50,-24,240"
 	EFLAG="-58,-71"
-	BEH="COVER"
+	BEH="DEFEND"
         echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"

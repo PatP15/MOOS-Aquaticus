@@ -42,6 +42,6 @@ NodeReport::NodeReport(string node_report){
 
 string NodeReport::toString(){
   string output="Node Report with Name= ";
-  output+=name+", NAV_X= "+to_string(nav_x)+", NAV_Y= "+to_string(nav_y)+ " process_message= "+to_string(valid);
+  output+=name;//+", NAV_X= "+to_string(nav_x)+", NAV_Y= "+to_string(nav_y)+ " process_message= "+to_string(valid);
   return output;
 }

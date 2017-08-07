@@ -181,10 +181,9 @@ void BHV_Cover::getOppCoords(string node)
   if(m_requestor==""){
     postWMessage("No teammate to guard");
   }
-  else
-    postWMessage(m_requestor);
   postMessage("STAT", "starting to get opponent coordinates");
   NodeReport new_report(node);
+  
   if(new_report.name=="" || new_report.nav_x==0 || new_report.nav_y==0){
     postWMessage("Invalid Node Report");
   }
@@ -281,7 +280,7 @@ IvPFunction* BHV_Cover::onRunState()
     m_destX = m_protX - cos(m_attack_angle)*m_dist_from_flag;
     m_destY = m_protY - sin(m_attack_angle)*m_dist_from_flag;
   }
-  postMessage("STAT", "sending robot to point "+to_string(m_destX)+","+to_string(m_destY));
+ 
       
   dx = m_destX-m_osX;
   dy = m_destY-m_osY;
@@ -293,10 +292,10 @@ IvPFunction* BHV_Cover::onRunState()
     dx = m_oppX-m_osX;
     dy = m_oppY-m_osY;
     m_move=true;
-    postMessage("VIEW_POINT", to_string(m_oppX)+","+to_string(m_oppY));
+    //postMessage("VIEW_POINT", to_string(m_oppX)+","+to_string(m_oppY));
   }
   else
-    postMessage("VIEW_POINT", to_string(m_destX)+","+to_string(m_destY));
+    //postMessage("VIEW_POINT", to_string(m_destX)+","+to_string(m_destY));
   
   m_angle = 90-atan(abs(dy)/abs(dx))*180/PI;
   

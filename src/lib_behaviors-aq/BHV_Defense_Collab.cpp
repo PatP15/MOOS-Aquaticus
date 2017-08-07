@@ -273,7 +273,7 @@ IvPFunction* BHV_Defense_Collab::onRunState()
     m_destX = m_flagX - cos(m_attack_angle)*m_dist_from_flag;
     m_destY = m_flagY - sin(m_attack_angle)*m_dist_from_flag;
   }
-  postMessage("STAT", "sending robot to point "+to_string(m_destX)+","+to_string(m_destY));
+  
       
   dx = m_destX-m_osX;
   dy = m_destY-m_osY;
