@@ -75,6 +75,13 @@ for ARGI; do
         VPORT="9011"
         SHARE_LISTEN="9311"
         echo "KIRK vehicle selected."
+    elif [ "${ARGI}" = "--luke" -o "${ARGI}" = "-l" ] ; then
+        M200_IP=192.168.12.1 #luke
+        VNAME="luke"
+	VMODEL="M300"
+        VPORT="9012"
+        SHARE_LISTEN="9312"
+        echo "KIRK vehicle selected."
     elif [ "${ARGI}" = "--nostromo" -o "${ARGI}" = "-n" ] ; then
         VNAME="nostromo"
 	VMODEL="kayak"
@@ -123,6 +130,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --ida,        -i  : Ida vehicle."
     echo "  --jing,       -J  : Jing vehicle."
     echo "  --kirk,       -k  : Kirk vehicle."
+    echo "  --luke,       -l  : Luke vehicle."
     echo "  --nostromo,   -n  : Nostromo vehicle."
     echo "  --kestrel,   -ke  : Kestrel vehicle."
     echo "  --sim,        -s  : Simulation mode."
