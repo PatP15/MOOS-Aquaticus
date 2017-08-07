@@ -52,6 +52,10 @@ case "$1" in
         HERON_IP=192.168.11.1
         echo "KIRK heron selected."
         ;;
+    l|luke)
+	HERON_IP=192.168.12.1
+	echo "LUKE heron selected."
+	;;
     *)
         HELP="yes"
         echo "Error invalid positional argument!"
@@ -179,6 +183,8 @@ if [ "${HELP}" = "yes" ]; then
     echo "  hal,          h   : Hal heron."
     echo "  ida,          i   : Ida heron."
     echo "  jing,         j   : Jing heron."
+    echo "  kirk,         k   : Kirk heron."
+    echo "  luke,         l   : Luke heron."
 
     echo ""
     echo "POSSIBLE VEHICAL NAMES:"
