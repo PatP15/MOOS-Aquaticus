@@ -53,9 +53,9 @@ case "$1" in
         echo "KIRK heron selected."
         ;;
     l|luke)
-	HERON_IP=192.168.12.1
-	echo "LUKE heron selected."
-	;;
+	    HERON_IP=192.168.12.1
+	    echo "LUKE heron selected."
+	    ;;
     *)
         HELP="yes"
         echo "Error invalid positional argument!"
