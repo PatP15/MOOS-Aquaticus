@@ -11,6 +11,8 @@
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "SerialComms.h"
 
+#include <cstdlib>
+
 class ButtonBox : public AppCastingMOOSApp
 {
  public:

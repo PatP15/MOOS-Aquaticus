@@ -124,7 +124,7 @@ bool ButtonBox::OnStartUp()
 
     if(param == "BAUDRATE"){
         handled = true;
-        m_baudrate = std::stoi(line);
+        m_baudrate = atoi(line.c_str());
     }
 
     if(param.substr(0,7) == "BUTTON_" && param.substr(param.length() - 5, param.length() ) == "_NAME"){
