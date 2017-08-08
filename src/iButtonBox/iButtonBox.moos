@@ -1,0 +1,9 @@
+//------------------------------------------------
+// iButtonBox config block
+
+ProcessConfig = iButtonBox
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
