@@ -56,6 +56,8 @@ protected: // State variables
   string m_team;
   string m_self;
   string m_covered;
+  string m_teammate;
+  string m_name;
   XYSegList m_points;
   bool m_move;
   double m_angle;

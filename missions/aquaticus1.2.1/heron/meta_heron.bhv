@@ -232,7 +232,6 @@ Behavior = BHV_AvdColregsV2
 
   condition               = MODE == AVOIDING
   templating              = spawn
-
   endflag                 = CONTACT_AVOIDING_RESOLVED = $[CONTACT]
 
   contact                 = optional_vehicle_name
@@ -380,7 +379,7 @@ Behavior = BHV_Trail
 }
 
 //#############################################################################
-Behavior = BHV_Defense_Collab
+Behavior = BHV_Defense_Multi
 {
   name                    = protect
   pwt                     = 100
@@ -391,6 +390,8 @@ Behavior = BHV_Defense_Collab
   enemy_flag       	  = $(GRAB_POS)
   team	 		  = $(VTEAM)
   self	 		  = $(VNAME)
+  teammate		  = $(HERON_TEAMMATE)
+  
   speed                   = 2  //default
   distance_from_flag      = 20 //default
 

@@ -47,16 +47,16 @@ fi
 if [[ -z $NO_HERON ]]; then
   cd ./heron
   # Evan Blue
-  ./launch_heron.sh e r3 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh e r3 r4 $TIME_WARP -s > /dev/null &
   sleep 1
   # Felix Red
-  ./launch_heron.sh f b3 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh f b3 b4 $TIME_WARP -s > /dev/null &
   sleep 1
   # Hal Blue
-  ./launch_heron.sh h r4 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh h r4 r3 $TIME_WARP -s > /dev/null &
   sleep 1
   # Ida Red
-  ./launch_heron.sh i b4 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh i b4 b3 $TIME_WARP -s > /dev/null &
   sleep 1
   cd ..
 fi

@@ -56,7 +56,7 @@ BHV_Defense_Multi::BHV_Defense_Multi(IvPDomain domain) :
   m_destX = 0;
   m_destY = 0;
   m_attack_angle = 0;
-  m_attacker = "";
+  m_attacker = "none";
   m_team ="";
   m_curr_node_report = "";
   m_move = false;
@@ -88,6 +88,11 @@ bool BHV_Defense_Multi::setParam(string param, string val)
     m_team = val;
     return(true);
   }
+
+  else if((param == "teammate")){
+    m_teammate = val;
+    return(true);
+  }
   
   else if (param == "flag") {
     vector<string> flag_coord = parseString(val, ',');
@@ -114,6 +119,7 @@ bool BHV_Defense_Multi::setParam(string param, string val)
       name.at(i) = toupper(name.at(i));
     }
     m_self = "NODE_REPORT_"+name;
+    m_name = val;
     return(true);
   }
   
@@ -211,7 +217,7 @@ void BHV_Defense_Multi::getOppCoords(string node)
   
   if(new_report.name == m_attacker){
     if(hypot(new_report.nav_x-m_flagX, new_report.nav_y-m_flagY)>m_crit_dist){
-      m_attacker="";
+      m_attacker="none";
     }
     else{
       m_oppX = new_report.nav_x;
@@ -230,6 +236,7 @@ void BHV_Defense_Multi::getOppCoords(string node)
 IvPFunction* BHV_Defense_Multi::onRunState()
 {
   postMessage("STAT", "Starting OnRunState()");
+  
   bool check1, check2, check3; 
   double dx, dy=0;
   m_osX = getBufferDoubleVal("NAV_X", check1);
@@ -252,12 +259,23 @@ IvPFunction* BHV_Defense_Multi::onRunState()
     }
   }
 
-  m_covered = getBufferDoubleVal("MULTI_NOTIFY", check3);
+  string val="src_node="+m_name+",dest_node="+m_teammate+",var_name=MULTI_NOTIFY,string_val="+m_attacker;
+  postMessage("NODE_MESSAGE_LOCAL", val);
+  
+  m_covered = getBufferStringVal("MULTI_NOTIFY", check3);
+
+  postWMessage("Partner Covering "+m_covered);
+  postWMessage("I am Covering "+m_attacker);
+  if(m_attacker == m_covered){
+    m_attacker = "none";
+    postWMessage("Conflicting Attacker, attacker reset");
+  }
+    
 
   IvPFunction *ipf = 0;
   double deltX,deltY=0;
   //we have identified a valid attacker coming within range for the flag
-  if(m_attacker!=""){
+  if(m_attacker!="none"){
     deltX = m_oppX-m_flagX;
     deltY = m_oppY-m_flagY;
   }
@@ -326,7 +344,7 @@ IvPFunction* BHV_Defense_Multi::onRunState()
   //if it isn't, m_move is set to true which activates the ipf function
   
   //we have not found a suitble attacker yet 
-  if(m_attacker ==""){
+  if(m_attacker =="none"){
     double min_index=0;
     double min_dist = 81;
     for(int i=0; i<m_opp_list.size();i++){
@@ -343,10 +361,8 @@ IvPFunction* BHV_Defense_Multi::onRunState()
       m_oppX= m_opp_list[min_index].nav_x;
       m_oppY= m_opp_list[min_index].nav_y;
       postMessage("STAT", "Set attacker called "+ m_attacker);
-      postMessage("MULTI_NOTIFY", m_attacker);
     }
-  }
-  
+  }  
   if ((hypot(dx, dy)>5))
     m_move=true;
   
