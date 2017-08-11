@@ -44,7 +44,6 @@ protected: // State variables
   double m_protH;
   double m_speed;
   vector<NodeReport> m_opp_list;
-  vector<string> m_enemy_list;
   double m_oppX;
   double m_oppY;
   double m_dist_from_flag;
@@ -56,6 +55,7 @@ protected: // State variables
   double m_attack_angle;
   string m_attacker;
   string m_requestor;
+  string m_self;
   string m_curr_node_report;
   string m_team;
   XYSegList m_points;

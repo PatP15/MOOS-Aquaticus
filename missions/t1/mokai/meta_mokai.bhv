@@ -38,22 +38,42 @@ Behavior = BHV_Waypoint
 //#############################################################################
 Behavior = BHV_Waypoint
 {
-  name                    = waypt_grab
-  pwt                     = 50
-  perpetual               = true
+  name			  = waypt_random
+  pwt			  = 50
+  perpetual		  = true
 
-  condition               = MODE == UNTAGGED
+  condition		  = MODE == UNTAGGED
+  updates		  = UPDATE_PATH
+  speed			  = 5
+  capture_line		  = false
+  capture_radius	  = 5.0
+  slip_radius		  = 5.0
 
-  endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
-  endflag                 = TAGGED=true
+  points		  = $(UNTAG_POS)
 
-  speed                   = 5 // meters per second
-  capture_line            = false
-  capture_radius          = 5.0
-  slip_radius             = 5.0
-
-  points                  = $(GRAB_POS)
+  visual_hints = nextpt_color=white, nextpt_lcolor=khaki
+  visual_hints = edge_color=orange, vertex_color=white
+  visual_hints = edge_size=1, vertex_size=2
 }
+//#############################################################################
+//Behavior = BHV_Waypoint
+//{
+//  name                    = waypt_grab
+//  pwt                     = 50
+//  perpetual               = true
+
+//  condition               = MODE == UNTAGGED
+
+//  endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
+//  endflag                 = TAGGED=true
+
+//  speed                   = 5 // meters per second
+//  capture_line            = false
+//  capture_radius          = 5.0
+//  slip_radius             = 5.0
+
+//  points                  = $(GRAB_POS)
+//}
 
 //#############################################################################
 Behavior = BHV_Waypoint

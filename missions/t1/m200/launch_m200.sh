@@ -20,6 +20,7 @@ GRAB_POS=""
 GRABR_POS=""
 GRABL_POS=""
 UNTAG_POS=""
+ENEMIES="EVAN,FELIX,MOKAI_RED,MOKAI_BLUE"
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -32,7 +33,7 @@ for ARGI; do
     elif [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
         M200_IP=192.168.5.1 #evan
         VNAME="evan"
-	ENEMIES="FELIX,MOKAI_RED,MOKAI_BLUE"
+	#ENEMIES="FELIX,MOKAI_RED,MOKAI_BLUE"
         VPORT="9005"
         SHARE_LISTEN="9305"
         echo "EVAN vehicle selected as HUNTER."
@@ -40,7 +41,7 @@ for ARGI; do
         M200_IP=192.168.6.1 #felix
         VNAME="felix"
 	CNAME="FELIX"
-	ENEMIES="EVAN,MOKAI_RED,MOKAI_BLUE"
+	#ENEMIES="EVAN,MOKAI_RED,MOKAI_BLUE"
         VPORT="9006"
         SHARE_LISTEN="9306"
         echo "FELIX vehicle selected as HUNTER."
@@ -88,7 +89,7 @@ for ARGI; do
         RETURN_POS="5,0"
         START_POS="50,-24,240"
 	EFLAG="-58,-71"
-	BEH="DEFEND"
+	BEH="COVER"
         echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"

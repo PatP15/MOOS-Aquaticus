@@ -212,7 +212,7 @@ Behavior = BHV_Defense_Collab
   flag = $(FLAG)
   enemy_flag = $(EFLAG)
   team	 = $(VTEAM)
-  enemies= $(ENEMIES)
+  self= $(VNAME)
   speed                   = 2  //default
   distance_from_flag      = 20 //default
 
@@ -272,7 +272,7 @@ Behavior = BHV_Cover
   runflag                 = BOT_DIALOG_STATUS=Covering
   
   team	 = $(VTEAM)
-  enemies= $(ENEMIES)
+  self	 = $(VNAME)
   requestor = mokai_$(VTEAM)
   enemy_flag= $(EFLAG)
 

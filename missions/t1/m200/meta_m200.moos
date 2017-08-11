@@ -61,7 +61,7 @@ ProcessConfig = ANTLER
 
 #include plug_pBotDialog.moos
 
-ProcessCOnfig = pNodeReportParse
+ProcessConfig = pNodeReportParse
 {
   AppTick  = 4
   CommsTick= 4

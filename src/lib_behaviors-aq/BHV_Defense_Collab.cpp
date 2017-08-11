@@ -31,7 +31,8 @@ using namespace std;
 
 //---------------------------------------------------------------
 // Constructor
-
+string player = "NODE_REPORT_RED_ONE,NODE_REPORT_RED_TWO,NODE_REPORT_RED_THREE,NODE_REPORT_RED_FOUR,NODE_REPORT_BLUE_ONE,NODE_REPORT_BLUE_TWO,NODE_REPORT_BLUE_THREE,NODE_REPORT_BLUE_FOUR";
+vector<string> players = parseString(player, ',');
 BHV_Defense_Collab::BHV_Defense_Collab(IvPDomain domain) :
   IvPBehavior(domain)
 {
@@ -61,9 +62,9 @@ BHV_Defense_Collab::BHV_Defense_Collab(IvPDomain domain) :
   m_move = false;
   m_angle = 0;
   m_crit_dist = 80;
-
+  
 // Add any variables this behavior needs to subscribe for
-  addInfoVars("NAV_X, NAV_Y, NODE_REPORT_EVAN, NODE_REPORT_FELIX, NODE_REPORT_MOKAI_RED, NODE_REPORT_MOKAI_BLUE");
+  addInfoVars("NAV_X, NAV_Y,"+player); 
   postMessage("STAT", "finished initializing");
 }
 
@@ -106,8 +107,12 @@ bool BHV_Defense_Collab::setParam(string param, string val)
     return(true);
   }
 
-  else if((param == "enemies")){
-    m_enemy_list= parseString(val, ',');
+  else if((param == "self")){
+    string name=val;
+    for(int i = 0; i < name.size(); i++) {
+      name.at(i) = toupper(name.at(i));
+    }
+    m_self = "NODE_REPORT_"+name;
     return(true);
   }
   
@@ -224,7 +229,7 @@ void BHV_Defense_Collab::getOppCoords(string node)
 IvPFunction* BHV_Defense_Collab::onRunState()
 {
   postMessage("STAT", "Starting OnRunState()");
-  bool check1, check2, check3;
+  bool check1, check2, check3; 
   double dx, dy=0;
   m_osX = getBufferDoubleVal("NAV_X", check1);
   m_osY = getBufferDoubleVal("NAV_Y", check2);
@@ -234,13 +239,15 @@ IvPFunction* BHV_Defense_Collab::onRunState()
     return 0;
   }
 
-  for(int i=0; i<m_enemy_list.size();i++){
-    m_curr_node_report = getBufferStringVal("NODE_REPORT_"+m_enemy_list[i], check3);
-    if(!check3){
-      postWMessage("BHV_DEFENSE ERROR: Node_report not found in info_buffer!");
-    }
-    else{
-      getOppCoords(m_curr_node_report);
+  for(int i=0; i<players.size();i++){
+    if(players[i] != m_self){
+      m_curr_node_report = getBufferStringVal(players[i], check3);
+      if(!check3){
+	postWMessage("BHV_DEFENSE ERROR: Node_report not found in info_buffer!");
+      }
+      else{
+	getOppCoords(m_curr_node_report);
+      }
     }
   }
 

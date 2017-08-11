@@ -34,11 +34,11 @@ TARGET_LINK_LIBRARIES(BHV_OpRegionRecover
 
 
 #--------------------------------------------------------
-#                                             BHV_Defense
+#                                        BHV_Defense_Multi
 #--------------------------------------------------------
-ADD_LIBRARY(BHV_Defense SHARED
-   BHV_Defense.cpp)
-TARGET_LINK_LIBRARIES(BHV_Defense
+ADD_LIBRARY(BHV_Defense_Multi SHARED
+   BHV_Defense_Multi.cpp NodeReport.cpp)
+TARGET_LINK_LIBRARIES(BHV_Defense_Multi
    helmivp
    behaviors
    ivpbuild
@@ -65,7 +65,7 @@ TARGET_LINK_LIBRARIES(BHV_Defense_Collab
    geometry
    ${SYSTEM_LIBS} )
 #--------------------------------------------------------
-#                                       BHV_Defense_Collab
+#                                       BHV_Defense_Cover
 #--------------------------------------------------------
 ADD_LIBRARY(BHV_Cover SHARED
    BHV_Cover.cpp NodeReport.cpp)
