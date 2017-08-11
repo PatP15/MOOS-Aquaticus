@@ -20,6 +20,8 @@ GRABR_POS=""
 GRABL_POS=""
 UNTAG_POS=""
 
+HERON_TEAMMATE=""
+
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
 #-------------------------------------------------------
@@ -68,35 +70,35 @@ case "$2" in
         VNAME="red_one"
         VPORT="9011"
         SHARE_LISTEN="9311"
-        echo "Vehical set to red one."
+        echo "Vehicle set to red one."
         ;;
     r2|red_two)
         VTEAM="red"
         VNAME="red_two"
         VPORT="9012"
         SHARE_LISTEN="9312"
-        echo "Vehical set to red two."
+        echo "Vehicle set to red two."
         ;;
     r3|red_three)
         VTEAM="red"
         VNAME="red_three"
         VPORT="9013"
         SHARE_LISTEN="9313"
-        echo "Vehical set to red two."
+        echo "Vehicle set to red two."
         ;;
     r4|red_four)
         VTEAM="red"
         VNAME="red_four"
         VPORT="9014"
         SHARE_LISTEN="9314"
-        echo "Vehical set to red two."
+        echo "Vehicle set to red two."
         ;;
     b1|blue_one)
         VTEAM="blue"
         VNAME="blue_one"
         VPORT="9015"
         SHARE_LISTEN="9315"
-        echo "Vehical set to blue one."
+        echo "Vehicle set to blue one."
         ;;
     b2|blue_two)
         VTEAM="blue"
@@ -104,29 +106,70 @@ case "$2" in
         VPORT="9016"
         SHARE_LISTEN="9316"
 	PLAYERS="b1,b3,b4"
-        echo "Vehical set to blue two."
+        echo "Vehicle set to blue two."
         ;;
     b3|blue_three)
         VTEAM="blue"
         VNAME="blue_three"
         VPORT="9017"
         SHARE_LISTEN="9317"
-        echo "Vehical set to blue three."
+        echo "Vehicle set to blue three."
         ;;
     b4|blue_four)
         VTEAM="blue"
         VNAME="blue_four"
         VPORT="9018"
         SHARE_LISTEN="9318"
-        echo "Vehical set to blue four."
+        echo "Vehicle set to blue four."
         ;;
     *)
         HELP="yes"
         echo "Error invalid positional argument!"
         ;;
-esac	
+esac
 
-for arg in "${@:3}"; do
+	
+case "$3" in
+    r1|red_one)
+        HERON_TEAMMATE="red_one"
+        echo "Vehicle set to red one."
+        ;;
+    r2|red_two)
+        HERON_TEAMMATE="red_two"
+        echo "Vehicle set to red two."
+        ;;
+    r3|red_three)
+        HERON_TEAMMATE="red_three"
+        echo "Vehicle set to red three."
+        ;;
+    r4|red_four)
+        HERON_TEAMMATE="red_four"
+        echo "Vehicle set to red four."
+        ;;
+    b1|blue_one)
+        HERON_TEAMMATE="blue_one"
+        echo "Vehicle set to blue one."
+        ;;
+    b2|blue_two)
+        HERON_TEAMMATE="blue_two"
+        echo "Vehicle set to blue two."
+        ;;
+    b3|blue_three)
+        HERON_TEAMMATE="blue_three"
+        echo "Vehicle set to blue three."
+        ;;
+    b4|blue_four)
+        HERON_TEAMMATE="blue_four"
+        echo "Vehicle set to blue four."
+        ;;
+    *)
+        HELP="yes"
+        echo "Error invalid positional argument!"
+        ;;
+esac
+
+
+for arg in "${@:4}"; do
     if [ "${arg}" = "--help" -o "${arg}" = "-H" ]; then
         HELP="yes"
     elif [ "${arg//[^0-9]/}" = "$arg" -a "$TIME_WARP" = 1 ]; then
@@ -174,7 +217,7 @@ fi
 
 if [ "${HELP}" = "yes" ]; then
     echo ""
-    echo "USAGE: $0 <heron_name> <vehical_name> [SWITCHES]"
+    echo "USAGE: $0 <heron_name> <vehicle_name> <heron_teammate_vehicale_name> [SWITCHES]"
     
     echo ""
     echo "POSSIBLE HERON NAMES:"
@@ -188,16 +231,16 @@ if [ "${HELP}" = "yes" ]; then
     echo "  luke,         l   : Luke heron."
 
     echo ""
-    echo "POSSIBLE VEHICAL NAMES:"
-    echo "  blue_one,     b1  : Vehical one on blue team."
-    echo "  blue_two,     b2  : Vehical two on blue team."
-    echo "  blue_three,   b3  : Vehical three on blue team."
-    echo "  blue_four,    b4  : Vehical four on blue team."
+    echo "POSSIBLE VEHICLE NAMES (and heron teammate_names):"
+    echo "  blue_one,     b1  : Vehicle one on blue team."
+    echo "  blue_two,     b2  : Vehicle two on blue team."
+    echo "  blue_three,   b3  : Vehicle three on blue team."
+    echo "  blue_four,    b4  : Vehicle four on blue team."
 
-    echo "  red_one,      r1  : Vehical one on red team."
-    echo "  red_two,      r2  : Vehical two on red team."
-    echo "  red_three,    r3  : Vehical three on red team."
-    echo "  red_four,     r4  : Vehical four on red team."
+    echo "  red_one,      r1  : Vehicle one on red team."
+    echo "  red_two,      r2  : Vehicle two on red team."
+    echo "  red_three,    r3  : Vehicle three on red team."
+    echo "  red_four,     r4  : Vehicle four on red team."
 
     echo ""
     echo "POSSIBLE SWITCHES:"
@@ -256,7 +299,8 @@ nsplug meta_heron.bhv targ_${VNAME}.bhv -f  \
         GRAB_POS=$GRAB_POS          \
         GRABR_POS=$GRABR_POS           \
         GRABL_POS=$GRABL_POS             \
-        UNTAG_POS=$UNTAG_POS        
+        UNTAG_POS=$UNTAG_POS        \
+        HERON_TEAMMATE=$HERON_TEAMMATE
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then

@@ -23,56 +23,56 @@ case "$1" in
         VNAME="red_one"
         VPORT="9011"
         SHARE_LISTEN="9311"
-        echo "Vehical set to red one."
+        echo "Vehicle set to red one."
         ;;
     r2|red_two)
         VTEAM="red"
         VNAME="red_two"
         VPORT="9012"
         SHARE_LISTEN="9312"
-        echo "Vehical set to red two."
+        echo "Vehicle set to red two."
         ;;
     r3|red_three)
         VTEAM="red"
         VNAME="red_three"
         VPORT="9013"
         SHARE_LISTEN="9313"
-        echo "Vehical set to red two."
+        echo "Vehicle set to red two."
         ;;
     r4|red_four)
         VTEAM="red"
         VNAME="red_four"
         VPORT="9014"
         SHARE_LISTEN="9314"
-        echo "Vehical set to red two."
+        echo "Vehicle set to red two."
         ;;
     b1|blue_one)
         VTEAM="blue"
         VNAME="blue_one"
         VPORT="9015"
         SHARE_LISTEN="9315"
-        echo "Vehical set to blue one."
+        echo "Vehicle set to blue one."
         ;;
     b2|blue_two)
         VTEAM="blue"
         VNAME="blue_two"
         VPORT="9016"
         SHARE_LISTEN="9316"
-        echo "Vehical set to blue two."
+        echo "Vehicle set to blue two."
         ;;
     b3|blue_three)
         VTEAM="blue"
         VNAME="blue_three"
         VPORT="9017"
         SHARE_LISTEN="9317"
-        echo "Vehical set to blue three."
+        echo "Vehicle set to blue three."
         ;;
     b4|blue_four)
         VTEAM="blue"
         VNAME="blue_four"
         VPORT="9018"
         SHARE_LISTEN="9318"
-        echo "Vehical set to blue four."
+        echo "Vehicle set to blue four."
         ;;
     *)
         HELP="yes"
@@ -170,16 +170,16 @@ if [ "${HELP}" = "yes" ]; then
     echo "$0 <vehical_name> <teammate1_name> <teammate2_name> [SWITCHES]"
 
     echo ""
-    echo "POSSIBLE VEHICAL OR TEAMMATE NAMES:"
-    echo "  blue_one,     b1    : Vehical one on blue team."
-    echo "  blue_two,     b2    : Vehical two on blue team."
-    echo "  blue_three,   b3    : Vehical three on blue team."
-    echo "  blue_four,    b4    : Vehical four on blue team."
+    echo "POSSIBLE VEHICLE OR TEAMMATE NAMES:"
+    echo "  blue_one,     b1    : Vehicle one on blue team."
+    echo "  blue_two,     b2    : Vehicle two on blue team."
+    echo "  blue_three,   b3    : Vehicle three on blue team."
+    echo "  blue_four,    b4    : Vehicle four on blue team."
 
-    echo "  red_one,      r1    : Vehical one on red team."
-    echo "  red_two,      r2    : Vehical two on red team."
-    echo "  red_three,    r3    : Vehical three on red team."
-    echo "  red_four,     r4    : Vehical four on red team."
+    echo "  red_one,      r1    : Vehicle one on red team."
+    echo "  red_two,      r2    : Vehicle two on red team."
+    echo "  red_three,    r3    : Vehicle three on red team."
+    echo "  red_four,     r4    : Vehicle four on red team."
 
     echo ""
     echo "POSSIBLE SWITCHES:"
