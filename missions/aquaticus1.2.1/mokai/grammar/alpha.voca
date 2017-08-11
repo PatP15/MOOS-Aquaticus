@@ -24,6 +24,8 @@ LEFT	    l eh f t
 DEFEND      d ih f eh n d
 COVER       k ah v er
 STATUS      s t ae t ah s
+INTERCEPT   ih n t er s eh p t
+SHIELD      sh iy l d
 
 %ACK
 YES         y eh s
