@@ -144,13 +144,13 @@ void DialogManager::triggerAckSequence(string sval)
   }
 
   else if(m_number_ack_attempts==1){ //means have have errored our ack a certain number of times
-    ackStatement = "Command Canceled, Wrong Responses";
+    ackStatement = "Command Canceled Wrong Responses";
     m_state = WAIT_COMMAND;
     m_number_ack_attempts = 0;
   }
   else{
     //    ackStatement = "Error Wrong Ack";
-    ackStatement = "Try one more time, " +  m_confirm_word[m_commanded_string] + " or " +  m_decline_word[m_commanded_string];
+    ackStatement = "Try one more time " +  m_confirm_word[m_commanded_string] + " or " +  m_decline_word[m_commanded_string];
     m_state = WAIT_ACK;
     m_number_ack_attempts += 1;
   }
