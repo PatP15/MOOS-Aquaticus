@@ -65,7 +65,7 @@ BHV_Defense_Multi::BHV_Defense_Multi(IvPDomain domain) :
   m_covered = "";
   
 // Add any variables this behavior needs to subscribe for
-  addInfoVars("NAV_X, NAV_Y, MULTI_NOTIFY,"+player, "NO_WARNING"); 
+  addInfoVars("NAV_X, NAV_Y, MULTI_NOTIFY, TAGGED_VEHICLES, "+player, "NO_WARNING"); 
   postMessage("STAT", "finished initializing");
 }
 
@@ -201,6 +201,14 @@ void BHV_Defense_Multi::getOppCoords(string node)
   if(new_report.name=="" || new_report.nav_x==0 || new_report.nav_y==0){
     postWMessage("Invalid Node Report");
   }
+  
+  bool tagged = false;
+  for(int i = 0; i<m_tagged.size(); i++){
+    if(new_report.name==m_tagged[i]){
+      tagged = true;
+    }
+  }
+  
   bool found =false;
   for(int i = 0; i<m_opp_list.size(); i++){
     if(m_opp_list[i].name == new_report.name){
@@ -216,7 +224,7 @@ void BHV_Defense_Multi::getOppCoords(string node)
   }
   
   if(new_report.name == m_attacker){
-    if(hypot(new_report.nav_x-m_flagX, new_report.nav_y-m_flagY)>m_crit_dist){
+    if(hypot(new_report.nav_x-m_flagX, new_report.nav_y-m_flagY)>m_crit_dist || tagged){
       m_attacker="none";
     }
     else{
@@ -246,7 +254,9 @@ IvPFunction* BHV_Defense_Multi::onRunState()
     postWMessage("BHV_DEFENSE ERROR: No X/Y value in info_buffer!");
     return 0;
   }
-
+  string temp = getBufferStringVal("TAGGED_VEHICLES", check2);
+  m_tagged = parseString(temp, ',');
+  
   for(int i=0; i<players.size();i++){
     if(players[i] != m_self){
       m_curr_node_report = getBufferStringVal(players[i], check3);
@@ -257,7 +267,8 @@ IvPFunction* BHV_Defense_Multi::onRunState()
 	getOppCoords(m_curr_node_report);
       }
     }
-  } 
+  }
+  
   m_covered = getBufferStringVal("MULTI_NOTIFY", check3);
   string val="src_node="+m_name+",dest_node="+m_teammate+",var_name=MULTI_NOTIFY,string_val="+m_attacker;
   postMessage("NODE_MESSAGE_LOCAL", val);
@@ -302,10 +313,10 @@ IvPFunction* BHV_Defense_Multi::onRunState()
     dx = m_oppX-m_osX;
     dy = m_oppY-m_osY;
     m_move=true;
-    //postMessage("STAT", to_string(m_oppX)+","+to_string(m_oppY));
+    // postMessage("STAT", to_string(m_oppX)+","+to_string(m_oppY));
   }
-  //else
-    //postMessage("VIEW_POINT", to_string(m_destX)+","+to_string(m_destY));
+  //  else
+  // postMessage("VIEW_POINT", to_string(m_destX)+","+to_string(m_destY));
   
   m_angle = 90-atan(abs(dy)/abs(dx))*180/PI;
   
@@ -333,17 +344,25 @@ IvPFunction* BHV_Defense_Multi::onRunState()
   //determines if defending vehicle is close enough to were it should be
   //if it isn't, m_move is set to true which activates the ipf function
   
-  //we have not found a suitble attacker yet 
+  //we have not found a suitable attacker yet 
   if(m_attacker =="none"){
     double min_index=0;
     double min_dist = 81;
     for(int i=0; i<m_opp_list.size();i++){
-      double delta_x = m_opp_list[i].nav_x-m_flagX;
-      double delta_y = m_opp_list[i].nav_y-m_flagY;
-      if(hypot(delta_x, delta_y)<min_dist && (m_opp_list[i].name != m_covered)){
-	min_dist=hypot(delta_x, delta_y);
-	min_index=i;
-	postMessage("STAT", "Found Minimal Attacker");
+      bool tagged = false;
+      for(int i = 0; i<m_tagged.size(); i++){
+	if(m_opp_list[i].name==m_tagged[i]){
+	  tagged = true;
+	}
+      }
+      if(!tagged){
+	double delta_x = m_opp_list[i].nav_x-m_flagX;
+	double delta_y = m_opp_list[i].nav_y-m_flagY;
+	if(hypot(delta_x, delta_y)<min_dist && (m_opp_list[i].name != m_covered)){
+	  min_dist=hypot(delta_x, delta_y);
+	  min_index=i;
+	  postMessage("STAT", "Found Minimal Attacker");
+	}
       }
     }
     if(min_dist<m_crit_dist){

@@ -194,7 +194,7 @@ ProcessConfig = uFldShoreBroker
 
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
-
+  bridge  = src=TAGGED_VEHICLES
   bridge   = src=UP_LOITER_$N, alias=UP_LOITER
   bridge   = src=HELM_MAP_CLEAR, alias=HELM_MAP_CLEAR
   bridge   = src=FLAG_SUMMARY
@@ -274,7 +274,6 @@ ProcessConfig = pMarineViewer
   button_three = UNTAG_REQUEST=vname=felix
   button_three = UNTAG_REQUEST=vname=gus
   button_three = FLAG_RESET=all
-  button_three = RETURN_ALL=true
 
   op_vertex = x=56,   y=16,  lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-83, y=-49,  lwidth=1,lcolor=yellow,looped=true,group=moa

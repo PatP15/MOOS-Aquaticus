@@ -384,7 +384,7 @@ Behavior = BHV_Defense_Multi
   name                    = protect
   pwt                     = 100
   condition               = MODE==PROTECTING
-  runflag                 = BOT_DIALOG_STATUS=Defending
+  runflag                 = BOT_DIALOG_STATUS=Protecting
   
   flag                    = $(UNTAG_POS)
   enemy_flag       	  = $(GRAB_POS)
