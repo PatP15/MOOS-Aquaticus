@@ -65,7 +65,7 @@ BHV_Defense_Multi::BHV_Defense_Multi(IvPDomain domain) :
   m_covered = "";
   
 // Add any variables this behavior needs to subscribe for
-  addInfoVars("NAV_X, NAV_Y, MULTI_NOTIFY,"+player); 
+  addInfoVars("NAV_X, NAV_Y, MULTI_NOTIFY,"+player, "NO_WARNING"); 
   postMessage("STAT", "finished initializing");
 }
 
@@ -257,20 +257,10 @@ IvPFunction* BHV_Defense_Multi::onRunState()
 	getOppCoords(m_curr_node_report);
       }
     }
-  }
-
+  } 
+  m_covered = getBufferStringVal("MULTI_NOTIFY", check3);
   string val="src_node="+m_name+",dest_node="+m_teammate+",var_name=MULTI_NOTIFY,string_val="+m_attacker;
   postMessage("NODE_MESSAGE_LOCAL", val);
-  
-  m_covered = getBufferStringVal("MULTI_NOTIFY", check3);
-
-  postWMessage("Partner Covering "+m_covered);
-  postWMessage("I am Covering "+m_attacker);
-  if(m_attacker == m_covered){
-    m_attacker = "none";
-    postWMessage("Conflicting Attacker, attacker reset");
-  }
-    
 
   IvPFunction *ipf = 0;
   double deltX,deltY=0;
