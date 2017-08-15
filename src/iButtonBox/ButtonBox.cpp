@@ -1,7 +1,7 @@
 /************************************************************/
-/*    NAME: Carter Fendley                                              */
+/*    NAME: Carter Fendley                                  */
 /*    ORGN: MIT                                             */
-/*    FILE: ButtonBox.cpp                                        */
+/*    FILE: ButtonBox.cpp                                   */
 /*    DATE:                                                 */
 /************************************************************/
 

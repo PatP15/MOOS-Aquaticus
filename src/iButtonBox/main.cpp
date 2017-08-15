@@ -1,5 +1,5 @@
 /************************************************************/
-/*    NAME: Carter Fendley                                              */
+/*    NAME: Carter Fendley                                  */
 /*    ORGN: MIT                                             */
 /*    FILE: main.cpp                                        */
 /*    DATE: December 29th, 1963                             */

@@ -1,7 +1,7 @@
 /****************************************************************/
-/*   NAME: Carter Fendley                                             */
+/*   NAME: Carter Fendley                                       */
 /*   ORGN: MIT Cambridge MA                                     */
-/*   FILE: ButtonBox_Info.h                                      */
+/*   FILE: ButtonBox_Info.h                                     */
 /*   DATE: Dec 29th 1963                                        */
 /****************************************************************/
 
