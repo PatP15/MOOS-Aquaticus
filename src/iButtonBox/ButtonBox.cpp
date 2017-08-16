@@ -72,19 +72,19 @@ bool ButtonBox::Iterate()
 {
   AppCastingMOOSApp::Iterate();
  
-  m_valid_serial_connection = m_serial->IsGoodSerialComms();
+  m_valid_serial_connection = m_serial->IsGoodSerialComms(); //check for good connection to arduino
 
   if(!m_valid_serial_connection){
-    m_valid_serial_connection = serialSetup();
+    m_valid_serial_connection = serialSetup(); // setup interface to arduino
   }
  
-  while(m_valid_serial_connection && m_serial->DataAvailable()){
+  while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
     string data = m_serial->GetNextSentence(); 
     
     parseSerialString(data);
   }
 
-  for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
+  for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
     m_Comms.Notify(getName(i), m_button_values[i]);
   }
 
@@ -113,7 +113,7 @@ bool ButtonBox::OnStartUp()
     string value = line;
 
     bool handled = false;
-    if(param == "PORT") {
+    if(param == "PORT") { // define the port where we access the arduino
       handled = true;
       m_serial_port = line;
       
@@ -122,12 +122,12 @@ bool ButtonBox::OnStartUp()
       }
     }
 
-    if(param == "BAUDRATE"){
+    if(param == "BAUDRATE"){ // define the speed at which we receive data
         handled = true;
         m_baudrate = atoi(line.c_str());
     }
 
-    if(param.substr(0,7) == "BUTTON_" && param.substr(param.length() - 5, param.length() ) == "_NAME"){
+    if(param.substr(0,7) == "BUTTON_" && param.substr(param.length() - 5, param.length() ) == "_NAME"){ // grab the name of the buttons
       handled = true;
       m_button_names[param] = line;
     }
@@ -196,7 +196,7 @@ bool ButtonBox::serialSetup()
   return(false);
 }
 
-void ButtonBox::parseSerialString(std::string data)
+void ButtonBox::parseSerialString(std::string data) //parse data sent via serial from arduino
 { 
   if(data.at(0) != '$'){
     reportRunWarning("Malformed data string! Does not begin with $ char");
@@ -231,7 +231,7 @@ void ButtonBox::parseSerialString(std::string data)
   m_button_values = button_values;
 }
 
-std::string ButtonBox::getName(int button_index){
+std::string ButtonBox::getName(int button_index){ //grab names of buttons for moos variables (defined in .moos file/config area)
     std::string key = "BUTTON_";
     std::ostringstream oss;
     oss << button_index << "_NAME";

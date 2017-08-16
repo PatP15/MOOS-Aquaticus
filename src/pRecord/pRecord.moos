@@ -1,0 +1,10 @@
+//------------------------------------------------
+// pRecord config block
+
+ProcessConfig = pRecord
+{
+   AppTick   = .2
+   CommsTick = 4
+
+}
+
