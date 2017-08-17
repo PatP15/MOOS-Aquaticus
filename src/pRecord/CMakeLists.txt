@@ -1,3 +1,4 @@
+
 #--------------------------------------------------------
 # The CMakeLists.txt for:                       pRecord
 # Author(s): Oliver MacNeely
@@ -16,7 +17,7 @@ TARGET_LINK_LIBRARIES(pRecord
    apputil
    mbutil
    m
-   PortAudio
+   portaudio
    sndfile
    pthread)
 
