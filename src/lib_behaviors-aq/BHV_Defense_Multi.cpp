@@ -66,10 +66,10 @@ BHV_Defense_Multi::BHV_Defense_Multi(IvPDomain domain) :
   m_angle = 0;
   m_crit_dist = 80;
   m_covered = "";
+  m_priority = false;
   
 // Add any variables this behavior needs to subscribe for
   addInfoVars("NAV_X, NAV_Y, MULTI_NOTIFY, TAGGED_VEHICLES, "+player, "NO_WARNING"); 
-  postMessage("STAT", "finished initializing");
 }
 
 //---------------------------------------------------------------
@@ -143,6 +143,18 @@ bool BHV_Defense_Multi::setParam(string param, string val)
 
 void BHV_Defense_Multi::onSetParamComplete()
 {
+  int self_val = 0;
+  int team_val = 0;
+  for (int i = 0; i < m_name.size(); i++) {
+    self_val += m_name[i];
+  }
+  for (int i = 0; i < m_teammate.size(); i++){
+    team_val += m_teammate[i];
+  }
+
+  if(self_val > team_val){
+    m_priority = true;
+  }
 }
 
 //---------------------------------------------------------------
@@ -199,7 +211,6 @@ void BHV_Defense_Multi::onRunToIdleState()
 
 void BHV_Defense_Multi::getOppCoords(string node)
 {
-  postMessage("STAT", "starting to get opponent coordinates");
   NodeReport new_report(node);
   if(new_report.name=="" || new_report.nav_x==0 || new_report.nav_y==0){
     postWMessage("Invalid Node Report");
@@ -217,18 +228,19 @@ void BHV_Defense_Multi::getOppCoords(string node)
     if(m_opp_list[i].name == new_report.name){
       m_opp_list[i]=new_report;
       found= true;
-      postMessage("STAT","updating node report: "+node);
     }
   }
   
   if((!found) && (new_report.group != m_team)){
     m_opp_list.push_back(new_report);
-    postMessage("STAT", "added "+new_report.name);
   }
   
   if(new_report.name == m_attacker){
     if(hypot(new_report.nav_x-m_flagX, new_report.nav_y-m_flagY)>m_crit_dist || tagged){
       m_attacker="none";
+    }
+    else if(!m_priority && m_attacker == m_covered){
+	m_attacker="none";
     }
     else{
       m_oppX = new_report.nav_x;
@@ -245,9 +257,7 @@ void BHV_Defense_Multi::getOppCoords(string node)
 //             and the enemy robot (at a set distance from the flag)
 
 IvPFunction* BHV_Defense_Multi::onRunState()
-{
-  postMessage("STAT", "Starting OnRunState()");
-  
+{ 
   bool check1, check2, check3; 
   double dx, dy=0;
   m_osX = getBufferDoubleVal("NAV_X", check1);
@@ -339,7 +349,7 @@ IvPFunction* BHV_Defense_Multi::onRunState()
   //we have not found a suitable attacker yet 
   if(m_attacker =="none"){
     double min_index=0;
-    double min_dist = 81;
+    double min_dist = m_crit_dist+1;
     for(int i=0; i<m_opp_list.size();i++){
       bool tagged = false;
       for(int i = 0; i<m_tagged.size(); i++){
@@ -353,7 +363,6 @@ IvPFunction* BHV_Defense_Multi::onRunState()
 	if(hypot(delta_x, delta_y)<min_dist && (m_opp_list[i].name != m_covered)){
 	  min_dist=hypot(delta_x, delta_y);
 	  min_index=i;
-	  postMessage("STAT", "Found Minimal Attacker");
 	}
       }
     }
@@ -361,7 +370,6 @@ IvPFunction* BHV_Defense_Multi::onRunState()
       m_attacker=m_opp_list[min_index].name;
       m_oppX= m_opp_list[min_index].nav_x;
       m_oppY= m_opp_list[min_index].nav_y;
-      postMessage("STAT", "Set attacker called "+ m_attacker);
     }
   }
 

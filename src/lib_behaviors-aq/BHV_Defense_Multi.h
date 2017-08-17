@@ -61,6 +61,7 @@ protected: // State variables
   string m_name;
   XYSegList m_points;
   bool m_move;
+  bool m_priority;
   double m_angle;
   double m_crit_dist;
 };
