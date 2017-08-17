@@ -84,11 +84,11 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
   PaStreamParameters inputParameters = // initialize structure for audio device parameters
     {
 
-     .device = Pa_GetDefaultInputDevice(),
-     .channelCount = data.numberOfChannels,
-     .sampleFormat = data.formatType,
-     .suggestedLatency = info->defaultLowInputLatency,
-     .hostApiSpecificStreamInfo = NULL
+     device : Pa_GetDefaultInputDevice(),
+     channelCount : data.numberOfChannels,
+     sampleFormat : data.formatType,
+     suggestedLatency : info->defaultLowInputLatency,
+     hostApiSpecificStreamInfo : NULL
 
     };
 
