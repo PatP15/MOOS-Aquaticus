@@ -1,12 +1,12 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for:                       uSpeechRec
-# Author(s):                              
+# The CMakeLists.txt for:                      uSpeechRec
+# Author(s):                     Michael "Misha" Novitzky
 #--------------------------------------------------------
 
 SET(SRC
-  SpeechRec.cpp
-  SpeechRec_Info.cpp
-  main.cpp
+  SpeechRec_2_0.cpp
+  SpeechRec_Info_2_0.cpp
+  main_2_0.cpp
 )
 
 #To support compiling on OS X and Ubuntu

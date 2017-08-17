@@ -1,15 +1,16 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: SpeechRec.cpp                                   */
+/*    FILE: SpeechRec_2_0.cpp                               */
 /*    DATE: August 13th, 2015                               */
+/*    DATE: August 17th, 2017                               */
 /************************************************************/
 #include <algorithm>
 #include <ctype.h>
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "SpeechRec.h"
+#include "SpeechRec_2_0.h"
 #include <string>
 #include <iostream>
 
@@ -26,6 +27,7 @@ SpeechRec::SpeechRec()
   m_jconf = NULL;
   m_recog = NULL;
   m_state = RUNNING;
+  m_pause_state = "False";
 }
 
 static inline bool isNotAlnum(char c) { return !(isalnum(c));}
@@ -46,11 +48,11 @@ bool SpeechRec::OnNewMail(MOOSMSG_LIST &NewMail)
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
     string key    = msg.GetKey();
-
+    string sval  = msg.GetString();
+    
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
-    string sval  = msg.GetString(); 
     string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
@@ -59,6 +61,14 @@ bool SpeechRec::OnNewMail(MOOSMSG_LIST &NewMail)
 
     if(key == "FOO") 
       cout << "great!";
+    else if( key == "SPEECH_PAUSE") {
+      if(sval == "TRUE") {
+	pauseRec();
+      }
+      else if(sval == "FALSE") {
+	unpauseRec();
+      }
+    }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -111,6 +121,28 @@ bool SpeechRec::Iterate()
 
 void SpeechRec::statusRecReady(Recog *recog, void *dummy)
 {
+}
+
+
+//---------------------------------------------------------
+// Procedure: pauseRec
+// on receiving SPEECH_PAUSE = TRUE we pause speech rec
+
+void SpeechRec::pauseRec()
+{
+  j_request_pause(m_recog);
+  m_pause_state = "True";
+}
+
+
+//---------------------------------------------------------
+// Procedure: unpauseRec
+// on receiving SPEECH_PAUSE = TRUE we pause speech rec
+
+void SpeechRec::unpauseRec()
+{
+  j_request_resume(m_recog);
+  m_pause_state = "False";
 }
 
 //---------------------------------------------------------
@@ -391,6 +423,7 @@ bool SpeechRec::OnStartUp()
 void SpeechRec::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
+  Register("SPEECH_PAUSE", 0);  
   // Register("FOOBAR", 0);  
 }
 
@@ -401,7 +434,8 @@ bool SpeechRec::buildReport()
 {
   m_msgs << "============================================ \n";
   m_msgs << "JuliusConf = " <<   m_julius_configuration << endl;
-
+  m_msgs << "Recognizer Paused = " << m_pause_state << endl;
+  
   //ACTable actab(4);
   //actab << "Alpha | Bravo | Charlie | Delta";
   //actab.addHeaderLines();

@@ -3,6 +3,7 @@
 /*   ORGN: MIT Cambridge MA                                     */
 /*   FILE: SpeechRec_Info.h                                      */
 /*   DATE: August 13th, 2015                                     */
+/*   DATE: August 17th, 2017                                     */
 /****************************************************************/
 
 #ifndef SpeechRec_INFO_HEADER

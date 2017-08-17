@@ -3,11 +3,12 @@
 /*   ORGN: MIT Cambridge MA                                     */
 /*   FILE: SpeechRec_Info.cpp                                   */
 /*   DATE: August 13th, 2015                                    */
+/*   DATE: August 17th, 2017                                    */
 /****************************************************************/
 
 #include <cstdlib>
 #include <iostream>
-#include "SpeechRec_Info.h"
+#include "SpeechRec_Info_2_0.h"
 #include "ColorParse.h"
 #include "ReleaseInfo.h"
 
@@ -91,7 +92,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("   No Subscriptions                                             ");
+  blk("   SPEECH_PAUSE = TRUE/FALSE to pause/unpause speech recognition");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
@@ -105,7 +106,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uSpeechRec", "gpl");
+  showReleaseInfo("uSpeechRec_2_0", "gpl");
   exit(0);
 }
 

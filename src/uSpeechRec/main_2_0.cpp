@@ -1,16 +1,17 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: main.cpp                                        */
+/*    FILE: main_2_0.cpp                                    */
 /*    DATE: August 13th, 2015                               */
+/*    DATE: August 17th, 2017                               */
 /************************************************************/
 
 #include <string>
 #include <queue>
 #include "MBUtils.h"
 #include "ColorParse.h"
-#include "SpeechRec.h"
-#include "SpeechRec_Info.h"
+#include "SpeechRec_2_0.h"
+#include "SpeechRec_Info_2_0.h"
 
 using namespace std;
 //These following variables are for Julius Speech Rec
