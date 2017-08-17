@@ -11,3 +11,5 @@
     - Find a open DIO pin for each button you wish to wire
     - Connect one side of each of the buttons to each DIO pin
     - Connect the other side of ALL buttons to ground.
+
+# When connecting the arduino to a computer, make sure to check /dev and note the full name of the device "tty.usbmodemXXXXX" where X's are stand-ins for arbitrary numbers. Then place the address of this device, so /dev/tty.submodemXXXXX, after "PORT" in the iButtonBox confix block.

@@ -7,20 +7,10 @@ ProcessConfig = ANTLER
 
 	MSBetweenLaunches = 200
 
-	Run = MOOSDB					@ NewConsole = false
-	Run = uXMS						@ NewConsole = false
-	Run = pRecord		@ NewConsole = false
+	Run = MOOSDB	@ NewConsole = false
+	Run = pRecord	@ NewConsole = false
 	Run = iButtonBox @NewConsole = false
 	Run = pLogger @NewConsole = false
-}
-
-ProcessConfig = uXMS
-{
-
-	VAR = STATUS
-	COLOR_MAP = STATUS, red, DEBUG, blue,
-	HISTORY_VAR = PRIME_RESULT, DEBUG
-
 }
 
 ProcessConfig = pRecord
@@ -35,7 +25,7 @@ ProcessConfig = iButtonBox
 	AppTick = 50
 	CommsTick = 50
 
-	PORT = /dev/tty.usbmodem14411
+	PORT = /dev/tty.usbmodem14411 //this adress can change each time an arduino is plugged in
 	BAUDRATE = 9600
 
 	BUTTON_0_NAME = SPEECH_BUTTON
@@ -48,7 +38,7 @@ ProcessConfig = pLogger
         CommsTick  = 10
 
 	File = BUTTON_LOG
-	PATH = ./logs/
+	PATH = ./logs/			// change this to any path to log files
 	SyncLog = true @ 0.2
 	AsyncLog = true
 	FileTimeStamp = true
@@ -57,7 +47,7 @@ ProcessConfig = pLogger
 
 	WildCardLogging = true
 
-	Log = SPEECH_BUTTON @ 0
+	Log = SPEECH_BUTTON @ 0         // add any other buttons for logging
 
 }
 	
