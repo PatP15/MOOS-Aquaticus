@@ -59,16 +59,19 @@ BHV_Cover::BHV_Cover(IvPDomain domain) :
   m_destX = 0;
   m_destY = 0;
   m_attack_angle = 0;
-  m_attacker = "";
+  m_attacker = "none";
+  m_covered = "";
   m_requestor="";
   m_team ="";
+  m_teammate="";
   m_curr_node_report = "";
   m_move = false;
   m_angle = 0;
   m_crit_dist=80;
+  m_priority = false;
   
 // Add any variables this behavior needs to subscribe for
-  addInfoVars("NAV_X, NAV_Y, TAGGED_VEHICLES, "+player);
+  addInfoVars("NAV_X, NAV_Y, TAGGED_VEHICLES, COVER_NOTIFY, "+player);
   postMessage("STAT", "finished initializing");
 }
 
@@ -88,6 +91,11 @@ bool BHV_Cover::setParam(string param, string val)
     return(true);
   }
 
+  else if((param == "teammate")){
+    m_teammate = val;
+    return(true);
+  }
+
   else if((param == "requestor")){
     m_requestor=val;
     return(true);
@@ -104,6 +112,7 @@ bool BHV_Cover::setParam(string param, string val)
       name.at(i) = toupper(name.at(i));
     }
     m_self = "NODE_REPORT_"+name;
+    m_name = val;
     return(true);
   }
   
@@ -131,6 +140,18 @@ bool BHV_Cover::setParam(string param, string val)
 
 void BHV_Cover::onSetParamComplete()
 {
+  int self_val = 0;
+  int team_val = 0;
+  for (int i = 0; i < m_name.size(); i++) {
+    self_val += m_name[i];
+  }
+  for (int i = 0; i < m_teammate.size(); i++){
+    team_val += m_teammate[i];
+  }
+
+  if(self_val > team_val){
+    m_priority = true;
+  }
 }
 
 //---------------------------------------------------------------
@@ -220,7 +241,10 @@ void BHV_Cover::getOppCoords(string node)
   
   if(new_report.name == m_attacker){
     if(hypot(new_report.nav_x-m_protX, new_report.nav_y-m_protY)>m_crit_dist || tagged){
-      m_attacker="";
+      m_attacker="none";
+    }
+    else if(!m_priority && m_attacker == m_covered){
+      m_attacker="none";
     }
     else{
       m_oppX = new_report.nav_x;
@@ -270,12 +294,15 @@ IvPFunction* BHV_Cover::onRunState()
     }
   }
 
-
+  m_covered = getBufferStringVal("COVER_NOTIFY", check3);
+  string val="src_node="+m_name+",dest_node="+m_teammate+",var_name=COVER_NOTIFY,string_val="+m_attacker;
+  postMessage("NODE_MESSAGE_LOCAL", val);
+    
   IvPFunction *ipf = 0;
   double deltX,deltY=0;
   
   //we have identified a valid attacker coming within range for the flag
-  if(m_attacker!=""){
+  if(m_attacker!="none"){
     deltX = m_oppX-m_protX;
     deltY = m_oppY-m_protY;
   }
@@ -336,9 +363,9 @@ IvPFunction* BHV_Cover::onRunState()
 
   
   //we have not found a suitble attacker yet 
-  if(m_attacker ==""){
+  if(m_attacker =="none"){
     double min_index=0;
-    double min_dist = 81;
+    double min_dist = m_crit_dist+1;
     for(int i=0; i<m_opp_list.size();i++){
       bool tagged = false;
       for(int i = 0; i<m_tagged.size(); i++){
@@ -349,10 +376,9 @@ IvPFunction* BHV_Cover::onRunState()
       if(!tagged){
 	double delta_x = m_opp_list[i].nav_x-m_protX;
 	double delta_y = m_opp_list[i].nav_y-m_protY;
-	if(hypot(delta_x, delta_y)<min_dist){
+	if(hypot(delta_x, delta_y)<min_dist && (m_opp_list[i].name != m_covered)){
 	  min_dist=hypot(delta_x, delta_y);
 	  min_index=i;
-	  postMessage("STAT", "Found Minimal Attacker");
 	}
       }
     }
@@ -360,7 +386,6 @@ IvPFunction* BHV_Cover::onRunState()
       m_attacker=m_opp_list[min_index].name;
       m_oppX= m_opp_list[min_index].nav_x;
       m_oppY= m_opp_list[min_index].nav_y;
-      postMessage("STAT", "Set attacker called "+ m_attacker);
     }
   }
   

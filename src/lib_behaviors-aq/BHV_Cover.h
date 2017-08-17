@@ -57,10 +57,14 @@ protected: // State variables
   string m_attacker;
   string m_requestor;
   string m_self;
+  string m_name;
   string m_curr_node_report;
   string m_team;
+  string m_teammate;
+  string m_covered;
   XYSegList m_points;
   bool m_move;
+  bool m_priority;
   double m_angle;
 };
 
