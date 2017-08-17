@@ -86,9 +86,13 @@ inline struct AudioData init(int sampleRate, int channels, int type) {
 
 inline void storeWAV(struct AudioData *audio, const char* filename) {
 
-  SF_INFO sfinfo = { channels : audio->numberOfChannels, samplerate : audio->sampleRate, format : SF_FORMAT_WAV | SF_FORMAT_PCM_16};
+  SF_INFO sfinfo = {};
 
-  SNDFILE *outfile = sf_open(filename, SFM_WRITE, &sfinfo); //open file for writing
+    sfinfo.channels = audio->numberOfChannels;
+    sfinfo.samplerate = audio->sampleRate;
+    sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+
+    SNDFILE *outfile = sf_open(filename, SFM_WRITE, &sfinfo); //open file for writing
 
   long wr = sf_writef_short(outfile, audio->recordedSamples, audio->size / sizeof(short)); //write audio data to .wav file
 
