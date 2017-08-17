@@ -42,12 +42,12 @@ export LIBRARY_PATH=/opt/local/lib to either your .profile, .bash_profile, or .b
 
 It is necessary because unfortunately MacPorts is not properly adding the library path.
 
-And then add the packages for Julius and portaudio:
-sudo port install julius portaudio
+And then add the packages for Julius, portaudio, and libsndfile:
+sudo port install julius portaudio libsndfile
 
 
 Ubuntu Dependencies:
-sudo apt-get install julius julius-dev libportaudio-dev libpulse-dev libasound2-dev
+sudo apt-get install julius julius-dev libportaudio-dev libpulse-dev libasound2-dev portaudio19-dev libsndfile1-dev
 
 To build on Linux and Apple platforms, execute the build script within this
 directory:
