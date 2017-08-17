@@ -44,6 +44,7 @@ protected: // State variables
   double m_protH;
   double m_speed;
   vector<NodeReport> m_opp_list;
+  vector<string> m_tagged;
   double m_oppX;
   double m_oppY;
   double m_dist_from_flag;

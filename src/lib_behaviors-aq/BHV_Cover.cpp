@@ -68,7 +68,7 @@ BHV_Cover::BHV_Cover(IvPDomain domain) :
   m_crit_dist=80;
   
 // Add any variables this behavior needs to subscribe for
-  addInfoVars("NAV_X, NAV_Y,"+player);
+  addInfoVars("NAV_X, NAV_Y, TAGGED_VEHICLES, "+player);
   postMessage("STAT", "finished initializing");
 }
 
@@ -196,6 +196,14 @@ void BHV_Cover::getOppCoords(string node)
   if(new_report.name=="" || new_report.nav_x==0 || new_report.nav_y==0){
     postWMessage("Invalid Node Report");
   }
+
+  bool tagged = false;
+  for(int i = 0; i<m_tagged.size(); i++){
+    if(new_report.name==m_tagged[i]){
+      tagged = true;
+    }
+  }
+  
   bool found =false;
   for(int i = 0; i<m_opp_list.size(); i++){
     if(m_opp_list[i].name == new_report.name){
@@ -211,7 +219,7 @@ void BHV_Cover::getOppCoords(string node)
   }
   
   if(new_report.name == m_attacker){
-    if(hypot(new_report.nav_x-m_protX, new_report.nav_y-m_protY)>m_crit_dist){
+    if(hypot(new_report.nav_x-m_protX, new_report.nav_y-m_protY)>m_crit_dist || tagged){
       m_attacker="";
     }
     else{
@@ -247,6 +255,8 @@ IvPFunction* BHV_Cover::onRunState()
     postWMessage("BHV_DEFENSE ERROR: No X/Y value in info_buffer!");
     return 0;
   }
+  string temp = getBufferStringVal("TAGGED_VEHICLES", check2);
+  m_tagged = parseString(temp, ',');
 
   for(int i=0; i<players.size();i++){
     if(players[i] != m_self){
@@ -330,12 +340,20 @@ IvPFunction* BHV_Cover::onRunState()
     double min_index=0;
     double min_dist = 81;
     for(int i=0; i<m_opp_list.size();i++){
-      double delta_x = m_opp_list[i].nav_x-m_protX;
-      double delta_y = m_opp_list[i].nav_y-m_protY;
-      if(hypot(delta_x, delta_y)<min_dist){
-	min_dist=hypot(delta_x, delta_y);
-	min_index=i;
-	postMessage("STAT", "Found Minimal Attacker");
+      bool tagged = false;
+      for(int i = 0; i<m_tagged.size(); i++){
+	if(m_opp_list[i].name==m_tagged[i]){
+	  tagged = true;
+	}
+      }
+      if(!tagged){
+	double delta_x = m_opp_list[i].nav_x-m_protX;
+	double delta_y = m_opp_list[i].nav_y-m_protY;
+	if(hypot(delta_x, delta_y)<min_dist){
+	  min_dist=hypot(delta_x, delta_y);
+	  min_index=i;
+	  postMessage("STAT", "Found Minimal Attacker");
+	}
       }
     }
     if(min_dist<m_crit_dist){
