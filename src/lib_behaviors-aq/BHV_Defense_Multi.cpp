@@ -29,10 +29,13 @@
 
 using namespace std;
 
-//---------------------------------------------------------------
-// Constructor
+//explicitly define all node reports to listen for
 string player = "NODE_REPORT_RED_ONE,NODE_REPORT_RED_TWO,NODE_REPORT_RED_THREE,NODE_REPORT_RED_FOUR,NODE_REPORT_BLUE_ONE,NODE_REPORT_BLUE_TWO,NODE_REPORT_BLUE_THREE,NODE_REPORT_BLUE_FOUR";
 vector<string> players = parseString(player, ',');
+
+//---------------------------------------------------------------
+// Constructor
+
 BHV_Defense_Multi::BHV_Defense_Multi(IvPDomain domain) :
   IvPBehavior(domain)
 {
@@ -275,7 +278,9 @@ IvPFunction* BHV_Defense_Multi::onRunState()
 
   IvPFunction *ipf = 0;
   double deltX,deltY=0;
+  
   //we have identified a valid attacker coming within range for the flag
+  
   if(m_attacker!="none"){
     deltX = m_oppX-m_flagX;
     deltY = m_oppY-m_flagY;
@@ -313,10 +318,7 @@ IvPFunction* BHV_Defense_Multi::onRunState()
     dx = m_oppX-m_osX;
     dy = m_oppY-m_osY;
     m_move=true;
-    // postMessage("STAT", to_string(m_oppX)+","+to_string(m_oppY));
   }
-  //  else
-  // postMessage("VIEW_POINT", to_string(m_destX)+","+to_string(m_destY));
   
   m_angle = 90-atan(abs(dy)/abs(dx))*180/PI;
   
@@ -333,16 +335,6 @@ IvPFunction* BHV_Defense_Multi::onRunState()
     m_angle += 180;
   else if (dx<0 && dy>0)
     m_angle += 270;
-  
- 
-      
-  // Part N: Prior to returning the IvP function, apply the priority wt
-  // Actual weight applied may be some value different than the configured
-  // m_priority_wt, depending on the behavior author's insite.
-
-
-  //determines if defending vehicle is close enough to were it should be
-  //if it isn't, m_move is set to true which activates the ipf function
   
   //we have not found a suitable attacker yet 
   if(m_attacker =="none"){
@@ -371,16 +363,23 @@ IvPFunction* BHV_Defense_Multi::onRunState()
       m_oppY= m_opp_list[min_index].nav_y;
       postMessage("STAT", "Set attacker called "+ m_attacker);
     }
-  }  
+  }
+
+  //determines if defending vehicle is close enough to were it should be
+  //if it isn't, m_move is set to true which activates the ipf function
+  
   if ((hypot(dx, dy)>5))
     m_move=true;
   
   if (m_move){
+    //proportional controller for speed
     int speed = min(int(5*hypot(dx,dy)/m_dist_from_flag*m_speed), int(m_speed));
     ipf = buildFunctionWithZAIC(speed);
     m_move=false;
   }
-    //otherwise use just enough speed to allow it to turn to face the correct direction
+
+  // Actual weight applied may be some value different than the configured
+  // m_priority_wt, depending on the behavior author's insite.
   if(ipf)
     ipf->setPWT(m_priority_wt);
 

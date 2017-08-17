@@ -1,8 +1,8 @@
 /*****************************y*******************************/
-/*    NAME: Jonathan Schwartz and Arjun Gupta                */
-/*    ORGN: MIT                                             */
-/*    FILE: BHV_Defense.cpp                                    */
-/*    DATE: 07/26/2017                                                */
+/*    NAME: Arjun Gupta                                      */
+/*    ORGN: MIT                                              */
+/*    FILE: BHV_Cover.cpp                                    */
+/*    DATE: 07/26/2017                                       */
 /************************************************************/
 
 #ifdef _WIN32
@@ -28,8 +28,11 @@
 #define PI 3.14159265358979323846264338327
 
 using namespace std;
+
+//explicitly define all node reports to register for
 string player = "NODE_REPORT_RED_ONE,NODE_REPORT_RED_TWO,NODE_REPORT_RED_THREE,NODE_REPORT_RED_FOUR,NODE_REPORT_BLUE_ONE,NODE_REPORT_BLUE_TWO,NODE_REPORT_BLUE_THREE,NODE_REPORT_BLUE_FOUR";
 vector<string> players = parseString(player, ',');
+
 //---------------------------------------------------------------
 // Constructor
 
@@ -79,6 +82,7 @@ bool BHV_Cover::setParam(string param, string val)
 
   // Get the numerical value of the param argument for convenience once
   double double_val = atof(val.c_str());
+  
   if((param == "team")) {
     m_team = val;
     return(true);
@@ -220,7 +224,6 @@ void BHV_Cover::getOppCoords(string node)
     m_protX = new_report.nav_x;
     m_protY = new_report.nav_y;
     m_protH= new_report.heading;
-    // postWMessage("got requestor coordinates: "+new_report.name);
   }
 }
 
@@ -266,6 +269,7 @@ IvPFunction* BHV_Cover::onRunState()
     deltX = m_oppX-m_protX;
     deltY = m_oppY-m_protY;
   }
+  
   //otherwise try to send the robot out infront of the vehicle
   else{
     deltX = m_attX-m_protX;
@@ -299,11 +303,8 @@ IvPFunction* BHV_Cover::onRunState()
     dx = m_oppX-m_osX;
     dy = m_oppY-m_osY;
     m_move=true;
-    //postMessage("VIEW_POINT", to_string(m_oppX)+","+to_string(m_oppY));
   }
-  else
-    //postMessage("VIEW_POINT", to_string(m_destX)+","+to_string(m_destY));
-  
+ 
   m_angle = 90-atan(abs(dy)/abs(dx))*180/PI;
   
   
@@ -320,15 +321,9 @@ IvPFunction* BHV_Cover::onRunState()
   else if (dx<0 && dy>0)
     m_angle += 270;
   
- 
-      
-  // Part N: Prior to returning the IvP function, apply the priority wt
-  // Actual weight applied may be some value different than the configured
-  // m_priority_wt, depending on the behavior author's insite.
 
 
-  //determines if defending vehicle is close enough to were it should be
-  //if it isn't, m_move is set to true which activates the ipf function
+
   
   //we have not found a suitble attacker yet 
   if(m_attacker ==""){
@@ -348,10 +343,11 @@ IvPFunction* BHV_Cover::onRunState()
       m_oppX= m_opp_list[min_index].nav_x;
       m_oppY= m_opp_list[min_index].nav_y;
       postMessage("STAT", "Set attacker called "+ m_attacker);
-      //postWMessage("Set attacker to "+m_attacker);
     }
   }
   
+  //determines if defending vehicle is close enough to were it should be
+  //if it isn't, m_move is set to true which activates the ipf function
   if ((hypot(dx, dy)>5))
     m_move=true;
   
@@ -360,7 +356,10 @@ IvPFunction* BHV_Cover::onRunState()
     ipf = buildFunctionWithZAIC(speed);
     m_move=false;
   }
-    //otherwise use just enough speed to allow it to turn to face the correct direction
+  
+  // Part N: Prior to returning the IvP function, apply the priority wt
+  // Actual weight applied may be some value different than the configured
+  // m_priority_wt, depending on the behavior author's insite.
   if(ipf)
     ipf->setPWT(m_priority_wt);
 
