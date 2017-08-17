@@ -1,0 +1,2201 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LOG FILE:       ./logs/BUTTON_LOG_16_8_2017_____09_21_23/BUTTON_LOG_16_8_2017_____09_21_23.alog
+%% FILE OPENED ON  Wed Dec 31 19:00:00 1969
+%% LOGSTART               1502889682.48
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+0.205           UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=0.813754,cpuload=0.7966,memory_kb=1236,memory_max_kb=1236,MOOSName=uXMS_553,Publishing="",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+0.299           DB_EVENT             MOOSDB_alpha    connected=uMAC_2553 
+0.473           IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=0.676007,cpuload=0.6137,memory_kb=1228,memory_max_kb=1228,MOOSName=iButtonBox,Publishing="",Subscribing="APPCAST_REQ," 
+0.530           PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=0.867912,cpuload=98.4,memory_kb=4688,memory_max_kb=4688,MOOSName=pRecord,Publishing="",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+0.661           LOGGER_DIRECTORY     pLogger         ./logs/BUTTON_LOG_16_8_2017_____09_21_23 
+0.735           PRECORD_ITER_GAP     pRecord         1.02319      
+0.735           PRECORD_ITER_LEN     pRecord         0.00026      
+0.764           PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=0.763835,cpuload=0.5815,memory_kb=1216,memory_max_kb=1216,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,",Subscribing="LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,SPEECH_BUTTON,",LogAuxSrc=true 
+0.816           APPCAST_REQ          uMAC_2553       node=all,app=all,duration=10.0,key=uMAC_2553startup,thresh=any 
+0.818           UXMS_553_ITER_GAP    uXMS_553        1.02185      
+0.818           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+0.818           APPCAST              uXMS_553        proc=uXMS_553!@#iter=4!@#node=alpha!@#iter=4!@#messages=VarName             (S)  (T)  (C)  VarValue (SCOPING:[7;32mEVENTS[0m)!@------------------  ---  ---  ---  -------------------------!@[34mPRIME_RESULT,DEBUG[0m  [34m[0m               [34mn/a[0m!@[31mSTATUS[0m              [31m[0m               [31mn/a[0m!@!@#!@#events_total=0!@#!@#run_warning_total=0!@# 
+0.844           IBUTTONBOX_ITER_GAP  iButtonBox      1.20085      
+0.844           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+0.868           IBUTTONBOX_ITER_GAP  iButtonBox      1.22020      
+0.868           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+0.891           IBUTTONBOX_ITER_GAP  iButtonBox      1.15194      
+0.891           IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+0.891           APPCAST              iButtonBox      proc=iButtonBox!@#iter=19!@#node=alpha!@#iter=19!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=20!@#run_warnings=20:Unable to open serial port: No such file or directory 
+0.912           IBUTTONBOX_ITER_GAP  iButtonBox      1.01526      
+0.912           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+0.938           IBUTTONBOX_ITER_GAP  iButtonBox      1.33945      
+0.939           IBUTTONBOX_ITER_LEN  iButtonBox      0.01465      
+0.939           PRECORD_ITER_GAP     pRecord         1.01948      
+0.939           PRECORD_ITER_LEN     pRecord         0.00017      
+0.939           APPCAST              pRecord         proc=pRecord!@#iter=3!@#node=alpha!@#iter=3!@#messages============================================= !@File:                                        !@============================================ !@STATUSfalse!@!@#!@#events_total=8!@#events=[0.21]: params buffer counter: 0!@[0.21]: params buffer counter: 0!@[0.41]: button value: 0!@[0.41]: params buffer counter: 0!@[0.41]: params buffer counter: 0!@[0.61]: button value: 0!@[0.61]: params buffer counter: 0!@[0.61]: params buffer counter: 0!@#run_warning_total=0!@# 
+0.961           IBUTTONBOX_ITER_GAP  iButtonBox      1.13645      
+0.961           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+0.983           IBUTTONBOX_ITER_GAP  iButtonBox      1.09200      
+0.983           IBUTTONBOX_ITER_LEN  iButtonBox      0.00174      
+1.008           IBUTTONBOX_ITER_GAP  iButtonBox      1.25295      
+1.008           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+1.016           APPCAST_REQ          uMAC_2553       node=alpha,app=all,duration=0.1,key=uMAC_2553startup,thresh=any 
+1.016           APPCAST_REQ          uMAC_2553       node=all,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+1.020           UXMS_553_ITER_GAP    uXMS_553        1.01130      
+1.020           UXMS_553_ITER_LEN    uXMS_553        0.00005      
+1.031           IBUTTONBOX_ITER_GAP  iButtonBox      1.13790      
+1.031           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+1.052           IBUTTONBOX_ITER_GAP  iButtonBox      1.03650      
+1.052           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+1.073           IBUTTONBOX_ITER_GAP  iButtonBox      1.09580      
+1.073           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+1.096           IBUTTONBOX_ITER_GAP  iButtonBox      1.11490      
+1.096           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+1.120           IBUTTONBOX_ITER_GAP  iButtonBox      1.20255      
+1.120           IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+1.141           IBUTTONBOX_ITER_GAP  iButtonBox      1.07145      
+1.141           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+1.143           PRECORD_ITER_GAP     pRecord         1.01878      
+1.143           PRECORD_ITER_LEN     pRecord         0.00025      
+1.162           IBUTTONBOX_ITER_GAP  iButtonBox      1.03824      
+1.162           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+1.184           IBUTTONBOX_ITER_GAP  iButtonBox      1.09905      
+1.184           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+1.208           IBUTTONBOX_ITER_GAP  iButtonBox      1.22360      
+1.208           IBUTTONBOX_ITER_LEN  iButtonBox      0.00266      
+1.209           DB_TIME              MOOSDB_alpha    1502889683.68500 
+1.209           DB_UPTIME            MOOSDB_alpha    2.00334      
+1.209           DB_CLIENTS           MOOSDB_alpha    uMAC_2553,pLogger,iButtonBox,pRecord,uXMS_553, 
+1.209           DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:23.415         pRecord              2.4 Hz S  proc=pRecord!@#iter=3!...
+APPCAST_REQ          09:21:23.493         uMAC_2553            0.0 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALL      09:21:23.493         uMAC_2553            0.0 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:23.492         uMAC_2553            0.0 Hz S  node=alpha,app=all,dur...
+DB_CLIENTS           09:21:23.685         MOOSDB_alpha         0.0 Hz S  uMAC_2553,pLogger,iBut...
+DB_EVENT             09:21:22.775         MOOSDB_alpha         2.5 Hz S  connected=uMAC_2553 
+DB_QOS               09:21:21.680         MOOSDB#1             0.0 Hz S                      
+DB_RWSUMMARY         09:21:21.680         MOOSDB#1             0.0 Hz S                      
+DB_TIME              09:21:23.685         MOOSDB_alpha         0.0 Hz D  1502889683.7         
+DB_UPTIME            09:21:23.685         MOOSDB_alpha         0.0 Hz D  2.0                  
+DB_VARSUMMARY        09:21:21.680         MOOSDB#1             0.0 Hz S                      
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:23.684         iButtonBox           21.5Hz D  1.2                  
+IBUTTONBOX_ITER_LEN  09:21:23.660         iButtonBox           21.6Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:22.950         iButtonBox           0.0 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:23.137         pLogger              0.0 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:23.240         pLogger              0.0 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:23.619         pRecord              0.0 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:23.619         pRecord              2.5 Hz D  0.0                  
+PRECORD_STATUS       09:21:23.006         pRecord              0.0 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:23.493         uMAC_2553            0.0 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:23.496         uXMS_553             2.5 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:23.496         uXMS_553             2.4 Hz D  0.0                  
+UXMS_553_STATUS      09:21:22.681         uXMS_553             0.0 Hz S  AppErrorFlag=false,Upt...
+ 
+1.209           DB_QOS               MOOSDB_alpha    iButtonBox=0:0.152111:0.11301:0,pLogger=0:0.121832:0.0860691:0,pRecord=0:0.0920296:0.0879765:0,uMAC_2553=0:0.0710487:0.0710487:0,uXMS_553=0:0.421047:0.0779629:0, 
+1.209           DB_RWSUMMARY         MOOSDB_alpha    uMAC_2553=APPCAST&APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:UMAC_2553_STATUS,pLogger=APPCAST:APPCAST_REQ:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+1.224           UXMS_553_ITER_GAP    uXMS_553        1.02318      
+1.225           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+1.229           IBUTTONBOX_ITER_GAP  iButtonBox      1.03990      
+1.229           IBUTTONBOX_ITER_LEN  iButtonBox      0.00261      
+1.252           IBUTTONBOX_ITER_GAP  iButtonBox      1.11696      
+1.252           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+1.272           IBUTTONBOX_ITER_GAP  iButtonBox      1.00754      
+1.272           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+1.292           IBUTTONBOX_ITER_GAP  iButtonBox      1.00496      
+1.292           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+1.292           APPCAST              iButtonBox      proc=iButtonBox!@#iter=37!@#node=alpha!@#iter=37!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=38!@#run_warnings=38:Unable to open serial port: No such file or directory 
+1.313           IBUTTONBOX_ITER_GAP  iButtonBox      1.06325      
+1.313           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+1.334           IBUTTONBOX_ITER_GAP  iButtonBox      1.06119      
+1.334           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+1.343           PRECORD_ITER_GAP     pRecord         1.00415      
+1.343           PRECORD_ITER_LEN     pRecord         0.00017      
+1.356           IBUTTONBOX_ITER_GAP  iButtonBox      1.07945      
+1.356           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+1.379           IBUTTONBOX_ITER_GAP  iButtonBox      1.16180      
+1.379           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+1.402           IBUTTONBOX_ITER_GAP  iButtonBox      1.15925      
+1.402           IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+1.426           IBUTTONBOX_ITER_GAP  iButtonBox      1.18690      
+1.426           UXMS_553_ITER_GAP    uXMS_553        1.00790      
+1.426           IBUTTONBOX_ITER_LEN  iButtonBox      0.00286      
+1.426           UXMS_553_ITER_LEN    uXMS_553        0.00015      
+1.447           IBUTTONBOX_ITER_GAP  iButtonBox      1.07296      
+1.448           IBUTTONBOX_ITER_LEN  iButtonBox      0.00340      
+1.472           IBUTTONBOX_ITER_GAP  iButtonBox      1.22155      
+1.472           IBUTTONBOX_ITER_LEN  iButtonBox      0.00385      
+1.496           IBUTTONBOX_ITER_GAP  iButtonBox      1.18455      
+1.496           IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+1.519           IBUTTONBOX_ITER_GAP  iButtonBox      1.16531      
+1.519           IBUTTONBOX_ITER_LEN  iButtonBox      0.00274      
+1.543           IBUTTONBOX_ITER_GAP  iButtonBox      1.22495      
+1.543           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+1.547           PRECORD_ITER_GAP     pRecord         1.02023      
+1.547           PRECORD_ITER_LEN     pRecord         0.00025      
+1.568           IBUTTONBOX_ITER_GAP  iButtonBox      1.23705      
+1.568           IBUTTONBOX_ITER_LEN  iButtonBox      0.00360      
+1.589           IBUTTONBOX_ITER_GAP  iButtonBox      1.02905      
+1.589           IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+1.611           IBUTTONBOX_ITER_GAP  iButtonBox      1.12525      
+1.611           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+1.625           APPCAST_REQ          uMAC_2553       node=all,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+1.631           UXMS_553_ITER_GAP    uXMS_553        1.02551      
+1.631           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+1.635           IBUTTONBOX_ITER_GAP  iButtonBox      1.18045      
+1.635           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+1.658           IBUTTONBOX_ITER_GAP  iButtonBox      1.16816      
+1.658           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+1.681           IBUTTONBOX_ITER_GAP  iButtonBox      1.13510      
+1.681           IBUTTONBOX_ITER_LEN  iButtonBox      0.00376      
+1.704           IBUTTONBOX_ITER_GAP  iButtonBox      1.16010      
+1.704           IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+1.704           APPCAST              iButtonBox      proc=iButtonBox!@#iter=55!@#node=alpha!@#iter=55!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=56!@#run_warnings=56:Unable to open serial port: No such file or directory 
+1.727           IBUTTONBOX_ITER_GAP  iButtonBox      1.16465      
+1.727           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+1.751           PRECORD_ITER_GAP     pRecord         1.01588      
+1.751           PRECORD_ITER_LEN     pRecord         0.00023      
+1.751           IBUTTONBOX_ITER_GAP  iButtonBox      1.18871      
+1.751           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+1.774           IBUTTONBOX_ITER_GAP  iButtonBox      1.12995      
+1.774           IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+1.795           IBUTTONBOX_ITER_GAP  iButtonBox      1.06704      
+1.795           IBUTTONBOX_ITER_LEN  iButtonBox      0.00330      
+1.818           IBUTTONBOX_ITER_GAP  iButtonBox      1.12470      
+1.818           IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+1.834           UXMS_553_ITER_GAP    uXMS_553        1.01617      
+1.834           UXMS_553_ITER_LEN    uXMS_553        0.00009      
+1.841           IBUTTONBOX_ITER_GAP  iButtonBox      1.14425      
+1.841           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+1.861           IBUTTONBOX_ITER_GAP  iButtonBox      1.01470      
+1.861           IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+1.884           IBUTTONBOX_ITER_GAP  iButtonBox      1.16655      
+1.884           IBUTTONBOX_ITER_LEN  iButtonBox      0.00321      
+1.905           IBUTTONBOX_ITER_GAP  iButtonBox      1.05100      
+1.905           IBUTTONBOX_ITER_LEN  iButtonBox      0.00211      
+1.928           IBUTTONBOX_ITER_GAP  iButtonBox      1.11996      
+1.928           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+1.952           PRECORD_ITER_GAP     pRecord         1.00484      
+1.952           PRECORD_ITER_LEN     pRecord         0.00026      
+1.952           IBUTTONBOX_ITER_GAP  iButtonBox      1.21119      
+1.952           IBUTTONBOX_ITER_LEN  iButtonBox      0.00291      
+1.974           IBUTTONBOX_ITER_GAP  iButtonBox      1.13215      
+1.974           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+1.992           APPCAST_REQ          uMAC_2553       node=alpha,app=uXMS_553,duration=0.0,key=uMAC_2553,thresh=any 
+1.996           IBUTTONBOX_ITER_GAP  iButtonBox      1.09205      
+1.996           IBUTTONBOX_ITER_LEN  iButtonBox      0.00660      
+1.016           UMAC_2553_STATUS     uMAC_2553       AppErrorFlag=false,Uptime=1.85442,cpuload=0.1699,memory_kb=1236,memory_max_kb=1236,MOOSName=uMAC_2553,Publishing="APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,",Subscribing="APPCAST," 
+1.625           APPCAST_REQ_ALL      uMAC_2553       node=all,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+1.992           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=uXMS_553,duration=0.0,key=uMAC_2553,thresh=any 
+2.020           IBUTTONBOX_ITER_GAP  iButtonBox      1.17810      
+2.020           IBUTTONBOX_ITER_LEN  iButtonBox      0.00370      
+2.035           UXMS_553_ITER_GAP    uXMS_553        1.00226      
+2.035           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+2.042           IBUTTONBOX_ITER_GAP  iButtonBox      1.11225      
+2.042           IBUTTONBOX_ITER_LEN  iButtonBox      0.00316      
+2.067           IBUTTONBOX_ITER_GAP  iButtonBox      1.25661      
+2.067           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+2.089           IBUTTONBOX_ITER_GAP  iButtonBox      1.09390      
+2.089           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+2.111           IBUTTONBOX_ITER_GAP  iButtonBox      1.12040      
+2.112           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+2.112           APPCAST              iButtonBox      proc=iButtonBox!@#iter=73!@#node=alpha!@#iter=73!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=74!@#run_warnings=74:Unable to open serial port: No such file or directory 
+2.135           IBUTTONBOX_ITER_GAP  iButtonBox      1.16719      
+2.135           IBUTTONBOX_ITER_LEN  iButtonBox      0.00325      
+2.153           PRECORD_ITER_GAP     pRecord         1.00587      
+2.153           PRECORD_ITER_LEN     pRecord         0.00026      
+2.155           IBUTTONBOX_ITER_GAP  iButtonBox      1.02135      
+2.155           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+2.178           IBUTTONBOX_ITER_GAP  iButtonBox      1.11691      
+2.178           IBUTTONBOX_ITER_LEN  iButtonBox      0.00305      
+2.198           IBUTTONBOX_ITER_GAP  iButtonBox      1.00740      
+2.198           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+2.220           IBUTTONBOX_ITER_GAP  iButtonBox      1.10329      
+2.220           IBUTTONBOX_ITER_LEN  iButtonBox      0.00296      
+2.231           APPCAST_REQ          uMAC_2553       node=alpha,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+2.231           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+2.239           UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=2.84755,cpuload=0.1256,memory_kb=1468,memory_max_kb=1468,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+2.239           UXMS_553_ITER_GAP    uXMS_553        1.01882      
+2.239           UXMS_553_ITER_LEN    uXMS_553        0.00002      
+2.244           IBUTTONBOX_ITER_GAP  iButtonBox      1.22185      
+2.244           IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+2.268           IBUTTONBOX_ITER_GAP  iButtonBox      1.19536      
+2.268           IBUTTONBOX_ITER_LEN  iButtonBox      0.00274      
+2.291           IBUTTONBOX_ITER_GAP  iButtonBox      1.13585      
+2.291           IBUTTONBOX_ITER_LEN  iButtonBox      0.00269      
+2.313           IBUTTONBOX_ITER_GAP  iButtonBox      1.09185      
+2.313           IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+2.335           IBUTTONBOX_ITER_GAP  iButtonBox      1.10630      
+2.335           IBUTTONBOX_ITER_LEN  iButtonBox      0.00249      
+2.354           PRECORD_ITER_GAP     pRecord         1.00729      
+2.354           PRECORD_ITER_LEN     pRecord         0.00031      
+2.359           IBUTTONBOX_ITER_GAP  iButtonBox      1.19205      
+2.359           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+2.382           IBUTTONBOX_ITER_GAP  iButtonBox      1.15815      
+2.382           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+2.407           IBUTTONBOX_ITER_GAP  iButtonBox      1.25564      
+2.407           IBUTTONBOX_ITER_LEN  iButtonBox      0.00141      
+2.431           IBUTTONBOX_ITER_GAP  iButtonBox      1.18741      
+2.431           IBUTTONBOX_ITER_LEN  iButtonBox      0.00144      
+2.441           UXMS_553_ITER_GAP    uXMS_553        1.01366      
+2.441           UXMS_553_ITER_LEN    uXMS_553        0.00009      
+2.451           IBUTTONBOX_ITER_GAP  iButtonBox      1.03520      
+2.451           IBUTTONBOX_ITER_LEN  iButtonBox      0.00249      
+2.474           IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=2.67622,cpuload=0.6607,memory_kb=1552,memory_max_kb=1552,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+2.474           IBUTTONBOX_ITER_GAP  iButtonBox      1.10954      
+2.474           IBUTTONBOX_ITER_LEN  iButtonBox      0.00136      
+2.494           IBUTTONBOX_ITER_GAP  iButtonBox      1.02221      
+2.494           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+2.517           IBUTTONBOX_ITER_GAP  iButtonBox      1.15910      
+2.517           IBUTTONBOX_ITER_LEN  iButtonBox      0.00360      
+2.517           APPCAST              iButtonBox      proc=iButtonBox!@#iter=91!@#node=alpha!@#iter=91!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=92!@#run_warnings=92:Unable to open serial port: No such file or directory 
+2.540           IBUTTONBOX_ITER_GAP  iButtonBox      1.13496      
+2.540           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+2.559           PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=2.89648,cpuload=98.75,memory_kb=4860,memory_max_kb=4860,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+2.559           PRECORD_ITER_GAP     pRecord         1.02306      
+2.559           PRECORD_ITER_LEN     pRecord         0.00008      
+2.563           IBUTTONBOX_ITER_GAP  iButtonBox      1.16010      
+2.563           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+2.585           IBUTTONBOX_ITER_GAP  iButtonBox      1.08440      
+2.585           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+2.609           IBUTTONBOX_ITER_GAP  iButtonBox      1.22020      
+2.609           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+2.633           IBUTTONBOX_ITER_GAP  iButtonBox      1.21205      
+2.634           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+2.643           UXMS_553_ITER_GAP    uXMS_553        1.01067      
+2.644           UXMS_553_ITER_LEN    uXMS_553        0.00025      
+2.656           IBUTTONBOX_ITER_GAP  iButtonBox      1.13555      
+2.656           IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+2.679           IBUTTONBOX_ITER_GAP  iButtonBox      1.16085      
+2.679           IBUTTONBOX_ITER_LEN  iButtonBox      0.00319      
+2.703           IBUTTONBOX_ITER_GAP  iButtonBox      1.16000      
+2.703           IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+2.726           IBUTTONBOX_ITER_GAP  iButtonBox      1.16155      
+2.726           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+2.749           IBUTTONBOX_ITER_GAP  iButtonBox      1.16104      
+2.749           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+2.762           PRECORD_ITER_GAP     pRecord         1.01438      
+2.762           PRECORD_ITER_LEN     pRecord         0.00018      
+2.772           IBUTTONBOX_ITER_GAP  iButtonBox      1.16130      
+2.772           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+2.795           IBUTTONBOX_ITER_GAP  iButtonBox      1.16036      
+2.796           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+2.818           IBUTTONBOX_ITER_GAP  iButtonBox      1.11965      
+2.818           IBUTTONBOX_ITER_LEN  iButtonBox      0.00149      
+2.819           PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=2.81928,cpuload=0.3495,memory_kb=1548,memory_max_kb=1548,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+2.842           IBUTTONBOX_ITER_GAP  iButtonBox      1.20289      
+2.842           APPCAST_REQ          uMAC_2553       node=alpha,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+2.842           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+2.842           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+2.845           UXMS_553_ITER_GAP    uXMS_553        1.00739      
+2.845           UXMS_553_ITER_LEN    uXMS_553        0.00005      
+2.865           IBUTTONBOX_ITER_GAP  iButtonBox      1.16116      
+2.865           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+2.888           IBUTTONBOX_ITER_GAP  iButtonBox      1.16260      
+2.888           IBUTTONBOX_ITER_LEN  iButtonBox      0.00454      
+2.912           IBUTTONBOX_ITER_GAP  iButtonBox      1.16014      
+2.912           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+2.935           IBUTTONBOX_ITER_GAP  iButtonBox      1.16000      
+2.935           IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+2.935           APPCAST              iButtonBox      proc=iButtonBox!@#iter=109!@#node=alpha!@#iter=109!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=110!@#run_warnings=110:Unable to open serial port: No such file or directory 
+2.958           IBUTTONBOX_ITER_GAP  iButtonBox      1.15945      
+2.958           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+2.964           PRECORD_ITER_GAP     pRecord         1.01406      
+2.965           PRECORD_ITER_LEN     pRecord         0.00018      
+2.981           IBUTTONBOX_ITER_GAP  iButtonBox      1.16324      
+2.981           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+3.001           IBUTTONBOX_ITER_GAP  iButtonBox      1.01135      
+3.002           IBUTTONBOX_ITER_LEN  iButtonBox      0.00376      
+3.026           IBUTTONBOX_ITER_GAP  iButtonBox      1.22390      
+3.027           IBUTTONBOX_ITER_LEN  iButtonBox      0.06286      
+3.046           UXMS_553_ITER_GAP    uXMS_553        1.00560      
+3.046           UXMS_553_ITER_LEN    uXMS_553        0.00009      
+3.046           UMAC_2553_STATUS     uMAC_2553       AppErrorFlag=false,Uptime=3.88414,cpuload=0.1289,memory_kb=1464,memory_max_kb=1464,MOOSName=uMAC_2553,Publishing="APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,UMAC_2553_STATUS,",Subscribing="APPCAST," 
+3.051           IBUTTONBOX_ITER_GAP  iButtonBox      1.25165      
+3.051           IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+3.073           IBUTTONBOX_ITER_GAP  iButtonBox      1.11481      
+3.073           IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+3.097           IBUTTONBOX_ITER_GAP  iButtonBox      1.20324      
+3.097           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+3.118           IBUTTONBOX_ITER_GAP  iButtonBox      1.04415      
+3.118           IBUTTONBOX_ITER_LEN  iButtonBox      0.00365      
+3.139           IBUTTONBOX_ITER_GAP  iButtonBox      1.05546      
+3.139           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+3.162           IBUTTONBOX_ITER_GAP  iButtonBox      1.11489      
+3.162           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+3.166           PRECORD_ITER_GAP     pRecord         1.00546      
+3.166           PRECORD_ITER_LEN     pRecord         0.00043      
+3.185           IBUTTONBOX_ITER_GAP  iButtonBox      1.18456      
+3.185           IBUTTONBOX_ITER_LEN  iButtonBox      0.00440      
+3.209           IBUTTONBOX_ITER_GAP  iButtonBox      1.17935      
+3.209           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+3.209           DB_TIME              MOOSDB_alpha    1502889685.68559 
+3.209           DB_UPTIME            MOOSDB_alpha    4.00392      
+3.209           DB_CLIENTS           MOOSDB_alpha    uMAC_2553,pLogger,iButtonBox,pRecord,uXMS_553, 
+3.209           DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:25.411         iButtonBox           3.0 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:25.318         uMAC_2553            2.1 Hz S  node=alpha,app=all,dur...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:25.318         uMAC_2553            1.4 Hz S  node=alpha,app=all,dur...
+DB_CLIENTS           09:21:25.685         MOOSDB_alpha         0.2 Hz S  uMAC_2553,pLogger,iBut...
+DB_EVENT             09:21:22.775         MOOSDB_alpha         2.5 Hz S  connected=uMAC_2553 
+DB_QOS               09:21:23.685         MOOSDB_alpha         0.0 Hz S  iButtonBox=0:0.152111:...
+DB_RWSUMMARY         09:21:23.685         MOOSDB_alpha         0.0 Hz S  uMAC_2553=APPCAST&APPC...
+DB_TIME              09:21:25.685         MOOSDB_alpha         0.2 Hz D  1502889685.7         
+DB_UPTIME            09:21:25.685         MOOSDB_alpha         0.2 Hz D  4.0                  
+DB_VARSUMMARY        09:21:23.685         MOOSDB_alpha         0.0 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:25.685         iButtonBox           42.2Hz D  1.2                  
+IBUTTONBOX_ITER_LEN  09:21:25.662         iButtonBox           42.3Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:24.950         iButtonBox           0.2 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:23.137         pLogger              0.0 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:25.295         pLogger              0.2 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:25.642         pRecord              4.6 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:25.642         pRecord              4.6 Hz D  0.0                  
+PRECORD_STATUS       09:21:25.035         pRecord              0.2 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:25.522         uMAC_2553            0.2 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:25.522         uXMS_553             4.6 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:25.522         uXMS_553             4.6 Hz D  0.0                  
+UXMS_553_STATUS      09:21:24.715         uXMS_553             0.2 Hz S  AppErrorFlag=false,Upt...
+ 
+3.209           DB_QOS               MOOSDB_alpha    iButtonBox=0:0.152111:0.0770092:0,pLogger=0:0.121832:0.0629425:0,pRecord=0:0.227928:0.0879765:0,uMAC_2553=0:0.151157:0.0710487:0,uXMS_553=0:0.421047:0.0720024:0, 
+3.209           DB_RWSUMMARY         MOOSDB_alpha    uMAC_2553=APPCAST&APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:UMAC_2553_STATUS,pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+3.234           IBUTTONBOX_ITER_GAP  iButtonBox      1.23404      
+3.234           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+3.248           UXMS_553_ITER_GAP    uXMS_553        1.01135      
+3.248           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+3.254           IBUTTONBOX_ITER_GAP  iButtonBox      1.01995      
+3.254           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+3.276           IBUTTONBOX_ITER_GAP  iButtonBox      1.07645      
+3.276           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+3.301           IBUTTONBOX_ITER_GAP  iButtonBox      1.25560      
+3.301           IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+3.325           IBUTTONBOX_ITER_GAP  iButtonBox      1.21500      
+3.325           IBUTTONBOX_ITER_LEN  iButtonBox      0.00325      
+3.350           IBUTTONBOX_ITER_GAP  iButtonBox      1.25645      
+3.350           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+3.350           APPCAST              iButtonBox      proc=iButtonBox!@#iter=127!@#node=alpha!@#iter=127!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=128!@#run_warnings=128:Unable to open serial port: No such file or directory 
+3.366           PRECORD_ITER_GAP     pRecord         1.00212      
+3.366           PRECORD_ITER_LEN     pRecord         0.00014      
+3.370           IBUTTONBOX_ITER_GAP  iButtonBox      1.00659      
+3.370           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+3.394           IBUTTONBOX_ITER_GAP  iButtonBox      1.20311      
+3.394           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+3.418           IBUTTONBOX_ITER_GAP  iButtonBox      1.19225      
+3.418           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+3.443           IBUTTONBOX_ITER_GAP  iButtonBox      1.25459      
+3.443           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+3.451           UXMS_553_ITER_GAP    uXMS_553        1.01548      
+3.451           UXMS_553_ITER_LEN    uXMS_553        0.00009      
+3.451           APPCAST_REQ          uMAC_2553       node=alpha,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+3.451           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=all,duration=3.0,key=uMAC_2553:app,thresh=run_warning 
+3.467           IBUTTONBOX_ITER_GAP  iButtonBox      1.19910      
+3.467           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+3.492           IBUTTONBOX_ITER_GAP  iButtonBox      1.23845      
+3.492           IBUTTONBOX_ITER_LEN  iButtonBox      0.00415      
+3.515           IBUTTONBOX_ITER_GAP  iButtonBox      1.16379      
+3.515           IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+3.539           IBUTTONBOX_ITER_GAP  iButtonBox      1.19570      
+3.539           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+3.562           IBUTTONBOX_ITER_GAP  iButtonBox      1.12330      
+3.562           IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+3.571           PRECORD_ITER_GAP     pRecord         1.02509      
+3.571           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=0.0,key=uMAC_2553,thresh=any 
+3.571           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=0.0,key=uMAC_2553,thresh=any 
+3.571           PRECORD_ITER_LEN     pRecord         0.00015      
+3.571           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=10.0,key=uMAC_2553,thresh=any 
+3.571           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=10.0,key=uMAC_2553,thresh=any 
+3.585           IBUTTONBOX_ITER_GAP  iButtonBox      1.15980      
+3.585           IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+3.608           IBUTTONBOX_ITER_GAP  iButtonBox      1.16155      
+3.608           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+3.628           IBUTTONBOX_ITER_GAP  iButtonBox      1.00501      
+3.628           IBUTTONBOX_ITER_LEN  iButtonBox      0.00449      
+3.651           IBUTTONBOX_ITER_GAP  iButtonBox      1.13909      
+3.651           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+3.652           UXMS_553_ITER_GAP    uXMS_553        1.00189      
+3.652           UXMS_553_ITER_LEN    uXMS_553        0.00021      
+3.673           IBUTTONBOX_ITER_GAP  iButtonBox      1.08756      
+3.673           IBUTTONBOX_ITER_LEN  iButtonBox      0.00274      
+3.693           IBUTTONBOX_ITER_GAP  iButtonBox      1.00645      
+3.693           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+3.713           IBUTTONBOX_ITER_GAP  iButtonBox      1.00795      
+3.713           IBUTTONBOX_ITER_LEN  iButtonBox      0.00139      
+3.735           IBUTTONBOX_ITER_GAP  iButtonBox      1.11675      
+3.735           IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+3.757           IBUTTONBOX_ITER_GAP  iButtonBox      1.10110      
+3.757           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+3.757           APPCAST              iButtonBox      proc=iButtonBox!@#iter=145!@#node=alpha!@#iter=145!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=146!@#run_warnings=146:Unable to open serial port: No such file or directory 
+3.772           PRECORD_ITER_GAP     pRecord         1.00276      
+3.772           PRECORD_ITER_LEN     pRecord         0.00016      
+3.782           IBUTTONBOX_ITER_GAP  iButtonBox      1.25779      
+3.783           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+3.807           IBUTTONBOX_ITER_GAP  iButtonBox      1.24176      
+3.807           IBUTTONBOX_ITER_LEN  iButtonBox      0.00139      
+3.829           IBUTTONBOX_ITER_GAP  iButtonBox      1.06940      
+3.829           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+3.850           IBUTTONBOX_ITER_GAP  iButtonBox      1.08529      
+3.850           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+3.853           UXMS_553_ITER_GAP    uXMS_553        1.00764      
+3.853           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+3.871           IBUTTONBOX_ITER_GAP  iButtonBox      1.04620      
+3.871           IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+3.894           IBUTTONBOX_ITER_GAP  iButtonBox      1.11010      
+3.894           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+3.917           IBUTTONBOX_ITER_GAP  iButtonBox      1.17790      
+3.917           IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+3.941           IBUTTONBOX_ITER_GAP  iButtonBox      1.17880      
+3.941           IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+3.966           IBUTTONBOX_ITER_GAP  iButtonBox      1.25641      
+3.966           IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+3.975           PRECORD_ITER_GAP     pRecord         1.01879      
+3.975           PRECORD_ITER_LEN     pRecord         0.00019      
+3.986           IBUTTONBOX_ITER_GAP  iButtonBox      1.00825      
+3.986           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+4.010           IBUTTONBOX_ITER_GAP  iButtonBox      1.21340      
+4.010           IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+4.035           IBUTTONBOX_ITER_GAP  iButtonBox      1.25415      
+4.035           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+4.056           UXMS_553_ITER_GAP    uXMS_553        1.01305      
+4.056           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+4.056           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+4.056           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+4.059           IBUTTONBOX_ITER_GAP  iButtonBox      1.18285      
+4.059           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+4.084           IBUTTONBOX_ITER_GAP  iButtonBox      1.25580      
+4.084           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+4.105           IBUTTONBOX_ITER_GAP  iButtonBox      1.04760      
+4.105           IBUTTONBOX_ITER_LEN  iButtonBox      0.00365      
+4.125           IBUTTONBOX_ITER_GAP  iButtonBox      1.01460      
+4.125           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+4.149           IBUTTONBOX_ITER_GAP  iButtonBox      1.19079      
+4.149           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+4.170           IBUTTONBOX_ITER_GAP  iButtonBox      1.03431      
+4.170           IBUTTONBOX_ITER_LEN  iButtonBox      0.00279      
+4.170           APPCAST              iButtonBox      proc=iButtonBox!@#iter=163!@#node=alpha!@#iter=163!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=164!@#run_warnings=164:Unable to open serial port: No such file or directory 
+4.180           PRECORD_ITER_GAP     pRecord         1.02560      
+4.180           PRECORD_ITER_LEN     pRecord         0.00015      
+4.194           IBUTTONBOX_ITER_GAP  iButtonBox      1.21344      
+4.194           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+4.216           IBUTTONBOX_ITER_GAP  iButtonBox      1.09265      
+4.216           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+4.238           IBUTTONBOX_ITER_GAP  iButtonBox      1.11035      
+4.238           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+4.261           UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=4.86971,cpuload=0.1548,memory_kb=1472,memory_max_kb=1472,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+4.261           UXMS_553_ITER_GAP    uXMS_553        1.02414      
+4.261           IBUTTONBOX_ITER_GAP  iButtonBox      1.13220      
+4.261           UXMS_553_ITER_LEN    uXMS_553        0.00003      
+4.261           IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+4.285           IBUTTONBOX_ITER_GAP  iButtonBox      1.19790      
+4.285           IBUTTONBOX_ITER_LEN  iButtonBox      0.00296      
+4.305           IBUTTONBOX_ITER_GAP  iButtonBox      1.03199      
+4.305           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+4.330           IBUTTONBOX_ITER_GAP  iButtonBox      1.25520      
+4.331           IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+4.351           IBUTTONBOX_ITER_GAP  iButtonBox      1.03381      
+4.351           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+4.376           IBUTTONBOX_ITER_GAP  iButtonBox      1.25304      
+4.376           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+4.385           PRECORD_ITER_GAP     pRecord         1.02199      
+4.385           PRECORD_ITER_LEN     pRecord         0.00014      
+4.398           IBUTTONBOX_ITER_GAP  iButtonBox      1.06831      
+4.398           IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+4.420           IBUTTONBOX_ITER_GAP  iButtonBox      1.11104      
+4.420           IBUTTONBOX_ITER_LEN  iButtonBox      0.00271      
+4.444           IBUTTONBOX_ITER_GAP  iButtonBox      1.21081      
+4.444           IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+4.463           UXMS_553_ITER_GAP    uXMS_553        1.01048      
+4.463           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+4.467           IBUTTONBOX_ITER_GAP  iButtonBox      1.16124      
+4.467           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+4.491           IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=4.69316,cpuload=0.6389,memory_kb=1716,memory_max_kb=1716,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+4.491           IBUTTONBOX_ITER_GAP  iButtonBox      1.16365      
+4.491           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+4.514           IBUTTONBOX_ITER_GAP  iButtonBox      1.15865      
+4.514           IBUTTONBOX_ITER_LEN  iButtonBox      0.00385      
+4.537           IBUTTONBOX_ITER_GAP  iButtonBox      1.16075      
+4.537           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+4.559           IBUTTONBOX_ITER_GAP  iButtonBox      1.12615      
+4.559           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+4.583           IBUTTONBOX_ITER_GAP  iButtonBox      1.19539      
+4.583           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+4.583           APPCAST              iButtonBox      proc=iButtonBox!@#iter=181!@#node=alpha!@#iter=181!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=182!@#run_warnings=182:Unable to open serial port: No such file or directory 
+4.590           PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=4.92767,cpuload=99.53,memory_kb=4892,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+4.590           PRECORD_ITER_GAP     pRecord         1.02559      
+4.590           PRECORD_ITER_LEN     pRecord         0.00013      
+4.609           IBUTTONBOX_ITER_GAP  iButtonBox      1.25800      
+4.609           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+4.633           IBUTTONBOX_ITER_GAP  iButtonBox      1.22271      
+4.633           IBUTTONBOX_ITER_LEN  iButtonBox      0.00479      
+4.658           IBUTTONBOX_ITER_GAP  iButtonBox      1.24370      
+4.658           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+4.664           UXMS_553_ITER_GAP    uXMS_553        1.00367      
+4.664           UXMS_553_ITER_LEN    uXMS_553        0.00009      
+4.664           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+4.664           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+4.680           IBUTTONBOX_ITER_GAP  iButtonBox      1.11225      
+4.680           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+4.701           IBUTTONBOX_ITER_GAP  iButtonBox      1.03065      
+4.701           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+4.722           IBUTTONBOX_ITER_GAP  iButtonBox      1.06875      
+4.722           IBUTTONBOX_ITER_LEN  iButtonBox      0.00161      
+4.747           IBUTTONBOX_ITER_GAP  iButtonBox      1.22886      
+4.747           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+4.767           IBUTTONBOX_ITER_GAP  iButtonBox      1.01130      
+4.767           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+4.791           IBUTTONBOX_ITER_GAP  iButtonBox      1.20810      
+4.791           PRECORD_ITER_GAP     pRecord         1.00560      
+4.791           IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+4.791           PRECORD_ITER_LEN     pRecord         0.00015      
+4.816           IBUTTONBOX_ITER_GAP  iButtonBox      1.22404      
+4.816           IBUTTONBOX_ITER_LEN  iButtonBox      0.00161      
+4.840           IBUTTONBOX_ITER_GAP  iButtonBox      1.22765      
+4.840           IBUTTONBOX_ITER_LEN  iButtonBox      0.00340      
+4.862           IBUTTONBOX_ITER_GAP  iButtonBox      1.09470      
+4.862           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+4.868           UXMS_553_ITER_GAP    uXMS_553        1.02208      
+4.868           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+4.880           PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=4.88046,cpuload=0.3801,memory_kb=1556,memory_max_kb=1556,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+4.885           IBUTTONBOX_ITER_GAP  iButtonBox      1.16091      
+4.885           IBUTTONBOX_ITER_LEN  iButtonBox      0.00335      
+4.906           IBUTTONBOX_ITER_GAP  iButtonBox      1.03129      
+4.906           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+4.931           IBUTTONBOX_ITER_GAP  iButtonBox      1.25545      
+4.931           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+4.955           IBUTTONBOX_ITER_GAP  iButtonBox      1.19565      
+4.955           IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+4.978           IBUTTONBOX_ITER_GAP  iButtonBox      1.16330      
+4.978           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+4.993           PRECORD_ITER_GAP     pRecord         1.00908      
+4.993           PRECORD_ITER_LEN     pRecord         0.00018      
+5.003           IBUTTONBOX_ITER_GAP  iButtonBox      1.24615      
+5.003           IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+5.003           APPCAST              iButtonBox      proc=iButtonBox!@#iter=199!@#node=alpha!@#iter=199!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=200!@#run_warnings=200:Unable to open serial port: No such file or directory 
+5.025           IBUTTONBOX_ITER_GAP  iButtonBox      1.11140      
+5.025           IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+5.047           IBUTTONBOX_ITER_GAP  iButtonBox      1.09855      
+5.047           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+5.067           IBUTTONBOX_ITER_GAP  iButtonBox      1.00530      
+5.067           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+5.070           UXMS_553_ITER_GAP    uXMS_553        1.00886      
+5.070           UXMS_553_ITER_LEN    uXMS_553        0.00015      
+5.070           UMAC_2553_STATUS     uMAC_2553       AppErrorFlag=false,Uptime=5.90788,cpuload=0.1003,memory_kb=1468,memory_max_kb=1468,MOOSName=uMAC_2553,Publishing="APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,UMAC_2553_STATUS,",Subscribing="APPCAST," 
+5.089           IBUTTONBOX_ITER_GAP  iButtonBox      1.09700      
+5.089           IBUTTONBOX_ITER_LEN  iButtonBox      0.00254      
+5.111           IBUTTONBOX_ITER_GAP  iButtonBox      1.10730      
+5.111           IBUTTONBOX_ITER_LEN  iButtonBox      0.00279      
+5.135           IBUTTONBOX_ITER_GAP  iButtonBox      1.17149      
+5.135           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+5.157           IBUTTONBOX_ITER_GAP  iButtonBox      1.09130      
+5.157           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+5.177           IBUTTONBOX_ITER_GAP  iButtonBox      1.03590      
+5.177           IBUTTONBOX_ITER_LEN  iButtonBox      0.00349      
+5.195           PRECORD_ITER_GAP     pRecord         1.00850      
+5.195           PRECORD_ITER_LEN     pRecord         0.00023      
+5.198           IBUTTONBOX_ITER_GAP  iButtonBox      1.01235      
+5.198           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+5.220           IBUTTONBOX_ITER_GAP  iButtonBox      1.10945      
+5.220           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+5.220           DB_TIME              MOOSDB_alpha    1502889687.69643 
+5.220           DB_UPTIME            MOOSDB_alpha    6.01477      
+5.220           DB_CLIENTS           MOOSDB_alpha    uMAC_2553,pLogger,iButtonBox,pRecord,uXMS_553, 
+5.220           DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:27.479         iButtonBox           2.5 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:27.140         uMAC_2553            2.5 Hz S  node=alpha,app=iButton...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:27.140         uMAC_2553            2.4 Hz S  node=alpha,app=iButton...
+DB_CLIENTS           09:21:27.696         MOOSDB_alpha         0.4 Hz S  uMAC_2553,pLogger,iBut...
+DB_EVENT             09:21:22.775         MOOSDB_alpha         2.5 Hz S  connected=uMAC_2553 
+DB_QOS               09:21:25.685         MOOSDB_alpha         0.2 Hz S  iButtonBox=0:0.152111:...
+DB_RWSUMMARY         09:21:25.685         MOOSDB_alpha         0.2 Hz S  uMAC_2553=APPCAST&APPC...
+DB_TIME              09:21:27.696         MOOSDB_alpha         0.4 Hz D  1502889687.7         
+DB_UPTIME            09:21:27.696         MOOSDB_alpha         0.4 Hz D  6.0                  
+DB_VARSUMMARY        09:21:25.685         MOOSDB_alpha         0.2 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:27.696         iButtonBox           43.7Hz D  1.1                  
+IBUTTONBOX_ITER_LEN  09:21:27.674         iButtonBox           43.5Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:26.967         iButtonBox           0.4 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:23.137         pLogger              0.0 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:27.357         pLogger              0.4 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:27.671         pRecord              4.9 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:27.671         pRecord              4.9 Hz D  0.0                  
+PRECORD_STATUS       09:21:27.066         pRecord              0.4 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:27.546         uMAC_2553            0.4 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:27.546         uXMS_553             4.9 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:27.546         uXMS_553             4.9 Hz D  0.0                  
+UXMS_553_STATUS      09:21:26.737         uXMS_553             0.4 Hz S  AppErrorFlag=false,Upt...
+ 
+5.220           DB_QOS               MOOSDB_alpha    iButtonBox=0.0779629:0.152111:0.0770092:0.108814,pLogger=0.106096:0.121832:0.0600815:0.0874043,pRecord=0.095129:0.227928:0.0879765:0.121784,uMAC_2553=0.11611:0.151157:0.0710487:0.103092,uXMS_553=0.100136:0.421047:0.0720024:0.16942, 
+5.220           DB_RWSUMMARY         MOOSDB_alpha    uMAC_2553=APPCAST&APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:UMAC_2553_STATUS,pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+5.245           IBUTTONBOX_ITER_GAP  iButtonBox      1.25530      
+5.245           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+5.270           IBUTTONBOX_ITER_GAP  iButtonBox      1.24390      
+5.270           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+5.270           UXMS_553_ITER_GAP    uXMS_553        1.00098      
+5.270           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+5.270           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+5.270           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+5.295           IBUTTONBOX_ITER_GAP  iButtonBox      1.25566      
+5.295           IBUTTONBOX_ITER_LEN  iButtonBox      0.00345      
+5.319           IBUTTONBOX_ITER_GAP  iButtonBox      1.21859      
+5.319           IBUTTONBOX_ITER_LEN  iButtonBox      0.00305      
+5.340           IBUTTONBOX_ITER_GAP  iButtonBox      1.03980      
+5.340           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+5.362           IBUTTONBOX_ITER_GAP  iButtonBox      1.08095      
+5.362           IBUTTONBOX_ITER_LEN  iButtonBox      0.00125      
+5.385           IBUTTONBOX_ITER_GAP  iButtonBox      1.14925      
+5.385           IBUTTONBOX_ITER_LEN  iButtonBox      0.00274      
+5.396           PRECORD_ITER_GAP     pRecord         1.00737      
+5.396           PRECORD_ITER_LEN     pRecord         0.00034      
+5.406           IBUTTONBOX_ITER_GAP  iButtonBox      1.07230      
+5.406           IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+5.406           APPCAST              iButtonBox      proc=iButtonBox!@#iter=217!@#node=alpha!@#iter=217!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=218!@#run_warnings=218:Unable to open serial port: No such file or directory 
+5.429           IBUTTONBOX_ITER_GAP  iButtonBox      1.12100      
+5.429           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+5.451           IBUTTONBOX_ITER_GAP  iButtonBox      1.13806      
+5.451           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+5.474           UXMS_553_ITER_GAP    uXMS_553        1.01767      
+5.474           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+5.474           IBUTTONBOX_ITER_GAP  iButtonBox      1.11555      
+5.474           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+5.498           IBUTTONBOX_ITER_GAP  iButtonBox      1.22039      
+5.498           IBUTTONBOX_ITER_LEN  iButtonBox      0.00440      
+5.518           IBUTTONBOX_ITER_GAP  iButtonBox      1.00585      
+5.518           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+5.543           IBUTTONBOX_ITER_GAP  iButtonBox      1.23175      
+5.543           IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+5.565           IBUTTONBOX_ITER_GAP  iButtonBox      1.13190      
+5.565           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+5.587           IBUTTONBOX_ITER_GAP  iButtonBox      1.05745      
+5.587           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+5.601           PRECORD_ITER_GAP     pRecord         1.02562      
+5.601           PRECORD_ITER_LEN     pRecord         0.00031      
+5.612           IBUTTONBOX_ITER_GAP  iButtonBox      1.25555      
+5.612           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+5.635           IBUTTONBOX_ITER_GAP  iButtonBox      1.15340      
+5.635           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+5.660           IBUTTONBOX_ITER_GAP  iButtonBox      1.25461      
+5.660           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+5.675           UXMS_553_ITER_GAP    uXMS_553        1.00850      
+5.675           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+5.682           IBUTTONBOX_ITER_GAP  iButtonBox      1.09555      
+5.682           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+5.707           IBUTTONBOX_ITER_GAP  iButtonBox      1.25560      
+5.707           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+5.732           IBUTTONBOX_ITER_GAP  iButtonBox      1.24271      
+5.732           IBUTTONBOX_ITER_LEN  iButtonBox      0.00249      
+5.757           IBUTTONBOX_ITER_GAP  iButtonBox      1.25530      
+5.757           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+5.779           IBUTTONBOX_ITER_GAP  iButtonBox      1.11049      
+5.779           IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+5.801           IBUTTONBOX_ITER_GAP  iButtonBox      1.08865      
+5.801           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+5.806           PRECORD_ITER_GAP     pRecord         1.02557      
+5.806           PRECORD_ITER_LEN     pRecord         0.00016      
+5.825           IBUTTONBOX_ITER_GAP  iButtonBox      1.19056      
+5.825           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+5.825           APPCAST              iButtonBox      proc=iButtonBox!@#iter=235!@#node=alpha!@#iter=235!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=236!@#run_warnings=236:Unable to open serial port: No such file or directory 
+5.849           IBUTTONBOX_ITER_GAP  iButtonBox      1.20319      
+5.849           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+5.871           IBUTTONBOX_ITER_GAP  iButtonBox      1.09230      
+5.871           IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+5.875           UXMS_553_ITER_GAP    uXMS_553        1.00058      
+5.875           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+5.875           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+5.875           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+5.894           IBUTTONBOX_ITER_GAP  iButtonBox      1.15991      
+5.894           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+5.914           IBUTTONBOX_ITER_GAP  iButtonBox      1.02254      
+5.914           IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+5.939           IBUTTONBOX_ITER_GAP  iButtonBox      1.25495      
+5.939           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+5.964           IBUTTONBOX_ITER_GAP  iButtonBox      1.23510      
+5.964           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+5.985           IBUTTONBOX_ITER_GAP  iButtonBox      1.03955      
+5.985           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+6.005           IBUTTONBOX_ITER_GAP  iButtonBox      1.03179      
+6.005           IBUTTONBOX_ITER_LEN  iButtonBox      0.00350      
+6.006           PRECORD_ITER_GAP     pRecord         1.00046      
+6.006           PRECORD_ITER_LEN     pRecord         0.00018      
+6.030           IBUTTONBOX_ITER_GAP  iButtonBox      1.22066      
+6.030           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+6.051           IBUTTONBOX_ITER_GAP  iButtonBox      1.07665      
+6.051           IBUTTONBOX_ITER_LEN  iButtonBox      0.00299      
+6.076           IBUTTONBOX_ITER_GAP  iButtonBox      1.25445      
+6.076           IBUTTONBOX_ITER_LEN  iButtonBox      0.00254      
+6.077           UXMS_553_ITER_GAP    uXMS_553        1.00977      
+6.077           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+6.097           IBUTTONBOX_ITER_GAP  iButtonBox      1.03915      
+6.097           IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+6.120           IBUTTONBOX_ITER_GAP  iButtonBox      1.12925      
+6.120           IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+6.143           IBUTTONBOX_ITER_GAP  iButtonBox      1.14410      
+6.143           IBUTTONBOX_ITER_LEN  iButtonBox      0.00266      
+6.167           IBUTTONBOX_ITER_GAP  iButtonBox      1.21325      
+6.167           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+6.192           IBUTTONBOX_ITER_GAP  iButtonBox      1.25490      
+6.192           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+6.209           PRECORD_ITER_GAP     pRecord         1.01468      
+6.209           PRECORD_ITER_LEN     pRecord         0.00028      
+6.214           IBUTTONBOX_ITER_GAP  iButtonBox      1.11209      
+6.214           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+6.239           IBUTTONBOX_ITER_GAP  iButtonBox      1.25500      
+6.239           IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+6.239           APPCAST              iButtonBox      proc=iButtonBox!@#iter=253!@#node=alpha!@#iter=253!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=254!@#run_warnings=254:Unable to open serial port: No such file or directory 
+6.260           IBUTTONBOX_ITER_GAP  iButtonBox      1.03951      
+6.260           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+6.278           UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=6.88742,cpuload=0.1146,memory_kb=1472,memory_max_kb=1472,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+6.279           UXMS_553_ITER_GAP    uXMS_553        1.00596      
+6.279           UXMS_553_ITER_LEN    uXMS_553        0.00003      
+6.285           IBUTTONBOX_ITER_GAP  iButtonBox      1.22795      
+6.285           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+6.310           IBUTTONBOX_ITER_GAP  iButtonBox      1.25325      
+6.310           IBUTTONBOX_ITER_LEN  iButtonBox      0.00545      
+6.334           IBUTTONBOX_ITER_GAP  iButtonBox      1.20410      
+6.334           IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+6.357           IBUTTONBOX_ITER_GAP  iButtonBox      1.13225      
+6.357           IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+6.381           IBUTTONBOX_ITER_GAP  iButtonBox      1.20665      
+6.381           IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+6.404           IBUTTONBOX_ITER_GAP  iButtonBox      1.17691      
+6.404           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+6.420           PRECORD_ITER_GAP     pRecord         1.05164      
+6.420           PRECORD_ITER_LEN     pRecord         0.00019      
+6.431           IBUTTONBOX_ITER_GAP  iButtonBox      1.33924      
+6.431           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+6.453           IBUTTONBOX_ITER_GAP  iButtonBox      1.10176      
+6.453           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+6.474           IBUTTONBOX_ITER_GAP  iButtonBox      1.03575      
+6.474           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+6.479           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+6.479           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+6.479           UXMS_553_ITER_GAP    uXMS_553        1.00183      
+6.479           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+6.494           IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=6.69674,cpuload=0.614,memory_kb=1888,memory_max_kb=1888,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+6.494           IBUTTONBOX_ITER_GAP  iButtonBox      1.01835      
+6.494           IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+6.517           IBUTTONBOX_ITER_GAP  iButtonBox      1.16135      
+6.517           IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+6.537           IBUTTONBOX_ITER_GAP  iButtonBox      1.00505      
+6.538           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+6.559           IBUTTONBOX_ITER_GAP  iButtonBox      1.07365      
+6.559           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+6.580           IBUTTONBOX_ITER_GAP  iButtonBox      1.07510      
+6.580           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+6.602           IBUTTONBOX_ITER_GAP  iButtonBox      1.07261      
+6.602           IBUTTONBOX_ITER_LEN  iButtonBox      0.00144      
+6.622           PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=6.95968,cpuload=99.73,memory_kb=4856,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+6.622           PRECORD_ITER_GAP     pRecord         1.01159      
+6.622           PRECORD_ITER_LEN     pRecord         0.00008      
+6.632           IBUTTONBOX_ITER_GAP  iButtonBox      1.50255      
+6.632           IBUTTONBOX_ITER_LEN  iButtonBox      0.00249      
+6.657           IBUTTONBOX_ITER_GAP  iButtonBox      1.26125      
+6.657           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+6.657           APPCAST              iButtonBox      proc=iButtonBox!@#iter=271!@#node=alpha!@#iter=271!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=272!@#run_warnings=272:Unable to open serial port: No such file or directory 
+6.681           IBUTTONBOX_ITER_GAP  iButtonBox      1.18090      
+6.681           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+6.681           UXMS_553_ITER_GAP    uXMS_553        1.01030      
+6.681           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+6.702           IBUTTONBOX_ITER_GAP  iButtonBox      1.04765      
+6.702           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+6.723           IBUTTONBOX_ITER_GAP  iButtonBox      1.04185      
+6.723           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+6.744           IBUTTONBOX_ITER_GAP  iButtonBox      1.04895      
+6.744           IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+6.767           IBUTTONBOX_ITER_GAP  iButtonBox      1.18215      
+6.767           IBUTTONBOX_ITER_LEN  iButtonBox      0.00615      
+6.788           IBUTTONBOX_ITER_GAP  iButtonBox      1.03135      
+6.788           IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+6.812           IBUTTONBOX_ITER_GAP  iButtonBox      1.23326      
+6.813           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+6.823           PRECORD_ITER_GAP     pRecord         1.00682      
+6.823           PRECORD_ITER_LEN     pRecord         0.00020      
+6.835           IBUTTONBOX_ITER_GAP  iButtonBox      1.10680      
+6.835           IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+6.859           IBUTTONBOX_ITER_GAP  iButtonBox      1.21660      
+6.859           IBUTTONBOX_ITER_LEN  iButtonBox      0.00254      
+6.879           IBUTTONBOX_ITER_GAP  iButtonBox      1.02079      
+6.879           IBUTTONBOX_ITER_LEN  iButtonBox      0.00451      
+6.886           UXMS_553_ITER_GAP    uXMS_553        1.02528      
+6.886           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+6.901           IBUTTONBOX_ITER_GAP  iButtonBox      1.09406      
+6.901           IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+6.922           IBUTTONBOX_ITER_GAP  iButtonBox      1.05790      
+6.922           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+6.945           IBUTTONBOX_ITER_GAP  iButtonBox      1.11040      
+6.945           IBUTTONBOX_ITER_LEN  iButtonBox      0.00135      
+6.945           PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=6.94469,cpuload=0.3992,memory_kb=1556,memory_max_kb=1556,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+6.967           IBUTTONBOX_ITER_GAP  iButtonBox      1.14415      
+6.968           IBUTTONBOX_ITER_LEN  iButtonBox      0.00125      
+6.988           IBUTTONBOX_ITER_GAP  iButtonBox      1.01825      
+6.988           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+7.013           IBUTTONBOX_ITER_GAP  iButtonBox      1.25420      
+7.013           IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+7.028           PRECORD_ITER_GAP     pRecord         1.02553      
+7.028           PRECORD_ITER_LEN     pRecord         0.00015      
+7.035           IBUTTONBOX_ITER_GAP  iButtonBox      1.08556      
+7.035           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+7.060           IBUTTONBOX_ITER_GAP  iButtonBox      1.25254      
+7.060           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+7.060           APPCAST              iButtonBox      proc=iButtonBox!@#iter=289!@#node=alpha!@#iter=289!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=290!@#run_warnings=290:Unable to open serial port: No such file or directory 
+7.080           IBUTTONBOX_ITER_GAP  iButtonBox      1.01100      
+7.080           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+7.087           UXMS_553_ITER_GAP    uXMS_553        1.00547      
+7.087           UXMS_553_ITER_LEN    uXMS_553        0.00009      
+7.087           UMAC_2553_STATUS     uMAC_2553       AppErrorFlag=false,Uptime=7.92513,cpuload=0.09715,memory_kb=1504,memory_max_kb=1504,MOOSName=uMAC_2553,Publishing="APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,UMAC_2553_STATUS,",Subscribing="APPCAST," 
+7.087           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+7.087           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+7.101           IBUTTONBOX_ITER_GAP  iButtonBox      1.04970      
+7.101           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+7.122           IBUTTONBOX_ITER_GAP  iButtonBox      1.04866      
+7.122           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+7.147           IBUTTONBOX_ITER_GAP  iButtonBox      1.25550      
+7.147           IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+7.171           IBUTTONBOX_ITER_GAP  iButtonBox      1.18400      
+7.171           IBUTTONBOX_ITER_LEN  iButtonBox      0.01285      
+7.191           IBUTTONBOX_ITER_GAP  iButtonBox      1.01595      
+7.191           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+7.216           IBUTTONBOX_ITER_GAP  iButtonBox      1.25510      
+7.216           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+7.233           PRECORD_ITER_GAP     pRecord         1.02092      
+7.233           PRECORD_ITER_LEN     pRecord         0.00011      
+7.233           DB_TIME              MOOSDB_alpha    1502889689.70921 
+7.233           DB_UPTIME            MOOSDB_alpha    8.02754      
+7.233           DB_CLIENTS           MOOSDB_alpha    uMAC_2553,pLogger,iButtonBox,pRecord,uXMS_553, 
+7.233           DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:29.536         iButtonBox           2.4 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:29.563         uMAC_2553            1.7 Hz S  node=alpha,app=iButton...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:29.563         uMAC_2553            1.7 Hz S  node=alpha,app=iButton...
+DB_CLIENTS           09:21:29.709         MOOSDB_alpha         0.4 Hz S  uMAC_2553,pLogger,iBut...
+DB_EVENT             09:21:22.775         MOOSDB_alpha         2.5 Hz S  connected=uMAC_2553 
+DB_QOS               09:21:27.696         MOOSDB_alpha         0.4 Hz S  iButtonBox=0.0779629:0...
+DB_RWSUMMARY         09:21:27.696         MOOSDB_alpha         0.4 Hz S  uMAC_2553=APPCAST&APPC...
+DB_TIME              09:21:29.709         MOOSDB_alpha         0.4 Hz D  1502889689.7         
+DB_UPTIME            09:21:29.709         MOOSDB_alpha         0.4 Hz D  8.0                  
+DB_VARSUMMARY        09:21:27.696         MOOSDB_alpha         0.4 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:29.692         iButtonBox           44.2Hz D  1.3                  
+IBUTTONBOX_ITER_LEN  09:21:29.692         iButtonBox           43.9Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:28.970         iButtonBox           0.4 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:23.137         pLogger              0.0 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:29.421         pLogger              0.4 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:29.709         pRecord              4.9 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:29.505         pRecord              4.9 Hz D  0.0                  
+PRECORD_STATUS       09:21:29.108         pRecord              0.4 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:29.563         uMAC_2553            0.4 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:29.563         uXMS_553             4.9 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:29.563         uXMS_553             4.9 Hz D  0.0                  
+UXMS_553_STATUS      09:21:28.755         uXMS_553             0.4 Hz S  AppErrorFlag=false,Upt...
+ 
+7.233           DB_QOS               MOOSDB_alpha    iButtonBox=0.0708103:0.152111:0.0708103:0.107384,pLogger=0.308037:0.308037:0.0600815:0.127792,pRecord=0.0720024:0.227928:0.0720024:0.117159,uMAC_2553=0.0808239:0.190973:0.0710487:0.096035,uXMS_553=0.324965:0.421047:0.0720024:0.214386, 
+7.233           DB_RWSUMMARY         MOOSDB_alpha    uMAC_2553=APPCAST&APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:UMAC_2553_STATUS,pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+7.241           IBUTTONBOX_ITER_GAP  iButtonBox      1.23066      
+7.241           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+7.266           IBUTTONBOX_ITER_GAP  iButtonBox      1.25309      
+7.266           IBUTTONBOX_ITER_LEN  iButtonBox      0.00141      
+7.289           IBUTTONBOX_ITER_GAP  iButtonBox      1.17060      
+7.289           UXMS_553_ITER_GAP    uXMS_553        1.01058      
+7.289           UXMS_553_ITER_LEN    uXMS_553        0.00005      
+7.289           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+7.311           IBUTTONBOX_ITER_GAP  iButtonBox      1.09615      
+7.311           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+7.334           IBUTTONBOX_ITER_GAP  iButtonBox      1.15380      
+7.334           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+7.357           IBUTTONBOX_ITER_GAP  iButtonBox      1.15590      
+7.357           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+7.380           IBUTTONBOX_ITER_GAP  iButtonBox      1.13200      
+7.380           IBUTTONBOX_ITER_LEN  iButtonBox      0.00299      
+7.401           IBUTTONBOX_ITER_GAP  iButtonBox      1.06729      
+7.401           IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+7.421           IBUTTONBOX_ITER_GAP  iButtonBox      1.01036      
+7.422           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+7.435           PRECORD_ITER_GAP     pRecord         1.01389      
+7.435           PRECORD_ITER_LEN     pRecord         0.00030      
+7.445           IBUTTONBOX_ITER_GAP  iButtonBox      1.18049      
+7.445           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+7.468           IBUTTONBOX_ITER_GAP  iButtonBox      1.12470      
+7.468           IBUTTONBOX_ITER_LEN  iButtonBox      0.00515      
+7.468           APPCAST              iButtonBox      proc=iButtonBox!@#iter=307!@#node=alpha!@#iter=307!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=308!@#run_warnings=308:Unable to open serial port: No such file or directory 
+7.491           IBUTTONBOX_ITER_GAP  iButtonBox      1.17520      
+7.491           IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+7.491           UXMS_553_ITER_GAP    uXMS_553        1.01071      
+7.491           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+7.516           IBUTTONBOX_ITER_GAP  iButtonBox      1.22600      
+7.516           IBUTTONBOX_ITER_LEN  iButtonBox      0.00319      
+7.541           IBUTTONBOX_ITER_GAP  iButtonBox      1.25630      
+7.541           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+7.564           IBUTTONBOX_ITER_GAP  iButtonBox      1.16971      
+7.564           IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+7.589           IBUTTONBOX_ITER_GAP  iButtonBox      1.25445      
+7.589           IBUTTONBOX_ITER_LEN  iButtonBox      0.00304      
+7.610           IBUTTONBOX_ITER_GAP  iButtonBox      1.06100      
+7.610           IBUTTONBOX_ITER_LEN  iButtonBox      0.00144      
+7.632           IBUTTONBOX_ITER_GAP  iButtonBox      1.05950      
+7.632           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+7.639           PRECORD_ITER_GAP     pRecord         1.01685      
+7.639           PRECORD_ITER_LEN     pRecord         0.00019      
+7.652           IBUTTONBOX_ITER_GAP  iButtonBox      1.00465      
+7.652           IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+7.672           IBUTTONBOX_ITER_GAP  iButtonBox      1.01556      
+7.672           IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+7.695           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+7.695           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+7.695           IBUTTONBOX_ITER_GAP  iButtonBox      1.14800      
+7.695           UXMS_553_ITER_GAP    uXMS_553        1.01832      
+7.695           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+7.695           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+7.720           IBUTTONBOX_ITER_GAP  iButtonBox      1.23969      
+7.720           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+7.742           IBUTTONBOX_ITER_GAP  iButtonBox      1.09651      
+7.742           IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+7.764           IBUTTONBOX_ITER_GAP  iButtonBox      1.13474      
+7.764           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+7.788           IBUTTONBOX_ITER_GAP  iButtonBox      1.16110      
+7.788           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+7.811           IBUTTONBOX_ITER_GAP  iButtonBox      1.18661      
+7.811           IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+7.834           IBUTTONBOX_ITER_GAP  iButtonBox      1.13505      
+7.834           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+7.839           PRECORD_ITER_GAP     pRecord         1.00302      
+7.839           PRECORD_ITER_LEN     pRecord         0.00016      
+7.855           IBUTTONBOX_ITER_GAP  iButtonBox      1.06674      
+7.855           IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+7.880           IBUTTONBOX_ITER_GAP  iButtonBox      1.23110      
+7.880           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+7.880           APPCAST              iButtonBox      proc=iButtonBox!@#iter=325!@#node=alpha!@#iter=325!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=326!@#run_warnings=326:Unable to open serial port: No such file or directory 
+7.896           UXMS_553_ITER_GAP    uXMS_553        1.00685      
+7.896           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+7.904           IBUTTONBOX_ITER_GAP  iButtonBox      1.18566      
+7.904           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+7.929           IBUTTONBOX_ITER_GAP  iButtonBox      1.25625      
+7.929           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+7.951           IBUTTONBOX_ITER_GAP  iButtonBox      1.09104      
+7.951           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+7.972           IBUTTONBOX_ITER_GAP  iButtonBox      1.05586      
+7.972           IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+7.997           IBUTTONBOX_ITER_GAP  iButtonBox      1.24010      
+7.997           IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+8.017           IBUTTONBOX_ITER_GAP  iButtonBox      1.02960      
+8.017           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+8.041           IBUTTONBOX_ITER_GAP  iButtonBox      1.16615      
+8.041           IBUTTONBOX_ITER_LEN  iButtonBox      0.00299      
+8.043           PRECORD_ITER_GAP     pRecord         1.01836      
+8.043           PRECORD_ITER_LEN     pRecord         0.00028      
+8.066           IBUTTONBOX_ITER_GAP  iButtonBox      1.25464      
+8.066           IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+8.089           IBUTTONBOX_ITER_GAP  iButtonBox      1.19220      
+8.090           IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+8.098           UXMS_553_ITER_GAP    uXMS_553        1.00889      
+8.098           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+8.113           IBUTTONBOX_ITER_GAP  iButtonBox      1.16380      
+8.113           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+8.136           IBUTTONBOX_ITER_GAP  iButtonBox      1.15839      
+8.136           IBUTTONBOX_ITER_LEN  iButtonBox      0.00480      
+8.159           IBUTTONBOX_ITER_GAP  iButtonBox      1.16526      
+8.159           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+8.180           IBUTTONBOX_ITER_GAP  iButtonBox      1.01445      
+8.180           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+8.201           IBUTTONBOX_ITER_GAP  iButtonBox      1.09060      
+8.201           IBUTTONBOX_ITER_LEN  iButtonBox      0.00385      
+8.223           IBUTTONBOX_ITER_GAP  iButtonBox      1.06961      
+8.223           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+8.248           IBUTTONBOX_ITER_GAP  iButtonBox      1.25605      
+8.248           PRECORD_ITER_GAP     pRecord         1.02379      
+8.248           PRECORD_ITER_LEN     pRecord         0.00021      
+8.248           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+8.270           IBUTTONBOX_ITER_GAP  iButtonBox      1.11125      
+8.270           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+8.292           IBUTTONBOX_ITER_GAP  iButtonBox      1.12001      
+8.292           IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+8.293           APPCAST              iButtonBox      proc=iButtonBox!@#iter=343!@#node=alpha!@#iter=343!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=344!@#run_warnings=344:Unable to open serial port: No such file or directory 
+8.301           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+8.301           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+8.301           UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=8.91024,cpuload=0.09844,memory_kb=1472,memory_max_kb=1472,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+8.301           UXMS_553_ITER_GAP    uXMS_553        1.01581      
+8.301           UXMS_553_ITER_LEN    uXMS_553        0.00003      
+8.318           IBUTTONBOX_ITER_GAP  iButtonBox      1.25794      
+8.318           IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+8.338           IBUTTONBOX_ITER_GAP  iButtonBox      1.04045      
+8.338           IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+8.360           IBUTTONBOX_ITER_GAP  iButtonBox      1.07325      
+8.360           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+8.384           IBUTTONBOX_ITER_GAP  iButtonBox      1.19735      
+8.384           IBUTTONBOX_ITER_LEN  iButtonBox      0.00606      
+8.408           IBUTTONBOX_ITER_GAP  iButtonBox      1.19175      
+8.408           IBUTTONBOX_ITER_LEN  iButtonBox      0.00161      
+8.432           IBUTTONBOX_ITER_GAP  iButtonBox      1.23005      
+8.432           IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+8.451           PRECORD_ITER_GAP     pRecord         1.01727      
+8.451           PRECORD_ITER_LEN     pRecord         0.00018      
+8.456           IBUTTONBOX_ITER_GAP  iButtonBox      1.17410      
+8.456           IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+8.479           IBUTTONBOX_ITER_GAP  iButtonBox      1.14166      
+8.479           IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+8.501           IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=8.70391,cpuload=0.6673,memory_kb=1940,memory_max_kb=1940,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+8.501           IBUTTONBOX_ITER_GAP  iButtonBox      1.13544      
+8.501           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+8.501           UXMS_553_ITER_GAP    uXMS_553        1.00041      
+8.501           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+8.526           IBUTTONBOX_ITER_GAP  iButtonBox      1.25605      
+8.526           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+8.551           IBUTTONBOX_ITER_GAP  iButtonBox      1.24140      
+8.551           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+8.576           IBUTTONBOX_ITER_GAP  iButtonBox      1.25475      
+8.576           IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+8.597           IBUTTONBOX_ITER_GAP  iButtonBox      1.01146      
+8.597           IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+8.617           IBUTTONBOX_ITER_GAP  iButtonBox      1.01075      
+8.617           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+8.641           IBUTTONBOX_ITER_GAP  iButtonBox      1.22790      
+8.641           IBUTTONBOX_ITER_LEN  iButtonBox      0.00254      
+8.652           PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=8.98994,cpuload=98.34,memory_kb=4856,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+8.652           PRECORD_ITER_GAP     pRecord         1.00483      
+8.652           PRECORD_ITER_LEN     pRecord         0.00009      
+8.664           IBUTTONBOX_ITER_GAP  iButtonBox      1.14515      
+8.664           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+8.685           IBUTTONBOX_ITER_GAP  iButtonBox      1.02030      
+8.685           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+8.702           UXMS_553_ITER_GAP    uXMS_553        1.00458      
+8.702           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+8.705           IBUTTONBOX_ITER_GAP  iButtonBox      1.00560      
+8.705           IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+8.705           APPCAST              iButtonBox      proc=iButtonBox!@#iter=361!@#node=alpha!@#iter=361!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=362!@#run_warnings=362:Unable to open serial port: No such file or directory 
+8.726           IBUTTONBOX_ITER_GAP  iButtonBox      1.05610      
+8.726           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+8.750           IBUTTONBOX_ITER_GAP  iButtonBox      1.21784      
+8.750           IBUTTONBOX_ITER_LEN  iButtonBox      0.00271      
+8.774           IBUTTONBOX_ITER_GAP  iButtonBox      1.20655      
+8.774           IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+8.797           IBUTTONBOX_ITER_GAP  iButtonBox      1.13820      
+8.797           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+8.817           IBUTTONBOX_ITER_GAP  iButtonBox      1.01250      
+8.818           IBUTTONBOX_ITER_LEN  iButtonBox      0.00770      
+8.841           IBUTTONBOX_ITER_GAP  iButtonBox      1.16460      
+8.841           IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+8.856           PRECORD_ITER_GAP     pRecord         1.02050      
+8.856           PRECORD_ITER_LEN     pRecord         0.00019      
+8.864           IBUTTONBOX_ITER_GAP  iButtonBox      1.18239      
+8.864           IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+8.889           IBUTTONBOX_ITER_GAP  iButtonBox      1.25476      
+8.889           IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+8.903           UXMS_553_ITER_GAP    uXMS_553        1.00373      
+8.903           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+8.903           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+8.903           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+8.914           IBUTTONBOX_ITER_GAP  iButtonBox      1.24605      
+8.914           IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+8.938           IBUTTONBOX_ITER_GAP  iButtonBox      1.20660      
+8.939           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+8.964           IBUTTONBOX_ITER_GAP  iButtonBox      1.25555      
+8.964           IBUTTONBOX_ITER_LEN  iButtonBox      0.00144      
+8.985           IBUTTONBOX_ITER_GAP  iButtonBox      1.04820      
+8.985           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+8.995           PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=8.99529,cpuload=0.3859,memory_kb=1556,memory_max_kb=1556,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+9.005           IBUTTONBOX_ITER_GAP  iButtonBox      1.01310      
+9.005           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+9.027           IBUTTONBOX_ITER_GAP  iButtonBox      1.11190      
+9.027           IBUTTONBOX_ITER_LEN  iButtonBox      0.00426      
+9.051           IBUTTONBOX_ITER_GAP  iButtonBox      1.20806      
+9.051           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+9.058           PRECORD_ITER_GAP     pRecord         1.00806      
+9.058           PRECORD_ITER_LEN     pRecord         0.00015      
+9.075           IBUTTONBOX_ITER_GAP  iButtonBox      1.20344      
+9.075           IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+9.098           IBUTTONBOX_ITER_GAP  iButtonBox      1.12201      
+9.098           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+9.105           UXMS_553_ITER_GAP    uXMS_553        1.01044      
+9.105           UMAC_2553_STATUS     uMAC_2553       AppErrorFlag=false,Uptime=9.94316,cpuload=0.08248,memory_kb=1504,memory_max_kb=1504,MOOSName=uMAC_2553,Publishing="APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,UMAC_2553_STATUS,",Subscribing="APPCAST," 
+9.105           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+9.119           IBUTTONBOX_ITER_GAP  iButtonBox      1.05870      
+9.119           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+9.119           APPCAST              iButtonBox      proc=iButtonBox!@#iter=379!@#node=alpha!@#iter=379!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=380!@#run_warnings=380:Unable to open serial port: No such file or directory 
+9.143           IBUTTONBOX_ITER_GAP  iButtonBox      1.18510      
+9.143           IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+9.164           IBUTTONBOX_ITER_GAP  iButtonBox      1.08656      
+9.164           IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+9.185           IBUTTONBOX_ITER_GAP  iButtonBox      1.02094      
+9.185           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+9.205           IBUTTONBOX_ITER_GAP  iButtonBox      1.03295      
+9.205           IBUTTONBOX_ITER_LEN  iButtonBox      0.00310      
+9.228           IBUTTONBOX_ITER_GAP  iButtonBox      1.12951      
+9.228           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+9.251           IBUTTONBOX_ITER_GAP  iButtonBox      1.15675      
+9.251           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+9.251           DB_TIME              MOOSDB_alpha    1502889691.72772 
+9.251           DB_UPTIME            MOOSDB_alpha    10.04606     
+9.251           DB_CLIENTS           MOOSDB_alpha    uMAC_2553,pLogger,iButtonBox,pRecord,uXMS_553, 
+9.251           DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:31.595         iButtonBox           2.4 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:31.379         uMAC_2553            1.7 Hz S  node=alpha,app=iButton...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:31.379         uMAC_2553            1.7 Hz S  node=alpha,app=iButton...
+DB_CLIENTS           09:21:31.727         MOOSDB_alpha         0.5 Hz S  uMAC_2553,pLogger,iBut...
+DB_EVENT             09:21:22.775         MOOSDB_alpha         2.5 Hz S  connected=uMAC_2553 
+DB_QOS               09:21:29.709         MOOSDB_alpha         0.4 Hz S  iButtonBox=0.0708103:0...
+DB_RWSUMMARY         09:21:29.709         MOOSDB_alpha         0.4 Hz S  uMAC_2553=APPCAST&APPC...
+DB_TIME              09:21:31.727         MOOSDB_alpha         0.5 Hz D  1502889691.7         
+DB_UPTIME            09:21:31.727         MOOSDB_alpha         0.5 Hz D  10.0                 
+DB_VARSUMMARY        09:21:29.709         MOOSDB_alpha         0.4 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:31.727         iButtonBox           43.8Hz D  1.2                  
+IBUTTONBOX_ITER_LEN  09:21:31.704         iButtonBox           43.7Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:30.977         iButtonBox           0.5 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:23.137         pLogger              0.0 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:31.471         pLogger              0.5 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:31.534         pRecord              4.9 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:31.534         pRecord              4.9 Hz D  0.0                  
+PRECORD_STATUS       09:21:31.128         pRecord              0.5 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:31.581         uMAC_2553            0.5 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:31.581         uXMS_553             5.0 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:31.581         uXMS_553             5.0 Hz D  0.0                  
+UXMS_553_STATUS      09:21:30.777         uXMS_553             0.5 Hz S  AppErrorFlag=false,Upt...
+ 
+9.251           DB_QOS               MOOSDB_alpha    iButtonBox=0.105143:0.152111:0.0708103:0.11425,pLogger=0.0889301:0.308037:0.0600815:0.083971,pRecord=0.0698566:0.227928:0.0698566:0.11673,uMAC_2553=0.0910759:0.190973:0.0710487:0.0980854,uXMS_553=0.0839233:0.421047:0.0720024:0.166178, 
+9.251           DB_RWSUMMARY         MOOSDB_alpha    uMAC_2553=APPCAST&APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:UMAC_2553_STATUS,pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+9.259           PRECORD_ITER_GAP     pRecord         1.00480      
+9.259           PRECORD_ITER_LEN     pRecord         0.00013      
+9.274           IBUTTONBOX_ITER_GAP  iButtonBox      1.13015      
+9.274           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+9.298           IBUTTONBOX_ITER_GAP  iButtonBox      1.19644      
+9.298           IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+9.305           UXMS_553_ITER_GAP    uXMS_553        1.00075      
+9.305           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+9.320           IBUTTONBOX_ITER_GAP  iButtonBox      1.12610      
+9.320           IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+9.344           IBUTTONBOX_ITER_GAP  iButtonBox      1.19445      
+9.344           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+9.365           IBUTTONBOX_ITER_GAP  iButtonBox      1.03195      
+9.365           IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+9.385           IBUTTONBOX_ITER_GAP  iButtonBox      1.02055      
+9.385           IBUTTONBOX_ITER_LEN  iButtonBox      0.00595      
+9.406           IBUTTONBOX_ITER_GAP  iButtonBox      1.03741      
+9.406           IBUTTONBOX_ITER_LEN  iButtonBox      0.00424      
+9.427           IBUTTONBOX_ITER_GAP  iButtonBox      1.04259      
+9.427           IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+9.450           IBUTTONBOX_ITER_GAP  iButtonBox      1.16141      
+9.450           IBUTTONBOX_ITER_LEN  iButtonBox      0.00529      
+9.459           PRECORD_ITER_GAP     pRecord         1.00134      
+9.459           PRECORD_ITER_LEN     pRecord         0.00019      
+9.470           IBUTTONBOX_ITER_GAP  iButtonBox      1.00739      
+9.470           IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+9.490           IBUTTONBOX_ITER_GAP  iButtonBox      1.00530      
+9.490           IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+9.506           UXMS_553_ITER_GAP    uXMS_553        1.00502      
+9.506           UXMS_553_ITER_LEN    uXMS_553        0.00007      
+9.506           APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+9.506           APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+9.513           IBUTTONBOX_ITER_GAP  iButtonBox      1.14175      
+9.513           IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+9.534           IBUTTONBOX_ITER_GAP  iButtonBox      1.03145      
+9.534           IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+9.534           APPCAST              iButtonBox      proc=iButtonBox!@#iter=398!@#node=alpha!@#iter=398!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=399!@#run_warnings=399:Unable to open serial port: No such file or directory 
+9.554           IBUTTONBOX_ITER_GAP  iButtonBox      1.02130      
+9.554           IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+9.578           IBUTTONBOX_ITER_GAP  iButtonBox      1.17475      
+9.578           IBUTTONBOX_ITER_LEN  iButtonBox      0.00266      
+9.601           IBUTTONBOX_ITER_GAP  iButtonBox      1.16736      
+9.601           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+9.623           IBUTTONBOX_ITER_GAP  iButtonBox      1.07985      
+9.623           IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+9.645           IBUTTONBOX_ITER_GAP  iButtonBox      1.13446      
+9.645           IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+9.660           PRECORD_ITER_GAP     pRecord         1.00281      
+9.660           PRECORD_ITER_LEN     pRecord         0.00015      
+9.670           IBUTTONBOX_ITER_GAP  iButtonBox      1.22789      
+9.670           IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+9.692           IBUTTONBOX_ITER_GAP  iButtonBox      1.09586      
+9.692           IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+9.707           UXMS_553_ITER_GAP    uXMS_553        1.00165      
+9.707           UXMS_553_ITER_LEN    uXMS_553        0.00006      
+9.715           IBUTTONBOX_ITER_GAP  iButtonBox      1.16110      
+9.715           IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+9.738           IBUTTONBOX_ITER_GAP  iButtonBox      1.16910      
+9.738           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+9.762           IBUTTONBOX_ITER_GAP  iButtonBox      1.17475      
+9.762           IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+9.787           IBUTTONBOX_ITER_GAP  iButtonBox      1.24966      
+9.787           IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+9.808           IBUTTONBOX_ITER_GAP  iButtonBox      1.05009      
+9.808           IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+9.829           IBUTTONBOX_ITER_GAP  iButtonBox      1.05655      
+9.829           IBUTTONBOX_ITER_LEN  iButtonBox      0.00161      
+9.851           IBUTTONBOX_ITER_GAP  iButtonBox      1.11001      
+9.851           IBUTTONBOX_ITER_LEN  iButtonBox      0.00474      
+9.862           PRECORD_ITER_GAP     pRecord         1.01133      
+9.862           PRECORD_ITER_LEN     pRecord         0.00015      
+9.872           IBUTTONBOX_ITER_GAP  iButtonBox      1.05190      
+9.872           IBUTTONBOX_ITER_LEN  iButtonBox      0.00404      
+9.893           IBUTTONBOX_ITER_GAP  iButtonBox      1.02915      
+9.893           IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+9.908           UXMS_553_ITER_GAP    uXMS_553        1.00538      
+9.908           UXMS_553_ITER_LEN    uXMS_553        0.00008      
+9.916           IBUTTONBOX_ITER_GAP  iButtonBox      1.14934      
+9.916           IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+9.940           IBUTTONBOX_ITER_GAP  iButtonBox      1.19416      
+9.940           IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+9.940           APPCAST              iButtonBox      proc=iButtonBox!@#iter=416!@#node=alpha!@#iter=416!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=417!@#run_warnings=417:Unable to open serial port: No such file or directory 
+9.964           IBUTTONBOX_ITER_GAP  iButtonBox      1.21419      
+9.964           IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+9.987           IBUTTONBOX_ITER_GAP  iButtonBox      1.13746      
+9.987           IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+10.012          IBUTTONBOX_ITER_GAP  iButtonBox      1.25500      
+10.012          IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+10.017          LOGGER_DIRECTORY     pLogger         ./logs/BUTTON_LOG_16_8_2017_____09_21_23 
+10.035          IBUTTONBOX_ITER_GAP  iButtonBox      1.13930      
+10.035          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+10.060          IBUTTONBOX_ITER_GAP  iButtonBox      1.25495      
+10.060          IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+10.063          PRECORD_ITER_GAP     pRecord         1.00616      
+10.063          PRECORD_ITER_LEN     pRecord         0.00017      
+10.085          IBUTTONBOX_ITER_GAP  iButtonBox      1.24490      
+10.085          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+10.105          IBUTTONBOX_ITER_GAP  iButtonBox      1.01155      
+10.105          IBUTTONBOX_ITER_LEN  iButtonBox      0.00355      
+10.110          UXMS_553_ITER_GAP    uXMS_553        1.01007      
+10.110          UXMS_553_ITER_LEN    uXMS_553        0.00015      
+10.110          APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+10.110          APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+10.126          IBUTTONBOX_ITER_GAP  iButtonBox      1.08720      
+10.127          IBUTTONBOX_ITER_LEN  iButtonBox      0.00515      
+10.150          IBUTTONBOX_ITER_GAP  iButtonBox      1.19510      
+10.150          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+10.173          IBUTTONBOX_ITER_GAP  iButtonBox      1.14945      
+10.173          IBUTTONBOX_ITER_LEN  iButtonBox      0.00420      
+10.198          IBUTTONBOX_ITER_GAP  iButtonBox      1.21235      
+10.198          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+10.220          IBUTTONBOX_ITER_GAP  iButtonBox      1.10835      
+10.220          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+10.240          IBUTTONBOX_ITER_GAP  iButtonBox      1.01120      
+10.240          IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+10.262          IBUTTONBOX_ITER_GAP  iButtonBox      1.09720      
+10.262          IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+10.268          PRECORD_ITER_GAP     pRecord         1.02309      
+10.268          PRECORD_ITER_LEN     pRecord         0.00017      
+10.286          IBUTTONBOX_ITER_GAP  iButtonBox      1.20070      
+10.286          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+10.309          IBUTTONBOX_ITER_GAP  iButtonBox      1.14155      
+10.309          IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+10.311          UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=10.9202,cpuload=0.1139,memory_kb=1472,memory_max_kb=1472,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+10.311          UXMS_553_ITER_GAP    uXMS_553        1.00794      
+10.311          UXMS_553_ITER_LEN    uXMS_553        0.00003      
+10.334          IBUTTONBOX_ITER_GAP  iButtonBox      1.25625      
+10.334          IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+10.359          IBUTTONBOX_ITER_GAP  iButtonBox      1.25395      
+10.359          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+10.359          APPCAST              iButtonBox      proc=iButtonBox!@#iter=434!@#node=alpha!@#iter=434!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=435!@#run_warnings=435:Unable to open serial port: No such file or directory 
+10.382          IBUTTONBOX_ITER_GAP  iButtonBox      1.14675      
+10.382          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+10.404          IBUTTONBOX_ITER_GAP  iButtonBox      1.11001      
+10.404          IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+10.429          IBUTTONBOX_ITER_GAP  iButtonBox      1.25489      
+10.429          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+10.451          IBUTTONBOX_ITER_GAP  iButtonBox      1.09335      
+10.451          IBUTTONBOX_ITER_LEN  iButtonBox      0.00345      
+10.470          PRECORD_ITER_GAP     pRecord         1.01007      
+10.470          PRECORD_ITER_LEN     pRecord         0.00020      
+10.472          IBUTTONBOX_ITER_GAP  iButtonBox      1.03101      
+10.472          IBUTTONBOX_ITER_LEN  iButtonBox      0.00174      
+10.495          IBUTTONBOX_ITER_GAP  iButtonBox      1.16194      
+10.495          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+10.515          UXMS_553_ITER_GAP    uXMS_553        1.01911      
+10.515          UXMS_553_ITER_LEN    uXMS_553        0.00010      
+10.520          IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=10.7225,cpuload=0.6731,memory_kb=2148,memory_max_kb=2148,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+10.520          IBUTTONBOX_ITER_GAP  iButtonBox      1.24540      
+10.520          IBUTTONBOX_ITER_LEN  iButtonBox      0.00274      
+10.545          IBUTTONBOX_ITER_GAP  iButtonBox      1.25564      
+10.545          IBUTTONBOX_ITER_LEN  iButtonBox      0.00585      
+10.568          IBUTTONBOX_ITER_GAP  iButtonBox      1.13111      
+10.568          IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+10.589          IBUTTONBOX_ITER_GAP  iButtonBox      1.05035      
+10.589          IBUTTONBOX_ITER_LEN  iButtonBox      0.00244      
+10.611          IBUTTONBOX_ITER_GAP  iButtonBox      1.12875      
+10.611          IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+10.635          IBUTTONBOX_ITER_GAP  iButtonBox      1.16895      
+10.635          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+10.655          IBUTTONBOX_ITER_GAP  iButtonBox      1.02170      
+10.655          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+10.670          PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=11.0077,cpuload=98.68,memory_kb=4888,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+10.670          PRECORD_ITER_GAP     pRecord         1.00083      
+10.670          PRECORD_ITER_LEN     pRecord         0.00023      
+10.680          IBUTTONBOX_ITER_GAP  iButtonBox      1.25500      
+10.680          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+10.703          IBUTTONBOX_ITER_GAP  iButtonBox      1.12325      
+10.703          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+10.720          APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+10.720          APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+10.720          UXMS_553_ITER_GAP    uXMS_553        1.02370      
+10.720          UXMS_553_ITER_LEN    uXMS_553        0.00018      
+10.727          IBUTTONBOX_ITER_GAP  iButtonBox      1.24450      
+10.728          IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+10.750          IBUTTONBOX_ITER_GAP  iButtonBox      1.15116      
+10.751          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+10.775          IBUTTONBOX_ITER_GAP  iButtonBox      1.22219      
+10.775          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+10.775          APPCAST              iButtonBox      proc=iButtonBox!@#iter=452!@#node=alpha!@#iter=452!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=453!@#run_warnings=453:Unable to open serial port: No such file or directory 
+10.800          IBUTTONBOX_ITER_GAP  iButtonBox      1.25985      
+10.800          IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+10.821          IBUTTONBOX_ITER_GAP  iButtonBox      1.06161      
+10.821          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+10.842          IBUTTONBOX_ITER_GAP  iButtonBox      1.04744      
+10.842          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+10.863          IBUTTONBOX_ITER_GAP  iButtonBox      1.01210      
+10.863          IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+10.873          PRECORD_ITER_GAP     pRecord         1.01659      
+10.873          PRECORD_ITER_LEN     pRecord         0.00018      
+10.883          IBUTTONBOX_ITER_GAP  iButtonBox      1.04395      
+10.883          IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+10.907          IBUTTONBOX_ITER_GAP  iButtonBox      1.16916      
+10.907          IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+10.921          UXMS_553_ITER_GAP    uXMS_553        1.00519      
+10.921          UXMS_553_ITER_LEN    uXMS_553        0.00007      
+10.929          IBUTTONBOX_ITER_GAP  iButtonBox      1.10840      
+10.929          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+10.951          IBUTTONBOX_ITER_GAP  iButtonBox      1.10210      
+10.951          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+10.973          IBUTTONBOX_ITER_GAP  iButtonBox      1.10705      
+10.973          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+10.995          IBUTTONBOX_ITER_GAP  iButtonBox      1.11235      
+10.995          IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+11.016          IBUTTONBOX_ITER_GAP  iButtonBox      1.01709      
+11.016          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+11.036          IBUTTONBOX_ITER_GAP  iButtonBox      1.01016      
+11.036          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+11.039          PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=11.0386,cpuload=0.3964,memory_kb=1588,memory_max_kb=1588,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+11.058          IBUTTONBOX_ITER_GAP  iButtonBox      1.09479      
+11.058          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+11.074          PRECORD_ITER_GAP     pRecord         1.00464      
+11.074          PRECORD_ITER_LEN     pRecord         0.00015      
+11.078          IBUTTONBOX_ITER_GAP  iButtonBox      1.01200      
+11.078          IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+11.100          IBUTTONBOX_ITER_GAP  iButtonBox      1.07784      
+11.100          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+11.120          IBUTTONBOX_ITER_GAP  iButtonBox      1.00526      
+11.120          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+11.124          UXMS_553_ITER_GAP    uXMS_553        1.01588      
+11.124          UXMS_553_ITER_LEN    uXMS_553        0.00009      
+11.124          UMAC_2553_STATUS     uMAC_2553       AppErrorFlag=false,Uptime=11.9621,cpuload=0.06919,memory_kb=1504,memory_max_kb=1504,MOOSName=uMAC_2553,Publishing="APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,UMAC_2553_STATUS,",Subscribing="APPCAST," 
+11.140          IBUTTONBOX_ITER_GAP  iButtonBox      1.02550      
+11.140          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+11.164          IBUTTONBOX_ITER_GAP  iButtonBox      1.19385      
+11.164          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+11.185          IBUTTONBOX_ITER_GAP  iButtonBox      1.01781      
+11.185          IBUTTONBOX_ITER_LEN  iButtonBox      0.00684      
+11.185          APPCAST              iButtonBox      proc=iButtonBox!@#iter=471!@#node=alpha!@#iter=471!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=472!@#run_warnings=472:Unable to open serial port: No such file or directory 
+11.209          IBUTTONBOX_ITER_GAP  iButtonBox      1.21070      
+11.209          IBUTTONBOX_ITER_LEN  iButtonBox      0.02199      
+11.234          IBUTTONBOX_ITER_GAP  iButtonBox      1.26134      
+11.234          IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+11.257          IBUTTONBOX_ITER_GAP  iButtonBox      1.14006      
+11.257          IBUTTONBOX_ITER_LEN  iButtonBox      0.00385      
+11.257          DB_TIME              MOOSDB_alpha    1502889693.73370 
+11.257          DB_UPTIME            MOOSDB_alpha    12.05204     
+11.257          DB_CLIENTS           MOOSDB_alpha    uMAC_2553,pLogger,iButtonBox,pRecord,uXMS_553, 
+11.258          DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:33.661         iButtonBox           2.4 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:33.196         uMAC_2553            1.6 Hz S  node=alpha,app=iButton...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:33.196         uMAC_2553            1.6 Hz S  node=alpha,app=iButton...
+DB_CLIENTS           09:21:33.733         MOOSDB_alpha         0.5 Hz S  uMAC_2553,pLogger,iBut...
+DB_EVENT             09:21:22.775         MOOSDB_alpha         2.5 Hz S  connected=uMAC_2553 
+DB_QOS               09:21:31.727         MOOSDB_alpha         0.5 Hz S  iButtonBox=0.105143:0....
+DB_RWSUMMARY         09:21:31.727         MOOSDB_alpha         0.5 Hz S  uMAC_2553=APPCAST&APPC...
+DB_TIME              09:21:33.733         MOOSDB_alpha         0.5 Hz D  1502889693.7         
+DB_UPTIME            09:21:33.733         MOOSDB_alpha         0.5 Hz D  12.1                 
+DB_VARSUMMARY        09:21:31.727         MOOSDB_alpha         0.5 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:33.733         iButtonBox           44.7Hz D  1.1                  
+IBUTTONBOX_ITER_LEN  09:21:33.733         iButtonBox           44.5Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:32.996         iButtonBox           0.5 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:32.493         pLogger              0.1 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:33.515         pLogger              0.5 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:33.550         pRecord              5.0 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:33.550         pRecord              5.0 Hz D  0.0                  
+PRECORD_STATUS       09:21:33.146         pRecord              0.5 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:33.600         uMAC_2553            0.5 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:33.600         uXMS_553             4.9 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:33.600         uXMS_553             4.9 Hz D  0.0                  
+UXMS_553_STATUS      09:21:32.787         uXMS_553             0.5 Hz S  AppErrorFlag=false,Upt...
+ 
+11.258          DB_QOS               MOOSDB_alpha    iButtonBox=0.10705:0.152111:0.0708103:0.114632,pLogger=0.0720024:0.308037:0.0600815:0.0805855,pRecord=0.115871:0.227928:0.0698566:0.125933,uMAC_2553=0.0679493:0.190973:0.0679493:0.0934601,uXMS_553=0.418901:0.421047:0.0720024:0.233173, 
+11.258          DB_RWSUMMARY         MOOSDB_alpha    uMAC_2553=APPCAST&APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:UMAC_2553_STATUS,pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+11.275          PRECORD_ITER_GAP     pRecord         1.00276      
+11.275          PRECORD_ITER_LEN     pRecord         0.00021      
+11.279          IBUTTONBOX_ITER_GAP  iButtonBox      1.11685      
+11.279          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+11.299          IBUTTONBOX_ITER_GAP  iButtonBox      1.00520      
+11.299          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+11.320          IBUTTONBOX_ITER_GAP  iButtonBox      1.01745      
+11.320          IBUTTONBOX_ITER_LEN  iButtonBox      0.00395      
+11.326          UXMS_553_ITER_GAP    uXMS_553        1.00906      
+11.326          UXMS_553_ITER_LEN    uXMS_553        0.00014      
+11.326          APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+11.326          APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+11.341          IBUTTONBOX_ITER_GAP  iButtonBox      1.08700      
+11.341          IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+11.365          IBUTTONBOX_ITER_GAP  iButtonBox      1.18620      
+11.365          IBUTTONBOX_ITER_LEN  iButtonBox      0.00249      
+11.387          IBUTTONBOX_ITER_GAP  iButtonBox      1.08675      
+11.387          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+11.407          IBUTTONBOX_ITER_GAP  iButtonBox      1.01194      
+11.407          IBUTTONBOX_ITER_LEN  iButtonBox      0.00341      
+11.431          IBUTTONBOX_ITER_GAP  iButtonBox      1.20496      
+11.431          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+11.454          IBUTTONBOX_ITER_GAP  iButtonBox      1.13615      
+11.454          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+11.478          IBUTTONBOX_ITER_GAP  iButtonBox      1.23010      
+11.478          IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+11.480          PRECORD_ITER_GAP     pRecord         1.02390      
+11.480          PRECORD_ITER_LEN     pRecord         0.00016      
+11.504          IBUTTONBOX_ITER_GAP  iButtonBox      1.25730      
+11.504          IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+11.527          IBUTTONBOX_ITER_GAP  iButtonBox      1.18606      
+11.527          UXMS_553_ITER_GAP    uXMS_553        1.00702      
+11.527          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+11.527          UXMS_553_ITER_LEN    uXMS_553        0.00005      
+11.549          IBUTTONBOX_ITER_GAP  iButtonBox      1.10345      
+11.549          IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+11.573          IBUTTONBOX_ITER_GAP  iButtonBox      1.16270      
+11.573          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+11.593          IBUTTONBOX_ITER_GAP  iButtonBox      1.02080      
+11.593          IBUTTONBOX_ITER_LEN  iButtonBox      0.00305      
+11.593          APPCAST              iButtonBox      proc=iButtonBox!@#iter=489!@#node=alpha!@#iter=489!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=490!@#run_warnings=490:Unable to open serial port: No such file or directory 
+11.613          IBUTTONBOX_ITER_GAP  iButtonBox      1.01825      
+11.613          IBUTTONBOX_ITER_LEN  iButtonBox      0.00370      
+11.635          IBUTTONBOX_ITER_GAP  iButtonBox      1.05985      
+11.635          IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+11.656          IBUTTONBOX_ITER_GAP  iButtonBox      1.08449      
+11.656          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+11.678          IBUTTONBOX_ITER_GAP  iButtonBox      1.09345      
+11.678          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+11.684          PRECORD_ITER_GAP     pRecord         1.02391      
+11.684          PRECORD_ITER_LEN     pRecord         0.00018      
+11.701          IBUTTONBOX_ITER_GAP  iButtonBox      1.15005      
+11.701          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+11.725          IBUTTONBOX_ITER_GAP  iButtonBox      1.17410      
+11.725          IBUTTONBOX_ITER_LEN  iButtonBox      0.00405      
+11.728          UXMS_553_ITER_GAP    uXMS_553        1.00446      
+11.728          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+11.749          IBUTTONBOX_ITER_GAP  iButtonBox      1.24235      
+11.750          IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+11.771          IBUTTONBOX_ITER_GAP  iButtonBox      1.09075      
+11.771          IBUTTONBOX_ITER_LEN  iButtonBox      0.00174      
+11.793          IBUTTONBOX_ITER_GAP  iButtonBox      1.08360      
+11.793          IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+11.818          IBUTTONBOX_ITER_GAP  iButtonBox      1.23240      
+11.818          IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+11.842          IBUTTONBOX_ITER_GAP  iButtonBox      1.20430      
+11.842          IBUTTONBOX_ITER_LEN  iButtonBox      0.00445      
+11.862          IBUTTONBOX_ITER_GAP  iButtonBox      1.00964      
+11.862          IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+11.883          IBUTTONBOX_ITER_GAP  iButtonBox      1.03821      
+11.883          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+11.889          PRECORD_ITER_GAP     pRecord         1.02513      
+11.889          PRECORD_ITER_LEN     pRecord         0.00014      
+11.906          IBUTTONBOX_ITER_GAP  iButtonBox      1.18085      
+11.906          IBUTTONBOX_ITER_LEN  iButtonBox      0.00269      
+11.928          IBUTTONBOX_ITER_GAP  iButtonBox      1.09329      
+11.928          IBUTTONBOX_ITER_LEN  iButtonBox      0.00496      
+11.928          UXMS_553_ITER_GAP    uXMS_553        1.00026      
+11.928          UXMS_553_ITER_LEN    uXMS_553        0.00009      
+11.928          APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+11.928          APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+11.949          IBUTTONBOX_ITER_GAP  iButtonBox      1.04440      
+11.949          IBUTTONBOX_ITER_LEN  iButtonBox      0.00305      
+11.969          IBUTTONBOX_ITER_GAP  iButtonBox      1.02000      
+11.969          IBUTTONBOX_ITER_LEN  iButtonBox      0.00360      
+11.991          IBUTTONBOX_ITER_GAP  iButtonBox      1.06335      
+11.991          IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+12.011          IBUTTONBOX_ITER_GAP  iButtonBox      1.00350      
+12.011          IBUTTONBOX_ITER_LEN  iButtonBox      0.00315      
+12.011          APPCAST              iButtonBox      proc=iButtonBox!@#iter=508!@#node=alpha!@#iter=508!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=509!@#run_warnings=509:Unable to open serial port: No such file or directory 
+12.031          IBUTTONBOX_ITER_GAP  iButtonBox      1.01230      
+12.031          IBUTTONBOX_ITER_LEN  iButtonBox      0.00390      
+12.051          IBUTTONBOX_ITER_GAP  iButtonBox      1.00620      
+12.051          IBUTTONBOX_ITER_LEN  iButtonBox      0.00380      
+12.074          IBUTTONBOX_ITER_GAP  iButtonBox      1.15300      
+12.074          IBUTTONBOX_ITER_LEN  iButtonBox      0.00324      
+12.094          PRECORD_ITER_GAP     pRecord         1.02178      
+12.094          PRECORD_ITER_LEN     pRecord         0.00018      
+12.099          IBUTTONBOX_ITER_GAP  iButtonBox      1.25649      
+12.099          IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+12.120          IBUTTONBOX_ITER_GAP  iButtonBox      1.03686      
+12.120          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+12.130          UXMS_553_ITER_GAP    uXMS_553        1.00815      
+12.130          UXMS_553_ITER_LEN    uXMS_553        0.00007      
+12.140          IBUTTONBOX_ITER_GAP  iButtonBox      1.01565      
+12.140          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+12.162          IBUTTONBOX_ITER_GAP  iButtonBox      1.06709      
+12.162          IBUTTONBOX_ITER_LEN  iButtonBox      0.00271      
+12.184          IBUTTONBOX_ITER_GAP  iButtonBox      1.13920      
+12.185          IBUTTONBOX_ITER_LEN  iButtonBox      0.00335      
+12.206          IBUTTONBOX_ITER_GAP  iButtonBox      1.08070      
+12.206          IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+12.228          IBUTTONBOX_ITER_GAP  iButtonBox      1.10915      
+12.228          IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+12.253          IBUTTONBOX_ITER_GAP  iButtonBox      1.21170      
+12.253          IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+12.273          IBUTTONBOX_ITER_GAP  iButtonBox      1.00545      
+12.273          IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+12.293          IBUTTONBOX_ITER_GAP  iButtonBox      1.00391      
+12.293          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+12.297          PRECORD_ITER_GAP     pRecord         1.01696      
+12.297          PRECORD_ITER_LEN     pRecord         0.00016      
+12.316          IBUTTONBOX_ITER_GAP  iButtonBox      1.14645      
+12.316          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+12.334          UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=12.9434,cpuload=0.09674,memory_kb=1508,memory_max_kb=1508,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+12.334          UXMS_553_ITER_GAP    uXMS_553        1.02292      
+12.334          UXMS_553_ITER_LEN    uXMS_553        0.00003      
+12.339          IBUTTONBOX_ITER_GAP  iButtonBox      1.16130      
+12.339          IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+12.362          IBUTTONBOX_ITER_GAP  iButtonBox      1.16074      
+12.362          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+12.385          IBUTTONBOX_ITER_GAP  iButtonBox      1.16055      
+12.385          IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+12.408          IBUTTONBOX_ITER_GAP  iButtonBox      1.15966      
+12.409          IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+12.432          IBUTTONBOX_ITER_GAP  iButtonBox      1.16280      
+12.432          IBUTTONBOX_ITER_LEN  iButtonBox      0.00174      
+12.432          APPCAST              iButtonBox      proc=iButtonBox!@#iter=527!@#node=alpha!@#iter=527!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=528!@#run_warnings=528:Unable to open serial port: No such file or directory 
+12.454          IBUTTONBOX_ITER_GAP  iButtonBox      1.10559      
+12.454          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+12.477          IBUTTONBOX_ITER_GAP  iButtonBox      1.14815      
+12.477          IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+12.501          PRECORD_ITER_GAP     pRecord         1.02117      
+12.501          IBUTTONBOX_ITER_GAP  iButtonBox      1.23065      
+12.501          PRECORD_ITER_LEN     pRecord         0.00022      
+12.501          IBUTTONBOX_ITER_LEN  iButtonBox      0.00360      
+12.525          IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=12.7273,cpuload=0.7101,memory_kb=2212,memory_max_kb=2212,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+12.525          IBUTTONBOX_ITER_GAP  iButtonBox      1.16166      
+12.525          IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+12.539          UXMS_553_ITER_GAP    uXMS_553        1.02403      
+12.539          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+12.539          APPCAST_REQ          uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+12.539          APPCAST_REQ_ALPHA    uMAC_2553       node=alpha,app=iButtonBox,duration=3.0,key=uMAC_2553:app,thresh=any 
+12.548          IBUTTONBOX_ITER_GAP  iButtonBox      1.16005      
+12.548          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+12.571          IBUTTONBOX_ITER_GAP  iButtonBox      1.15860      
+12.571          IBUTTONBOX_ITER_LEN  iButtonBox      0.00370      
+12.594          IBUTTONBOX_ITER_GAP  iButtonBox      1.16150      
+12.594          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+12.617          IBUTTONBOX_ITER_GAP  iButtonBox      1.16144      
+12.618          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+12.641          IBUTTONBOX_ITER_GAP  iButtonBox      1.16080      
+12.641          IBUTTONBOX_ITER_LEN  iButtonBox      0.00191      
+12.664          IBUTTONBOX_ITER_GAP  iButtonBox      1.16130      
+12.664          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+12.687          IBUTTONBOX_ITER_GAP  iButtonBox      1.15895      
+12.687          IBUTTONBOX_ITER_LEN  iButtonBox      0.00169      
+12.703          PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=13.0408,cpuload=98.56,memory_kb=4888,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+12.703          PRECORD_ITER_GAP     pRecord         1.00842      
+12.703          PRECORD_ITER_LEN     pRecord         0.00009      
+12.708          IBUTTONBOX_ITER_GAP  iButtonBox      1.02044      
+12.708          IBUTTONBOX_ITER_LEN  iButtonBox      0.00321      
+12.728          IBUTTONBOX_ITER_GAP  iButtonBox      1.00646      
+12.728          IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+12.741          UXMS_553_ITER_GAP    uXMS_553        1.00892      
+12.741          UXMS_553_ITER_LEN    uXMS_553        0.00006      
+12.751          IBUTTONBOX_ITER_GAP  iButtonBox      1.17480      
+12.751          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+12.776          IBUTTONBOX_ITER_GAP  iButtonBox      1.22770      
+12.776          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+12.800          IBUTTONBOX_ITER_GAP  iButtonBox      1.21585      
+12.800          IBUTTONBOX_ITER_LEN  iButtonBox      0.00340      
+12.824          IBUTTONBOX_ITER_GAP  iButtonBox      1.18594      
+12.824          IBUTTONBOX_ITER_LEN  iButtonBox      0.00211      
+12.848          IBUTTONBOX_ITER_GAP  iButtonBox      1.21505      
+12.848          IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+12.848          APPCAST              iButtonBox      proc=iButtonBox!@#iter=545!@#node=alpha!@#iter=545!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=546!@#run_warnings=546:Unable to open serial port: No such file or directory 
+12.849          DB_EVENT             MOOSDB_alpha    disconnected=uMAC_2553 
+12.873          IBUTTONBOX_ITER_GAP  iButtonBox      1.24465      
+12.873          IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+12.896          IBUTTONBOX_ITER_GAP  iButtonBox      1.16035      
+12.896          IBUTTONBOX_ITER_LEN  iButtonBox      0.00365      
+12.904          PRECORD_ITER_GAP     pRecord         1.00689      
+12.905          PRECORD_ITER_LEN     pRecord         0.00020      
+12.919          IBUTTONBOX_ITER_GAP  iButtonBox      1.16191      
+12.919          IBUTTONBOX_ITER_LEN  iButtonBox      0.00345      
+12.943          IBUTTONBOX_ITER_GAP  iButtonBox      1.15999      
+12.943          UXMS_553_ITER_GAP    uXMS_553        1.00767      
+12.943          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+12.943          IBUTTONBOX_ITER_LEN  iButtonBox      0.00236      
+12.966          IBUTTONBOX_ITER_GAP  iButtonBox      1.16130      
+12.966          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+12.989          IBUTTONBOX_ITER_GAP  iButtonBox      1.16551      
+12.989          IBUTTONBOX_ITER_LEN  iButtonBox      0.00269      
+13.009          IBUTTONBOX_ITER_GAP  iButtonBox      1.00925      
+13.009          IBUTTONBOX_ITER_LEN  iButtonBox      0.00294      
+13.034          IBUTTONBOX_ITER_GAP  iButtonBox      1.22529      
+13.034          IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+13.059          IBUTTONBOX_ITER_GAP  iButtonBox      1.24151      
+13.059          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+13.082          IBUTTONBOX_ITER_GAP  iButtonBox      1.19090      
+13.082          IBUTTONBOX_ITER_LEN  iButtonBox      0.00199      
+13.091          PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=13.0908,cpuload=0.3543,memory_kb=1588,memory_max_kb=1588,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+13.105          IBUTTONBOX_ITER_GAP  iButtonBox      1.13319      
+13.105          PRECORD_ITER_GAP     pRecord         1.00315      
+13.105          PRECORD_ITER_LEN     pRecord         0.00016      
+13.105          IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+13.128          IBUTTONBOX_ITER_GAP  iButtonBox      1.16180      
+13.128          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+13.144          UXMS_553_ITER_GAP    uXMS_553        1.00715      
+13.144          UXMS_553_ITER_LEN    uXMS_553        0.00015      
+13.152          IBUTTONBOX_ITER_GAP  iButtonBox      1.16010      
+13.152          IBUTTONBOX_ITER_LEN  iButtonBox      0.00321      
+13.175          IBUTTONBOX_ITER_GAP  iButtonBox      1.16045      
+13.175          IBUTTONBOX_ITER_LEN  iButtonBox      0.00315      
+13.198          IBUTTONBOX_ITER_GAP  iButtonBox      1.16115      
+13.198          IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+13.221          IBUTTONBOX_ITER_GAP  iButtonBox      1.16911      
+13.221          IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+13.246          IBUTTONBOX_ITER_GAP  iButtonBox      1.21725      
+13.246          IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+13.270          IBUTTONBOX_ITER_GAP  iButtonBox      1.20475      
+13.270          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+13.270          APPCAST              iButtonBox      proc=iButtonBox!@#iter=563!@#node=alpha!@#iter=563!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=564!@#run_warnings=564:Unable to open serial port: No such file or directory 
+13.270          DB_TIME              MOOSDB_alpha    1502889695.74649 
+13.270          DB_UPTIME            MOOSDB_alpha    14.06483     
+13.270          DB_CLIENTS           MOOSDB_alpha    pLogger,iButtonBox,pRecord,uXMS_553, 
+13.270          DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:35.746         iButtonBox           2.4 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:35.015         uMAC_2553            1.6 Hz S  node=alpha,app=iButton...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:35.015         uMAC_2553            1.6 Hz S  node=alpha,app=iButton...
+DB_CLIENTS           09:21:35.746         MOOSDB_alpha         0.5 Hz S  pLogger,iButtonBox,pRe...
+DB_EVENT             09:21:35.325         MOOSDB_alpha         0.0 Hz S  disconnected=uMAC_2553
+DB_QOS               09:21:33.734         MOOSDB_alpha         0.5 Hz S  iButtonBox=0.10705:0.1...
+DB_RWSUMMARY         09:21:33.734         MOOSDB_alpha         0.5 Hz S  uMAC_2553=APPCAST&APPC...
+DB_TIME              09:21:35.746         MOOSDB_alpha         0.5 Hz D  1502889695.7         
+DB_UPTIME            09:21:35.746         MOOSDB_alpha         0.5 Hz D  14.1                 
+DB_VARSUMMARY        09:21:33.734         MOOSDB_alpha         0.5 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:35.746         iButtonBox           43.6Hz D  1.2                  
+IBUTTONBOX_ITER_LEN  09:21:35.746         iButtonBox           43.7Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:35.001         iButtonBox           0.5 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:32.493         pLogger              0.1 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:35.567         pLogger              0.5 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:35.581         pRecord              4.9 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:35.581         pRecord              4.9 Hz D  0.0                  
+PRECORD_STATUS       09:21:35.179         pRecord              0.5 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:33.600         uMAC_2553            0.5 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:35.620         uXMS_553             4.9 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:35.620         uXMS_553             4.9 Hz D  0.0                  
+UXMS_553_STATUS      09:21:34.811         uXMS_553             0.5 Hz S  AppErrorFlag=false,Upt...
+ 
+13.270          DB_QOS               MOOSDB_alpha    iButtonBox=0.0917912:0.154018:0.0708103:0.11158,pLogger=0.0748634:0.308037:0.0600815:0.0811577,pRecord=0.0910759:0.227928:0.0698566:0.120974,uXMS_553=0.0891685:0.421047:0.0700951:0.167227, 
+13.270          DB_RWSUMMARY         MOOSDB_alpha    pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+13.291          IBUTTONBOX_ITER_GAP  iButtonBox      1.05369      
+13.291          IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+13.308          PRECORD_ITER_GAP     pRecord         1.01375      
+13.308          PRECORD_ITER_LEN     pRecord         0.00018      
+13.315          IBUTTONBOX_ITER_GAP  iButtonBox      1.19015      
+13.315          IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+13.337          IBUTTONBOX_ITER_GAP  iButtonBox      1.12915      
+13.337          IBUTTONBOX_ITER_LEN  iButtonBox      0.00371      
+13.348          UXMS_553_ITER_GAP    uXMS_553        1.01992      
+13.348          UXMS_553_ITER_LEN    uXMS_553        0.00006      
+13.361          IBUTTONBOX_ITER_GAP  iButtonBox      1.16335      
+13.361          IBUTTONBOX_ITER_LEN  iButtonBox      0.00335      
+13.384          IBUTTONBOX_ITER_GAP  iButtonBox      1.15991      
+13.384          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+13.405          IBUTTONBOX_ITER_GAP  iButtonBox      1.05644      
+13.405          IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+13.427          IBUTTONBOX_ITER_GAP  iButtonBox      1.10965      
+13.427          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+13.451          IBUTTONBOX_ITER_GAP  iButtonBox      1.20026      
+13.451          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+13.476          IBUTTONBOX_ITER_GAP  iButtonBox      1.25519      
+13.476          IBUTTONBOX_ITER_LEN  iButtonBox      0.00131      
+13.500          IBUTTONBOX_ITER_GAP  iButtonBox      1.18470      
+13.500          IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+13.509          PRECORD_ITER_GAP     pRecord         1.00716      
+13.509          PRECORD_ITER_LEN     pRecord         0.00018      
+13.520          IBUTTONBOX_ITER_GAP  iButtonBox      1.00865      
+13.520          IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+13.541          IBUTTONBOX_ITER_GAP  iButtonBox      1.03425      
+13.541          IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+13.549          UXMS_553_ITER_GAP    uXMS_553        1.00324      
+13.549          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+13.565          IBUTTONBOX_ITER_GAP  iButtonBox      1.20990      
+13.565          IBUTTONBOX_ITER_LEN  iButtonBox      0.00485      
+13.589          IBUTTONBOX_ITER_GAP  iButtonBox      1.20494      
+13.589          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+13.614          IBUTTONBOX_ITER_GAP  iButtonBox      1.25501      
+13.614          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+13.639          IBUTTONBOX_ITER_GAP  iButtonBox      1.25350      
+13.639          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+13.661          IBUTTONBOX_ITER_GAP  iButtonBox      1.10210      
+13.661          IBUTTONBOX_ITER_LEN  iButtonBox      0.00174      
+13.686          IBUTTONBOX_ITER_GAP  iButtonBox      1.21875      
+13.686          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+13.686          APPCAST              iButtonBox      proc=iButtonBox!@#iter=581!@#node=alpha!@#iter=581!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=582!@#run_warnings=582:Unable to open serial port: No such file or directory 
+13.706          IBUTTONBOX_ITER_GAP  iButtonBox      1.03204      
+13.706          IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+13.714          PRECORD_ITER_GAP     pRecord         1.02525      
+13.714          PRECORD_ITER_LEN     pRecord         0.00032      
+13.731          IBUTTONBOX_ITER_GAP  iButtonBox      1.25486      
+13.731          IBUTTONBOX_ITER_LEN  iButtonBox      0.00294      
+13.749          UXMS_553_ITER_GAP    uXMS_553        1.00361      
+13.749          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+13.752          IBUTTONBOX_ITER_GAP  iButtonBox      1.05860      
+13.753          IBUTTONBOX_ITER_LEN  iButtonBox      0.00265      
+13.773          IBUTTONBOX_ITER_GAP  iButtonBox      1.04614      
+13.773          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+13.799          IBUTTONBOX_ITER_GAP  iButtonBox      1.25484      
+13.799          IBUTTONBOX_ITER_LEN  iButtonBox      0.00120      
+13.820          IBUTTONBOX_ITER_GAP  iButtonBox      1.06660      
+13.820          IBUTTONBOX_ITER_LEN  iButtonBox      0.00136      
+13.845          IBUTTONBOX_ITER_GAP  iButtonBox      1.25376      
+13.845          IBUTTONBOX_ITER_LEN  iButtonBox      0.00135      
+13.870          IBUTTONBOX_ITER_GAP  iButtonBox      1.24439      
+13.870          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+13.895          IBUTTONBOX_ITER_GAP  iButtonBox      1.23720      
+13.895          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+13.918          PRECORD_ITER_GAP     pRecord         1.01720      
+13.918          IBUTTONBOX_ITER_GAP  iButtonBox      1.16285      
+13.918          PRECORD_ITER_LEN     pRecord         0.00018      
+13.918          IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+13.942          IBUTTONBOX_ITER_GAP  iButtonBox      1.18515      
+13.942          IBUTTONBOX_ITER_LEN  iButtonBox      0.00135      
+13.950          UXMS_553_ITER_GAP    uXMS_553        1.00313      
+13.950          UXMS_553_ITER_LEN    uXMS_553        0.00009      
+13.967          IBUTTONBOX_ITER_GAP  iButtonBox      1.25245      
+13.967          IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+13.988          IBUTTONBOX_ITER_GAP  iButtonBox      1.04750      
+13.988          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+14.011          IBUTTONBOX_ITER_GAP  iButtonBox      1.15919      
+14.011          IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+14.031          IBUTTONBOX_ITER_GAP  iButtonBox      1.00330      
+14.031          IBUTTONBOX_ITER_LEN  iButtonBox      0.00355      
+14.051          IBUTTONBOX_ITER_GAP  iButtonBox      1.01321      
+14.051          IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+14.075          IBUTTONBOX_ITER_GAP  iButtonBox      1.17860      
+14.075          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+14.100          IBUTTONBOX_ITER_GAP  iButtonBox      1.25544      
+14.100          IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+14.100          APPCAST              iButtonBox      proc=iButtonBox!@#iter=599!@#node=alpha!@#iter=599!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=600!@#run_warnings=600:Unable to open serial port: No such file or directory 
+14.120          IBUTTONBOX_ITER_GAP  iButtonBox      1.00590      
+14.120          PRECORD_ITER_GAP     pRecord         1.01027      
+14.120          IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+14.120          PRECORD_ITER_LEN     pRecord         0.00018      
+14.140          IBUTTONBOX_ITER_GAP  iButtonBox      1.00255      
+14.140          IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+14.152          UXMS_553_ITER_GAP    uXMS_553        1.01171      
+14.152          UXMS_553_ITER_LEN    uXMS_553        0.00019      
+14.160          IBUTTONBOX_ITER_GAP  iButtonBox      1.00831      
+14.160          IBUTTONBOX_ITER_LEN  iButtonBox      0.00330      
+14.183          IBUTTONBOX_ITER_GAP  iButtonBox      1.16315      
+14.183          IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+14.207          IBUTTONBOX_ITER_GAP  iButtonBox      1.16115      
+14.207          IBUTTONBOX_ITER_LEN  iButtonBox      0.00166      
+14.231          IBUTTONBOX_ITER_GAP  iButtonBox      1.23600      
+14.231          IBUTTONBOX_ITER_LEN  iButtonBox      0.00216      
+14.256          IBUTTONBOX_ITER_GAP  iButtonBox      1.26181      
+14.257          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+14.277          IBUTTONBOX_ITER_GAP  iButtonBox      1.03570      
+14.277          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+14.300          IBUTTONBOX_ITER_GAP  iButtonBox      1.15235      
+14.300          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+14.320          PRECORD_ITER_GAP     pRecord         1.00044      
+14.320          PRECORD_ITER_LEN     pRecord         0.00024      
+14.321          IBUTTONBOX_ITER_GAP  iButtonBox      1.01745      
+14.321          IBUTTONBOX_ITER_LEN  iButtonBox      0.00390      
+14.342          IBUTTONBOX_ITER_GAP  iButtonBox      1.06424      
+14.342          IBUTTONBOX_ITER_LEN  iButtonBox      0.00161      
+14.353          UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=14.9618,cpuload=0.1095,memory_kb=1508,memory_max_kb=1508,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+14.353          UXMS_553_ITER_GAP    uXMS_553        1.00268      
+14.353          UXMS_553_ITER_LEN    uXMS_553        0.00004      
+14.362          IBUTTONBOX_ITER_GAP  iButtonBox      1.00510      
+14.362          IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+14.383          IBUTTONBOX_ITER_GAP  iButtonBox      1.04885      
+14.383          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+14.405          IBUTTONBOX_ITER_GAP  iButtonBox      1.12245      
+14.405          IBUTTONBOX_ITER_LEN  iButtonBox      0.00426      
+14.427          IBUTTONBOX_ITER_GAP  iButtonBox      1.06236      
+14.427          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+14.447          IBUTTONBOX_ITER_GAP  iButtonBox      1.00579      
+14.447          IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+14.467          IBUTTONBOX_ITER_GAP  iButtonBox      1.00806      
+14.467          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+14.489          IBUTTONBOX_ITER_GAP  iButtonBox      1.11549      
+14.489          IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+14.514          IBUTTONBOX_ITER_GAP  iButtonBox      1.25515      
+14.514          IBUTTONBOX_ITER_LEN  iButtonBox      0.00360      
+14.514          APPCAST              iButtonBox      proc=iButtonBox!@#iter=618!@#node=alpha!@#iter=618!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=619!@#run_warnings=619:Unable to open serial port: No such file or directory 
+14.522          PRECORD_ITER_GAP     pRecord         1.01132      
+14.522          PRECORD_ITER_LEN     pRecord         0.00021      
+14.539          IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=14.7413,cpuload=0.621,memory_kb=2356,memory_max_kb=2356,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+14.539          IBUTTONBOX_ITER_GAP  iButtonBox      1.21790      
+14.539          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+14.554          UXMS_553_ITER_GAP    uXMS_553        1.00778      
+14.554          UXMS_553_ITER_LEN    uXMS_553        0.00015      
+14.564          IBUTTONBOX_ITER_GAP  iButtonBox      1.25420      
+14.564          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+14.586          IBUTTONBOX_ITER_GAP  iButtonBox      1.11245      
+14.586          IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+14.611          IBUTTONBOX_ITER_GAP  iButtonBox      1.25395      
+14.611          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+14.634          IBUTTONBOX_ITER_GAP  iButtonBox      1.16065      
+14.634          IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+14.657          IBUTTONBOX_ITER_GAP  iButtonBox      1.11940      
+14.657          IBUTTONBOX_ITER_LEN  iButtonBox      0.00116      
+14.682          IBUTTONBOX_ITER_GAP  iButtonBox      1.25370      
+14.682          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+14.706          IBUTTONBOX_ITER_GAP  iButtonBox      1.18735      
+14.706          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+14.727          PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=15.0648,cpuload=100.5,memory_kb=4888,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+14.727          PRECORD_ITER_GAP     pRecord         1.02451      
+14.727          PRECORD_ITER_LEN     pRecord         0.00008      
+14.730          IBUTTONBOX_ITER_GAP  iButtonBox      1.24561      
+14.731          IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+14.754          IBUTTONBOX_ITER_GAP  iButtonBox      1.16385      
+14.754          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+14.760          UXMS_553_ITER_GAP    uXMS_553        1.02540      
+14.760          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+14.776          IBUTTONBOX_ITER_GAP  iButtonBox      1.11840      
+14.776          IBUTTONBOX_ITER_LEN  iButtonBox      0.00294      
+14.800          IBUTTONBOX_ITER_GAP  iButtonBox      1.20305      
+14.800          IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+14.823          IBUTTONBOX_ITER_GAP  iButtonBox      1.16071      
+14.823          IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+14.847          IBUTTONBOX_ITER_GAP  iButtonBox      1.18234      
+14.847          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+14.870          IBUTTONBOX_ITER_GAP  iButtonBox      1.13961      
+14.870          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+14.895          IBUTTONBOX_ITER_GAP  iButtonBox      1.25505      
+14.895          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+14.920          IBUTTONBOX_ITER_GAP  iButtonBox      1.24520      
+14.920          IBUTTONBOX_ITER_LEN  iButtonBox      0.00335      
+14.920          APPCAST              iButtonBox      proc=iButtonBox!@#iter=635!@#node=alpha!@#iter=635!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=636!@#run_warnings=636:Unable to open serial port: No such file or directory 
+14.932          PRECORD_ITER_GAP     pRecord         1.02514      
+14.932          PRECORD_ITER_LEN     pRecord         0.00027      
+14.945          IBUTTONBOX_ITER_GAP  iButtonBox      1.25835      
+14.945          IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+14.963          UXMS_553_ITER_GAP    uXMS_553        1.01618      
+14.963          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+14.969          IBUTTONBOX_ITER_GAP  iButtonBox      1.20915      
+14.969          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+14.991          IBUTTONBOX_ITER_GAP  iButtonBox      1.07970      
+14.991          IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+15.016          IBUTTONBOX_ITER_GAP  iButtonBox      1.25514      
+15.016          IBUTTONBOX_ITER_LEN  iButtonBox      0.00296      
+15.036          IBUTTONBOX_ITER_GAP  iButtonBox      1.02556      
+15.036          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+15.061          IBUTTONBOX_ITER_GAP  iButtonBox      1.25415      
+15.061          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+15.083          IBUTTONBOX_ITER_GAP  iButtonBox      1.09575      
+15.083          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+15.108          IBUTTONBOX_ITER_GAP  iButtonBox      1.25505      
+15.109          IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+15.130          IBUTTONBOX_ITER_GAP  iButtonBox      1.06540      
+15.130          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+15.134          PRECORD_ITER_GAP     pRecord         1.01161      
+15.134          PRECORD_ITER_LEN     pRecord         0.00023      
+15.135          PLOGGER_STATUS       pLogger         AppErrorFlag=false,Uptime=15.1347,cpuload=0.3507,memory_kb=1596,memory_max_kb=1596,MOOSName=pLogger,Publishing="LOGGER_DIRECTORY,PLOGGER_STATUS,",Subscribing="APPCAST,APPCAST_REQ,APPCAST_REQ_ALL,APPCAST_REQ_ALPHA,DB_CLIENTS,DB_EVENT,DB_QOS,DB_RWSUMMARY,DB_TIME,DB_UPTIME,DB_VARSUMMARY,DEBUG,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,LOGGER_DIRECTORY,LOGGER_RESTART,MOOS_DEBUG,MOOS_SYSTEM,PLOGGER_CMD,PLOGGER_STATUS,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,PRIME_RESULT,SPEECH_BUTTON,STATUS,UMAC_2553_STATUS,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",LogAuxSrc=true 
+15.151          IBUTTONBOX_ITER_GAP  iButtonBox      1.06515      
+15.151          IBUTTONBOX_ITER_LEN  iButtonBox      0.00196      
+15.167          UXMS_553_ITER_GAP    uXMS_553        1.02363      
+15.167          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+15.172          IBUTTONBOX_ITER_GAP  iButtonBox      1.02946      
+15.172          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+15.195          IBUTTONBOX_ITER_GAP  iButtonBox      1.16080      
+15.195          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+15.220          IBUTTONBOX_ITER_GAP  iButtonBox      1.24625      
+15.220          IBUTTONBOX_ITER_LEN  iButtonBox      0.00269      
+15.241          IBUTTONBOX_ITER_GAP  iButtonBox      1.08035      
+15.241          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+15.261          IBUTTONBOX_ITER_GAP  iButtonBox      1.00391      
+15.262          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+15.282          IBUTTONBOX_ITER_GAP  iButtonBox      1.01334      
+15.282          IBUTTONBOX_ITER_LEN  iButtonBox      0.00296      
+15.282          DB_TIME              MOOSDB_alpha    1502889697.75837 
+15.282          DB_UPTIME            MOOSDB_alpha    16.07670     
+15.282          DB_CLIENTS           MOOSDB_alpha    pLogger,iButtonBox,pRecord,uXMS_553, 
+15.282          DB_VARSUMMARY        MOOSDB_alpha    APPCAST              09:21:37.396         iButtonBox           2.4 Hz S  proc=iButtonBox!@#iter...
+APPCAST_REQ          09:21:35.015         uMAC_2553            1.6 Hz S  node=alpha,app=iButton...
+APPCAST_REQ_ALL      09:21:24.101         uMAC_2553            1.2 Hz S  node=all,app=all,durat...
+APPCAST_REQ_ALPHA    09:21:35.015         uMAC_2553            1.6 Hz S  node=alpha,app=iButton...
+DB_CLIENTS           09:21:37.758         MOOSDB_alpha         0.5 Hz S  pLogger,iButtonBox,pRe...
+DB_EVENT             09:21:35.325         MOOSDB_alpha         0.0 Hz S  disconnected=uMAC_2553
+DB_QOS               09:21:35.746         MOOSDB_alpha         0.5 Hz S  iButtonBox=0.0917912:0...
+DB_RWSUMMARY         09:21:35.746         MOOSDB_alpha         0.5 Hz S  pLogger=APPCAST:APPCAS...
+DB_TIME              09:21:37.758         MOOSDB_alpha         0.5 Hz D  1502889697.8         
+DB_UPTIME            09:21:37.758         MOOSDB_alpha         0.5 Hz D  16.1                 
+DB_VARSUMMARY        09:21:35.746         MOOSDB_alpha         0.5 Hz S  APPCAST              0...
+DEBUG                18:59:59.000         (write pending)      0.0 Hz ~  
+                   IBUTTONBOX_ITER_GAP  09:21:37.758         iButtonBox           43.8Hz D  1.0                  
+IBUTTONBOX_ITER_LEN  09:21:37.738         iButtonBox           43.4Hz D  0.0                  
+IBUTTONBOX_STATUS    09:21:37.015         iButtonBox           0.5 Hz S  AppErrorFlag=false,Upt...
+LOGGER_DIRECTORY     09:21:32.493         pLogger              0.1 Hz S  ./logs/BUTTON_LOG_16_8...
+LOGGER_RESTART       18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_DEBUG           18:59:59.000         (write pending)      0.0 Hz ~  
+                   MOOS_SYSTEM          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_CMD          18:59:59.000         (write pending)      0.0 Hz ~  
+                   PLOGGER_STATUS       09:21:37.611         pLogger              0.5 Hz S  AppErrorFlag=false,Upt...
+PRECORD_ITER_GAP     09:21:37.611         pRecord              4.9 Hz D  1.0                  
+PRECORD_ITER_LEN     09:21:37.611         pRecord              4.9 Hz D  0.0                  
+PRECORD_STATUS       09:21:37.203         pRecord              0.5 Hz S  AppErrorFlag=false,Upt...
+PRIME_RESULT         18:59:59.000         (write pending)      0.0 Hz ~  
+                   PRIME_RESULT,DEBUG   18:59:59.000         (write pending)      0.0 Hz ~  
+                   SPEECH_BUTTON        18:59:59.000         (write pending)      0.0 Hz ~  
+                   STATUS               18:59:59.000         (write pending)      0.0 Hz ~  
+                   UMAC_2553_STATUS     09:21:33.600         uMAC_2553            0.5 Hz S  AppErrorFlag=false,Upt...
+UXMS_553_ITER_GAP    09:21:37.644         uXMS_553             4.9 Hz D  1.0                  
+UXMS_553_ITER_LEN    09:21:37.644         uXMS_553             4.9 Hz D  0.0                  
+UXMS_553_STATUS      09:21:36.829         uXMS_553             0.5 Hz S  AppErrorFlag=false,Upt...
+ 
+15.282          DB_QOS               MOOSDB_alpha    iButtonBox=0.0760555:0.154018:0.0708103:0.108433,pLogger=0.0860691:0.308037:0.0600815:0.0833988,pRecord=0.0829697:0.227928:0.0698566:0.119352,uXMS_553=0.0669956:0.421047:0.0669956:0.162792, 
+15.282          DB_RWSUMMARY         MOOSDB_alpha    pLogger=APPCAST:APPCAST_REQ:APPCAST_REQ_ALL:APPCAST_REQ_ALPHA:DB_CLIENTS:DB_EVENT:DB_QOS:DB_RWSUMMARY:DB_TIME:DB_UPTIME:DB_VARSUMMARY:DEBUG:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS:LOGGER_DIRECTORY:LOGGER_RESTART:MOOS_DEBUG:MOOS_SYSTEM:PLOGGER_CMD:PLOGGER_STATUS:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS:PRIME_RESULT:SPEECH_BUTTON:STATUS:UMAC_2553_STATUS:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS&LOGGER_DIRECTORY:PLOGGER_STATUS,iButtonBox=APPCAST_REQ&APPCAST:IBUTTONBOX_ITER_GAP:IBUTTONBOX_ITER_LEN:IBUTTONBOX_STATUS,pRecord=APPCAST_REQ:SPEECH_BUTTON&APPCAST:PRECORD_ITER_GAP:PRECORD_ITER_LEN:PRECORD_STATUS,uXMS_553=APPCAST_REQ:DB_UPTIME:PRIME_RESULT,DEBUG:STATUS&APPCAST:UXMS_553_ITER_GAP:UXMS_553_ITER_LEN:UXMS_553_STATUS 
+15.302          IBUTTONBOX_ITER_GAP  iButtonBox      1.01941      
+15.302          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+15.327          IBUTTONBOX_ITER_GAP  iButtonBox      1.25440      
+15.327          IBUTTONBOX_ITER_LEN  iButtonBox      0.00219      
+15.327          APPCAST              iButtonBox      proc=iButtonBox!@#iter=653!@#node=alpha!@#iter=653!@#messages=!@SETUP!@-----!@	PORT: /dev/tty.usbmodem14511!@	BAUDRATE: 9600!@!@STATUS!@-----!@	Valid serial connection: false!@!@	No current button values.!@!@#!@#events_total=0!@#!@#run_warning_total=654!@#run_warnings=654:Unable to open serial port: No such file or directory 
+15.337          PRECORD_ITER_GAP     pRecord         1.01490      
+15.337          PRECORD_ITER_LEN     pRecord         0.00019      
+15.351          IBUTTONBOX_ITER_GAP  iButtonBox      1.18510      
+15.351          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+15.372          UXMS_553_ITER_GAP    uXMS_553        1.02344      
+15.372          UXMS_553_ITER_LEN    uXMS_553        0.00010      
+15.372          IBUTTONBOX_ITER_GAP  iButtonBox      1.06150      
+15.372          IBUTTONBOX_ITER_LEN  iButtonBox      0.00335      
+15.396          IBUTTONBOX_ITER_GAP  iButtonBox      1.18965      
+15.396          IBUTTONBOX_ITER_LEN  iButtonBox      0.00346      
+15.419          IBUTTONBOX_ITER_GAP  iButtonBox      1.17365      
+15.419          IBUTTONBOX_ITER_LEN  iButtonBox      0.00285      
+15.441          IBUTTONBOX_ITER_GAP  iButtonBox      1.09520      
+15.441          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+15.463          IBUTTONBOX_ITER_GAP  iButtonBox      1.08556      
+15.463          IBUTTONBOX_ITER_LEN  iButtonBox      0.00114      
+15.484          IBUTTONBOX_ITER_GAP  iButtonBox      1.06364      
+15.484          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+15.507          IBUTTONBOX_ITER_GAP  iButtonBox      1.14460      
+15.507          IBUTTONBOX_ITER_LEN  iButtonBox      0.00315      
+15.528          IBUTTONBOX_ITER_GAP  iButtonBox      1.01955      
+15.528          IBUTTONBOX_ITER_LEN  iButtonBox      0.00426      
+15.538          PRECORD_ITER_GAP     pRecord         1.00150      
+15.538          PRECORD_ITER_LEN     pRecord         0.00020      
+15.551          IBUTTONBOX_ITER_GAP  iButtonBox      1.17550      
+15.551          IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+15.575          IBUTTONBOX_ITER_GAP  iButtonBox      1.21475      
+15.575          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+15.576          UXMS_553_ITER_GAP    uXMS_553        1.02131      
+15.576          UXMS_553_ITER_LEN    uXMS_553        0.00009      
+15.600          IBUTTONBOX_ITER_GAP  iButtonBox      1.20885      
+15.600          IBUTTONBOX_ITER_LEN  iButtonBox      0.00294      
+15.620          IBUTTONBOX_ITER_GAP  iButtonBox      1.00754      
+15.620          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+15.645          IBUTTONBOX_ITER_GAP  iButtonBox      1.25450      
+15.645          IBUTTONBOX_ITER_LEN  iButtonBox      0.00325      
+15.670          IBUTTONBOX_ITER_GAP  iButtonBox      1.24896      
+15.670          IBUTTONBOX_ITER_LEN  iButtonBox      0.00135      
+15.692          IBUTTONBOX_ITER_GAP  iButtonBox      1.08744      
+15.692          IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+15.717          IBUTTONBOX_ITER_GAP  iButtonBox      1.25426      
+15.717          IBUTTONBOX_ITER_LEN  iButtonBox      0.00149      
+15.742          IBUTTONBOX_ITER_GAP  iButtonBox      1.25500      
+15.742          PRECORD_ITER_GAP     pRecord         1.02015      
+15.742          IBUTTONBOX_ITER_LEN  iButtonBox      0.00194      
+15.742          PRECORD_ITER_LEN     pRecord         0.00019      
+15.763          IBUTTONBOX_ITER_GAP  iButtonBox      1.04145      
+15.763          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+15.781          UXMS_553_ITER_GAP    uXMS_553        1.02118      
+15.781          UXMS_553_ITER_LEN    uXMS_553        0.00010      
+15.784          IBUTTONBOX_ITER_GAP  iButtonBox      1.09195      
+15.784          IBUTTONBOX_ITER_LEN  iButtonBox      0.00275      
+15.809          IBUTTONBOX_ITER_GAP  iButtonBox      1.20820      
+15.809          IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+15.829          IBUTTONBOX_ITER_GAP  iButtonBox      1.01095      
+15.829          IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+15.851          IBUTTONBOX_ITER_GAP  iButtonBox      1.10714      
+15.851          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+15.876          IBUTTONBOX_ITER_GAP  iButtonBox      1.25481      
+15.876          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+15.901          IBUTTONBOX_ITER_GAP  iButtonBox      1.24509      
+15.901          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+15.921          IBUTTONBOX_ITER_GAP  iButtonBox      1.00635      
+15.921          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+15.944          PRECORD_ITER_GAP     pRecord         1.01292      
+15.944          IBUTTONBOX_ITER_GAP  iButtonBox      1.16360      
+15.944          PRECORD_ITER_LEN     pRecord         0.00023      
+15.944          IBUTTONBOX_ITER_LEN  iButtonBox      0.00230      
+15.968          IBUTTONBOX_ITER_GAP  iButtonBox      1.16144      
+15.968          IBUTTONBOX_ITER_LEN  iButtonBox      0.00300      
+15.984          UXMS_553_ITER_GAP    uXMS_553        1.01813      
+15.984          UXMS_553_ITER_LEN    uXMS_553        0.00009      
+15.988          IBUTTONBOX_ITER_GAP  iButtonBox      1.00740      
+15.988          IBUTTONBOX_ITER_LEN  iButtonBox      0.00250      
+16.008          IBUTTONBOX_ITER_GAP  iButtonBox      1.02586      
+16.008          IBUTTONBOX_ITER_LEN  iButtonBox      0.00260      
+16.031          IBUTTONBOX_ITER_GAP  iButtonBox      1.12979      
+16.031          IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+16.051          IBUTTONBOX_ITER_GAP  iButtonBox      1.00670      
+16.051          IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+16.073          IBUTTONBOX_ITER_GAP  iButtonBox      1.11231      
+16.073          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+16.094          IBUTTONBOX_ITER_GAP  iButtonBox      1.05540      
+16.094          IBUTTONBOX_ITER_LEN  iButtonBox      0.00135      
+16.118          IBUTTONBOX_ITER_GAP  iButtonBox      1.16215      
+16.118          IBUTTONBOX_ITER_LEN  iButtonBox      0.00241      
+16.139          IBUTTONBOX_ITER_GAP  iButtonBox      1.09055      
+16.139          IBUTTONBOX_ITER_LEN  iButtonBox      0.00145      
+16.147          PRECORD_ITER_GAP     pRecord         1.01269      
+16.147          PRECORD_ITER_LEN     pRecord         0.00036      
+16.160          IBUTTONBOX_ITER_GAP  iButtonBox      1.03536      
+16.160          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+16.185          IBUTTONBOX_ITER_GAP  iButtonBox      1.25329      
+16.185          IBUTTONBOX_ITER_LEN  iButtonBox      0.00365      
+16.185          UXMS_553_ITER_GAP    uXMS_553        1.00528      
+16.185          UXMS_553_ITER_LEN    uXMS_553        0.00009      
+16.210          IBUTTONBOX_ITER_GAP  iButtonBox      1.25666      
+16.210          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+16.232          IBUTTONBOX_ITER_GAP  iButtonBox      1.09675      
+16.232          IBUTTONBOX_ITER_LEN  iButtonBox      0.00119      
+16.252          IBUTTONBOX_ITER_GAP  iButtonBox      1.00859      
+16.252          IBUTTONBOX_ITER_LEN  iButtonBox      0.00330      
+16.274          IBUTTONBOX_ITER_GAP  iButtonBox      1.05951      
+16.274          IBUTTONBOX_ITER_LEN  iButtonBox      0.00274      
+16.299          IBUTTONBOX_ITER_GAP  iButtonBox      1.25535      
+16.299          IBUTTONBOX_ITER_LEN  iButtonBox      0.00255      
+16.320          IBUTTONBOX_ITER_GAP  iButtonBox      1.05715      
+16.320          IBUTTONBOX_ITER_LEN  iButtonBox      0.00296      
+16.343          IBUTTONBOX_ITER_GAP  iButtonBox      1.17360      
+16.343          IBUTTONBOX_ITER_LEN  iButtonBox      0.00215      
+16.349          PRECORD_ITER_GAP     pRecord         1.01192      
+16.349          PRECORD_ITER_LEN     pRecord         0.00018      
+16.378          IBUTTONBOX_ITER_GAP  iButtonBox      1.71605      
+16.378          IBUTTONBOX_ITER_LEN  iButtonBox      0.00204      
+16.393          UXMS_553_STATUS      uXMS_553        AppErrorFlag=false,Uptime=17.0022,cpuload=0.1023,memory_kb=1548,memory_max_kb=1548,MOOSName=uXMS_553,Publishing="APPCAST,UXMS_553_ITER_GAP,UXMS_553_ITER_LEN,UXMS_553_STATUS,",Subscribing="APPCAST_REQ,DB_UPTIME,PRIME_RESULT,DEBUG,STATUS," 
+16.393          UXMS_553_ITER_GAP    uXMS_553        1.03997      
+16.393          UXMS_553_ITER_LEN    uXMS_553        0.00003      
+16.405          IBUTTONBOX_ITER_GAP  iButtonBox      1.34414      
+16.405          IBUTTONBOX_ITER_LEN  iButtonBox      0.00170      
+16.426          IBUTTONBOX_ITER_GAP  iButtonBox      1.09890      
+16.427          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+16.450          IBUTTONBOX_ITER_GAP  iButtonBox      1.18115      
+16.450          IBUTTONBOX_ITER_LEN  iButtonBox      0.00186      
+16.471          IBUTTONBOX_ITER_GAP  iButtonBox      1.02756      
+16.471          IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+16.497          IBUTTONBOX_ITER_GAP  iButtonBox      1.29714      
+16.497          IBUTTONBOX_ITER_LEN  iButtonBox      0.00161      
+16.517          IBUTTONBOX_ITER_GAP  iButtonBox      1.02886      
+16.517          IBUTTONBOX_ITER_LEN  iButtonBox      0.00155      
+16.540          IBUTTONBOX_STATUS    iButtonBox      AppErrorFlag=false,Uptime=16.7425,cpuload=0.5791,memory_kb=2480,memory_max_kb=2480,MOOSName=iButtonBox,Publishing="APPCAST,IBUTTONBOX_ITER_GAP,IBUTTONBOX_ITER_LEN,IBUTTONBOX_STATUS,",Subscribing="APPCAST_REQ," 
+16.540          IBUTTONBOX_ITER_GAP  iButtonBox      1.13485      
+16.540          IBUTTONBOX_ITER_LEN  iButtonBox      0.00190      
+16.551          PRECORD_ITER_GAP     pRecord         1.00961      
+16.551          PRECORD_ITER_LEN     pRecord         0.00017      
+16.564          IBUTTONBOX_ITER_GAP  iButtonBox      1.20004      
+16.564          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+16.588          IBUTTONBOX_ITER_GAP  iButtonBox      1.20906      
+16.588          IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+16.597          UXMS_553_ITER_GAP    uXMS_553        1.01932      
+16.597          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+16.611          IBUTTONBOX_ITER_GAP  iButtonBox      1.16174      
+16.611          IBUTTONBOX_ITER_LEN  iButtonBox      0.00291      
+16.632          IBUTTONBOX_ITER_GAP  iButtonBox      1.01626      
+16.632          IBUTTONBOX_ITER_LEN  iButtonBox      0.00165      
+16.652          IBUTTONBOX_ITER_GAP  iButtonBox      1.00474      
+16.652          IBUTTONBOX_ITER_LEN  iButtonBox      0.00175      
+16.677          IBUTTONBOX_ITER_GAP  iButtonBox      1.25420      
+16.677          IBUTTONBOX_ITER_LEN  iButtonBox      0.00185      
+16.698          IBUTTONBOX_ITER_GAP  iButtonBox      1.04045      
+16.698          IBUTTONBOX_ITER_LEN  iButtonBox      0.00180      
+16.719          IBUTTONBOX_ITER_GAP  iButtonBox      1.06156      
+16.719          IBUTTONBOX_ITER_LEN  iButtonBox      0.00139      
+16.740          IBUTTONBOX_ITER_GAP  iButtonBox      1.04710      
+16.740          IBUTTONBOX_ITER_LEN  iButtonBox      0.00224      
+16.751          PRECORD_STATUS       pRecord         AppErrorFlag=false,Uptime=17.089,cpuload=68.23,memory_kb=4888,memory_max_kb=4892,MOOSName=pRecord,Publishing="APPCAST,PRECORD_ITER_GAP,PRECORD_ITER_LEN,PRECORD_STATUS,",Subscribing="APPCAST_REQ,SPEECH_BUTTON," 
+16.751          PRECORD_ITER_GAP     pRecord         1.00093      
+16.751          PRECORD_ITER_LEN     pRecord         0.00014      
+16.764          IBUTTONBOX_ITER_GAP  iButtonBox      1.19765      
+16.764          IBUTTONBOX_ITER_LEN  iButtonBox      0.00205      
+16.784          IBUTTONBOX_ITER_GAP  iButtonBox      1.00310      
+16.784          IBUTTONBOX_ITER_LEN  iButtonBox      0.00210      
+16.798          UXMS_553_ITER_GAP    uXMS_553        1.00213      
+16.798          UXMS_553_ITER_LEN    uXMS_553        0.00008      
+16.805          IBUTTONBOX_ITER_GAP  iButtonBox      1.05460      
+16.805          IBUTTONBOX_ITER_LEN  iButtonBox      0.00160      
+16.825          IBUTTONBOX_ITER_GAP  iButtonBox      1.02005      
+16.825          IBUTTONBOX_ITER_LEN  iButtonBox      0.00150      
+16.850          IBUTTONBOX_ITER_GAP  iButtonBox      1.25400      
+16.850          IBUTTONBOX_ITER_LEN  iButtonBox      0.00246      
+16.874          IBUTTONBOX_ITER_GAP  iButtonBox      1.18245      
+16.874          IBUTTONBOX_ITER_LEN  iButtonBox      0.00221      
+16.894          IBUTTONBOX_ITER_GAP  iButtonBox      1.02155      
+16.894          IBUTTONBOX_ITER_LEN  iButtonBox      0.00200      
+16.915          IBUTTONBOX_ITER_GAP  iButtonBox      1.00366      
+16.915          IBUTTONBOX_ITER_LEN  iButtonBox      0.00269      
+16.936          IBUTTONBOX_ITER_GAP  iButtonBox      1.09395      
+16.936          IBUTTONBOX_ITER_LEN  iButtonBox      0.00290      
+16.953          PRECORD_ITER_GAP     pRecord         1.00672      
+16.953          PRECORD_ITER_LEN     pRecord         0.00019      
+16.960          IBUTTONBOX_ITER_GAP  iButtonBox      1.16135      
+16.960          IBUTTONBOX_ITER_LEN  iButtonBox      0.00110      
+16.983          IBUTTONBOX_ITER_GAP  iButtonBox      1.15970      
+16.983          IBUTTONBOX_ITER_LEN  iButtonBox      0.00130      
+17.001          UXMS_553_ITER_GAP    uXMS_553        1.01637      
+17.001          UXMS_553_ITER_LEN    uXMS_553        0.00015      
+17.006          IBUTTONBOX_ITER_GAP  iButtonBox      1.16144      
+17.006          IBUTTONBOX_ITER_LEN  iButtonBox      0.00280      
+17.029          IBUTTONBOX_ITER_GAP  iButtonBox      1.16315      
+17.029          IBUTTONBOX_ITER_LEN  iButtonBox      0.00240      
+17.053          IBUTTONBOX_ITER_GAP  iButtonBox      1.20945      
+17.054          IBUTTONBOX_ITER_LEN  iButtonBox      0.00235      
+17.077          IBUTTONBOX_ITER_GAP  iButtonBox      1.17800      
+17.077          IBUTTONBOX_ITER_LEN  iButtonBox      0.00105      
+17.101          IBUTTONBOX_ITER_GAP  iButtonBox      1.19045      
+17.101          IBUTTONBOX_ITER_LEN  iButtonBox      0.00225      
+17.122          IBUTTONBOX_ITER_GAP  iButtonBox      1.06385      
+17.122          IBUTTONBOX_ITER_LEN  iButtonBox      0.00335      
+17.144          IBUTTONBOX_ITER_GAP  iButtonBox      1.10586      
+17.144          IBUTTONBOX_ITER_LEN  iButtonBox      0.00125      
+17.157          PRECORD_ITER_GAP     pRecord         1.01948      
+17.157          PRECORD_ITER_LEN     pRecord         0.00028      
+17.169          IBUTTONBOX_ITER_GAP  iButtonBox      1.21430      
+17.169          IBUTTONBOX_ITER_LEN  iButtonBox      0.00279      
