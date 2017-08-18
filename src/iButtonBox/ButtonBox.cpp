@@ -173,7 +173,7 @@ bool ButtonBox::buildReport()
   }  
 
   for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
-    m_msgs << getName(i) << ": " << std::boolalpha << m_button_values[i] << endl; 
+    m_msgs << getName(i) << ": " << m_button_values[i] << endl; 
   }
 
   return(true);
@@ -216,15 +216,15 @@ void ButtonBox::parseSerialString(std::string data) //parse data sent via serial
   }
 
   std::stringstream ss(values);
-  std::vector<bool> button_values;
+  std::vector<std::string> button_values;
   while( ss.good() ){
     string substr;
     getline( ss, substr, ',' );
 
     if(substr.compare("0") == 0){
-      button_values.push_back(true);
+      button_values.push_back("TRUE");
     }else if(substr.compare("1") == 0){
-      button_values.push_back(false);
+      button_values.push_back("FALSE");
     }
   }
   

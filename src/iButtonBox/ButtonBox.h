@@ -43,7 +43,7 @@ class ButtonBox : public AppCastingMOOSApp
   bool m_valid_serial_connection;
 
   std::map <std::string, std::string> m_button_names;
-  std::vector<bool> m_button_values;
+  std::vector<std::string> m_button_values;
 };
 
 #endif 
