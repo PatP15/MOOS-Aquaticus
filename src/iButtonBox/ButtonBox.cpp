@@ -92,6 +92,7 @@ bool ButtonBox::Iterate()
     for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
 
       previous_button_values.push_back(m_button_values[i]);
+      m_Comms.Notify(getName(i), m_button_values[i]);
       
     }
 
