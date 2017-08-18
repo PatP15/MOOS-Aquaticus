@@ -27,7 +27,8 @@ SpeechRec::SpeechRec()
   m_jconf = NULL;
   m_recog = NULL;
   m_state = RUNNING;
-  m_pause_state = "False";
+  m_pause_state = "FALSE";
+  m_start_state = "ACTIVE";
 }
 
 static inline bool isNotAlnum(char c) { return !(isalnum(c));}
@@ -123,7 +124,6 @@ void SpeechRec::statusRecReady(Recog *recog, void *dummy)
 {
 }
 
-
 //---------------------------------------------------------
 // Procedure: pauseRec
 // on receiving SPEECH_PAUSE = TRUE we pause speech rec
@@ -131,9 +131,8 @@ void SpeechRec::statusRecReady(Recog *recog, void *dummy)
 void SpeechRec::pauseRec()
 {
   j_request_pause(m_recog);
-  m_pause_state = "True";
+  m_pause_state = "TRUE";
 }
-
 
 //---------------------------------------------------------
 // Procedure: unpauseRec
@@ -142,7 +141,7 @@ void SpeechRec::pauseRec()
 void SpeechRec::unpauseRec()
 {
   j_request_resume(m_recog);
-  m_pause_state = "False";
+  m_pause_state = "FALSE";
 }
 
 //---------------------------------------------------------
@@ -259,7 +258,6 @@ void SpeechRec::outputResult(Recog *recog, void *dummy)
   }
 }
 
-
 //---------------------------------------------------------
 // Procedure: handleJuliusConf
 // given a filename from .moos file attempts to initialize
@@ -348,11 +346,40 @@ bool SpeechRec::handleJuliusConf(std::string fileName)
   else {
     m_t->Start();
   }
+
+  //try to have start state from .moos file influence here
+  if(m_start_state == "PAUSED") {
+    pauseRec();
+  }
   
   return true;
 
 }
 
+//---------------------------------------------------------
+// Procedure: handleStartState
+// given a config from .moos file named StartState
+// that is either 'Active' or 'Paused' determines how
+// Julius Speech Rec will initially start 
+
+bool SpeechRec::handleStartState(std::string startState) 
+{
+  //convert startState to all caps for ease of use
+  //  std::string upperCaseStartState = MOOSToUpper(startState);
+  MOOSToUpper(startState);
+
+  //default is active -- set in constructor
+
+  //return true if either 'PAUSED' or 'ACTIVE
+  if(startState == "ACTIVE" || startState == "PAUSED") {
+    m_start_state = startState;
+    return true;
+  }
+  
+  //otherwise it is a malformed value - return false
+  return false;
+
+}
 
 //---------------------------------------------------------
 // Procedure: internalStartJRecognize
@@ -366,7 +393,6 @@ bool SpeechRec::internalStartJRecognize()
   else
     return true;
 }
-
 
 //---------------------------------------------------------
 // Procedure: startJRecognize
@@ -408,6 +434,14 @@ bool SpeechRec::OnStartUp()
 	handled = handleJuliusConf(tmp);
       }
     }
+    else if(MOOSStrCmp(sVarName, "StartState")) {
+      if(!strContains(sLine, " ")) {
+	string tmp = stripBlankEnds(sLine);
+	//std::vector<std::string> messages;
+	handled = handleStartState(tmp);
+      }
+    }
+ 
  
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -434,8 +468,13 @@ bool SpeechRec::buildReport()
 {
   m_msgs << "============================================ \n";
   m_msgs << "JuliusConf = " <<   m_julius_configuration << endl;
-  m_msgs << "Recognizer Paused = " << m_pause_state << endl;
-  
+
+  if(m_pause_state == "TRUE") {
+    m_msgs << "Recognizer Paused" << endl;
+  }
+  else if(m_pause_state == "FALSE") {
+    m_msgs << "Recognizer Active" << endl;
+  }
   //ACTable actab(4);
   //actab << "Alpha | Bravo | Charlie | Delta";
   //actab.addHeaderLines();

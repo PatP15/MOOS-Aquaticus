@@ -29,6 +29,7 @@ class SpeechRec : public AppCastingMOOSApp
   static void statusRecReady(Recog *recog, void *dummy);
   static void statusRecStart(Recog *recog, void *dummy);
   bool handleJuliusConf(std::string fileName);
+  bool handleStartState(std::string startState);
   static void outputResult(Recog *recog, void *dummy);
   static bool startJRecognize(void* param);
   bool internalStartJRecognize();
@@ -51,6 +52,7 @@ class SpeechRec : public AppCastingMOOSApp
   Jconf *m_jconf;
   Recog *m_recog;
   std::string m_pause_state;
+  std::string m_start_state;
 
 
  private: // State variables

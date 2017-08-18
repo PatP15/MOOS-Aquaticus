@@ -6,5 +6,8 @@ ProcessConfig = uSpeechRec
    AppTick   = 4
    CommsTick = 4
    JuliusConf = Alpha.jconf
+   //StartState can have uSpeech Rec either 'Paused' or 'Active'
+   //default is 'Active'
+   StartState = Active
 }
 
