@@ -72,6 +72,11 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("  JuliusConf = Alpha.jconf                                      ");
+  blk("  //StartState: Default is recognition starts in 'Active' state ");
+  blk("  //can be set to start in a 'Paused' state                     ");
+  blk("  //will then need to be unpaused by publishing FALSE to        "); 
+  blk("  //SPEECH_PAUSE to be put back into an 'Active' state          ");
+  blk("  StartState = Paused                                           ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
