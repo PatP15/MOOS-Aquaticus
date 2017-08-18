@@ -17,6 +17,9 @@ using namespace std;
 
 ButtonBox::ButtonBox()
 {
+
+  iterate_counter = 0;
+  
 }
 
 //---------------------------------------------------------
@@ -84,10 +87,31 @@ bool ButtonBox::Iterate()
     parseSerialString(data);
   }
 
-  for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
-    m_Comms.Notify(getName(i), m_button_values[i]);
+  if (iterate_counter == 0) {
+
+    for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
+
+      previous_button_values.push_back(m_button_values[i]);
+      
+    }
+
+  } else {
+
+      for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
+
+	if (previous_button_values[i] != m_button_values[i]) {
+
+	  m_Comms.Notify(getName(i), m_button_values[i]);
+
+	}
+	
+      }
+
   }
 
+  iterate_counter++;
+
+  
   AppCastingMOOSApp::PostReport();
   return(true);
 }
