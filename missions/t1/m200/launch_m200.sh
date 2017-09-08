@@ -103,7 +103,7 @@ for ARGI; do
         RETURN_POS="5,0"
         START_POS="50,-24,240"
 	EFLAG="-58,-71"
-	BEH="COVER"
+	BEH="DEFEND"
         echo "Red team selected."
     elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         VTEAM="blue"
@@ -115,7 +115,7 @@ for ARGI; do
         RETURN_POS="5,0"
         START_POS="-58,-71,60"
 	EFLAG="50,-24"
-	BEH="DEFEND"
+	BEH="COVER"
         echo "Blue team selected."
     elif [ "${ARGI:0:10}" = "--start-x=" ] ; then
         START_POS_X="${ARGI#--start-x=*}"
