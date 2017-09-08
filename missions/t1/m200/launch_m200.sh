@@ -73,6 +73,20 @@ for ARGI; do
         VPORT="9010"
         SHARE_LISTEN="9310"
         echo "JING vehicle selected as HUNTER."
+    elif [ "${ARGI}" = "--kirk" -o "${ARGI}" = "-k" ] ; then
+        M200_IP=192.168.11.1 #kirk
+        VNAME="krik"
+	      VMODEL="M300"
+        VPORT="9011"
+        SHARE_LISTEN="9311"
+        echo "KIRK vehicle selected as HUNTER."
+    elif [ "${ARGI}" = "--luke" -o "${ARGI}" = "-l" ] ; then
+        M200_IP=192.168.12.1 #luke
+        VNAME="luke"
+	      VMODEL="M300"
+        VPORT="9012"
+        SHARE_LISTEN="9312"
+        echo "LUKE vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
@@ -128,6 +142,8 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --hal,        -H  : Hal vehicle."
     echo "  --ida,        -i  : Ida vehicle."
     echo "  --jing,       -J  : Jing vehicle."
+    echo "  --kirk,       -k  : Kirk vehicle."
+    echo "  --luke,       -l  : Luke vehicle."
     echo "  --blue,       -b  : Blue team."
     echo "  --red,        -r  : Red team."
     echo "  --sim,        -s  : Simulation mode."
@@ -161,7 +177,7 @@ if [[ -n $START_POS_X && (-n $START_POS_Y && -n $START_POS_A)]]; then
 elif [[ -z $START_POS_X && (-z $START_POS_Y && -z $START_POS_A) ]]; then
   echo "Starting from default postion: " $START_POS
 else [[ -z $START_POS_X || (-z $START_POS_Y || -z $START_POS_A) ]]
-  echo "When specifing a strating coordinate, all 3 should be specified (x,y,a)."
+  echo "When specifing a starting coordinate, all 3 should be specified (x,y,a)."
   echo "See help (-h)."
   exit 1
 fi
