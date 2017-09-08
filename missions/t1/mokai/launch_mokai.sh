@@ -108,7 +108,7 @@ fi
 echo "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos ."
 
 nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
-       VNAME="${VNAME}_${VTEAM}"    \
+       VNAME="${VTEAM}_one"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$TIME_WARP              \
