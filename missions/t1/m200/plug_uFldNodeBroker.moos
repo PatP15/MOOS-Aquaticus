@@ -1,8 +1,8 @@
 //--------------------------------------------------
 ProcessConfig = uFldNodeBroker
 {
-  AppTick   = 1
-  CommsTick = 1
+  AppTick   = 10
+  CommsTick = 10
 
 #ifdef SIM
   TRY_SHORE_HOST = pshare_route=localhost:$(SHORE_LISTEN)

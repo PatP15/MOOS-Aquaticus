@@ -34,8 +34,8 @@ Processconfig = ANTLER
 
 ProcessConfig = uFldFlagManager
 {
-  AppTick       = 2
-  CommsTick     = 2
+  AppTick       = 10
+  CommsTick     = 10
 
   flag = $(RED_FLAG), color=red, label=red
   flag = $(BLUE_FLAG), color=blue, label=blue
@@ -67,8 +67,8 @@ ProcessConfig = uFldFlagManager
 
 ProcessConfig = uFldTagManager
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
   tag_range = 10     // default (meters)
 
@@ -122,8 +122,8 @@ ProcessConfig = uFldTagManager
 
 ProcessConfig = pShare
 {
-  AppTick    = 2
-  CommsTick  = 2
+  AppTick    = 10
+  CommsTick  = 10
 
   input = route =  localhost:$(SHARE_LISTEN)
 //  input = route =  multicast_7
@@ -134,8 +134,8 @@ ProcessConfig = pShare
 
 ProcessConfig = uFldNodeComms
 {
-  AppTick       = 2
-  CommsTick     = 2
+  AppTick       = 10
+  CommsTick     = 10
 
   comms_range      = 5000
   critical_range   = 25
@@ -152,8 +152,8 @@ ProcessConfig = uFldNodeComms
 // uFldShoreBroker Configuration Block
 ProcessConfig = uFldShoreBroker
 {
-  AppTick       = 1
-  CommsTick     = 1
+  AppTick       = 10
+  CommsTick     = 10
 
   // Note: [QBRIDGE = FOO]  is shorthand for
   //       [BRIDGE = src=FOO_$V,  alias=FOO] and
@@ -211,8 +211,8 @@ ProcessConfig = pLogger
 //--------------------------------------------------------
 ProcessConfig = pMarineViewer
 {
-  AppTick    = 4
-  CommsTick  = 4
+  AppTick    = 10
+  CommsTick  = 10
 
   //TIFF_FILE            = forrest19.tif
   TIFF_FILE            = MIT_SP.tif
