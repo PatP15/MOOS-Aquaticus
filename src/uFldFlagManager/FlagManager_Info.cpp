@@ -90,6 +90,7 @@ void showExampleConfigAndExit()
   blk("  ungrabbed_color    = red      // Default is red               ");
   blk("                                                                ");
   blk("  flag_follows_vehicle = true   // Default is true              ");
+  blk("  near_flag_range_buffer = 5    // Default is 2                 ");
   blk("                                                                ");
   blk("  flag = x=60, y=-30,  label=one, range=20, width=10            ");
   blk("  flag = x=60, y=-170, label=two, color=purple, type=diamond    ");

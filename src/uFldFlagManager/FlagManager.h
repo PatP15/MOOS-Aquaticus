@@ -80,6 +80,8 @@ class FlagManager : public AppCastingMOOSApp
   bool        m_flag_follows_vehicle;
   std::string m_grabbed_color;
   std::string m_ungrabbed_color;
+
+  double      m_near_flag_range_buffer;
   
   // Configurable MOOS postings upon defined events
   std::vector<VarDataPair> m_flag_grab_posts;
@@ -106,6 +108,7 @@ class FlagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_grab_count;
   std::map<std::string, unsigned int> m_map_flag_count;
   std::map<std::string, bool>         m_map_in_flag_zone;
+  std::map<std::string, bool>         m_map_near_flag_zone;
   std::map<std::string, bool>         m_map_in_home_zone;
   
   // Overall Flag/Game Score

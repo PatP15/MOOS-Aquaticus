@@ -29,6 +29,8 @@ FlagManager::FlagManager()
   m_default_flag_type     = "circle";
   m_report_flags_on_start = true;
 
+  m_near_flag_range_buffer = 2;
+
   // Default state values
   m_total_node_reports_rcvd  = 0;
   m_total_grab_requests_rcvd = 0;
@@ -150,6 +152,8 @@ bool FlagManager::OnStartUp()
     
     else if(param == "default_flag_range")
       handled = setNonNegDoubleOnString(m_default_flag_range, value);
+    else if(param == "near_flag_range_buffer")
+      handled = setNonNegDoubleOnString(m_near_flag_range_buffer, value);
     else if(param == "default_flag_width")
       handled = setNonNegDoubleOnString(m_default_flag_width, value);
     else if(param == "poly_vertex_size")
@@ -581,6 +585,7 @@ void FlagManager::updateVehiclesInFlagRange()
     double vy = record.getY();
 
     bool vname_in_flag_zone = false;
+    bool vname_near_flag_zone = false;
 
     string flag_name;
     for(unsigned int i=0; i<m_flags.size(); i++) {
@@ -593,16 +598,22 @@ void FlagManager::updateVehiclesInFlagRange()
 	double dist = hypot(vx-flagx, vy-flagy);
 	if(dist <= range)
 	  vname_in_flag_zone = true;
+	if(dist <= (range + m_near_flag_range_buffer))
+	  vname_near_flag_zone = true;
       }
     }
 
-    if(!m_map_in_flag_zone[vname] && vname_in_flag_zone)
+    //if(!m_map_in_flag_zone[vname] && vname_in_flag_zone)
+    //  invokePosts("near", vname, vteam, flag_name);
+
+    if(!m_map_near_flag_zone[vname] && vname_near_flag_zone)
       invokePosts("near", vname, vteam, flag_name);
 
     if(m_map_in_flag_zone[vname] && !vname_in_flag_zone)
       invokePosts("away", vname, vteam, flag_name);
 
     m_map_in_flag_zone[vname] = vname_in_flag_zone;
+    m_map_near_flag_zone[vname] = vname_near_flag_zone;
   }
 }
 
