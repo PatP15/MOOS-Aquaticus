@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 TIME_WARP=1
 JUST_MAKE=""
@@ -13,15 +13,15 @@ HAL="no"
 #-------------------------------------------------------
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	printf "%s [OPTIONS] [WARP]                       \n\n" $0
-	printf "Options:                                  \n"
-	printf "--evan   Launch the vehicle EVAN          \n" 
-	printf "--felix  Launch the vehicle FELIX         \n" 
-	printf "--gus    Launch the vehicle GUS           \n" 
-	printf "--hal    Launch the vehicle HAL           \n" 
-	printf "--red    Launch the RED Team EVAN,FELIX   \n" 
-	printf "--blue   Launch the BLUE Team, GUS,HAL    \n" 
-	printf "-j       Just Build the target files      \n" 
+	printf "%s [OPTIONS] [WARP]                         \n\n" $0
+	printf "Options:                                    \n"
+	printf "  --evan   Launch the vehicle EVAN          \n" 
+	printf "  --felix  Launch the vehicle FELIX         \n" 
+	printf "  --gus    Launch the vehicle GUS           \n" 
+	printf "  --hal    Launch the vehicle HAL           \n" 
+	printf "  --red    Launch the RED Team EVAN,FELIX   \n" 
+	printf "  --blue   Launch the BLUE Team, GUS,HAL    \n" 
+	printf "  -j       Just Build the target files      \n" 
 	exit 0;
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
@@ -37,13 +37,13 @@ for ARGI; do
         GUS="yes"
     elif [ "${ARGI}" = "--hal" ] ; then
         HAL="yes"
-    elif [ "${ARGI}" = "--blue" ] ; then
+    elif [ "${ARGI}" = "--blue" -o "${ARGI}" = "-b" ] ; then
         EVAN="yes"
         FELIX="yes"
-    elif [ "${ARGI}" = "--red" ] ; then
+    elif [ "${ARGI}" = "--red" -o "${ARGI}" = "-r" ] ; then
         GUS="yes"
         HAL="yes"
-    elif [ "${ARGI}" = "--all" ] ; then
+    elif [ "${ARGI}" = "--all" -o "${ARGI}" = "-a" ] ; then
         EVAN="yes"
         FELIX="yes"
         GUS="yes"

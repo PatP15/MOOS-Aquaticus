@@ -88,7 +88,7 @@ Behavior = BHV_OpRegionRecover
 }
 
 //----------------------------------------------
-Behavior = BHV_AvdColregsV2
+Behavior = BHV_AvdColregsV17
 {
   name       = colavd_one_
   pwt        = 300

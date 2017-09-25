@@ -45,26 +45,28 @@ ProcessConfig = uFldFlagManager
 {
   AppTick       = 4
   CommsTick     = 4
+  
+  default_flag_range = 15
 
-	default_flag_range = 15
+  flag_follows_vehicle = true
 
-	flag_follows_vehicle = true
-	
+  near_flag_range_buffer = 5
+
   flag = $(RED_FLAG), color=red, label=red, range=15
   flag = $(BLUE_FLAG), color=blue, label=blue, range=15
 
-	grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
-	//lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
+  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+  //lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
 
-	//near_post = var=SAY_MOOS, sval={say={$VNAME is near the $FLAG flag}}
-	near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
-	away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
+  //near_post = var=SAY_MOOS, sval={say={$VNAME is near the $FLAG flag}}
+  near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
+  away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
 
-	//deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}
-	deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
+  //deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}
+  deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
 
-	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored and returned the $FLAG flag}}
-	home_post = var=SAY_MOOS, sval={say={$VNAME has returned home}}
+  goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored and returned the $FLAG flag}}
+  home_post = var=SAY_MOOS, sval={say={$VNAME has returned home}}
 }
 
 //--------------------------------------------------
