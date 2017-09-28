@@ -75,7 +75,7 @@ for ARGI; do
         echo "JING vehicle selected as HUNTER."
     elif [ "${ARGI}" = "--kirk" -o "${ARGI}" = "-k" ] ; then
         M200_IP=192.168.11.1 #kirk
-        VNAME="krik"
+        VNAME="kirk"
 	      VMODEL="M300"
         VPORT="9011"
         SHARE_LISTEN="9311"
@@ -204,7 +204,7 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     $SIM
 
 echo "Assembling BHV file targ_${VNAME}.bhv"
-nsplug meta_m200.bhv targ_${VNAME}.bhv -f  \
+nsplug meta_m200_cut_range.bhv targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \

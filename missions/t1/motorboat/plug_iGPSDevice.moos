@@ -5,9 +5,9 @@ ProcessConfig = iGPSDevice
   CommsTick  = 10              // greater than the GPS output frequency
 
 //  Port            = ./GPSDEVICE  // Fully-qualified path to the serial port
-  Port            =  /dev/tty.usbmodemFA131 // Fully-qualified path to the serial port
+  Port            =  /dev/tty.usbserial // Fully-qualified path to the serial port
 
-  BaudRate        = 19200      // Serial port baud rate
+  BaudRate        = 4800      // Serial port baud rate
   PREFIX          = NAV_       // Prepends this to all GPS publications
   HEADING_SOURCE  = gprmc    // none or blank: no published GPS heading
                                // gprmc: heading is published from $GPRMC

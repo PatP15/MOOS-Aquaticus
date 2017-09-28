@@ -107,7 +107,7 @@ fi
 
 echo "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos ."
 
-nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
+nsplug meta_mokai.moos targ_${VTEAM}_one.moos -f  \
        VNAME="${VTEAM}_one"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
@@ -123,10 +123,10 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        START_POS=$START_POS         \
        $SIM
 
-echo "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv ."
+echo "Assembling BHV file targ_${VTEAM}_one.bhv ."
 
-nsplug meta_mokai.bhv targ_${VNAME}_${VTEAM}.bhv -f  \
-       VNAME="${VNAME}_${VTEAM}"    \
+nsplug meta_mokai.bhv targ_${VTEAM}_one.bhv -f  \
+       VNAME="${VTEAM}_one"    \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$WARP                   \
@@ -147,12 +147,12 @@ if [ ${JUST_BUILD} = "yes" ] ; then
     exit 0
 fi
 
-if [ ! -e targ_${VNAME}_${VTEAM}.moos ]; then echo "no targ_${VNAME}_${VTEAM}.moos!"; exit 1; fi
-if [ ! -e targ_${VNAME}_${VTEAM}.bhv ]; then echo "no targ_${VNAME}_${VTEAM}.bhv!"; exit 1; fi
+if [ ! -e targ_${VTEAM}_one.moos ]; then echo "no targ_${VTEAM}_one.moos!"; exit 1; fi
+if [ ! -e targ_${VTEAM}_one.bhv ]; then echo "no targ_${VTEAM}_one.bhv!"; exit 1; fi
 
 echo "Launching $VNAME MOOS Community."
-pAntler targ_${VNAME}_${VTEAM}.moos >& /dev/null &
-uMAC targ_${VNAME}_${VTEAM}.moos
+pAntler targ_${VTEAM}_one.moos >& /dev/null &
+uMAC targ_${VTEAM}_one.moos
 
 echo "Killing all processes ..."
 kill -- -$$
