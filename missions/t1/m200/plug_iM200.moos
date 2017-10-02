@@ -22,4 +22,6 @@ ProcessConfig = iM200
   MAX_RUDDER     = 50.0        // Rudder value will be capped to this, +/-
   MAX_THRUST     =  84.0       // Thrust value to each motor will be
                                // capped to this value, +/-
+
+  PUBLISH_THRUST = true
 }
