@@ -58,7 +58,7 @@ Behavior = BHV_CutRange
   time_on_leg             = 60
 
   giveup_dist             = 50 //30
-  patience                = 35 //50
+  patience                = 50
   pwt_inner_dist          = 0
   pwt_outer_dist          = 50 //20
 }
