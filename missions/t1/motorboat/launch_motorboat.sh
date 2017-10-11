@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SHORE_IP=192.168.1.151
+SHORE_IP=localhost
 SHORE_LISTEN="9300"
 
 TIME_WARP=1
