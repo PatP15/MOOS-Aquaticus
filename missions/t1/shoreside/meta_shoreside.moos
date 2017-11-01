@@ -40,11 +40,17 @@ ProcessConfig = uFldFlagManager
   flag = $(RED_FLAG), color=red, label=red
   flag = $(BLUE_FLAG), color=blue, label=blue
 
-  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
-  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
+//  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+//  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
 
-  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
-  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
+  grab_post = var=SAY_MOOS, sval={file=sounds/grab_post_$VNAME.wav}
+  grab_post = var=SAY_MOOS_ALL, sval={file=sounds/grab_post_$VNAME.wav}
+
+//  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
+//  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
+
+  lose_post = var=SAY_MOOS, sval={file=sounds/lose_post_$FLAG.wav}
+  lose_post = var=SAY_MOOS_ALL, sval={file=sounds/lose_post_$FLAG.wav}
 
   near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
   near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
@@ -52,14 +58,18 @@ ProcessConfig = uFldFlagManager
   away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
   away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
 
-  deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
-  deny_post = var=SAY_MOOS_$UP_VNAME, sval={say={Grab denied $REASON}}
+  deny_post = var=SAY_MOOS, sval={file=sounds/deny_post_$REASON.wav}
+  deny_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/deny_post$REASON.wav}
 
   home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
   home_post = var=FLAG_RESET, sval={vname=$VNAME}
 
-	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
-	goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
+//	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
+//	goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
+
+	goal_post = var=SAY_MOOS, sval={file=sounds/goal_post_$VTEAM.wav}
+	goal_post = var=SAY_MOOS_ALL, sval={file=sounds/goal_post_$VTEAM.wav}
+
 }
 
 //--------------------------------------------------
