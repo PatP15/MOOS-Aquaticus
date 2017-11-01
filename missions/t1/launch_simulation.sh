@@ -48,7 +48,7 @@ fi
 if [[ -z $NO_M200 ]]; then
   cd ./m200
   # Evan Blue
-  ./launch_m200.sh $TIME_WARP $JUST_BUILD -e -b -s > /dev/null &
+#  ./launch_m200.sh $TIME_WARP $JUST_BUILD -e -b -s > /dev/null &
   # Felix Red
   ./launch_m200.sh $TIME_WARP $JUST_BUILD -f -r -s > /dev/null &
   cd ..
@@ -62,7 +62,7 @@ if [[ -z $NO_MOKAI ]]; then
   # w/ Evan Blue
   ./launch_mokai.sh $TIME_WARP $JUST_BUILD -e -b -ss >& /dev/null &
   # w/ Felix Red
-  ./launch_mokai.sh $TIME_WARP $JUST_BUILD -f -r -ss >& /dev/null &
+ # ./launch_mokai.sh $TIME_WARP $JUST_BUILD -f -r -ss >& /dev/null &
   cd ..
 fi
 
