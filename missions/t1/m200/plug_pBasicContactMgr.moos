@@ -23,7 +23,7 @@ ProcessConfig = pBasicContactMgr
   alert = id=zone, region=pts={ 56,16 : -15,-17 : 17,-83 : 82,-56}
   alert = id=zone, on_flag=SAY_MOOS=say={hello}
   alert = id=zone, off_flag=SAY_MOOS=say={bye}
-
-
+  alert = id=zone, on_flag=AGGRESSIVE=true
+  alert = id=zone, off_flag=AGGRESSIVE=false
 //  Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=mokai", alert_range=140
 }

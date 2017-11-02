@@ -43,12 +43,13 @@ Behavior = BHV_CutRange
   name                    = cutrange_
   pwt                     = 100
   activeflag                 = BOT_DIALOG_STATUS=Intercepting
-  activeflag                = AGGRESSIVE=true
-//  condition               = MODE == INTERCEPTING
+//  activeflag                = AGGRESSIVE=true
+
   condition               = MODE == ACTIVE
+  condition               = AGGRESSIVE=true
   updates                 = CR_INTERCEPT_UPDATES
 //  templating              = spawn
-  inactiveflag                  = AGGRESSIVE=false
+//  inactiveflag                  = AGGRESSIVE=false
 //  endflag                   = STATION=true
 //  endflag                   = AGGRESSIVE=false
   contact                 = blue_one
