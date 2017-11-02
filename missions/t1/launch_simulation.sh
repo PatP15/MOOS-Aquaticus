@@ -5,6 +5,7 @@ CMD_ARGS=""
 NO_M200=""
 NO_MOKAI=""
 NO_SHORESIDE=""
+M200_DEFENSE_MODE=""
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -18,7 +19,11 @@ for ARGI; do
         NO_MOKAI="true"
     elif [ "${ARGI}" = "--no_m200" -o "${ARGI}" = "-nm2" ] ; then
         NO_M200="true"
-    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
+    elif [ "${ARGI}" = "--passive" -o "${ARGI}" = "-p" ] ; then
+        M200_DEFENSE_MODE="--passive"
+    elif [ "${ARGI}" = "--aggressive" -o "${ARGI}" = "-a" ] ; then
+        M200_DEFENSE_MODE="--aggressive"
+  elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
         echo "Time warp set up to $TIME_WARP."
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
@@ -42,6 +47,12 @@ if [ "${HELP}" = "yes" ]; then
   exit 0;
 fi
 
+if [[ -z $M200_DEFENSE_MODE ]]; then
+    echo " No M200 Defense mode chosen..."
+    echo " Please choose -p or -a for passive or aggressive"
+    exit 0;
+fi
+
 #-------------------------------------------------------
 #  Part 2: Launching M200s
 #-------------------------------------------------------
@@ -50,7 +61,7 @@ if [[ -z $NO_M200 ]]; then
   # Evan Blue
 #  ./launch_m200.sh $TIME_WARP $JUST_BUILD -e -b -s > /dev/null &
   # Felix Red
-  ./launch_m200.sh $TIME_WARP $JUST_BUILD -f -r -s > /dev/null &
+  ./launch_m200.sh $TIME_WARP $JUST_BUILD -f -r -s $M200_DEFENSE_MODE > /dev/null &
   cd ..
 fi
 

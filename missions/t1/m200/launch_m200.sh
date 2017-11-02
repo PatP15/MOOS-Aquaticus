@@ -21,6 +21,7 @@ GRABR_POS=""
 GRABL_POS=""
 UNTAG_POS=""
 ENEMIES="EVAN,FELIX,MOKAI_RED,MOKAI_BLUE"
+DEFENSE_MODE=""
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -30,7 +31,11 @@ for ARGI; do
         HELP="yes"
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
-    elif [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
+    elif [ "${ARGI}" = "--passive" -o "${ARGI}" = "-p" ] ; then
+        DEFENSE_MODE="PASSIVE"
+    elif [ "${ARGI}" = "--aggressive" -o "${ARGI}" = "-a" ] ; then
+        DEFENSE_MODE="AGGRESSIVE"
+   elif [ "${ARGI}" = "--evan" -o "${ARGI}" = "-e" ] ; then
         M200_IP=192.168.5.1 #evan
         VNAME="evan"
 	#ENEMIES="FELIX,MOKAI_RED,MOKAI_BLUE"
@@ -136,6 +141,8 @@ done
 
 if [ "${HELP}" = "yes" ]; then
     echo "$0 [SWITCHES]"
+    echo "  --passive,    -p  : Passive defense behavior."
+    echo "  --aggressive, -a  : Aggressive defense behavior."
     echo "  --evan,       -e  : Evan vehicle."
     echo "  --felix,      -f  : Felix vehicle."
     echo "  --gus,        -g  : Gus vehicle."
@@ -153,6 +160,13 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --just_build, -j"
     echo "  --help, -h"
     exit 0;
+fi
+
+if [ -z $DEFENSE_MODE ]; then
+    echo "No defense mode has been selected..."
+    echo "Make sure to add the flag -p or -a for passive or aggressive"
+    echo "Exiting."
+    exit 2
 fi
 
 if [ -z $VNAME ]; then
@@ -204,7 +218,15 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     $SIM
 
 echo "Assembling BHV file targ_${VNAME}.bhv"
-nsplug meta_m200_cut_range.bhv targ_${VNAME}.bhv -f  \
+if [ ${DEFENSE_MODE} = "AGGRESSIVE" ] ; then
+    BEHAVIOR_FILE="meta_m200_aggressive.bhv"
+else
+    BEHAVIOR_FILE="meta_m200_passive.bhv"
+fi
+
+echo "${BEHAVIOR_FILE} has been chosen for template."
+
+nsplug ${BEHAVIOR_FILE} targ_${VNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
