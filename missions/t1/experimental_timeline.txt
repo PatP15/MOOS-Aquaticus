@@ -44,3 +44,20 @@ game 2 over: score
 participant gets out of the Mokai
 
 participant fills out questionnaires
+
+tag times
+
+
+
+
+
+
+
+grab times
+
+
+
+
+
+
+
