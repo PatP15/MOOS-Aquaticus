@@ -67,19 +67,19 @@ fi
 # Part 2: Set Vehicle specific parameters
 #-------------------------------------------------------
 if [ "${VNAME}" = "evan" ] ; then
-    M200_IP=192.168.5.1 #evan
+    M300_IP=192.168.5.1 #evan
     VPORT="9005"
     SHARE_LISTEN="9305"
 elif [ "${VNAME}" = "felix" ] ; then
-    M200_IP=192.168.6.1 #felix
+    M300_IP=192.168.6.1 #felix
     VPORT="9006"
     SHARE_LISTEN="9306"
 elif [ "${VNAME}" = "gus" ] ; then
-    M200_IP=192.168.7.1 #gus
+    M300_IP=192.168.7.1 #gus
     VPORT="9007"
     SHARE_LISTEN="9307"
 elif [ "${VNAME}" = "hal" ] ; then
-    M200_IP=192.168.8.1 #hal
+    M300_IP=192.168.8.1 #hal
     VPORT="9008"
     SHARE_LISTEN="9308"
 else
@@ -114,17 +114,17 @@ printf "$VTEAM vehicle team selected.  \n"
 #-------------------------------------------------------
 printf "Assembling MOOS file targ_${VNAME}.moos\n"
 
-nsplug meta_m200.moos targ_${VNAME}.moos -f --strict     \
+nsplug meta_heron.moos targ_${VNAME}.moos -f --strict     \
        VNAME=$VNAME          SHARE_LISTEN=$SHARE_LISTEN  \
        VPORT=$VPORT          SHORE_LISTEN=$SHORE_LISTEN  \
        WARP=$WARP            SHORE_IP=$SHORE_IP          \
-       M200_IP=$M200_IP      HOSTIP_FORCE="localhost"    \
+       M300_IP=$M300_IP      HOSTIP_FORCE="localhost"    \
        VTYPE="kayak"         LOITER_POS=$LOITER_POS      \
        VTEAM=$VTEAM          START_POS=$START_POS        \
        SIM=$SIM
     
 printf "Assembling BHV file targ_${VNAME}.bhv\n"
-nsplug meta_m200.bhv targ_${VNAME}.bhv -f --strict       \
+nsplug meta_heron.bhv targ_${VNAME}.bhv -f --strict       \
        RETURN_POS=${RETURN_POS}     VTEAM=$VTEAM         \
        TRAIL_RANGE=$TRAIL_RANGE     VNAME=$VNAME         \
        TRAIL_ANGLE=$TRAIL_ANGLE     GRAB_POS=$GRAB_POS   \

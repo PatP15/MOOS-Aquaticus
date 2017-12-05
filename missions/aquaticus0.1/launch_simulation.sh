@@ -59,8 +59,8 @@ done
 # Launch Evan and check for results      BLUE #1
 #-----------------------------------------------
 if [ ${EVAN} = "yes" ] ; then
-    ./launch_m200.sh --vname=evan   --startpos=-25,-25,70        \
-                     --vteam=blue   --sim $TIME_WARP $JUST_MAKE 
+    ./launch_heron.sh --vname=evan   --startpos=-25,-25,70        \
+                      --vteam=blue   --sim $TIME_WARP $JUST_MAKE 
 
     if [ $? -ne 0 ]; then echo Launch of evan failed; exit 1;  fi
 fi
@@ -69,8 +69,8 @@ fi
 # Launch Felix and check for results     BLUE #2
 #-----------------------------------------------
 if [ ${FELIX} = "yes" ] ; then
-    ./launch_m200.sh --vname=felix --startpos=-35,-75,70         \
-		     --vteam=blue  --sim $TIME_WARP $JUST_MAKE 
+    ./launch_heron.sh --vname=felix --startpos=-35,-75,70         \
+		      --vteam=blue  --sim $TIME_WARP $JUST_MAKE 
     if [ $? -ne 0 ]; then echo launch of Felix failed; exit 1; fi
 fi
     
@@ -78,8 +78,8 @@ fi
 # Launch Gus and check for results        RED #1
 #-----------------------------------------------
 if [ ${GUS} = "yes" ] ; then
-    ./launch_m200.sh --vname=gus   --startpos=40,-45,230         \
-		     --vteam=red   --sim $TIME_WARP $JUST_MAKE 
+    ./launch_heron.sh --vname=gus   --startpos=40,-45,230         \
+		      --vteam=red   --sim $TIME_WARP $JUST_MAKE 
     
     if [ $? -ne 0 ]; then echo launch of Gus failed; exit 1; fi
 fi
@@ -88,8 +88,8 @@ fi
 # Launch Hal and check for results        RED #2
 #-----------------------------------------------
 if [ ${HAL} = "yes" ] ; then
-    ./launch_m200.sh --vname=hal   --startpos=25,-15,230         \
-		     --vteam=red   --sim $TIME_WARP $JUST_MAKE     
+    ./launch_heron.sh --vname=hal   --startpos=25,-15,230         \
+		      --vteam=red   --sim $TIME_WARP $JUST_MAKE     
     if [ $? -ne 0 ]; then echo launch of Hal failed; exit 1; fi    
 fi
 
