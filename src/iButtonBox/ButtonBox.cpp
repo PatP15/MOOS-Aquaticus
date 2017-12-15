@@ -19,7 +19,6 @@ ButtonBox::ButtonBox()
 {
 
   iterate_counter = 0;
-  
 }
 
 //---------------------------------------------------------
@@ -44,7 +43,7 @@ bool ButtonBox::OnNewMail(MOOSMSG_LIST &NewMail)
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
-    string sval  = msg.GetString(); 
+    string sval  = msg.GetString();
     string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
@@ -54,7 +53,7 @@ bool ButtonBox::OnNewMail(MOOSMSG_LIST &NewMail)
      if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
        reportRunWarning("Unhandled Mail: " + key);
    }
-	
+
    return(true);
 }
 
@@ -74,45 +73,56 @@ bool ButtonBox::OnConnectToServer()
 bool ButtonBox::Iterate()
 {
   AppCastingMOOSApp::Iterate();
- 
+
   m_valid_serial_connection = m_serial->IsGoodSerialComms(); //check for good connection to arduino
 
   if(!m_valid_serial_connection){
     m_valid_serial_connection = serialSetup(); // setup interface to arduino
   }
- 
+
   while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
-    string data = m_serial->GetNextSentence(); 
-    
+    string data = m_serial->GetNextSentence();
+
+    reportEvent("Data: " + data);
+
     parseSerialString(data);
   }
 
+  reportEvent("Got to first iterate loop");
+
   if (iterate_counter == 0) {
+
+    //reportEvent("In first iterate loop: " + to_string(iterate_counter));
+    //reportEvent("size of button values array: " + to_string(m_button_values.size()));
+
+    for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { //looks at current button values and posts them
+
+      previous_button_values.push_back(m_button_values[i]); //move current values (first time) to comparison values
+      m_Comms.Notify(getName(i), m_button_values[i]); //send first time values to MOOS
+
+    }
+
+  } else { //any other iteration
+
+    //reportEvent("In second iterate loop: " + to_string(iterate_counter));
+    //reportEvent("Size of button values array: " + to_string(m_button_values.size()));
 
     for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
 
-      previous_button_values.push_back(m_button_values[i]);
-      m_Comms.Notify(getName(i), m_button_values[i]);
-      
+      if (previous_button_values[i] != m_button_values[i]) { //if there are changed button values, send them, if not, do nothing
+
+	       m_Comms.Notify(getName(i), m_button_values[i]);
+         previous_button_values[i] = m_button_values[i];//send changed values
+
+	    }
+
     }
-
-  } else {
-
-      for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
-
-	if (previous_button_values[i] != m_button_values[i]) {
-
-	  m_Comms.Notify(getName(i), m_button_values[i]);
-
-	}
-	
-      }
 
   }
 
   iterate_counter++;
 
-  
+
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -141,7 +151,7 @@ bool ButtonBox::OnStartUp()
     if(param == "PORT") { // define the port where we access the arduino
       handled = true;
       m_serial_port = line;
-      
+
       if(m_serial_port.empty()){
 	    reportConfigWarning("Mission file parameter PORT must not be blank");
       }
@@ -161,10 +171,10 @@ bool ButtonBox::OnStartUp()
       reportUnhandledConfigWarning(orig);
 
   }
- 
-  m_valid_serial_connection = serialSetup(); 
 
-  registerVariables();	
+  m_valid_serial_connection = serialSetup();
+
+  registerVariables();
   return(true);
 }
 
@@ -181,7 +191,7 @@ void ButtonBox::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool ButtonBox::buildReport() 
+bool ButtonBox::buildReport()
 {
 
   m_msgs << endl << "SETUP" << endl << "-----" << endl;
@@ -195,10 +205,10 @@ bool ButtonBox::buildReport()
 
   if(m_button_values.size() == 0){
     m_msgs << "	No current button values." << endl;
-  }  
+  }
 
   for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
-    m_msgs << getName(i) << ": " << m_button_values[i] << endl; 
+    m_msgs << getName(i) << ": " << m_button_values[i] << endl;
   }
 
   return(true);
@@ -222,20 +232,20 @@ bool ButtonBox::serialSetup()
 }
 
 void ButtonBox::parseSerialString(std::string data) //parse data sent via serial from arduino
-{ 
+{
   if(data.at(0) != '$'){
     reportRunWarning("Malformed data string! Does not begin with $ char");
     return;
   }
 
   std::string values = data.substr(data.find(":") + 1);
-  
+
   for(unsigned int i = 0; i<values.length(); i++) {
     char c = values[i];
     if(c != '0' && c != '1' && c != ','){
       std::string err = "Malformed data string! Unrecognised char: ";
       err += c;
-      reportRunWarning(err); 
+      reportRunWarning(err);
       return;
     }
   }
@@ -252,7 +262,7 @@ void ButtonBox::parseSerialString(std::string data) //parse data sent via serial
       button_values.push_back("FALSE");
     }
   }
-  
+
   m_button_values = button_values;
 }
 

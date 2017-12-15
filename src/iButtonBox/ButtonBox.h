@@ -19,13 +19,13 @@ class ButtonBox : public AppCastingMOOSApp
    ButtonBox();
    ~ButtonBox();
 
- protected: // Standard MOOSApp functions to overload  
+ protected: // Standard MOOSApp functions to overload
    bool OnNewMail(MOOSMSG_LIST &NewMail);
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
 
- protected: // Standard AppCastingMOOSApp function to overload 
+ protected: // Standard AppCastingMOOSApp function to overload
    bool buildReport();
 
  protected:
@@ -49,4 +49,4 @@ class ButtonBox : public AppCastingMOOSApp
   std::vector<std::string> m_button_values;
 };
 
-#endif 
+#endif
