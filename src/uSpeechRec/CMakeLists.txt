@@ -19,7 +19,7 @@ endif (NOT ${APPLE}NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ADD_EXECUTABLE(uSpeechRec ${SRC})
 
-include_directories(/opt/local/include/)
+#include_directories(/opt/local/include/)
 
 TARGET_LINK_LIBRARIES(uSpeechRec
    ${MOOS_LIBRARIES}
