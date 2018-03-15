@@ -152,11 +152,11 @@ bool Record::OnNewMail(MOOSMSG_LIST &NewMail)
 
       if(key == "SPEECH_BUTTON") { // change global variables depending on whether button has been pressed
 
-          if ((int) msg.GetString() == "TRUE") {
+          if (msg.GetString() == "TRUE") {
 
               STATUS = true; // record
 
-          } else if ((int) msg.GetString() == "FALSE") {
+          } else if (msg.GetString() == "FALSE") {
 
               STATUS = false; // stop recording
           }
