@@ -8,7 +8,7 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "Comms_server.h"
-
+#include <cstdlib>   // for the strtoul() function
 
 
 using namespace std;
@@ -98,8 +98,7 @@ bool Comms_server::OnNewMail(MOOSMSG_LIST &NewMail)
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
 #endif
-   }
-
+  }
    return(true);
 }
 
@@ -230,6 +229,14 @@ bool Comms_server::OnStartUp()
       else if(param == "BAR") {
         //handled
       }
+      else if(param == "ServerSocket") {
+          uint64_t new_value = strtoul(value.c_str(), NULL, 0);
+          m_ServerSocket = new_value;
+      }
+      else if(param == "ServerIP") {
+        m_ServerIp = value; 
+      }
+
     }
   }
 

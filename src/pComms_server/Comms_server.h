@@ -1,8 +1,9 @@
 /************************************************************/
-/*    NAME: Oliver                                              */
+/*    Original NAME: Oliver MacNeely                        */
+/*    Updated NAME: Michael "Misha" Novitky                 */
 /*    ORGN: MIT                                             */
-/*    FILE: Comms_server.h                                          */
-/*    DATE:                                                 */
+/*    FILE: Comms_server.h                                  */
+/*    DATE: March 19th 2018                                 */
 /************************************************************/
 
 #ifndef Comms_server_HEADER
@@ -47,6 +48,8 @@ class Comms_server : public CMOOSApp
    void RegisterVariables();
 
  private: // Configuration variables
+  int m_ServerSocket;
+  std::string m_ServerIp;
 
  private: // State variables
 };
