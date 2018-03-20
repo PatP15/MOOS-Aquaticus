@@ -9,7 +9,7 @@
 #ifndef Comms_server_HEADER
 #define Comms_server_HEADER
 
-#include "MOOS/libMOOS/MOOSLib.h"
+#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
 #include<iostream>
 #include<arpa/inet.h>
@@ -32,7 +32,7 @@
 typedef short SAMPLE;
 #define PA_SAMPLE_TYPE paInt16
 
-class Comms_server : public CMOOSApp
+class Comms_server : public AppCastingMOOSApp
 {
  public:
    Comms_server();
@@ -43,6 +43,7 @@ class Comms_server : public CMOOSApp
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
+  bool buildReport();
 
  protected:
    void RegisterVariables();

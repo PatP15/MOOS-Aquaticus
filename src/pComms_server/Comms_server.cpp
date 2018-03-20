@@ -83,6 +83,9 @@ Comms_server::~Comms_server()
 
 bool Comms_server::OnNewMail(MOOSMSG_LIST &NewMail)
 {
+  cout << endl << "In OnNewMail method " << endl;
+  AppCastingMOOSApp::OnNewMail(NewMail);
+
   MOOSMSG_LIST::iterator p;
 
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
@@ -107,6 +110,7 @@ bool Comms_server::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool Comms_server::OnConnectToServer()
 {
+  cout << endl << " In OnConnectToServer method " << endl;
    // register for variables here
    // possibly look at the mission file?
    // m_MissionReader.GetConfigurationParam("Name", <string>);
@@ -122,7 +126,8 @@ bool Comms_server::OnConnectToServer()
 
 bool Comms_server::Iterate()
 {
-
+  cout << endl << "In Iterate method " << endl;
+  AppCastingMOOSApp::Iterate();
   pushBACK = false; // assume we shouldn't add the first connected port to list of clients
 
   recvfrom(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &client, &l); // receive audio from connected client
@@ -205,6 +210,7 @@ bool Comms_server::Iterate()
 
   message_counter++;
 
+  AppCastingMOOSApp::PostReport();
   return(true);
 }
 
@@ -214,6 +220,9 @@ bool Comms_server::Iterate()
 
 bool Comms_server::OnStartUp()
 {
+  AppCastingMOOSApp::OnStartUp();
+
+  cout << endl << "In StartUp method " << endl;
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   if(m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
@@ -229,11 +238,13 @@ bool Comms_server::OnStartUp()
       else if(param == "BAR") {
         //handled
       }
-      else if(param == "ServerSocket") {
+      else if(param == "SERVERSOCKET") {
+        cout << endl << "Reading ServerSocket config " << endl;
           uint64_t new_value = strtoul(value.c_str(), NULL, 0);
           m_ServerSocket = new_value;
       }
-      else if(param == "ServerIP") {
+      else if(param == "SERVERIP") {
+        cout << endl << "Reading ServerIP config " << endl;
         m_ServerIp = value; 
       }
 
@@ -249,5 +260,19 @@ bool Comms_server::OnStartUp()
 
 void Comms_server::RegisterVariables()
 {
+  AppCastingMOOSApp::RegisterVariables();
+
   // Register("FOOBAR", 0);
+}
+
+bool Comms_server::buildReport()
+{
+  m_msgs << "============================================ \n";
+  m_msgs << "File:                                        \n";
+  m_msgs << "============================================ \n";
+
+  m_msgs << "    Server IP: " << m_ServerIp << endl;
+  m_msgs << "Server Socket: " << m_ServerSocket << endl;
+
+  return(true);
 }
