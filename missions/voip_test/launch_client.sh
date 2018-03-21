@@ -23,15 +23,15 @@ done
 #-------------------------------------------------------
 #  Part 2: Create the .moos and .bhv files. 
 #-------------------------------------------------------
-SERVER_LISTEN="9300"
-SERVER_PORT="9000"
+CLIENT_LISTEN="9301"
+CLIENT_PORT="9001"
 
 #-------------------------------------------------------
-#  SERVER
+#  CLIENT
 #-------------------------------------------------------
-nsplug meta_server.moos targ_server.moos -f WARP=$TIME_WARP \
-   SNAME="server"  SHARE_LISTEN=$SERVER_LISTEN                  \
-   SPORT=$SERVER_PORT
+nsplug meta_client.moos targ_client.moos -f WARP=$TIME_WARP \
+   SNAME="client"  SHARE_LISTEN=$CLIENT_LISTEN                  \
+   SPORT=$CLIENT_PORT
 
 
 if [ ${JUST_MAKE} = "yes" ] ; then
@@ -42,10 +42,10 @@ fi
 #  Part 3: Launch the processes
 #-------------------------------------------------------
 printf "Launching $SNAME MOOS Community (WARP=%s) \n"  $TIME_WARP
-pAntler targ_server.moos >& /dev/null &
+pAntler targ_client.moos >& /dev/null &
 printf "Done \n"
 
-uMAC targ_server.moos
+uMAC targ_client.moos
 
 printf "Killing all processes ... \n"
 kill %1 
