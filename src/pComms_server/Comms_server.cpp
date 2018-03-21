@@ -1,8 +1,9 @@
 /************************************************************/
-/*    NAME: Oliver                                              */
+/*    ORIGINAL NAME: Oliver MacNeely                        */
+/*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: Comms_server.cpp                                        */
-/*    DATE:                                                 */
+/*    FILE: Comms_server.cpp                                */
+/*    DATE: March 19th 2018                                 */
 /************************************************************/
 
 #include <iterator>
