@@ -1,16 +1,17 @@
 /************************************************************/
-/*    NAME: Oliver                                              */
+/*    ORIGINAL NAME: Oliver MacNeely                        */
+/*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: Comms_client.h                                          */
-/*    DATE:                                                 */
+/*    FILE: Comms_client.h                                  */
+/*    DATE: March 21 2018                                   */
 /************************************************************/
 
 #ifndef Comms_client_HEADER
 #define Comms_client_HEADER
 
-#include "MOOS/libMOOS/MOOSLib.h"
+#include  "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
-class Comms_client : public CMOOSApp
+class Comms_client : public AppCastingMOOSApp
 {
  public:
    Comms_client();
@@ -21,11 +22,16 @@ class Comms_client : public CMOOSApp
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
+  bool buildReport(); 
 
- protected:
+protected:
    void RegisterVariables();
 
  private: // Configuration variables
+  int m_ClientSocket;
+  std::string m_ClientIP;
+  int m_ServerSocket;
+  std::string m_ServerIP;
 
  private: // State variables
 };

@@ -1,8 +1,9 @@
 /************************************************************/
-/*    NAME: Oliver                                              */
+/*    Original NAME: Oliver MacNeely                        */
+/*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: Comms_client.cpp                                        */
-/*    DATE:                                                 */
+/*    FILE: Comms_client.cpp                                */
+/*    DATE: March 21 2018                                   */
 /************************************************************/
 
 #include <iterator>
@@ -152,7 +153,8 @@ Comms_client::~Comms_client()
 
 bool Comms_client::OnNewMail(MOOSMSG_LIST &NewMail)
 {
-  MOOSMSG_LIST::iterator p;
+  AppCastingMOOSApp::OnNewMail(NewMail);
+ MOOSMSG_LIST::iterator p;
 
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
@@ -187,6 +189,7 @@ bool Comms_client::OnConnectToServer()
 
 bool Comms_client::Iterate()
 {
+  AppCastingMOOSApp::Iterate();
 
   PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
   sendto(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &server, m); // send this audio to the server
@@ -242,6 +245,7 @@ bool Comms_client::Iterate()
   message_counter++;
 
 
+  AppCastingMOOSApp::PostReport();
   return(true);
 }
 
@@ -251,6 +255,8 @@ bool Comms_client::Iterate()
 
 bool Comms_client::OnStartUp()
 {
+  AppCastingMOOSApp::OnStartUp();
+
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   if(m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
@@ -266,6 +272,20 @@ bool Comms_client::OnStartUp()
       else if(param == "BAR") {
         //handled
       }
+      else if(param == "SERVERSOCKET") {
+        uint64_t  converted_value = strtoul(value.c_str(), NULL, 0);
+        m_ServerSocket = converted_value;
+      }
+      else if(param == "SERVERIP") {
+        m_ServerIP = value;
+      }
+      else if(param == "CLIENTSOCKET") {
+        uint64_t  converted_value = strtoul(value.c_str(), NULL, 0);
+        m_ClientSocket = converted_value; 
+      }
+      else if(param == "CLIENTIP") {
+        m_ClientIP = value;
+      }
     }
   }
 
@@ -278,5 +298,22 @@ bool Comms_client::OnStartUp()
 
 void Comms_client::RegisterVariables()
 {
+  AppCastingMOOSApp::RegisterVariables();
+
   Register("SAVE", 0);
+}
+
+bool Comms_client::buildReport()
+{
+  m_msgs << "============================================ \n";
+  m_msgs << "Client:                                        \n";
+  m_msgs << "============================================ \n";
+
+  m_msgs << "    Client IP: " << m_ClientIP << endl;
+  m_msgs << "Client Socket: " << m_ClientSocket << endl;
+  m_msgs << endl;
+  m_msgs << "    Server IP: " << m_ServerIP << endl;
+  m_msgs << "Server Socket: " << m_ServerSocket << endl;
+
+  return(true);
 }
