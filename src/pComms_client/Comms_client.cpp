@@ -257,6 +257,12 @@ bool Comms_client::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
 
+  //boolean value to make sure all 4 critical values are set
+  bool server_sock_param_set = false;
+  bool server_ip_param_set = false;
+  bool client_sock_param_set = false;
+  bool client_ip_param_set = false;
+
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   if(m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
@@ -275,18 +281,27 @@ bool Comms_client::OnStartUp()
       else if(param == "SERVERSOCKET") {
         uint64_t  converted_value = strtoul(value.c_str(), NULL, 0);
         m_ServerSocket = converted_value;
+        server_sock_param_set = true;
       }
       else if(param == "SERVERIP") {
         m_ServerIP = value;
+        server_ip_param_set = true;
       }
       else if(param == "CLIENTSOCKET") {
         uint64_t  converted_value = strtoul(value.c_str(), NULL, 0);
-        m_ClientSocket = converted_value; 
+        m_ClientSocket = converted_value;
+        client_sock_param_set = true;
       }
       else if(param == "CLIENTIP") {
         m_ClientIP = value;
+        client_ip_param_set = true;
       }
     }
+  }
+
+  //check that all important params have been set
+  if(!(server_sock_param_set && server_ip_param_set && client_ip_param_set && client_sock_param_set )) {
+    reportConfigWarning("Not all necessary parameters were set for Client and Server IP and Socket.");
   }
 
   RegisterVariables();
