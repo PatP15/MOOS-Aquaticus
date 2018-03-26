@@ -2,22 +2,21 @@
 //Date: March 26th 2018
 //Origin: MIT
 
-#ifndef ClientConnec_HEADER
-#define ClientConnec_HEADER
+#ifndef UDPConnect_HEADER
+#define UDPConnect_HEADER
 
-class ClientConnec
+class UDPConnect
 { 
  public:
-  struct sockaddr_in address;
+  struct sockaddr_in my_address;
   int sock =0;
   int valread;
-  struct sockaddr_in serv_addr;
+  struct sockaddr_in send_to_address;
 
   int CreateSocket();
-  int SetParams(int portNo, std::string server_address);
-  int Connect();
-  int Send(char* data, int length);
-  int Read( char * buffer, int length);
+  int BindSocket( int myPortNo, std::string myAddress);
+  int SendTo( char* data, int length);
+  int Receive( char * buffer, int length);
 };
 
   #endif
