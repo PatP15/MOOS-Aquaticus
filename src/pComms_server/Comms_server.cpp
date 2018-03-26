@@ -10,7 +10,7 @@
 #include "MBUtils.h"
 #include "Comms_server.h"
 #include <cstdlib>   // for the strtoul() function
-
+#include "ClientConnec.h"
 
 using namespace std;
 
