@@ -41,7 +41,7 @@ int UDPConnect::BindSocket(int myPortNo, std::string myAddress)
   }
 }
 
-int UDPConnect::SendTo(char* data, int length, int destPortNo, std::string destIP)
+int UDPConnect::SendTo(short* data, int length, int destPortNo, std::string destIP)
 {
   struct sockaddr_in dest_address;
   memset((char *)& dest_address, 0, sizeof(dest_address));

@@ -50,12 +50,7 @@ struct sockaddr_in client;
 socklen_t l = sizeof(client);
 
 //initialize socket information for sending data
-
-struct sockaddr_in sender; // structures for holding server and client data for sending data
-
-int socket_sender = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // create socket for sending data
-
-void * set_size = memset(&sender, 0, sizeof(sender));
+UDPConnect sender;
 
 
 
@@ -194,17 +189,10 @@ bool Comms_server::Iterate()
     } else {
 
       // setup a information to send the audio for each client that isn't the one that send the audio
-      sender.sin_family = AF_INET;
-      sender.sin_port = htons(11112);
-      sender.sin_addr.s_addr = inet_addr(ips[i].c_str());
-
-      bind(socket_sender, (struct sockaddr *) &sender, sizeof(sender));
-
-      socklen_t p = sizeof(sender);
-
-      sendto(socket_sender, buffer.recording , buffer.size, 0, (struct sockaddr *) &sender, p);
-
-    }
+      sender.CreateSocket();
+      //      sender.BindSocket(11112, ips[i]);
+      sender.SendTo(buffer.recording, buffer.size, 11112, ips[i]);
+         }
 
   }
 
