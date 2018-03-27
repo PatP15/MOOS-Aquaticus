@@ -9,7 +9,7 @@ ProcessConfig = pComms_server
 //ServerSocket as integer
 ServerSocket = 11111
 //ServerIP in string format Question -- why not just localhost?
-ServerIP = 192.168.1.50
+ServerIP = 192.168.0.8
 
 }
 

@@ -59,13 +59,11 @@ int UDPConnect::SendTo(char* data, int length, int destPortNo, std::string destI
       }
 }
 
-int UDPConnect::Receive( char * buffer, int length)
+int UDPConnect::Receive( short * buffer, int length, sockaddr_in & remote_client, socklen_t & remote_client_size)
 {
   int lengthReceived;
-  struct sockaddr_in remoteAddress;
-  socklen_t remoteAddresslength = sizeof(remoteAddresslength);
 
-  lengthReceived = recvfrom(sock, buffer, length, 0, (struct sockaddr * ) &remoteAddress, &remoteAddresslength);
+  lengthReceived = recvfrom(sock, buffer, length, 0, (struct sockaddr * ) &remote_client, &remote_client_size);
   if(lengthReceived<0){
     cout << endl << "Error Receiving Message" << endl;
     return -1;

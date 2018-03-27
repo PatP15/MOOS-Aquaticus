@@ -13,8 +13,6 @@
 #include "UDPConnect.h"
 
 using namespace std;
-UDPConnect test_udp_connect;
-
 char ipstr[INET6_ADDRSTRLEN]; // string that contains the ip of the connected client
 int port; // int that contains the port of the connected client
 
@@ -45,14 +43,9 @@ struct AudioBuffer buffer = {(short*) malloc(FRAMES_PER_BUFFER* sizeof(short)*NU
 
 // structures for holding server and client data for receiving data
 
-struct sockaddr_in server = {AF_INET, htons(11111), inet_addr("18.111.102.119")}; // hardcoded setup for server socket
+UDPConnect server;
 
 struct sockaddr_in client;
-
-
-int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // create socket for receiving data
-
-int binding = bind(sock,( struct sockaddr *) &server, sizeof(server)); // bind the socket
 
 socklen_t l = sizeof(client);
 
@@ -132,7 +125,8 @@ bool Comms_server::Iterate()
   AppCastingMOOSApp::Iterate();
   pushBACK = false; // assume we shouldn't add the first connected port to list of clients
 
-  recvfrom(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &client, &l); // receive audio from connected client
+  int attempt_receive = server.Receive(buffer.recording, buffer.size, client,l);
+  //  recvfrom(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &client, &l); // receive audio from connected client
 
 
   // check if ip4 or ip6 for grabbing port + ip address
@@ -224,6 +218,9 @@ bool Comms_server::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
 
+  bool server_sock_param_set = false;
+  bool server_ip_param_set = false;
+
   cout << endl << "In StartUp method " << endl;
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
@@ -244,12 +241,28 @@ bool Comms_server::OnStartUp()
         cout << endl << "Reading ServerSocket config " << endl;
           uint64_t new_value = strtoul(value.c_str(), NULL, 0);
           m_ServerSocket = new_value;
+          server_sock_param_set = true;
       }
       else if(param == "SERVERIP") {
         cout << endl << "Reading ServerIP config " << endl;
-        m_ServerIp = value; 
+        m_ServerIp = value;
+        server_ip_param_set = true;
       }
 
+    }
+  }
+
+  if(!server_sock_param_set && server_ip_param_set) {
+    reportConfigWarning("Server IP and Port Number not Set!");
+  }
+  else {
+    if(server.CreateSocket()== -1){
+      reportConfigWarning("Unable to create socket!");
+    }
+    else {
+      if(server.BindSocket(m_ServerSocket,m_ServerIp) == -1) {
+      reportConfigWarning("Server Socket Bind Error!");
+      }
     }
   }
 

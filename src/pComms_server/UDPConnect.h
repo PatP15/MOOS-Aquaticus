@@ -25,7 +25,7 @@ class UDPConnect
   int CreateSocket();
   int BindSocket( int myPortNo, std::string myAddress);
   int SendTo( char* data, int length, int destPortNo, std::string destIP);
-  int Receive( char * buffer, int length);
+  int Receive( short * buffer, int length, sockaddr_in & remote_client, socklen_t & remote_client_size);
 };
 
   #endif
