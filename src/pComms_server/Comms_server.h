@@ -53,6 +53,7 @@ class Comms_server : public AppCastingMOOSApp
   std::string m_ServerIp;
 
  private: // State variables
+  bool m_GoodState;
 };
 
 #endif

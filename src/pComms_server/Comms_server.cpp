@@ -64,6 +64,7 @@ void * set_size = memset(&sender, 0, sizeof(sender));
 
 Comms_server::Comms_server()
 {
+  m_GoodState = true;
 }
 
 //---------------------------------------------------------
@@ -123,7 +124,10 @@ bool Comms_server::Iterate()
 {
   cout << endl << "In Iterate method " << endl;
   AppCastingMOOSApp::Iterate();
-  pushBACK = false; // assume we shouldn't add the first connected port to list of clients
+
+  if(m_GoodState){
+
+    pushBACK = false; // assume we shouldn't add the first connected port to list of clients
 
   int attempt_receive = server.Receive(buffer.recording, buffer.size, client,l);
   //  recvfrom(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &client, &l); // receive audio from connected client
@@ -205,7 +209,7 @@ bool Comms_server::Iterate()
   }
 
   message_counter++;
-
+  }
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -252,16 +256,19 @@ bool Comms_server::OnStartUp()
     }
   }
 
-  if(!server_sock_param_set && server_ip_param_set) {
+  if(!(server_sock_param_set && server_ip_param_set)) {
     reportConfigWarning("Server IP and Port Number not Set!");
+    m_GoodState = false;
   }
   else {
     if(server.CreateSocket()== -1){
       reportConfigWarning("Unable to create socket!");
+      m_GoodState = false;
     }
     else {
       if(server.BindSocket(m_ServerSocket,m_ServerIp) == -1) {
       reportConfigWarning("Server Socket Bind Error!");
+      m_GoodState = false;
       }
     }
   }
