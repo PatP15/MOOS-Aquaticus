@@ -93,41 +93,13 @@ short *received_recording = (short*) malloc(FRAMES_PER_BUFFER * sizeof(short) * 
 //sending data as a client to the server
 UDPConnect server;
 
-struct sockaddr_in client; // create client
-
-void *set_memory = memset(&server, 0, sizeof(server)); // set memory for the server
-
-int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // create socket
-
-int binding_client = bind(sock, (struct sockaddr *) &server, sizeof(server)); // bind client to socket
-
-socklen_t m = sizeof(server);
-
 //receving data as a server, when the client receives data from the sever, it acts as a server
+UDPConnect server_ss;
 
-int sock_ss = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // create socket for receiving data
-
-struct sockaddr_in server_ss = {AF_INET, htons(11112), inet_addr("18.111.102.119")}; //own port and own address
-
-struct sockaddr_in client_ss; // set up client to receive data from
-
-int binding_server = bind(sock_ss, (struct sockaddr *) &server_ss, sizeof(server_ss)); // bind the server to socket
-
-socklen_t q = sizeof(client_ss); //variable for the size of the client
-
-struct pollfd ufds[1] = // set up polling so that the client isn't waiting to receive data from the server
-  {
-
-    ufds[0].fd = sock_ss,
-    ufds[0].events = POLLIN
-
-  };
 int rv; // polling variable
 
-
-
-
 //---------------------------------------------------------
+struct pollfd ufds[1]; // set up polling so that the client isn't waiting to receive data from the server
 // Constructor
 
 Comms_client::Comms_client()
@@ -168,7 +140,7 @@ bool Comms_client::OnNewMail(MOOSMSG_LIST &NewMail)
 
    }
 
-   return(true);
+  return(true);
 }
 
 //---------------------------------------------------------
@@ -202,7 +174,10 @@ bool Comms_client::Iterate()
 
   if (rv != 0) { // if there is data, receive it
 
-    recvfrom(sock_ss, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
+    struct sockaddr_in client_ss; // set up client to receive data from
+    socklen_t q = sizeof(client_ss); //variable for the size of the client
+
+    recvfrom(server_ss.sock, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
 
   }
 
@@ -304,8 +279,8 @@ bool Comms_client::OnStartUp()
   }
 
   //check that all important params have been set
-  if(!(server_sock_param_set && server_ip_param_set && client_ip_param_set && client_sock_param_set )) {
-    reportConfigWarning("Not all necessary parameters were set for Client and Server IP and Socket.");
+  if(!(server_sock_param_set && server_ip_param_set)) {
+    reportConfigWarning("Server IP and Socket not set!");
     m_GoodState = false;
   }
   else {
@@ -313,11 +288,34 @@ bool Comms_client::OnStartUp()
       reportConfigWarning("Unable to create server socket!");
       m_GoodState = false;
     }
-    else if(server.BindSocket(m_ServerSocket, m_ServerIP) == -1 ) {
+    else {
+      if(server.BindSocket(m_ServerSocket, m_ServerIP) == -1 ) {
       reportConfigWarning("Unable to bind server socket!");
       m_GoodState = false;
+      }
     }
 
+  }
+  
+  if(!(client_ip_param_set && client_sock_param_set)) {
+    reportConfigWarning("Client IP and Socket not set!");
+    m_GoodState = false;
+  }
+  else {
+    if(server_ss.CreateSocket() == -1) {
+      reportConfigWarning("Unable to create client side socket!");
+      m_GoodState = false;
+    }
+    else {
+      if(server_ss.BindSocket(m_ClientSocket, m_ClientIP) == -1) {
+        reportConfigWarning("Unable to bind client side socket!");
+        m_GoodState = false;
+      }
+      else {
+        ufds[0].fd = server_ss.sock;
+        ufds[0].events = POLLIN;
+      }
+    }
   }
 
   RegisterVariables();
