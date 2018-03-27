@@ -4,6 +4,7 @@
 #--------------------------------------------------------
 
 SET(SRC
+  UDPConnect.cpp
   Comms_client.cpp
   Comms_client_Info.cpp
   main.cpp

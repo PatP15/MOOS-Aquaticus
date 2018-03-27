@@ -21,6 +21,7 @@
 #include <portaudio.h>
 #include "sndfile.h"
 #include <sys/poll.h>
+#include "UDPConnect.h"
 
 // these define the variables needed for initializing audio transmission and handling
 #define FRAMES_PER_BUFFER (256)
