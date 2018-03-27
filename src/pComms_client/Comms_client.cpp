@@ -91,8 +91,7 @@ struct AudioBuffer buffer = {(short*) malloc (FRAMES_PER_BUFFER * sizeof(short) 
 short *received_recording = (short*) malloc(FRAMES_PER_BUFFER * sizeof(short) * NUM_CHANNELS);
 
 //sending data as a client to the server
-
-struct sockaddr_in server = {AF_INET, htons(11111), inet_addr("18.111.102.119")}; // server's port and address (hardcoded right now)
+UDPConnect server;
 
 struct sockaddr_in client; // create client
 
@@ -133,6 +132,8 @@ int rv; // polling variable
 
 Comms_client::Comms_client()
 {
+  m_GoodState = true;
+
 }
 
 //---------------------------------------------------------
@@ -192,8 +193,10 @@ bool Comms_client::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
+  if(m_GoodState) {
+
   PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
-  sendto(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &server, m); // send this audio to the server
+  server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
 
   rv = poll(ufds, 1, 1); // check to see if there is data from the server
 
@@ -245,7 +248,7 @@ bool Comms_client::Iterate()
 
   message_counter++;
 
-
+  }
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -303,6 +306,18 @@ bool Comms_client::OnStartUp()
   //check that all important params have been set
   if(!(server_sock_param_set && server_ip_param_set && client_ip_param_set && client_sock_param_set )) {
     reportConfigWarning("Not all necessary parameters were set for Client and Server IP and Socket.");
+    m_GoodState = false;
+  }
+  else {
+    if(server.CreateSocket() == -1) {
+      reportConfigWarning("Unable to create server socket!");
+      m_GoodState = false;
+    }
+    else if(server.BindSocket(m_ServerSocket, m_ServerIP) == -1 ) {
+      reportConfigWarning("Unable to bind server socket!");
+      m_GoodState = false;
+    }
+
   }
 
   RegisterVariables();

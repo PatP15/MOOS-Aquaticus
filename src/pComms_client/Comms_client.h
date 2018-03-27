@@ -34,6 +34,7 @@ protected:
   std::string m_ServerIP;
 
  private: // State variables
+  bool m_GoodState;
 };
 
 #endif 
