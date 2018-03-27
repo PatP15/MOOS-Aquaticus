@@ -4,18 +4,27 @@
 
 #ifndef UDPConnect_HEADER
 #define UDPConnect_HEADER
+#include<sys/socket.h>
+#include<sys/types.h>
+#include<iostream>
+#include<string>
+#include<arpa/inet.h>
+
+using namespace std;
 
 class UDPConnect
 { 
  public:
+  UDPConnect();
+  ~UDPConnect();
   struct sockaddr_in my_address;
-  int sock =0;
+  int sock;
   int valread;
   struct sockaddr_in send_to_address;
 
   int CreateSocket();
   int BindSocket( int myPortNo, std::string myAddress);
-  int SendTo( char* data, int length);
+  int SendTo( char* data, int length, int destPortNo, std::string destIP);
   int Receive( char * buffer, int length);
 };
 

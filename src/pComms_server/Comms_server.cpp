@@ -13,6 +13,7 @@
 #include "UDPConnect.h"
 
 using namespace std;
+UDPConnect test_udp_connect;
 
 char ipstr[INET6_ADDRSTRLEN]; // string that contains the ip of the connected client
 int port; // int that contains the port of the connected client
