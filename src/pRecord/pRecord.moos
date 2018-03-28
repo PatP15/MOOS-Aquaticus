@@ -6,5 +6,11 @@ ProcessConfig = pRecord
    AppTick   = .2
    CommsTick = 4
 
+//Set the MOOS Variable and Value for which to record
+//If not specified, defaults to MOOS_VAR_WATCH = SPEECH_BUTTON
+// and MOOS_VALUE_WATCH = TRUE
+  MOOS_VAR_WATCH = TEST_SPEECH
+  MOOS_VALUE_WATCH = FALSE
+
 }
 

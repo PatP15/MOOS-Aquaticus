@@ -1,8 +1,9 @@
 /****************************************************************/
-/*   NAME:                                              */
+/*   NAME: Michael "Misha" Novitzky                             */
+/*   Original NAME: Oliver MacNeely                             */
 /*   ORGN: MIT Cambridge MA                                     */
-/*   FILE: Record_Info.cpp                               */
-/*   DATE: Dec 29th 1963                                        */
+/*   FILE: Record_Info.cpp                                      */
+/*   DATE: March 28th 2018                                      */
 /****************************************************************/
 
 #include <cstdlib>
@@ -19,8 +20,9 @@ using namespace std;
 void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
-  blk("------------------------------------                            ");
-  blk("  The pRecord application is used for               ");
+  blk("--------------------------------------------------------------  ");
+  blk("  The pRecord application is used for recording audio from      ");
+  blk("  a microphone to a local wave file.                            ");
   blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");
@@ -66,13 +68,19 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("pRecord Example MOOS Configuration                   ");
+  blu("pRecord Example MOOS Configuration                              ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = pRecord                              ");
+  blk("ProcessConfig = pRecord                                         ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
+  blk("                                                                "); 
+  blk("//Set the MOOS Variable and Value for which to record           ");
+  blk("//If not specified, defaults to MOOS_VAR_WATCH = SPEECH_BUTTON  ");
+  blk("// and MOOS_VALUE_WATCH = TRUE                                  ");
+  blk("  MOOS_VAR_WATCH = TEST_SPEECH                                  ");
+  blk("  MOOS_VALUE_WATCH = FALSE                                      ");
   blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
@@ -94,12 +102,13 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("  By default subscribes to SPEECH_BUTTON                        ");
+  blk("  Unless otherwise configured to watch for another variable in  ");
+  blk("  .moos file with MOOS_VAR_WATCH                                ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("        ");
   blk("                                                                ");
   exit(0);
 }

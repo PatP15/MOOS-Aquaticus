@@ -1,9 +1,10 @@
 /************************************************************/
-/*    NAME:                                               */
+/*    NAME: Michael "Misha" Novitzky                        */
+/*    Original NAME: Oliver MacNeely                        */
 /*    ORGN: MIT                                             */
-/*    FILE: Record.cpp                                        */
-/*    DATE: Summer 2017
- *
+/*    FILE: Record.cpp                                      */
+/*    DATE: March 28th 2018                                 */
+/*    Original DATE: Summer 2017                            *
  *    Thanks to Syb0rg (https://codereview.stackexchange.com/users/27623/syb0rg) from Stack Overflow for snippets/design from this question:
  *    https://codereview.stackexchange.com/questions/84536/recording-audio-continuously-in-c*/
 /************************************************************/
@@ -106,7 +107,10 @@ struct ThreadParams params = {&data, &buffer, 0, 0}; // declare and initialize s
 Record::Record()
 
 {
+  m_MOOSVarToWatch = "SPEECH_BUTTON";
 
+  m_MOOSValueToWatch = "TRUE";
+ 
   err = Pa_OpenStream(&stream, // open stream (initializes audio stream for further use)
 		      &inputParameters,
 		      NULL,
@@ -150,13 +154,14 @@ bool Record::OnNewMail(MOOSMSG_LIST &NewMail)
 
 
 
-      if(key == "SPEECH_BUTTON") { // change global variables depending on whether button has been pressed
+      if(key == m_MOOSVarToWatch) { // change global variables depending on whether button has been pressed
 
-          if (msg.GetString() == "TRUE") {
+          if (msg.GetString() == m_MOOSValueToWatch) {
 
               STATUS = true; // record
 
-          } else if (msg.GetString() == "FALSE") {
+          }
+          else {
 
               STATUS = false; // stop recording
           }
@@ -230,6 +235,16 @@ bool Record::OnStartUp()
     else if(param == "BAR") {
       handled = true;
     }
+    else if(param == "MOOS_VAR_WATCH") {
+      //assume a variable in string form
+      m_MOOSVarToWatch = value;
+      handled = true;
+    }
+    else if(param == "MOOS_VALUE_WATCH") {
+      //assume a variable in string form
+      m_MOOSValueToWatch = value;
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -251,7 +266,7 @@ bool Record::OnStartUp()
 void Record::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  Register("SPEECH_BUTTON", 0);
+  Register(m_MOOSVarToWatch, 0);
 }
 
 
@@ -263,7 +278,8 @@ bool Record::buildReport()
   m_msgs << "============================================ \n";
   m_msgs << "File:                                        \n";
   m_msgs << "============================================ \n";
-
+  m_msgs << "Record on MOOS Variable: " << m_MOOSVarToWatch << endl;
+  m_msgs << "with Value: " << m_MOOSValueToWatch << endl; 
 
 
   return(true);

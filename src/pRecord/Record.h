@@ -1,10 +1,11 @@
 /************************************************************/
-/*    NAME:                                               */
+/*    NAME: Michael "Misha" Novitzky                        */
+/*    Original NAME: Oliver MacNeely                        */
 /*    ORGN: MIT                                             */
-/*    FILE: Record.h                                          */
-/*    DATE: December 29th, 1963
- *
- *    Attribute to stack overflow question as well*/
+/*    FILE: Record.h                                        */
+/*    DATE: March 28th, 2018                                */
+/*    Original DATE: summer 2017                            */
+/*    Attribute to stack overflow question as well          */
 /************************************************************/
 
 #ifndef Record_HEADER
@@ -123,6 +124,8 @@ class Record : public AppCastingMOOSApp
    void registerVariables();
 
  private: // Configuration variables
+  std::string m_MOOSVarToWatch;
+  std::string m_MOOSValueToWatch;
 
  
  private: // State variables
