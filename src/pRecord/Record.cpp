@@ -25,6 +25,8 @@ using namespace std;
 bool STATUS = false; // Declare and initialize global recording status variable
 bool END = false;
 
+std::string file_save_prefix = "file_";
+
 PaStream *stream = NULL; //Housekeeping for starting an audio stream, creates a stream pointer for future use
 PaError err = Pa_Initialize(); // Initializes the audio library for use
 
@@ -56,11 +58,13 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
 
         } else if (threadData->buffer_counter != 0) {   // if we aren't recording, check if we just finished recording, if so, write recording to file
 
-            char filename[200]; // ample room for filename
+                      char filename[200]; // ample room for filename
 
-            snprintf(filename, 200, "file_%d.wav", threadData->recording_counter); // write formatted string to characters
-
-            storeWAV(threadData->audiodata, filename);      // store recorded audio in .wav file and free used memory
+                     snprintf(filename, 200, "file_%d.wav", threadData->recording_counter); // write formatted string to characters
+          //std::string filename;
+          //filename = file_save_prefix + ".wav";
+          
+                     storeWAV(threadData->audiodata, filename);      // store recorded audio in .wav file and free used memory
             free(threadData->audiodata->recordedSamples);
             threadData->audiodata->recordedSamples = NULL;
 
@@ -75,7 +79,7 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
 
 }
 
-  const PaDeviceInfo *info = Pa_GetDeviceInfo(Pa_GetDefaultInputDevice()); // declare variable
+const PaDeviceInfo *info = Pa_GetDeviceInfo(Pa_GetDefaultInputDevice()); // declare variable
 
 
   struct AudioData data = init(44100, 1, paInt16); // initialize structure
@@ -245,6 +249,10 @@ bool Record::OnStartUp()
       m_MOOSValueToWatch = value;
       handled = true;
     }
+    else if(param == "SAVE_FILE_PREFIX"){
+      file_save_prefix = value;
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -280,7 +288,7 @@ bool Record::buildReport()
   m_msgs << "============================================ \n";
   m_msgs << "Record on MOOS Variable: " << m_MOOSVarToWatch << endl;
   m_msgs << "with Value: " << m_MOOSValueToWatch << endl; 
-
+  m_msgs << "Save file prefix: " << file_save_prefix << endl;
 
   return(true);
 }

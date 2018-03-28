@@ -12,5 +12,8 @@ ProcessConfig = pRecord
   MOOS_VAR_WATCH = TEST_SPEECH
   MOOS_VALUE_WATCH = FALSE
 
+//Set the prefix of .wave files to be saved
+//If not specified, defaults to "file"
+  SAVE_FILE_PREFIX = speech_rec
 }
 
