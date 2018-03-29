@@ -83,7 +83,7 @@ void showExampleConfigAndExit()
   blk("  MOOS_VALUE_WATCH = FALSE                                      ");
   blk("                                                                ");
   blk("//Set the prefix of .wave files to be saved                     ");
-  blk("//If not specified, defaults to "file_"                         ");
+  blk("//If not specified, defaults to \"file_\"                       ");
   blk("  SAVE_FILE_PREFIX = speech_rec_                                ");
   blk("                                                                 ");
   blk("}                                                               ");
