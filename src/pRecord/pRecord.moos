@@ -14,6 +14,6 @@ ProcessConfig = pRecord
 
 //Set the prefix of .wave files to be saved
 //If not specified, defaults to "file"
-  SAVE_FILE_PREFIX = speech_rec
+  SAVE_FILE_PREFIX = speech_rec_
 }
 

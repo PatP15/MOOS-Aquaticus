@@ -58,13 +58,10 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
 
         } else if (threadData->buffer_counter != 0) {   // if we aren't recording, check if we just finished recording, if so, write recording to file
 
-                      char filename[200]; // ample room for filename
-
-                     snprintf(filename, 200, "file_%d.wav", threadData->recording_counter); // write formatted string to characters
-          //std::string filename;
-          //filename = file_save_prefix + ".wav";
+          stringstream filename;
+          filename << file_save_prefix << threadData->recording_counter << ".wav";
           
-                     storeWAV(threadData->audiodata, filename);      // store recorded audio in .wav file and free used memory
+          storeWAV(threadData->audiodata, filename.str().c_str());      // store recorded audio in .wav file and free used memory
             free(threadData->audiodata->recordedSamples);
             threadData->audiodata->recordedSamples = NULL;
 
