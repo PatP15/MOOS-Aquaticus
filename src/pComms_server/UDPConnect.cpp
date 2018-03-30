@@ -1,4 +1,6 @@
 #include "UDPConnect.h"
+#include <stdio.h>
+#include <string.h>
 
 UDPConnect::UDPConnect()
 {
