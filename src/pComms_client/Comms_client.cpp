@@ -105,6 +105,9 @@ struct pollfd ufds[1]; // set up polling so that the client isn't waiting to rec
 Comms_client::Comms_client()
 {
   m_GoodState = true;
+  m_SendAudio = false;
+  m_ListenForMOOSVar = "SEND";
+  m_ListenForMOOSValue = "TRUE";
 
 }
 
@@ -135,8 +138,18 @@ bool Comms_client::OnNewMail(MOOSMSG_LIST &NewMail)
 
 
     string key   = msg.GetKey();
-    moos_value  = msg.GetDouble(); // grab variable from MOOS
 
+    double num = msg.GetDouble(); // grab variable from MOOS
+    string value = msg.GetString();
+
+    if(key == m_ListenForMOOSVar) {
+      if(value == m_ListenForMOOSValue) {
+        m_SendAudio = true;
+      }
+      else {
+        m_SendAudio = false;
+      }
+    }
 
    }
 
@@ -167,8 +180,11 @@ bool Comms_client::Iterate()
 
   if(m_GoodState) {
 
-  PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
-  server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
+    if(m_SendAudio) {
+
+      PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
+      server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
+    }
 
   rv = poll(ufds, 1, 1); // check to see if there is data from the server
 
@@ -275,6 +291,12 @@ bool Comms_client::OnStartUp()
         m_ClientIP = value;
         client_ip_param_set = true;
       }
+      else if(param == "SEND_VOICE_ON_VARNAME") {
+        m_ListenForMOOSVar = value;
+      }
+      else if(param == "SEND_VOICE_ON_VALUE") {
+        m_ListenForMOOSValue = value;
+      }
     }
   }
 
@@ -329,6 +351,7 @@ void Comms_client::RegisterVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
 
+  Register(m_ListenForMOOSVar, 0);
   Register("SAVE", 0);
 }
 
@@ -343,6 +366,8 @@ bool Comms_client::buildReport()
   m_msgs << endl;
   m_msgs << "    Server IP: " << m_ServerIP << endl;
   m_msgs << "Server Socket: " << m_ServerSocket << endl;
-
+  m_msgs << "Send Audio on:" << endl;
+  m_msgs << "     MOOS Variable: " << m_ListenForMOOSVar << endl;
+  m_msgs << "     MOOS Value: " << m_ListenForMOOSValue << endl;
   return(true);
 }

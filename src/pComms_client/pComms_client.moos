@@ -15,5 +15,14 @@ ProcessConfig = pComms_client
    ServerSocket = 11111
    //ServerIP in string format
    ServerIP = 192.168.1.50
+
+//Define MOOS Variable and Value
+//to trigger sending audio to server
+//if not specified, defaults to
+//MOOS Variable = "SEND"
+//Value = "TRUE"
+  SEND_VOICE_ON_VARNAME = "SEND_VOICE"
+
+  SEND_VOICE_ON_VALUE = "TRUE"
 }
 

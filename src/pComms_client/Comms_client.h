@@ -32,9 +32,12 @@ protected:
   std::string m_ClientIP;
   int m_ServerSocket;
   std::string m_ServerIP;
+  std::string m_ListenForMOOSVar;
+  std::string m_ListenForMOOSValue;
 
  private: // State variables
   bool m_GoodState;
+  bool m_SendAudio;
 };
 
 #endif 
