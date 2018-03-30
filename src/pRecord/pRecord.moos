@@ -15,5 +15,11 @@ ProcessConfig = pRecord
 //Set the prefix of .wave files to be saved
 //If not specified, defaults to "file"
   SAVE_FILE_PREFIX = speech_rec_
+
+//Set directory save prefix
+//pRecord saves the directory relative to execution of the program
+//with date and time appended.
+//If not specified, defaults to "pRecord_saves"
+  SAVE_DIR_PREFIX = SPEECH_SAVE
 }
 

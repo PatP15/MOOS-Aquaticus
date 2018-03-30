@@ -26,6 +26,8 @@ bool STATUS = false; // Declare and initialize global recording status variable
 bool END = false;
 
 std::string file_save_prefix = "file_";
+std::string dir_save_prefix = "pRecord_saves";
+std::string  dir_save_full;
 
 PaStream *stream = NULL; //Housekeeping for starting an audio stream, creates a stream pointer for future use
 PaError err = Pa_Initialize(); // Initializes the audio library for use
@@ -59,6 +61,7 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
         } else if (threadData->buffer_counter != 0) {   // if we aren't recording, check if we just finished recording, if so, write recording to file
 
           stringstream filename;
+          filename << "./" << dir_save_full << "/";
           filename << file_save_prefix << threadData->recording_counter << ".wav";
           
           storeWAV(threadData->audiodata, filename.str().c_str());      // store recorded audio in .wav file and free used memory
@@ -250,16 +253,38 @@ bool Record::OnStartUp()
       file_save_prefix = value;
       handled = true;
     }
+    else if(param == "SAVE_DIR_PREFIX") {
+      dir_save_prefix = value;
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
 
   }
 
+  //We borrow pLogger's method of adding timestamp to logging
+  struct tm *Now;
+  time_t aclock;
+  time( &aclock );
+	
+  Now = localtime( &aclock );
 
+  stringstream ss;
+  ss << dir_save_prefix << "_" << Now->tm_mday << "_" << Now->tm_mon+1 << "_";
+  ss << Now->tm_year+1900 << "_____" << Now->tm_hour << "_" << Now->tm_min << "_" << Now->tm_sec;
+   
+  //Let's create the directory where files saves will happen
+  int result_dir_create = 0;
+  std::string sys_call;
+  sys_call = "mkdir " + ss.str();
+  result_dir_create = system(sys_call.c_str());
 
+  dir_save_full = ss.str();
 
-
+  if(result_dir_create!=0) {
+    reportConfigWarning("Error creating save directory: " + dir_save_prefix);
+  }
   
   registerVariables();	
   return(true);
@@ -286,7 +311,8 @@ bool Record::buildReport()
   m_msgs << "Record on MOOS Variable: " << m_MOOSVarToWatch << endl;
   m_msgs << "with Value: " << m_MOOSValueToWatch << endl; 
   m_msgs << "Save file prefix: " << file_save_prefix << endl;
-
+  m_msgs << "Save dir prefix: " << dir_save_prefix << endl;
+  m_msgs << "Full save dir: " << dir_save_full << endl;
   return(true);
 }
 

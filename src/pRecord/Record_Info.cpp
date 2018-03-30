@@ -85,7 +85,13 @@ void showExampleConfigAndExit()
   blk("//Set the prefix of .wave files to be saved                     ");
   blk("//If not specified, defaults to \"file_\"                       ");
   blk("  SAVE_FILE_PREFIX = speech_rec_                                ");
-  blk("                                                                 ");
+  blk("                                                                ");
+  blk("//Set directory save prefix                                     ");
+  blk("//pRecord saves the directory relative to execution of the      ");
+  blk("//program with date and time appended.                          ");
+  blk("//If not specified, defaults to \"pRecord_saves\"               ");
+  blk("  SAVE_DIR_PREFIX = SPEECH_SAVE                                 ");
+  blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
