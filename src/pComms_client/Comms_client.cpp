@@ -289,10 +289,10 @@ bool Comms_client::OnStartUp()
       m_GoodState = false;
     }
     else {
-      if(server.BindSocket(m_ServerSocket, m_ServerIP) == -1 ) {
-      reportConfigWarning("Unable to bind server socket!");
-      m_GoodState = false;
-      }
+      //      if(server.BindSocket(m_ServerSocket, m_ServerIP) == -1 ) {
+      //reportConfigWarning("Unable to bind server socket!");
+      //m_GoodState = false;
+      // }
     }
 
   }
