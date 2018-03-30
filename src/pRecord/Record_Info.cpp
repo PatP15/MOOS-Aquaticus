@@ -118,6 +118,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
+  blk("AUDIO_FILE_SAVED -folder and name of latest saved audio file    ");
   blk("                                                                ");
   blk("                                                                ");
   exit(0);
