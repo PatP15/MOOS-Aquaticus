@@ -28,6 +28,7 @@ bool END = false;
 std::string file_save_prefix = "file_";
 std::string dir_save_prefix = "pRecord_saves";
 std::string  dir_save_full;
+stringstream filename;
 
 PaStream *stream = NULL; //Housekeeping for starting an audio stream, creates a stream pointer for future use
 PaError err = Pa_Initialize(); // Initializes the audio library for use
@@ -60,12 +61,14 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
 
         } else if (threadData->buffer_counter != 0) {   // if we aren't recording, check if we just finished recording, if so, write recording to file
 
-          stringstream filename;
+          filename.str("");
           filename << "./" << dir_save_full << "/";
           filename << file_save_prefix << threadData->recording_counter << ".wav";
           
           storeWAV(threadData->audiodata, filename.str().c_str());      // store recorded audio in .wav file and free used memory
-            free(threadData->audiodata->recordedSamples);
+          //  Notify("AUDIO_FILE_SAVED",filename.str());
+
+          free(threadData->audiodata->recordedSamples);
             threadData->audiodata->recordedSamples = NULL;
 
             threadData->buffer_counter = 0;
@@ -208,6 +211,11 @@ bool Record::Iterate()
 
     reportEvent("buffer counter: " + intToString(params.buffer_counter));
     reportEvent("recording counter: " + intToString(params.recording_counter));
+
+    if(filename.str() != "") {
+      Notify("AUDIO_FILE_SAVED",filename.str());
+      filename.str("");
+    }
 
   AppCastingMOOSApp::PostReport();
   return(true);
