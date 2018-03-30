@@ -11,6 +11,8 @@
 #include "Comms_server.h"
 #include <cstdlib>   // for the strtoul() function
 #include "UDPConnect.h"
+#include <stdio.h>
+#include <string.h>
 
 using namespace std;
 char ipstr[INET6_ADDRSTRLEN]; // string that contains the ip of the connected client
