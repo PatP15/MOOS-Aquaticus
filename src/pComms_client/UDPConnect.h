@@ -9,6 +9,7 @@
 #include<iostream>
 #include<string>
 #include<arpa/inet.h>
+#include<stdio.h>
 
 using namespace std;
 
