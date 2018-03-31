@@ -54,6 +54,7 @@ class Comms_server : public AppCastingMOOSApp
 
  private: // State variables
   bool m_GoodState;
+  std::vector<std::string> m_connectedClients;
 };
 
 #endif

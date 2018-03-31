@@ -152,6 +152,7 @@ bool Comms_server::Iterate()
 
         clients.push_back(port);
         ips.push_back(ipstr);
+        m_connectedClients.push_back(ipstr);
 
         port_counter++;
 
@@ -181,6 +182,7 @@ bool Comms_server::Iterate()
 
           clients.push_back(port);
           ips.push_back(ipstr);
+          m_connectedClients.push_back(ipstr);
 
           port_counter++;
 
@@ -297,5 +299,11 @@ bool Comms_server::buildReport()
   m_msgs << "    Server IP: " << m_ServerIp << endl;
   m_msgs << "Server Socket: " << m_ServerSocket << endl;
 
+  //list pComms_clients
+  m_msgs << endl;
+  m_msgs << "Connected Clients" << endl;
+  for(std::vector<std::string>::iterator it = m_connectedClients.begin(); it!= m_connectedClients.end(); ++it) {
+    m_msgs << *it << endl;
+  }
   return(true);
 }
