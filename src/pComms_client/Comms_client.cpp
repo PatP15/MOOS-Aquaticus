@@ -358,9 +358,8 @@ void Comms_client::RegisterVariables()
 bool Comms_client::buildReport()
 {
   m_msgs << "============================================ \n";
-  m_msgs << "Client:                                        \n";
+  m_msgs << "VOIP Client                                  \n";
   m_msgs << "============================================ \n";
-
   m_msgs << "    Client IP: " << m_ClientIP << endl;
   m_msgs << "Client Socket: " << m_ClientSocket << endl;
   m_msgs << endl;

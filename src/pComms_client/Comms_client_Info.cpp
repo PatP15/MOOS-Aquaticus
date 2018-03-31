@@ -1,5 +1,6 @@
 /****************************************************************/
-/*   NAME: Oliver                                             */
+/*   NAME: Michael "Misha" Novitzky                             */
+/*   Original NAME: Oliver MacNeely                             */
 /*   ORGN: MIT Cambridge MA                                     */
 /*   FILE: Comms_client_Info.cpp                               */
 /*   DATE: Dec 29th 1963                                        */
@@ -20,8 +21,10 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The pComms_client application is used for               ");
-  blk("                                                                ");
+  blk("  The pComms_client application is used for                     ");
+  blk("  VOIP - in combination with a pComms_server and other          ");
+  blk("  pComms_client applications.  Triggers sending audio           ");
+  blk("  from the microphone via a specified MOOSDB variable.          ");
   blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");
@@ -66,13 +69,31 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("pComms_client Example MOOS Configuration                   ");
+  blu("pComms_client Example MOOS Configuration                        ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = pComms_client                              ");
+  blk("ProcessConfig = pComms_client                                   ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
+  blk("                                                                ");
+  blk("//ClientSocket as integer                                       ");
+  blk("  ClientSocket =  11112                                         ");
+  blk("//ClientIP in string format                                     ");
+  blk("  ClientIP = 192.168.1.50                                       ");
+  blk("//ServerSocket as integer                                       ");
+  blk("  ServerSocket = 11111                                          ");
+  blk("//ServerIP in string format                                     ");
+  blk("  ServerIP = 192.168.1.50                                       ");
+  blk("                                                                ");
+  blk("//Define MOOS Variable and Value                                ");
+  blk("//to trigger sending audio to server                            ");
+  blk("//if not specified, defaults to                                 ");
+  blk("//MOOS Variable = \"SEND\"                                      ");
+  blk("//Value = \"TRUE\"                                              ");
+  blk("  SEND_VOICE_ON_VARNAME = \"SEND_VOICE\"                        ");
+  blk("                                                                ");
+  blk("  SEND_VOICE_ON_VALUE = \"TRUE\"                                ");
   blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
@@ -94,12 +115,14 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("  SEND = upon receiving \"TRUE\" value will send the local audio");
+  blk("         from the microphone to pComms_server and other         ");
+  blk("         pComms_clients. The MOOS variable name and value can   ");
+  blk("         be changed by setting the paramaters in the .moos file.");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  None                                                          ");
   blk("                                                                ");
   exit(0);
 }
