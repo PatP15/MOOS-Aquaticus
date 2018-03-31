@@ -365,6 +365,7 @@ bool Comms_client::buildReport()
   m_msgs << endl;
   m_msgs << "    Server IP: " << m_ServerIP << endl;
   m_msgs << "Server Socket: " << m_ServerSocket << endl;
+  m_msgs << endl;
   m_msgs << "Send Audio on:" << endl;
   m_msgs << "     MOOS Variable: " << m_ListenForMOOSVar << endl;
   m_msgs << "     MOOS Value: " << m_ListenForMOOSValue << endl;
