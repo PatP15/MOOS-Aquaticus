@@ -54,7 +54,7 @@ socklen_t l = sizeof(client);
 //initialize socket information for sending data
 UDPConnect sender;
 
-
+struct pollfd ufds[1]; //set up polling so server can be a good appcasting app
 
 //---------------------------------------------------------
 // Constructor
@@ -123,6 +123,12 @@ bool Comms_server::Iterate()
   AppCastingMOOSApp::Iterate();
 
   if(m_GoodState){
+    int rv = 0;
+    
+    rv = poll(ufds, 1, 1); // check to see if there is data from the clients
+
+    if (rv != 0) { // if there is data, receive it
+
 
     pushBACK = false; // assume we shouldn't add the first connected port to list of clients
 
@@ -200,6 +206,7 @@ bool Comms_server::Iterate()
 
   message_counter++;
   }
+  }
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -260,6 +267,10 @@ bool Comms_server::OnStartUp()
       reportConfigWarning("Server Socket Bind Error!");
       m_GoodState = false;
       }
+      else {
+        ufds[0].fd = server.sock;
+        ufds[0].events = POLLIN;  
+      }
     }
   }
 
@@ -280,7 +291,7 @@ void Comms_server::RegisterVariables()
 bool Comms_server::buildReport()
 {
   m_msgs << "============================================ \n";
-  m_msgs << "File:                                        \n";
+  m_msgs << "VOIP Server                                  \n";
   m_msgs << "============================================ \n";
 
   m_msgs << "    Server IP: " << m_ServerIp << endl;
