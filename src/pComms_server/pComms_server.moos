@@ -7,9 +7,9 @@ ProcessConfig = pComms_server
    CommsTick = 4
 
 //ServerSocket as integer
-ServerSocket = 11111
+   ServerSocket = 11111
 //ServerIP in string format Question -- why not just localhost?
-ServerIP = 192.168.0.8
+   ServerIP = 192.168.0.8
 
 }
 

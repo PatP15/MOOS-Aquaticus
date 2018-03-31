@@ -20,7 +20,9 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The pComms_server application is used for               ");
+  blk("  The pComms_server application is used for VOIP by receiving   ");
+  blk("  audio data from a pComms_client and sending it to all other   ");
+  blk("  connected pComms_clients.                                     ");
   blk("                                                                ");
   blk("                                                                ");
   blk("                                                                ");
@@ -66,13 +68,18 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("pComms_server Example MOOS Configuration                   ");
+  blu("pComms_server Example MOOS Configuration                        ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = pComms_server                              ");
+  blk("ProcessConfig = pComms_server                                   ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
+  blk("                                                                ");
+  blk("//ServerSocket as integer                                       ");
+  blk("  ServerSocket = 11111                                          ");
+  blk("//ServerIP in string format                                     ");
+  blk("  ServerIP = 192.168.1.150                                      ");
   blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
@@ -87,19 +94,19 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("pComms_server INTERFACE                                    ");
+  blu("pComms_server INTERFACE                                         ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-  blk("                 string_val=BAR                                 ");
+  blk("  None                                                          ");
+  blk("                                                                ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  None                                                          ");
   blk("                                                                ");
   exit(0);
 }
