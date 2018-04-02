@@ -106,6 +106,7 @@ Comms_client::Comms_client()
 {
   m_GoodState = true;
   m_SendAudio = false;
+  m_Transmitting = false;
   m_ListenForMOOSVar = "SEND";
   m_ListenForMOOSValue = "TRUE";
 
@@ -184,6 +185,11 @@ bool Comms_client::Iterate()
 
       PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
       server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
+      Notify("TRANSMIT","TRUE");
+      m_Transmitting = true;
+    }
+    else {
+      m_Transmitting = false;
     }
 
   rv = poll(ufds, 1, 1); // check to see if there is data from the server
@@ -195,7 +201,7 @@ bool Comms_client::Iterate()
 
     recvfrom(server_ss.sock, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
 
-  }
+  
 
   PaError write_stream = Pa_WriteStream(stream, received_recording, FRAMES_PER_BUFFER); // write received data to speaker
 
@@ -238,7 +244,7 @@ bool Comms_client::Iterate()
   }
 
   message_counter++;
-
+  }
   }
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -369,5 +375,8 @@ bool Comms_client::buildReport()
   m_msgs << "Send Audio on:" << endl;
   m_msgs << "     MOOS Variable: " << m_ListenForMOOSVar << endl;
   m_msgs << "     MOOS Value: " << m_ListenForMOOSValue << endl;
+  m_msgs << endl;
+  m_msgs << "Transmitting = " << m_Transmitting <<endl;
+  
   return(true);
 }

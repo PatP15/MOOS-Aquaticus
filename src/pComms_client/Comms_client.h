@@ -38,6 +38,7 @@ protected:
  private: // State variables
   bool m_GoodState;
   bool m_SendAudio;
+  bool m_Transmitting;
 };
 
 #endif 
