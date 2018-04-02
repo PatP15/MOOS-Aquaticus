@@ -34,7 +34,7 @@ using namespace std;
 
 size_t received_size = FRAMES_PER_BUFFER *sizeof(short) * NUM_CHANNELS; // size of received recording from server
 
-double moos_value; // value from moos variable that decides whether to record or not, currently only records when true
+bool moos_value = false; // value from moos variable that decides whether to record or not, currently only records when true
 
 struct AudioBuffer { // structure that holds audio data before being saved
 
