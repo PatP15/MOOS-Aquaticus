@@ -107,6 +107,7 @@ Comms_client::Comms_client()
   m_GoodState = true;
   m_SendAudio = false;
   m_Transmitting = false;
+  m_Receiving = false;
   m_ListenForMOOSVar = "SEND";
   m_ListenForMOOSValue = "TRUE";
 
@@ -201,7 +202,8 @@ bool Comms_client::Iterate()
 
     recvfrom(server_ss.sock, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
 
-  
+    Notify("RECEIVING_AUDIO","TRUE");
+    m_Receiving = true;
 
   PaError write_stream = Pa_WriteStream(stream, received_recording, FRAMES_PER_BUFFER); // write received data to speaker
 
@@ -244,6 +246,9 @@ bool Comms_client::Iterate()
   }
 
   message_counter++;
+  }
+  else {
+    m_Receiving = false;
   }
   }
   AppCastingMOOSApp::PostReport();
@@ -382,7 +387,15 @@ bool Comms_client::buildReport()
   }
   else {
     m_msgs << " No" <<endl;
-  };
+  }
+  m_msgs << endl;
+  m_msgs << "Receiving = ";
+  if(m_Receiving == true){
+    m_msgs << " Yes" << endl;
+  }
+  else {
+    m_msgs << " No" <<endl;
+  }
   
   return(true);
 }
