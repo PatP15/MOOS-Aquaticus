@@ -147,10 +147,12 @@ bool Comms_server::Iterate()
     inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
   }
 
+  m_ReceivingFrom = ipstr;
+  Notify("RECEIVING_FROM_CLIENT",ipstr);
 
   if (message_counter == 0) { // if this is the first time, add the client to list
 
-        clients.push_back(port);
+ clients.push_back(port);
         ips.push_back(ipstr);
         m_connectedClients.push_back(ipstr);
 
@@ -207,7 +209,10 @@ bool Comms_server::Iterate()
   }
 
   message_counter++;
-  }
+    }
+    else {
+      m_ReceivingFrom = "";
+    }
   }
   AppCastingMOOSApp::PostReport();
   return(true);
@@ -298,6 +303,8 @@ bool Comms_server::buildReport()
 
   m_msgs << "    Server IP: " << m_ServerIp << endl;
   m_msgs << "Server Socket: " << m_ServerSocket << endl;
+  m_msgs << endl;
+  m_msgs << "Receiving Data From " << m_ReceivingFrom << endl;
 
   //list pComms_clients
   m_msgs << endl;
