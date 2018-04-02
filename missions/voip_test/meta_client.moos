@@ -20,8 +20,8 @@ ProcessConfig = ANTLER
 
 ProcessConfig = pComms_client
 {
-   AppTick   = 4
-   CommsTick = 4
+   AppTick   = .2
+   CommsTick = .2
 
 //ClientSocket as integer
    ClientSocket =  11112
@@ -31,7 +31,7 @@ ProcessConfig = pComms_client
 //ServerSocket as integer
    ServerSocket = 11111
    //ServerIP in string format
-   ServerIP = 192.168.1.50
+   ServerIP = 192.168.1.193
 }
 
 //--------------------------------------------------
