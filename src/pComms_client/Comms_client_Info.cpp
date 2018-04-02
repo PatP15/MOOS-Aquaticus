@@ -91,9 +91,9 @@ void showExampleConfigAndExit()
   blk("//if not specified, defaults to                                 ");
   blk("//MOOS Variable = \"SEND\"                                      ");
   blk("//Value = \"TRUE\"                                              ");
-  blk("  SEND_VOICE_ON_VARNAME = \"SEND_VOICE\"                        ");
+  blk("  SEND_VOICE_ON_VARNAME = SEND_VOICE                            ");
   blk("                                                                ");
-  blk("  SEND_VOICE_ON_VALUE = \"TRUE\"                                ");
+  blk("  SEND_VOICE_ON_VALUE = TRUE                                    ");
   blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
