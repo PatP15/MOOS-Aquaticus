@@ -119,7 +119,7 @@ bool Comms_server::OnConnectToServer()
 
 bool Comms_server::Iterate()
 {
-  cout << endl << "In Iterate method " << endl;
+  //  cout << endl << "In Iterate method " << endl;
   AppCastingMOOSApp::Iterate();
 
   if(m_GoodState){
