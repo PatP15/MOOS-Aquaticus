@@ -21,8 +21,8 @@ ProcessConfig = pComms_client
 //if not specified, defaults to
 //MOOS Variable = "SEND"
 //Value = "TRUE"
-  SEND_VOICE_ON_VARNAME = "SEND_VOICE"
+  SEND_VOICE_ON_VARNAME = SEND_VOICE
 
-  SEND_VOICE_ON_VALUE = "TRUE"
+  SEND_VOICE_ON_VALUE = TRUE
 }
 

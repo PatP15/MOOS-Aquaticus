@@ -188,7 +188,7 @@ bool Comms_client::Iterate()
       Notify("TRANSMIT","TRUE");
       m_Transmitting = true;
     }
-    else {
+    else if(!m_SendAudio){
       m_Transmitting = false;
     }
 
@@ -376,7 +376,13 @@ bool Comms_client::buildReport()
   m_msgs << "     MOOS Variable: " << m_ListenForMOOSVar << endl;
   m_msgs << "     MOOS Value: " << m_ListenForMOOSValue << endl;
   m_msgs << endl;
-  m_msgs << "Transmitting = " << m_Transmitting <<endl;
+  m_msgs << "Transmitting = ";
+  if(m_Transmitting == true){
+    m_msgs << " Yes" << endl;
+  }
+  else {
+    m_msgs << " No" <<endl;
+  };
   
   return(true);
 }
