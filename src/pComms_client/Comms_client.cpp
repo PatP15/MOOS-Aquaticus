@@ -187,7 +187,11 @@ bool Comms_client::Iterate()
       PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
       server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
       Notify("TRANSMIT","TRUE");
+      Notify("TRANSMIT_BUFFER_SIZE",buffer.size);
       m_Transmitting = true;
+      std::stringstream ts;
+      ts << buffer.size;
+      m_TransmitBufferSize = ts.str();
     }
     else if(!m_SendAudio){
       m_Transmitting = false;
@@ -203,47 +207,51 @@ bool Comms_client::Iterate()
     recvfrom(server_ss.sock, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
 
     Notify("RECEIVING_AUDIO","TRUE");
+    Notify("RECEIVING_AUDIO_BUFFER_SIZE", received_size);
     m_Receiving = true;
+    std::stringstream rs;
+    rs << received_size;
+    m_ReceiveBufferSize = rs.str();
 
   PaError write_stream = Pa_WriteStream(stream, received_recording, FRAMES_PER_BUFFER); // write received data to speaker
 
-  buffer.recordedSamples = (short *) realloc(buffer.recordedSamples, buffer.size * message_counter); // enlarge buffer for new recording to be appended
+  // buffer.recordedSamples = (short *) realloc(buffer.recordedSamples, buffer.size * message_counter); // enlarge buffer for new recording to be appended
 
-  buffer.recorded_size = buffer.size * (message_counter); // increase size of buffer for next recording
+  // buffer.recorded_size = buffer.size * (message_counter); // increase size of buffer for next recording
 
-  memcpy((char *) buffer.recordedSamples + ((message_counter - 1) * buffer.size), buffer.recording, buffer.size); // append data from audio buffer to recording buffer
+  // memcpy((char *) buffer.recordedSamples + ((message_counter - 1) * buffer.size), buffer.recording, buffer.size); // append data from audio buffer to recording buffer
 
-  if(moos_value) { // if signalled, dump audio buffer to .wav file
+  // if(moos_value) { // if signalled, dump audio buffer to .wav file
 
-    char filename[50];
+  //   char filename[50];
 
-    snprintf(filename, 100, "file:%d.wav", message_counter); // create filename from messages received so far
+  //   snprintf(filename, 100, "file:%d.wav", message_counter); // create filename from messages received so far
 
-    // standard structure for holding parameters for writing audio
-    SF_INFO sfinfo =
-      {
+  //   // standard structure for holding parameters for writing audio
+  //   SF_INFO sfinfo =
+  //     {
 
-        sfinfo.channels = 1,
-        sfinfo.samplerate = 44100,
-        sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16
+  //       sfinfo.channels = 1,
+  //       sfinfo.samplerate = 44100,
+  //       sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16
 
-      };
+  //     };
 
-    // open .wav file
-    SNDFILE *outfile = sf_open(filename, SFM_WRITE, &sfinfo);
+  //   // open .wav file
+  //   SNDFILE *outfile = sf_open(filename, SFM_WRITE, &sfinfo);
 
-    // write audio to .wav file
-    long wr = sf_writef_short(outfile, buffer.recordedSamples, buffer.recorded_size / sizeof(short));
+  //   // write audio to .wav file
+  //   long wr = sf_writef_short(outfile, buffer.recordedSamples, buffer.recorded_size / sizeof(short));
 
-    // clean up and close file
-    sf_write_sync(outfile);
-    sf_close(outfile);
+  //   // clean up and close file
+  //   sf_write_sync(outfile);
+  //   sf_close(outfile);
 
-    // free buffer that recorded audio packet
-    free(buffer.recordedSamples);
-    buffer.recordedSamples = NULL;
+  //   // free buffer that recorded audio packet
+  //   free(buffer.recordedSamples);
+  //   buffer.recordedSamples = NULL;
 
-  }
+  // }
 
   message_counter++;
   }
@@ -383,7 +391,7 @@ bool Comms_client::buildReport()
   m_msgs << endl;
   m_msgs << "Transmitting = ";
   if(m_Transmitting == true){
-    m_msgs << " Yes" << endl;
+    m_msgs << " Yes" << " Size: " << m_TransmitBufferSize << endl;
   }
   else {
     m_msgs << " No" <<endl;
@@ -391,7 +399,7 @@ bool Comms_client::buildReport()
   m_msgs << endl;
   m_msgs << "Receiving = ";
   if(m_Receiving == true){
-    m_msgs << " Yes" << endl;
+    m_msgs << " Yes" << " Size: " << m_ReceiveBufferSize << endl;
   }
   else {
     m_msgs << " No" <<endl;

@@ -34,6 +34,8 @@ protected:
   std::string m_ServerIP;
   std::string m_ListenForMOOSVar;
   std::string m_ListenForMOOSValue;
+  std::string m_TransmitBufferSize;
+  std::string m_ReceiveBufferSize;
 
  private: // State variables
   bool m_GoodState;
