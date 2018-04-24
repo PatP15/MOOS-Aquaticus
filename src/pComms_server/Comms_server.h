@@ -56,6 +56,8 @@ class Comms_server : public AppCastingMOOSApp
   bool m_GoodState;
   std::vector<std::string> m_connectedClients;
   std::string m_ReceivingFrom;
+  std::string m_ReceiveBufferSize;
+  std::string m_TransmitBufferSize;
 };
 
 #endif

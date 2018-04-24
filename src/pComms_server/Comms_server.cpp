@@ -122,6 +122,9 @@ bool Comms_server::Iterate()
   //  cout << endl << "In Iterate method " << endl;
   AppCastingMOOSApp::Iterate();
 
+  m_ReceiveBufferSize = "0";
+  m_TransmitBufferSize = "0";
+
   if(m_GoodState){
     int rv = 0;
     
@@ -149,6 +152,10 @@ bool Comms_server::Iterate()
 
   m_ReceivingFrom = ipstr;
   Notify("RECEIVING_FROM_CLIENT",ipstr);
+    std:stringstream rs;
+  rs << buffer.size;
+  m_ReceiveBufferSize = rs.str();
+  Notify("RECEIVING_BUFFER_SIZE",m_ReceiveBufferSize);
 
   if (message_counter == 0) { // if this is the first time, add the client to list
 
@@ -204,6 +211,10 @@ bool Comms_server::Iterate()
       sender.CreateSocket();
       //      sender.BindSocket(11112, ips[i]);
       sender.SendTo(buffer.recording, buffer.size, 11112, ips[i]);
+      std::stringstream ts;
+      ts << buffer.size;
+      m_TransmitBufferSize = ts.str();
+
          }
 
   }
@@ -304,7 +315,7 @@ bool Comms_server::buildReport()
   m_msgs << "    Server IP: " << m_ServerIp << endl;
   m_msgs << "Server Socket: " << m_ServerSocket << endl;
   m_msgs << endl;
-  m_msgs << "Receiving Data From " << m_ReceivingFrom << endl;
+  m_msgs << "Receiving Data From " << m_ReceivingFrom << " Buffer Size:" << m_ReceiveBufferSize << endl;
 
   //list pComms_clients
   m_msgs << endl;
@@ -312,5 +323,6 @@ bool Comms_server::buildReport()
   for(std::vector<std::string>::iterator it = m_connectedClients.begin(); it!= m_connectedClients.end(); ++it) {
     m_msgs << *it << endl;
   }
+  m_msgs << "Transmit Buffer Size: " << m_TransmitBufferSize << endl;
   return(true);
 }
