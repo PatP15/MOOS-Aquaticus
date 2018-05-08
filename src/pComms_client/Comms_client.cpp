@@ -22,6 +22,7 @@
 #include "sndfile.h"
 #include <sys/poll.h>
 #include "UDPConnect.h"
+#include <pthread.h>
 
 // these define the variables needed for initializing audio transmission and handling
 #define FRAMES_PER_BUFFER (256)
@@ -31,6 +32,9 @@ typedef short SAMPLE;
 #define PA_SAMPLE_TYPE paInt16
 
 using namespace std;
+
+
+void* startMic(void *);
 
 size_t received_size = FRAMES_PER_BUFFER *sizeof(short) * NUM_CHANNELS; // size of received recording from server
 
@@ -110,6 +114,8 @@ Comms_client::Comms_client()
   m_Receiving = false;
   m_ListenForMOOSVar = "SEND";
   m_ListenForMOOSValue = "TRUE";
+  m_ReadMicCount = 0;
+  m_PlayNetworkAudioCount = 0;
 
 }
 
@@ -179,87 +185,7 @@ bool Comms_client::OnConnectToServer()
 bool Comms_client::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-
-  if(m_GoodState) {
-
-    if(m_SendAudio) {
-
-      PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
-      server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
-      Notify("TRANSMIT","TRUE");
-      Notify("TRANSMIT_BUFFER_SIZE",buffer.size);
-      m_Transmitting = true;
-      std::stringstream ts;
-      ts << buffer.size;
-      m_TransmitBufferSize = ts.str();
-    }
-    else if(!m_SendAudio){
-      m_Transmitting = false;
-    }
-
-  rv = poll(ufds, 1, 1); // check to see if there is data from the server
-
-  if (rv != 0) { // if there is data, receive it
-
-    struct sockaddr_in client_ss; // set up client to receive data from
-    socklen_t q = sizeof(client_ss); //variable for the size of the client
-
-    recvfrom(server_ss.sock, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
-
-    Notify("RECEIVING_AUDIO","TRUE");
-    Notify("RECEIVING_AUDIO_BUFFER_SIZE", received_size);
-    m_Receiving = true;
-    std::stringstream rs;
-    rs << received_size;
-    m_ReceiveBufferSize = rs.str();
-
-  PaError write_stream = Pa_WriteStream(stream, received_recording, FRAMES_PER_BUFFER); // write received data to speaker
-
-  // buffer.recordedSamples = (short *) realloc(buffer.recordedSamples, buffer.size * message_counter); // enlarge buffer for new recording to be appended
-
-  // buffer.recorded_size = buffer.size * (message_counter); // increase size of buffer for next recording
-
-  // memcpy((char *) buffer.recordedSamples + ((message_counter - 1) * buffer.size), buffer.recording, buffer.size); // append data from audio buffer to recording buffer
-
-  // if(moos_value) { // if signalled, dump audio buffer to .wav file
-
-  //   char filename[50];
-
-  //   snprintf(filename, 100, "file:%d.wav", message_counter); // create filename from messages received so far
-
-  //   // standard structure for holding parameters for writing audio
-  //   SF_INFO sfinfo =
-  //     {
-
-  //       sfinfo.channels = 1,
-  //       sfinfo.samplerate = 44100,
-  //       sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16
-
-  //     };
-
-  //   // open .wav file
-  //   SNDFILE *outfile = sf_open(filename, SFM_WRITE, &sfinfo);
-
-  //   // write audio to .wav file
-  //   long wr = sf_writef_short(outfile, buffer.recordedSamples, buffer.recorded_size / sizeof(short));
-
-  //   // clean up and close file
-  //   sf_write_sync(outfile);
-  //   sf_close(outfile);
-
-  //   // free buffer that recorded audio packet
-  //   free(buffer.recordedSamples);
-  //   buffer.recordedSamples = NULL;
-
-  // }
-
-  message_counter++;
-  }
-  else {
-    m_Receiving = false;
-  }
-  }
-  AppCastingMOOSApp::PostReport();
+ AppCastingMOOSApp::PostReport();
   return(true);
 }
 
@@ -359,6 +285,35 @@ bool Comms_client::OnStartUp()
     }
   }
 
+  //Let's spawn the threads for picking up from the microphone
+  //and playing back received audio
+  if(m_GoodState == true) {
+
+    m_t = new CMOOSThread();
+
+    bool micThreadCreated = m_t->Initialise(StartMicThread, this);
+
+    if(micThreadCreated == false) {
+      reportConfigWarning("Unable to create microphone thread!");
+      m_GoodState = false;
+    }
+    else {
+      m_t->Start();
+    }
+
+    p_t = new CMOOSThread();
+
+    bool playThreadCreated = p_t->Initialise(StartPlayThread, this);
+
+    if(playThreadCreated == false){
+      reportConfigWarning("Unable to create play network audio thread!");
+      m_GoodState = false;
+    }
+    else {
+      p_t->Start();
+    }
+  }
+
   RegisterVariables();
   return(true);
 }
@@ -396,6 +351,7 @@ bool Comms_client::buildReport()
   else {
     m_msgs << " No" <<endl;
   }
+  m_msgs << "Read Microphone Count: " << m_ReadMicCount << endl;
   m_msgs << endl;
   m_msgs << "Receiving = ";
   if(m_Receiving == true){
@@ -404,6 +360,119 @@ bool Comms_client::buildReport()
   else {
     m_msgs << " No" <<endl;
   }
+  m_msgs << "Play Network Audio Count: " << m_PlayNetworkAudioCount << endl;
   
   return(true);
 }
+
+bool Comms_client::ReadMicThread()
+{
+  bool allGood = true;
+
+  while(allGood == true) {
+if(m_SendAudio) {
+
+  PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
+  //TODO: check if there is a reading error
+  server.SendTo(buffer.recording, buffer.size, m_ServerSocket, m_ServerIP);
+  Notify("TRANSMIT","TRUE");
+  Notify("TRANSMIT_BUFFER_SIZE",buffer.size);
+  m_Transmitting = true;
+  std::stringstream ts;
+  ts << buffer.size;
+  m_TransmitBufferSize = ts.str();
+  m_ReadMicCount++;
+ }
+ else if(!m_SendAudio){
+   m_Transmitting = false;
+ }
+  }
+  return true;
+}
+
+bool Comms_client::StartMicThread(void *param)
+{
+  Comms_client* me = (Comms_client*)param;
+  return me->ReadMicThread();
+}
+
+bool Comms_client::StartPlayThread(void *param)
+{
+  Comms_client* me = (Comms_client*)param;
+  return me->PlayNetworkAudio();
+}
+
+bool Comms_client::PlayNetworkAudio()
+{
+  bool keepGoing = true;
+  while(keepGoing){
+    
+  
+    m_PlayNetworkAudioCount++;
+  if(m_GoodState) {
+
+   
+  rv = poll(ufds, 1, 1); // check to see if there is data from the server
+
+  if (rv != 0) { // if there is data, receive it
+
+    struct sockaddr_in client_ss; // set up client to receive data from
+    socklen_t q = sizeof(client_ss); //variable for the size of the client
+
+    recvfrom(server_ss.sock, received_recording, received_size, 0, (struct sockaddr *) &client_ss, &q);
+
+    Notify("RECEIVING_AUDIO","TRUE");
+    Notify("RECEIVING_AUDIO_BUFFER_SIZE", received_size);
+    m_Receiving = true;
+    std::stringstream rs;
+    rs << received_size;
+    m_ReceiveBufferSize = rs.str();
+
+  PaError write_stream = Pa_WriteStream(stream, received_recording, FRAMES_PER_BUFFER); // write received data to speaker
+  // buffer.recordedSamples = (short *) realloc(buffer.recordedSamples, buffer.size * message_counter); // enlarge buffer for new recording to be appended
+
+  // buffer.recorded_size = buffer.size * (message_counter); // increase size of buffer for next recording
+
+  // memcpy((char *) buffer.recordedSamples + ((message_counter - 1) * buffer.size), buffer.recording, buffer.size); // append data from audio buffer to recording buffer
+
+  // if(moos_value) { // if signalled, dump audio buffer to .wav file
+
+  //   char filename[50];
+
+  //   snprintf(filename, 100, "file:%d.wav", message_counter); // create filename from messages received so far
+
+  //   // standard structure for holding parameters for writing audio
+  //   SF_INFO sfinfo =
+  //     {
+
+  //       sfinfo.channels = 1,
+  //       sfinfo.samplerate = 44100,
+  //       sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16
+
+  //     };
+
+  //   // open .wav file
+  //   SNDFILE *outfile = sf_open(filename, SFM_WRITE, &sfinfo);
+
+  //   // write audio to .wav file
+  //   long wr = sf_writef_short(outfile, buffer.recordedSamples, buffer.recorded_size / sizeof(short));
+
+  //   // clean up and close file
+  //   sf_write_sync(outfile);
+  //   sf_close(outfile);
+
+  //   // free buffer that recorded audio packet
+  //   free(buffer.recordedSamples);
+  //   buffer.recordedSamples = NULL;
+
+  // }
+
+  message_counter++;
+  }
+  else {
+    m_Receiving = false;
+  }
+  }
+  }
+  return true;
+} 

@@ -10,6 +10,7 @@
 #define Comms_client_HEADER
 
 #include  "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include "MOOS/libMOOS/Utils/MOOSThread.h"
 
 class Comms_client : public AppCastingMOOSApp
 {
@@ -22,12 +23,20 @@ class Comms_client : public AppCastingMOOSApp
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
-  bool buildReport(); 
+   bool buildReport(); 
 
 protected:
    void RegisterVariables();
+  static bool StartMicThread(void* param);
+  bool ReadMicThread();
+
+  static bool StartPlayThread(void* param);
+  bool PlayNetworkAudio();
 
  private: // Configuration variables
+  
+  CMOOSThread*  m_t;
+  CMOOSThread*  p_t;
   int m_ClientSocket;
   std::string m_ClientIP;
   int m_ServerSocket;
@@ -41,7 +50,9 @@ protected:
   bool m_GoodState;
   bool m_SendAudio;
   bool m_Transmitting;
-  bool m_Receiving; 
+  bool m_Receiving;
+  int  m_ReadMicCount;
+  int  m_PlayNetworkAudioCount;
 };
 
 #endif 
