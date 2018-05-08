@@ -23,6 +23,7 @@
 #include <sys/poll.h>
 #include "UDPConnect.h"
 #include <pthread.h>
+#include <unistd.h>
 
 // these define the variables needed for initializing audio transmission and handling
 #define FRAMES_PER_BUFFER (256)
@@ -370,6 +371,9 @@ bool Comms_client::ReadMicThread()
   bool allGood = true;
 
   while(allGood == true) {
+
+    usleep(1000);
+
 if(m_SendAudio) {
 
   PaError read_stream = Pa_ReadStream(stream, buffer.recording, FRAMES_PER_BUFFER); // read audio from the mic
