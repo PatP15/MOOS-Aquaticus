@@ -37,6 +37,8 @@ public:
     bool        IsGoodSerialComms() { return bGoodSerialComms; };
     int         DataAvailable();
     int         serialport_flush();
+    int         SerialSend();
+    int         SerialStop();
 
 private:
     bool        serialport_init(const char* serialport, int baud, std::string& errMsg);

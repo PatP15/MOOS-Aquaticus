@@ -1,0 +1,70 @@
+// Programmer: Caileigh Fitzgerald
+
+ServerHost = localhost
+ServerPort = 9000
+Simulator  = true
+
+Community  = iLEDInfoBar
+
+MOOSTimeWarp = 1
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  #MSBetweenLaunches = 200
+  MSBetweenLaunches = 100
+
+  Run = MOOSDB    		     @ NewConsole = false
+  //Run = uTimerScript	     @ NewConsole = false
+  //Run = iLEDInfoBar		     @ NewConsole = true
+  //Run = pLogger 		     @ NewConsole = false
+}
+
+//------------------------------------------------
+// iLEDInfoBar config block
+
+ProcessConfig = iLEDInfoBar
+{
+   AppTick    = 4
+   CommsTick  = 4
+   TEAM_COLOR = blue
+   PORT	  	  = /dev/cu.usbmodemFD121
+   BAUDRATE   = 9600
+
+}
+
+//------------------------------------------------------------------
+// pLogger configuration block
+ ProcessConfig = pLogger
+ {
+   AsyncLog = true
+   WildCardLogging = true
+   WildCardOmitPattern = *_STATUS
+
+   //LOG =  VAR @ 0
+ }
+
+//------------------------------------------------------------------
+// uTimerScript configuration block
+ ProcessConfig = uTimerScript
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  paused     = false
+  event      = var=IN_FLAG_ZONE, val="true", time=0.75
+  event      = var=TAGGED, 	  	 val="true", time=0.25
+  event      = var=IN_FLAG_ZONE, val="false", time=0.26
+
+  event      = var=TAGGED, 		 val="false", time=1.00
+  event      = var=IN_FLAG_ZONE, val="true", time=0.75
+  event      = var=HAVE_FLAG, 	 val="true", time=0.78
+  event      = var=OUT_OF_BOUNDS, 	 val="true", time=0.85
+  event      = var=HAVE_FLAG, 	 val="false", time=0.86
+  event      = var=TAGGED, 	 val="true", time=0.87
+  reset_max  = 0
+  reset_time = all-posted
+}
+
+
