@@ -54,7 +54,6 @@ socklen_t l = sizeof(client);
 //initialize socket information for sending data
 UDPConnect sender;
 
-struct pollfd ufds[1]; //set up polling so server can be a good appcasting app
 
 //---------------------------------------------------------
 // Constructor
@@ -121,111 +120,7 @@ bool Comms_server::Iterate()
 {
   //  cout << endl << "In Iterate method " << endl;
   AppCastingMOOSApp::Iterate();
-
-  m_ReceiveBufferSize = "0";
-  m_TransmitBufferSize = "0";
-
-  if(m_GoodState){
-    int rv = 0;
-    
-    rv = poll(ufds, 1, 1); // check to see if there is data from the clients
-
-    if (rv != 0) { // if there is data, receive it
-
-
-    pushBACK = false; // assume we shouldn't add the first connected port to list of clients
-
-  int attempt_receive = server.Receive(buffer.recording, buffer.size, client,l);
-  //  recvfrom(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &client, &l); // receive audio from connected client
-
-
-  // check if ip4 or ip6 for grabbing port + ip address
-  if (client.sin_family == AF_INET) {
-    struct sockaddr_in *s = (struct sockaddr_in *)&client;
-    port = ntohs(s->sin_port);
-    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
-  } else { // AF_INET6
-    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&client;
-    port = ntohs(s->sin6_port);
-    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
-  }
-
-  m_ReceivingFrom = ipstr;
-  Notify("RECEIVING_FROM_CLIENT",ipstr);
-    std:stringstream rs;
-  rs << buffer.size;
-  m_ReceiveBufferSize = rs.str();
-  Notify("RECEIVING_BUFFER_SIZE",m_ReceiveBufferSize);
-
-  if (message_counter == 0) { // if this is the first time, add the client to list
-
- clients.push_back(port);
-        ips.push_back(ipstr);
-        m_connectedClients.push_back(ipstr);
-
-        port_counter++;
-
-      } else { // if not, iterate through list of clients and check to see whether connected client is there
-
-        for (int i = 0; i < port_counter; i++) {
-
-          if (clients[i] == port) {
-
-            cout << "Same port!" << endl;
-            cout << "saved port: " << clients[i] << endl;
-            cout << "new port: " << port << endl;
-
-            pushBACK = false; // if the client is there, don't add to list
-
-            break;
-
-          } else {
-
-            pushBACK = true; // if the client isn't there, add to list
-
-          }
-
-        }
-
-        if (pushBACK == true) { // depending on value, add client to list of conected clients
-
-          clients.push_back(port);
-          ips.push_back(ipstr);
-          m_connectedClients.push_back(ipstr);
-
-          port_counter++;
-
-        }
-
-      }
-
-  for (int i = 0; i < port_counter; i++) {
-
-    if (clients[i] == port) {
-
-      cout << "I continued, port = " << clients[i] << endl;
-
-    } else {
-
-      // setup a information to send the audio for each client that isn't the one that send the audio
-      sender.CreateSocket();
-      //      sender.BindSocket(11112, ips[i]);
-      sender.SendTo(buffer.recording, buffer.size, 11112, ips[i]);
-      std::stringstream ts;
-      ts << buffer.size;
-      m_TransmitBufferSize = ts.str();
-
-         }
-
-  }
-
-  message_counter++;
-    }
-    else {
-      m_ReceivingFrom = "";
-    }
-  }
-  AppCastingMOOSApp::PostReport();
+ AppCastingMOOSApp::PostReport();
   return(true);
 }
 
@@ -292,6 +187,24 @@ bool Comms_server::OnStartUp()
     }
   }
 
+  //Let's spawn the thread that reads from the socket
+  //and passes it on to other clients
+  if(m_GoodState == true) {
+
+    s_t = new CMOOSThread();
+
+    bool serverThreadCreated = s_t->Initialise(StartServerThread, this);
+
+    if(serverThreadCreated == false) {
+      reportConfigWarning("Unable to create server thread!");
+      m_GoodState = false;
+    }
+    else {
+      s_t->Start();
+    }
+
+  }
+
   RegisterVariables();
   return(true);
 }
@@ -326,3 +239,142 @@ bool Comms_server::buildReport()
   m_msgs << "Transmit Buffer Size: " << m_TransmitBufferSize << endl;
   return(true);
 }
+
+bool Comms_server::SocketServerThread()
+{
+
+  bool allGood = true;
+
+  if(allGood == true) {
+
+  m_ReceiveBufferSize = "0";
+  m_TransmitBufferSize = "0";
+
+  if(m_GoodState){
+    int rv = 0;
+    
+    rv = poll(ufds, 1, 1); // check to see if there is data from the clients
+
+    if (rv != 0) { // if there is data, receive it
+
+
+    pushBACK = false; // assume we shouldn't add the first connected port to list of clients
+
+  int attempt_receive = server.Receive(buffer.recording, buffer.size, client,l);
+  //  recvfrom(sock, buffer.recording, buffer.size, 0, (struct sockaddr *) &client, &l); // receive audio from connected client
+
+
+  // check if ip4 or ip6 for grabbing port + ip address
+  if (client.sin_family == AF_INET) {
+    struct sockaddr_in *s = (struct sockaddr_in *)&client;
+    port = ntohs(s->sin_port);
+    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+  } else { // AF_INET6
+    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&client;
+    port = ntohs(s->sin6_port);
+    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+  }
+
+  m_ReceivingFrom = ipstr;
+  Notify("RECEIVING_FROM_CLIENT",ipstr);
+    std:stringstream rs;
+  rs << buffer.size;
+  m_ReceiveBufferSize = rs.str();
+  Notify("RECEIVING_BUFFER_SIZE",m_ReceiveBufferSize);
+
+  if (message_counter == 0) { // if this is the first time, add the client to list
+
+ clients.push_back(port);
+        ips.push_back(ipstr);
+        m_connectedClients.push_back(ipstr);
+
+        port_counter++;
+        Notify("SERVER_INCOMING_PORT_COUNT",port_counter);
+        std::string incoming_client = m_connectedClients.back();
+        incoming_client += ":";
+        incoming_client += clients.back();
+        Notify("NEW_CLIENT",incoming_client);
+
+
+
+      } else { // if not, iterate through list of clients and check to see whether connected client is there
+
+        for (int i = 0; i < port_counter; i++) {
+
+          if (clients[i] == port) {
+
+            cout << "Same port!" << endl;
+            cout << "saved port: " << clients[i] << endl;
+            cout << "new port: " << port << endl;
+
+            pushBACK = false; // if the client is there, don't add to list
+
+            break;
+
+          } else {
+
+            pushBACK = true; // if the client isn't there, add to list
+
+          }
+
+        }
+
+        if (pushBACK == true) { // depending on value, add client to list of conected clients
+
+          clients.push_back(port);
+          ips.push_back(ipstr);
+          m_connectedClients.push_back(ipstr);
+
+          port_counter++;
+          Notify("SERVER_INCOMING_PORT_COUNT",port_counter);
+          std::string incoming_client = m_connectedClients.back();
+          incoming_client += ":";
+          incoming_client += clients.back();
+          Notify("NEW_CLIENT",incoming_client);
+
+        }
+
+      }
+
+  for (int i = 0; i < port_counter; i++) {
+
+    if (clients[i] == port) {
+
+      cout << "I continued, port = " << clients[i] << endl;
+
+    } else {
+
+      // setup a information to send the audio for each client that isn't the one that send the audio
+      sender.CreateSocket();
+      //      sender.BindSocket(11112, ips[i]);
+      sender.SendTo(buffer.recording, buffer.size, 11112, ips[i]);
+      std::stringstream ts;
+      ts << buffer.size;
+      m_TransmitBufferSize = ts.str();
+      std::string outgoing_client = ips[i];
+      outgoing_client += ":";
+      outgoing_client += 11112;
+      Notify("TRANSMITTING_AUDIO_TO",outgoing_client );
+      Notify("TRANSMITTING_AUDIO_BUFFER_SIZE",m_TransmitBufferSize);
+
+         }
+
+  }
+
+  message_counter++;
+    }
+    else {
+      m_ReceivingFrom = "";
+    }
+  }
+    
+  }
+  return true;
+}
+
+bool Comms_server::StartServerThread(void *param)
+{
+  Comms_server* me = (Comms_server*)param;
+  return me->SocketServerThread();
+}
+

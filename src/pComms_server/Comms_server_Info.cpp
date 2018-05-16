@@ -106,7 +106,12 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  None                                                          ");
+  blk(" NEW_CLIENT                      IP address of a new client.    ");
+  blk(" SERVER_INCOMING_PORT_COUNT      Number of clients connected.   ");
+  blk(" RECEIVING_FROM_CLIENT           Live audio from this IP.       ");
+  blk(" RECEIVING_BUFFER_SIZE           Incoming audio buffer size.    ");
+  blk(" TRANSMITTING_AUDIO_TO           IP address audio transmitting. ");
+  blk(" TRANSMITTING_AUDIO_BUFFER_SIZE  Outgoing audio buffer size.    ");
   blk("                                                                ");
   exit(0);
 }

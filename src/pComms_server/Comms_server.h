@@ -44,14 +44,19 @@ class Comms_server : public AppCastingMOOSApp
    bool OnConnectToServer();
    bool OnStartUp();
   bool buildReport();
+  bool SocketServerThread();
+  static bool StartServerThread(void *param); 
 
  protected:
    void RegisterVariables();
 
  private: // Configuration variables
+
+  CMOOSThread* s_t;
   int m_ServerSocket;
   std::string m_ServerIp;
 
+  struct pollfd ufds[1]; //set up polling so server can be a good appcasting app
  private: // State variables
   bool m_GoodState;
   std::vector<std::string> m_connectedClients;
