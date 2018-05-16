@@ -104,7 +104,6 @@ UDPConnect server_ss;
 int rv; // polling variable
 
 //---------------------------------------------------------
-struct pollfd ufds[1]; // set up polling so that the client isn't waiting to receive data from the server
 // Constructor
 
 Comms_client::Comms_client()
@@ -372,7 +371,7 @@ bool Comms_client::ReadMicThread()
 
   while(allGood == true) {
 
-    usleep(1000);
+    //usleep(1000);
 
 if(m_SendAudio) {
 
@@ -412,7 +411,6 @@ bool Comms_client::PlayNetworkAudio()
   while(keepGoing){
     
   
-    m_PlayNetworkAudioCount++;
   if(m_GoodState) {
 
    
@@ -420,6 +418,7 @@ bool Comms_client::PlayNetworkAudio()
 
   if (rv != 0) { // if there is data, receive it
 
+    m_PlayNetworkAudioCount++;
     struct sockaddr_in client_ss; // set up client to receive data from
     socklen_t q = sizeof(client_ss); //variable for the size of the client
 

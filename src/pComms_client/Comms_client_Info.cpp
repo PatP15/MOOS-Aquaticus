@@ -122,7 +122,10 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  None                                                          ");
+  blk("  TRANSMIT                    TRUE when client is transmitting. ");
+  blk("  TRANSMIT_BUFFER_SIZE        Size of transmission buffer.      ");
+  blk("  RECEIVING_AUDIO             TRUE if receiving audio from server.");
+  blk("  RECEIVING_AUDIO_BUFFER_SIZE Size of receiving buffer.         ");
   blk("                                                                ");
   exit(0);
 }

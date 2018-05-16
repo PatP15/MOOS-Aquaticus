@@ -11,6 +11,7 @@
 
 #include  "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "MOOS/libMOOS/Utils/MOOSThread.h"
+#include <sys/poll.h>
 
 class Comms_client : public AppCastingMOOSApp
 {
@@ -18,6 +19,7 @@ class Comms_client : public AppCastingMOOSApp
    Comms_client();
    ~Comms_client();
 
+  struct pollfd ufds[1]; // set up polling so that the client isn't waiting to receive data from the server
  protected: // Standard MOOSApp functions to overload  
    bool OnNewMail(MOOSMSG_LIST &NewMail);
    bool Iterate();
