@@ -8,8 +8,6 @@
 #include "LEDInfoBar.h"
 using namespace std;
 bool debug = true;
-const int ALL_OFF = 7;
-const int ALL_ON  = 8;
 
 //---------------------------------------------------------
 // Constructor
