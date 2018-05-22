@@ -237,7 +237,7 @@ bool LEDInfoBar::OnStartUp()
     reportConfigWarning("No config block found for " + GetAppName());
 
   // now that we have everything to set up connection, do that now
-  serialSetup();
+  ( serialSetup() ? Notify("SERIAL_OPEN", true) : Notify("SERIAL_OPEN", false) );
 
   RegisterVariables();	
   return(true);
