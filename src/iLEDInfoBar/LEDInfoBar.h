@@ -31,6 +31,8 @@ class LEDInfoBar : public AppCastingMOOSApp
   bool OnConnectToServer();
   bool OnStartUp();
   void RegisterVariables();
+  std::string toString(int i);
+  std::string toString(int type, int state);
 
 protected:
   //------------------------------------------------
@@ -82,10 +84,7 @@ protected:
   }; 
 
     // relevant to comms with arduino
-  void parseSerialString(std::string data);
   bool serialSetup();
-  // deconflicts when LED change is illogical
-  bool deconflictStates(Icon updated_icon);
   // Standard AppCastingMOOSApp function to overload
   //bool buildReport();
 
@@ -95,7 +94,7 @@ protected:
   SerialComms*  m_serial;
 
   std::string   m_team_color;
-  std::vector<Icon> m_icons;
+  std::map<TYPE_ENUM, STATE_ENUM> m_icons_map;
 
 };
 

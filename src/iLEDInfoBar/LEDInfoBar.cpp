@@ -8,6 +8,8 @@
 #include "LEDInfoBar.h"
 using namespace std;
 bool debug = true;
+const int ALL_OFF = 7;
+const int ALL_ON  = 8;
 
 //---------------------------------------------------------
 // Constructor
@@ -15,14 +17,13 @@ bool debug = true;
 LEDInfoBar::LEDInfoBar()
 {
   if (debug)
-  cout << "\nI'm in the LEDInfoBar constructor\n";
-  // Icons state is set to m_OFF by default
-  // you can set the state to something else here as well
-  m_icons.push_back(Icon(m_TAGGED));
-  m_icons.push_back(Icon(m_HAVE_FLAG));
-  m_icons.push_back(Icon(m_FLAG_ZONE));
-  m_icons.push_back(Icon(m_IN_TAG_RANGE));
-  m_icons.push_back(Icon(m_OUT_OF_BOUNDS));
+    cout << "\nI'm in the LEDInfoBar constructor\n";
+  // Icons state is set to m_OFF to start
+  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_TAGGED,       m_OFF));
+  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_HAVE_FLAG,    m_OFF));
+  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_FLAG_ZONE,    m_OFF));
+  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_IN_TAG_RANGE, m_OFF));
+  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_OUT_OF_BOUNDS,m_OFF));
 }
 
 //---------------------------------------------------------
@@ -45,6 +46,51 @@ bool LEDInfoBar::OnNewMail(MOOSMSG_LIST &NewMail)
   MOOSMSG_LIST::iterator p; 
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
+    string key   = msg.GetKey();
+    string sval  = msg.GetString(); 
+    string str_out;
+
+    if(key == "TAGGED")
+    {
+      if (sval=="blinking") m_icons_map[m_TAGGED] = m_BLINKING;       // check for blink
+      else m_icons_map[m_TAGGED] = (sval=="true" ? m_ACTIVE : m_OFF); // updating state var
+      str_out = toString(m_TAGGED, m_icons_map[m_TAGGED]);            // building str for ardunio
+    }
+    else if(key == "IN_FLAG_ZONE")
+    {
+      if (sval=="blinking") m_icons_map[m_FLAG_ZONE] = m_BLINKING;
+      else m_icons_map[m_FLAG_ZONE] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_FLAG_ZONE, m_icons_map[m_FLAG_ZONE]);
+    }
+    else if(key == "OUT_OF_BOUNDS")
+    {
+      if (sval=="blinking") m_icons_map[m_OUT_OF_BOUNDS] = m_BLINKING;
+      else m_icons_map[m_OUT_OF_BOUNDS] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_OUT_OF_BOUNDS, m_icons_map[m_OUT_OF_BOUNDS]);
+    }
+    else if(key == "HAVE_FLAG")
+    {
+      if (sval=="blinking") m_icons_map[m_HAVE_FLAG] = m_BLINKING;
+      else m_icons_map[m_HAVE_FLAG] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_HAVE_FLAG, m_icons_map[m_HAVE_FLAG]);
+    }
+    else if (key == "IN_TAG_RANGE")
+    {
+      if (sval=="blinking") m_icons_map[m_IN_TAG_RANGE] = m_BLINKING;
+      else m_icons_map[m_IN_TAG_RANGE] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_IN_TAG_RANGE, m_icons_map[m_IN_TAG_RANGE]);     
+    }
+    else if (key == "ALL_OFF")    // for debugging
+    {
+      str_out = toString(ALL_OFF, m_OFF);
+    }
+    else if (key == "ALL_ON")     // for debugging
+    {
+      str_out = toString(ALL_ON, (sval=="true" ? m_ACTIVE : m_OFF));
+    }
+      
+    m_serial->WriteToSerialPort(str_out);
+    m_serial->SerialSend();
 
 #if 0 // Keep these around just for template
     string key   = msg.GetKey();
@@ -76,13 +122,25 @@ bool LEDInfoBar::OnConnectToServer()
    RegisterVariables();
    return(true);
 }
+//---------------------------------------------------------
+// Procedure: toString(int i)
+//            quick enum > string
+string LEDInfoBar::toString(int i)
+{
+  stringstream ss;
+  ss << i;
+  return(ss.str());
+}
 
 //---------------------------------------------------------
-// Procedure: deconflictStates()
-//            called in Iterate() to make sure LED update is logical
-bool LEDInfoBar::deconflictStates(Icon updated_icon)
+// Procedure: toString(int type, int state)
+//            quick enum > string OVERLOADED for type and state
+string LEDInfoBar::toString(int type, int state)
 {
-  return(true);
+  stringstream ss;
+  ss << type << state;
+  cout << "toString() : type|state = " << ss.str() << endl;
+  return(ss.str());
 }
 
 //---------------------------------------------------------
@@ -91,91 +149,19 @@ bool LEDInfoBar::deconflictStates(Icon updated_icon)
 
 bool LEDInfoBar::Iterate()
 {
-  if (debug)
-    cout << "\nI'm in Iterate()\n";
+  // if (debug)
+  //   cout << "\nI'm in Iterate()\n";
 
   AppCastingMOOSApp::Iterate();
 
   m_valid_serial_connection = m_serial->IsGoodSerialComms();
+  // checking again in case serial closes during execution
   if (!m_valid_serial_connection) // check arduino connection
   {
     m_valid_serial_connection = serialSetup(); // not connected, set it up
   }
 
-  bool testing = true;
-  while(m_valid_serial_connection && testing) 
-  {
-    if (debug)
-      cout << "I'm inside while (m_valid_serial_connection && testing)\n";
-    /*
-    iterate through the vector of Icons and update them with new info
-    ?? write a function to work out the conflicts with each LED situation ?? 
-    */
-    //if (deconflictStates(Icon(TAGGED, OFF, "")))
-    if (debug)
-    {
-      // update and push to arduino
-      m_serial->WriteToSerialPort("0");
-      if (debug) cout << "\nSanity check! m_HAVE_FLAG=" << (m_HAVE_FLAG) << endl;
-      m_serial->SerialSend();
-      testing = false;
-    }
-    // else 
-    // {
-    //   // move on and don't update
-    // }
-  }
-
-
-      //m_serial->serialport_flush();
-
-  if (debug)
-      cout << "I'm OUTSIDE while (m_valid_serial_connection && testing)\n";
-
   return(true);
-}
-
-//---------------------------------------------------------
-// Procedure: parseSerialString(str)
-//            opens serial ports
-
-// GenerateSerial string instead??
-void LEDInfoBar::parseSerialString(string data) //parse data sent via serial from arduino
-{
-  if (debug)
-    cout << "\nI'm in parseSerialString()\n";
-
-  if(data.at(0) != '$'){
-    reportRunWarning("Malformed data string! Does not begin with $ char");
-    return;
-  }
-
-  std::string values = data.substr(data.find(":") + 1);
-
-  for(unsigned int i = 0; i<values.length(); i++) {
-    char c = values[i];
-    if(c != '0' && c != '1' && c != ','){
-      std::string err = "Malformed data string! Unrecognized char: ";
-      err += c;
-      reportRunWarning(err);
-      return;
-    }
-  }
-
-  std::stringstream ss(values);
-  std::vector<std::string> button_values;
-  while( ss.good() ){
-    string substr;
-    getline( ss, substr, ',' );
-
-    if(substr.compare("0") == 0){
-      button_values.push_back("TRUE");
-    }else if(substr.compare("1") == 0){
-      button_values.push_back("FALSE");
-    }
-  }
-
-  //m_button_values = button_values;
 }
 
 //---------------------------------------------------------
@@ -225,12 +211,8 @@ bool LEDInfoBar::OnStartUp()
       string line  = *p;
       string param = toupper(biteStringX(line, '='));
       string value = line;
-
-      if (debug) cout << "param=" << param << endl;
-      if (debug) cout << " line=" << line << endl;
     
-      if(param == "PORT") { // define the port where we access the arduino
-        if (debug) cout << "in PORT block" << endl;
+      if(param == "PORT") { // define the port where we access the ardunio
         m_serial_port = line;
         handled = true;
 
@@ -240,7 +222,6 @@ bool LEDInfoBar::OnStartUp()
         }
       }
       if(param == "BAUDRATE"){ // define the speed at which we receive data
-        if (debug) cout << "in BAUDRATE block" << endl;
         m_baudrate = atoi(line.c_str());
         handled = true;
       }
@@ -251,13 +232,13 @@ bool LEDInfoBar::OnStartUp()
 
       if(!handled)
         reportUnhandledConfigWarning(orig);
+
+      handled = false; // reset
     }
   } else // !m_MissionReaderGetConfiguration()
     reportConfigWarning("No config block found for " + GetAppName());
 
   // now that we have everything to set up connection, do that now
-  // had an issue with the serial port thinking it was setup when it wasn't
-  // since I added it here it works
   serialSetup();
 
   RegisterVariables();	
@@ -276,96 +257,13 @@ void LEDInfoBar::RegisterVariables()
   Register("IN_FLAG_ZONE" , 0);
   Register("HAVE_FLAG"    , 0);
   Register("OUT_OF_BOUNDS", 0);
+  Register("ALL_OFF"      , 0);
+  Register("ALL_ON"       , 0);
 }
 
 // bool buildReport()
 // {
+//   AppCastingMOOSApp::buildReport();
 //   return(true);
-// };
+// }
 
-
-
-
-
-
-// /*
-// /************************************************************/
-// /*    NAME: Caileigh Fitzgerald                                              */
-// /*    ORGN: MIT                                             */
-// /*    FILE: LEDInfoBar.h                                          */
-// /*    DATE:                                                 */
-// /************************************************************/
-
-// #ifndef LEDInfoBar_HEADER
-// #define LEDInfoBar_HEADER
-
-// #include "MBUtils.h"
-// #include "MOOS/libMOOS/MOOSLib.h"
-// #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
-// #include <string>
-// #include <vector>
-// #include <list>
-// #include <iterator>
-
-// class LEDInfoBar : public AppCastingMOOSApp
-// {
-//  public:
-//   LEDInfoBar();
-//   virtual ~LEDInfoBar();
-
-//   bool OnNewMail(MOOSMSG_LIST &NewMail);
-//   bool Iterate();
-//   bool OnConnectToServer();
-//   bool OnStartUp();
-//   void RegisterVariables();
-//   //-----------------------------------------------
-//   // state for LED light state
-//   enum STATE_ENUM
-//   {
-//     m_OFF,      // off no error
-//     m_ACTIVE,   // steady light on
-//     m_BLINKING, // blinking light on
-//     m_ERROR     // error can't turn on LED
-//   };
-//   //------------------------------------------------
-//   // Enums to make types more clear when comparing
-//   // .. to new mail and vars from other apps
-//   // 
-//   enum TYPE_ENUM
-//   {
-//     m_HAVE_FLAG,
-//     m_FLAG_ZONE,
-//     m_TAGGED,
-//     m_IN_TAG_RANGE,
-//     m_OUT_OF_BOUNDS
-//   };
-
-// protected:
-//   //------------------------------------------------
-//   // struct for list of icons to keep track of LED states
-//   //
-//   struct Icon 
-//   { 
-//     Icon(TYPE_ENUM t, STATE_ENUM s=OFF, std::string str="") 
-//     {
-//       // type set in constructor
-//       // optional state 
-//       // optional string value, maybe fill in register for vars?
-//       m_type_str = str;
-//       m_type     = t; 
-//       m_state    = s;
-//     }
-    
-//     std::string m_type_str; // to keep track of different naming conventions
-//     TYPE_ENUM   m_type; 
-//     STATE_ENUM  m_state; 
-//   }; 
-
-//   std::vector<Icon> m_icons;
-//   // Standard AppCastingMOOSApp function to overload
-//   //bool buildReport();
-// };
-
-// #endif 
-
-// */
