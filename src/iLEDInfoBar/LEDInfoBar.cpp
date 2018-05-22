@@ -238,9 +238,9 @@ bool LEDInfoBar::OnStartUp()
 
   // now that we have everything to set up connection, do that now
   if(serialSetup())
-    Notify("SERIAL_OPEN", true);
+    Notify("SERIAL_OPEN", "true");
   else
-    Notify("SERIAL_OPEN", false);
+    Notify("SERIAL_OPEN", "false");
 
   RegisterVariables();	
   return(true);
