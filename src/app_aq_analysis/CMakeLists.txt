@@ -7,6 +7,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux)
 endif(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
 SET(SRC
+  GrepHandler.cpp
   main.cpp
 )
 
@@ -14,6 +15,7 @@ ADD_EXECUTABLE(aq_analysis ${SRC})
 
 TARGET_LINK_LIBRARIES(aq_analysis
   mbutil
+  logutils
   fltk 
   fltk_gl
   zaicview

@@ -23,20 +23,22 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <string>
 #include "MBUtils.h"
 #include "ReleaseInfo.h"
+#include "GrepHandler.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Chart.H>
-
+ 
 using namespace std;
 
 void showHelpAndExit();
 
 void idleProc(void *);
 
-//--------------------------------------------------------
+//----------------------/----------------------------------
 // Procedure: idleProc
 
 void idleProc(void *)
@@ -66,7 +68,8 @@ int main(int argc, char *argv[])
     if((argi=="-h") || (argi == "--help"))
       showHelpAndExit();
     else if((argi=="-v") || (argi == "--version")) 
-      showReleaseInfoAndExit("zaic_hdg", "gpl");
+      showReleaseInfoAndExit
+        ("zaic_hdg", "gpl");
     else if(strBegins(argi, "--domain=")) {
       string domain_str = argi.substr(9);
       domain = vclip(atoi(domain_str.c_str()), 100, 1000);
@@ -82,6 +85,32 @@ int main(int argc, char *argv[])
     }      
   }
 
+  //some variable names to look for
+  vector<string> keys;
+  keys.push_back("TEAMSPEAK");
+
+  GrepHandler handler;
+  //  handler.setFileOverWrite(file_overwrite);
+  //handler.setCommentsRetained(comments_retained);
+  //handler.setBadLinesRetained(badlines_retained);
+  //handler.setGapLinesRetained(gaplines_retained);
+  //handler.setAppCastRetained(appcast_retained);
+
+  int ksize = keys.size(); 
+  for(int i=0; i<ksize; i++)
+    handler.addKey(keys[i]);
+
+  string alogfile_in = "test.alog";
+  string alogfile_out = "";
+
+  bool handled_alog = handler.handle(alogfile_in, alogfile_out);
+  if(!handled_alog)
+    exit(1);
+
+  bool make_end_report = true;
+  if(handled_alog && make_end_report)
+    handler.printReport();
+ 
   //Several ideas on information display
   //1) one participant timeline with different color bars per speaker
   //2) a window per participant with a bar per speaker to that participant
@@ -126,7 +155,7 @@ int main(int argc, char *argv[])
 void showHelpAndExit()
 {
   cout << endl;
-  cout << "Usage: zaic_hdg [OPTIONS]                           " << endl;
+ cout << "Usage: zaic_hdg [OPTIONS]                           " << endl;
   cout << "Options:                                            " << endl;
   cout << "  --help, -h           Display this help message    " << endl;
   cout << "  --domain=360         Set upper value of domain    " << endl;
