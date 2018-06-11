@@ -19,11 +19,10 @@ option(BUILD_ALL "Build all apps." ON)
 
 #============================================================================
 # List the subdirectories to build...
-#============================================================================
 IF(BUILD_ALL)
   ADD_SUBDIRECTORY(iBlink)
   ADD_SUBDIRECTORY(lib_SimpleSerial)
-  ADD_SUBDIRECTORY(uSpeechRec)
+ADD_SUBDIRECTORY(uSpeechRec)
   ADD_SUBDIRECTORY(uDialogManager)
   ADD_SUBDIRECTORY(iJoystick)
   ADD_SUBDIRECTORY(pMapValues)
