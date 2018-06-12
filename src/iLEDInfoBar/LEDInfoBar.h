@@ -94,7 +94,7 @@ protected:
   SerialComms*  m_serial;
 
   std::string   m_team_color;
-  std::map<TYPE_ENUM, STATE_ENUM> m_icons_map;
+  int *m_icons; // keeps track of the state of each LED
 
 };
 

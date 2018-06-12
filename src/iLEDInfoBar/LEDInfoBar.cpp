@@ -17,11 +17,14 @@ LEDInfoBar::LEDInfoBar()
   if (debug)
     cout << "\nI'm in the LEDInfoBar constructor\n";
   // Icons state is set to m_OFF to start
-  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_TAGGED,       m_OFF));
-  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_HAVE_FLAG,    m_OFF));
-  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_FLAG_ZONE,    m_OFF));
-  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_IN_TAG_RANGE, m_OFF));
-  m_icons_map.insert(pair<TYPE_ENUM, STATE_ENUM>(m_OUT_OF_BOUNDS,m_OFF));
+  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_TAGGED,       m_OFF));
+  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_HAVE_FLAG,    m_OFF));
+  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_FLAG_ZONE,    m_OFF));
+  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_IN_TAG_RANGE, m_OFF));
+  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_OUT_OF_BOUNDS,m_OFF));
+  m_icons = new int [m_NUM_ICONS];
+  for (int i=0; i<m_NUM_ICONS; i++)
+    m_icons[i] = m_OFF;
 }
 
 //---------------------------------------------------------
@@ -50,33 +53,33 @@ bool LEDInfoBar::OnNewMail(MOOSMSG_LIST &NewMail)
 
     if(key == "TAGGED")
     {
-      if (sval=="blinking") m_icons_map[m_TAGGED] = m_BLINKING;       // check for blink
-      else m_icons_map[m_TAGGED] = (sval=="true" ? m_ACTIVE : m_OFF); // updating state var
-      str_out = toString(m_TAGGED, m_icons_map[m_TAGGED]);            // building str for ardunio
+      if (sval=="blinking") m_icons[m_TAGGED] = m_BLINKING;       // check for blink
+      else m_icons[m_TAGGED] = (sval=="true" ? m_ACTIVE : m_OFF); // updating state var
+      str_out = toString(m_TAGGED, m_icons[m_TAGGED]);            // building str for ardunio
     }
     else if(key == "IN_FLAG_ZONE")
     {
-      if (sval=="blinking") m_icons_map[m_FLAG_ZONE] = m_BLINKING;
-      else m_icons_map[m_FLAG_ZONE] = (sval=="true" ? m_ACTIVE : m_OFF);
-      str_out = toString(m_FLAG_ZONE, m_icons_map[m_FLAG_ZONE]);
+      if (sval=="blinking") m_icons[m_FLAG_ZONE] = m_BLINKING;
+      else m_icons[m_FLAG_ZONE] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_FLAG_ZONE, m_icons[m_FLAG_ZONE]);
     }
     else if(key == "OUT_OF_BOUNDS")
     {
-      if (sval=="blinking") m_icons_map[m_OUT_OF_BOUNDS] = m_BLINKING;
-      else m_icons_map[m_OUT_OF_BOUNDS] = (sval=="true" ? m_ACTIVE : m_OFF);
-      str_out = toString(m_OUT_OF_BOUNDS, m_icons_map[m_OUT_OF_BOUNDS]);
+      if (sval=="blinking") m_icons[m_OUT_OF_BOUNDS] = m_BLINKING;
+      else m_icons[m_OUT_OF_BOUNDS] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_OUT_OF_BOUNDS, m_icons[m_OUT_OF_BOUNDS]);
     }
     else if(key == "HAVE_FLAG")
     {
-      if (sval=="blinking") m_icons_map[m_HAVE_FLAG] = m_BLINKING;
-      else m_icons_map[m_HAVE_FLAG] = (sval=="true" ? m_ACTIVE : m_OFF);
-      str_out = toString(m_HAVE_FLAG, m_icons_map[m_HAVE_FLAG]);
+      if (sval=="blinking") m_icons[m_HAVE_FLAG] = m_BLINKING;
+      else m_icons[m_HAVE_FLAG] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_HAVE_FLAG, m_icons[m_HAVE_FLAG]);
     }
     else if (key == "IN_TAG_RANGE")
     {
-      if (sval=="blinking") m_icons_map[m_IN_TAG_RANGE] = m_BLINKING;
-      else m_icons_map[m_IN_TAG_RANGE] = (sval=="true" ? m_ACTIVE : m_OFF);
-      str_out = toString(m_IN_TAG_RANGE, m_icons_map[m_IN_TAG_RANGE]);     
+      if (sval=="blinking") m_icons[m_IN_TAG_RANGE] = m_BLINKING;
+      else m_icons[m_IN_TAG_RANGE] = (sval=="true" ? m_ACTIVE : m_OFF);
+      str_out = toString(m_IN_TAG_RANGE, m_icons[m_IN_TAG_RANGE]);     
     }
     else if (key == "ALL_OFF")    // for debugging
     {

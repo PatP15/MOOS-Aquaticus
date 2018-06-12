@@ -1,4 +1,7 @@
 // Programmer: Caileigh Fitzgerald
+/*
+udev unix tool?
+*/
 
 ServerHost = localhost
 ServerPort = 9000
@@ -16,7 +19,7 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 100
 
   Run = MOOSDB    		     @ NewConsole = false
-  Run = uTimerScript	     @ NewConsole = false
+  //Run = uTimerScript	     @ NewConsole = false
   Run = iLEDInfoBar		     @ NewConsole = false
   //Run = pLogger 		     @ NewConsole = false
 }

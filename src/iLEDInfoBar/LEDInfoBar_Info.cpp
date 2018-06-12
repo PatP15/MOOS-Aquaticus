@@ -74,9 +74,9 @@ void showExampleConfigAndExit()
   blk("{                                                               ");
   blk("  AppTick    = 4                                                ");
   blk("  CommsTick  = 4                                                ");
-  blk("  TEAM_COLOR = \"Blue\"                                         ");
+  blk("  TEAM_COLOR = \"blue\"                                         ");
   blk("  BAUDRATE   = 9600                                             ");
-  blk("  PORT       = /dev/tty2                                        ");
+  blk("  PORT       = /dev/cu.usbmodemFA131                            ");
   blk("                                                                ");
   blk("}                                                               ");
   blk("                                                                ");
@@ -103,7 +103,7 @@ void showInterfaceAndExit()
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  This app does not publish.                                    ");
   blk("                                                                ");
   exit(0);
 }

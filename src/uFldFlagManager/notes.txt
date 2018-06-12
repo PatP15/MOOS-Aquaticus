@@ -3,7 +3,7 @@
 posts    config        meaning
 ======   =========     ==========
 
-o grab   grab_post     shen a flag has successfully be grabbed
+o grab   grab_post     when a flag has successfully be grabbed
 o lose   lose_post     when a flag has been reset
 o near   near_post     when a vehicle goes within grab range
 o away   away_post     when a vehicle goes outside grab range

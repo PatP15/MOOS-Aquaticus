@@ -27,11 +27,13 @@ enum STATE_ENUM
 // 
 enum TYPE_ENUM
 {
-  m_HAVE_FLAG,
-  m_FLAG_ZONE,
   m_TAGGED,
+  m_OUT_OF_BOUNDS,
+  m_HAVE_FLAG,
   m_IN_TAG_RANGE,
-  m_OUT_OF_BOUNDS
+  m_FLAG_ZONE,
+  m_ROBOT_ICON,
+  m_NUM_ICONS
 };
 
 #endif
