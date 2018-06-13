@@ -1,24 +1,13 @@
 /*****************************************************************/
-/*    NAME: Michael Benjamin                                     */
+/*    NAME: Michael "Misha" Novitzky                             */
 /*    ORGN: Dept of Mechanical Eng / CSAIL, MIT Cambridge MA     */
 /*    FILE: main.cpp                                             */
-/*    DATE: June 2nd, 2015                                       */
+/*    DATE: June 13th, 2018                                      */
 /*                                                               */
-/* This file is part of MOOS-IvP                                 */
-/*                                                               */
-/* MOOS-IvP is free software: you can redistribute it and/or     */
-/* modify it under the terms of the GNU General Public License   */
-/* as published by the Free Software Foundation, either version  */
-/* 3 of the License, or (at your option) any later version.      */
-/*                                                               */
-/* MOOS-IvP is distributed in the hope that it will be useful,   */
-/* but WITHOUT ANY WARRANTY; without even the implied warranty   */
-/* of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See  */
-/* the GNU General Public License for more details.              */
-/*                                                               */
-/* You should have received a copy of the GNU General Public     */
-/* License along with MOOS-IvP.  If not, see                     */
-/* <http://www.gnu.org/licenses/>.                               */
+/*  Borrowed heavily from MOOS-IvP applications:                 */
+/*  1) app_aloggrep for parsing .alog files                      */
+/*  2) app_zaic_hdg for FLTK integration                         */
+/*  Both apps by: Michael R. Benjamin                            */
 /*****************************************************************/
 
 #include <iostream>
@@ -54,6 +43,7 @@ void but_cb(Fl_Widget* o, void*) {
   b->resize(10,150,150,30);
   b->redraw();
 }
+
 //--------------------------------------------------------
 // Procedure: main
 
@@ -88,6 +78,7 @@ int main(int argc, char *argv[])
   //some variable names to look for
   vector<string> keys;
   keys.push_back("TEAMSPEAK");
+  keys.push_back("SAY_MOOS");
 
   GrepHandler handler;
   //  handler.setFileOverWrite(file_overwrite);
