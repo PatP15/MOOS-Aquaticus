@@ -25,7 +25,7 @@
 #define ALOG_GREP_HANDLER_HEADER
 
 #include <vector>
-#include <string>
+#include <string.h>
 #include <set>
 
 class GrepHandler
@@ -43,7 +43,9 @@ class GrepHandler
   void setGapLinesRetained(bool v) {m_gaplines_retained=v;}
   void setAppCastRetained(bool v)  {m_appcast_retained=v;}
   
- protected:
+  std::vector<std::string> m_kept_lines;
+
+protected:
   std::vector<std::string> getMatchedKeys();
   std::vector<std::string> getUnMatchedKeys();
 
@@ -75,6 +77,7 @@ class GrepHandler
   
   FILE *m_file_in;
   FILE *m_file_out;
+
 };
 
 #endif

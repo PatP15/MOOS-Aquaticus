@@ -12,8 +12,9 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <string>
+#include <string.h>
 #include "MBUtils.h"
+#include "LogUtils.h"
 #include "ReleaseInfo.h"
 #include "GrepHandler.h"
 #include <FL/Fl.H>
@@ -59,12 +60,8 @@ int main(int argc, char *argv[])
       showHelpAndExit();
     else if((argi=="-v") || (argi == "--version")) 
       showReleaseInfoAndExit
-        ("zaic_hdg", "gpl");
-    else if(strBegins(argi, "--domain=")) {
-      string domain_str = argi.substr(9);
-      domain = vclip(atoi(domain_str.c_str()), 100, 1000);
-    }
-    else if(strBegins(argi, "--verbose")) 
+        ("aq_analysis", "gpl");
+       else if(strBegins(argi, "--verbose")) 
       verbose = true;
     else
       handled = false;
@@ -101,7 +98,23 @@ int main(int argc, char *argv[])
   bool make_end_report = true;
   if(handled_alog && make_end_report)
     handler.printReport();
+
+  //our addition to GrepHandler is a vector of strings keeping the lines
+  //that would otherwise be printed to console are now kept in m_kept_lines
+
+  for(int j = 0;j < handler.m_kept_lines.size();j++) {
+    std::string to_parse = handler.m_kept_lines[j];
+    //let's search for SAY_MOOS
+    std::string curr_var;
+    curr_var = getVarName(to_parse);
+    if(curr_var == "SAY_MOOS") {
+      //save the time for use in plotting window
+      cout<<endl<< "SAY_MOOS " << to_parse <<endl; 
+    }
+    }
  
+ 
+
   //Several ideas on information display
   //1) one participant timeline with different color bars per speaker
   //2) a window per participant with a bar per speaker to that participant
