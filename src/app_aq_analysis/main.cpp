@@ -17,6 +17,7 @@
 #include "LogUtils.h"
 #include "ReleaseInfo.h"
 #include "GrepHandler.h"
+#include "MOOS/libMOOS/Utils/MOOSUtilityFunctions.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
@@ -110,6 +111,8 @@ int main(int argc, char *argv[])
   //our addition to GrepHandler is a vector of strings keeping the lines
   //that would otherwise be printed to console are now kept in m_kept_lines
 
+  std::vector<double> say_moos_times;
+
   for(int j = 0;j < handler.m_kept_lines.size();j++) {
     std::string to_parse = handler.m_kept_lines[j];
     //let's search for SAY_MOOS
@@ -118,7 +121,12 @@ int main(int argc, char *argv[])
     if(curr_var == "SAY_MOOS") {
       //save the time for use in plotting window
       cout<<endl<< "Kept SAY_MOOS " << to_parse <<endl;
-      
+      std::string curr_time = getTimeStamp(to_parse);
+      cout<< "Kept SAY_MOOS time: " << curr_time << endl;
+      //let's keep track of the times by converting it to a double for use for plotting later.
+      double dbl_curr_time = atof(curr_time.c_str());
+      say_moos_times.push_back(dbl_curr_time);
+
     }
     }
  
@@ -137,7 +145,7 @@ int main(int argc, char *argv[])
   Fl_Window win(400,400,"Testing");
   win.begin();
   Fl_Chart chart1( 0,0,100,100,"Blue One");
-  Fl_Chart chart2( 0,150,100,100,"Blue Two");
+  Fl_Chart chart2( 0,150,200,100,"SAY_MOOS");
   Fl_Button but( 10, 300, 70, 30, "Click me");
   win.end();
   chart1.type(FL_FILL_CHART);
@@ -151,9 +159,29 @@ int main(int argc, char *argv[])
   chart1.insert(4, 10,"4", 49); //49 is default grey
   chart1.insert(5, 10,"5", 12);
 
-  chart2.insert(1, 10,"0", 12);
-  chart2.insert(2, 10,"1", 216);
-  chart2.insert(3, 10,"2", 80);
+  //let's build a timeline using the vector
+  //remember that the insert starts at 1 with the "0" and increments from there
+  //let's perform a while loop until the vector runs out -- only coloring vector
+  //specified events and the rest grey
+  std::vector<double>::iterator it = say_moos_times.begin();
+  int time_increment = 0;
+
+  while(it != say_moos_times.end()) {
+    std::string str_time = intToString(time_increment);
+    int color_choice;
+    int say_event_time_int = *it;
+
+    if(say_event_time_int == time_increment) {
+      color_choice = 12;
+      ++it;
+    }
+    else {
+      color_choice = 49; //49 is default color
+    }
+    chart2.insert(time_increment+1, 10,str_time.c_str(), color_choice);
+    time_increment++;
+  }
+
   but.callback(but_cb);
   win.show();
   Fl::add_idle(idleProc);
