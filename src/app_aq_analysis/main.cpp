@@ -52,7 +52,10 @@ int main(int argc, char *argv[])
 {
   bool verbose = false;
   int  domain  = 360;
-  
+  string alogfile_in = "";
+  string alogfile_out = "";
+
+ 
   bool handled = true;
   for(int i=1; i<argc; i++) {
     string argi = argv[i];
@@ -63,6 +66,8 @@ int main(int argc, char *argv[])
         ("aq_analysis", "gpl");
        else if(strBegins(argi, "--verbose")) 
       verbose = true;
+       else if(strEnds(argi,".alog"))
+         alogfile_in = argi;
     else
       handled = false;
 
@@ -72,6 +77,12 @@ int main(int argc, char *argv[])
     }      
   }
 
+  //catch not assigning alog file
+  if(alogfile_in == "") {
+    cout << "Please specify an .alog file" << endl;
+    exit(1);
+  }
+  
   //some variable names to look for
   vector<string> keys;
   keys.push_back("TEAMSPEAK");
@@ -79,7 +90,7 @@ int main(int argc, char *argv[])
 
   GrepHandler handler;
   //  handler.setFileOverWrite(file_overwrite);
-  //handler.setCommentsRetained(comments_retained);
+  //handler..setCommentsRetained(comments_retained);
   //handler.setBadLinesRetained(badlines_retained);
   //handler.setGapLinesRetained(gaplines_retained);
   //handler.setAppCastRetained(appcast_retained);
@@ -88,10 +99,7 @@ int main(int argc, char *argv[])
   for(int i=0; i<ksize; i++)
     handler.addKey(keys[i]);
 
-  string alogfile_in = "test.alog";
-  string alogfile_out = "";
-
-  bool handled_alog = handler.handle(alogfile_in, alogfile_out);
+   bool handled_alog = handler.handle(alogfile_in, alogfile_out);
   if(!handled_alog)
     exit(1);
 
@@ -109,7 +117,8 @@ int main(int argc, char *argv[])
     curr_var = getVarName(to_parse);
     if(curr_var == "SAY_MOOS") {
       //save the time for use in plotting window
-      cout<<endl<< "SAY_MOOS " << to_parse <<endl; 
+      cout<<endl<< "SAY_MOOS " << to_parse <<endl;
+      
     }
     }
  
