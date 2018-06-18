@@ -305,8 +305,10 @@ void GrepHandler::outputLine(const string& line, const string& var)
 {
   if(m_file_out)
     fprintf(m_file_out, "%s\n", line.c_str());
-  else
+  else {
     cout << line << endl;
+    m_kept_lines.push_back(line);
+  }
 
   m_lines_retained++;
   m_chars_retained += line.length();

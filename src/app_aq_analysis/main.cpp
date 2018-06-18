@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     curr_var = getVarName(to_parse);
     if(curr_var == "SAY_MOOS") {
       //save the time for use in plotting window
-      cout<<endl<< "SAY_MOOS " << to_parse <<endl;
+      cout<<endl<< "Kept SAY_MOOS " << to_parse <<endl;
       
     }
     }
