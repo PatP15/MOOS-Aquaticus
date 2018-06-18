@@ -32,7 +32,7 @@ ProcessConfig = iLEDInfoBar
    AppTick    = 4
    CommsTick  = 4
    TEAM_COLOR = blue
-   PORT	  	  = /dev/cu.usbmodemFA131
+   PORT	  	  = /dev/cu.usbmodemFD121
    BAUDRATE   = 9600
 
 }

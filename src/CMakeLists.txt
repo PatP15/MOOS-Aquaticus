@@ -64,6 +64,7 @@ ADD_SUBDIRECTORY(iGPS)
 #  ADD_SUBDIRECTORY(pPingDisplay)
 
   ADD_SUBDIRECTORY(iLEDInfoBar)
+  ADD_SUBDIRECTORY(iLEDInterpreter)
 
 ##############################################################################
 #                           END of CMakeLists.txt
