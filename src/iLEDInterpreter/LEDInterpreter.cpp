@@ -8,6 +8,7 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "LEDInterpreter.h"
+bool debug = true;
 
 using namespace std;
 
@@ -31,6 +32,7 @@ LEDInterpreter::~LEDInterpreter()
 bool LEDInterpreter::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   MOOSMSG_LIST::iterator p;
+  bool handled = false;
    
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
@@ -47,30 +49,22 @@ bool LEDInterpreter::OnNewMail(MOOSMSG_LIST &NewMail)
     else if (sval == "false") {
       state = "false";
     }
-    else
-      continue; // if state is unknown skip for now
 
 
-    if (key == "TAGGED") {// * NEED TO CHANGE CONDITION keys & sval TO MATCH UFLDXX
+    if (key == m_tagged_var) {// * NEED TO CHANGE CONDITION keys & sval TO MATCH UFLDXX
       Notify("TAGGED", state);            
     }
-    else if (key == "IN_FLAG_ZONE") {
+    else if (key == m_flag_zone_var) {
       Notify("IN_FLAG_ZONE", state); 
     }
-    else if (key == "OUT_OF_BOUNDS") {
+    else if (key == m_out_of_bounds_var) {
       Notify("OUT_OF_BOUNDS", state); 
     }
-    else if (key == "HAVE_FLAG") {
+    else if (key == m_have_flag_var) {
       Notify("HAVE_FLAG", state); 
     }
-    else if (key == "IN_TAG_RANGE") {
+    else if (key == m_in_tag_range_var) {
       Notify("IN_TAG_RANGE", state);     
-    }
-    else if (key == "ALL_OFF") {  // for debugging
-      Notify("ALL_OFF", state); 
-    }
-    else if (key == "ALL_ON") {   // for debugging
-      Notify("ALL_ON", state); 
     }
 
 #if 0 // Keep these around just for template
@@ -93,12 +87,6 @@ bool LEDInterpreter::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool LEDInterpreter::OnConnectToServer()
 {
-   // register for variables here
-   // possibly look at the mission file?
-   // m_MissionReader.GetConfigurationParam("Name", <string>);
-   // m_Comms.Register("VARNAME", 0);
-	
-   RegisterVariables();
    return(true);
 }
 
@@ -119,19 +107,48 @@ bool LEDInterpreter::OnStartUp()
 {
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  bool handled = false;
   if(m_MissionReader.GetConfiguration(GetAppName(), sParams)) {
     list<string>::iterator p;
     for(p=sParams.begin(); p!=sParams.end(); p++) {
+      string orig  = *p;
       string line  = *p;
-      string param = tolower(biteStringX(line, '='));
+      string param = toupper(biteStringX(line, '='));
       string value = line;
+
+      if (debug)
+        cout << "value=" << value << endl;
       
-      if(param == "foo") {
-        //handled
+      if(param == "TAGGED")
+      {
+        m_tagged_var=value;
+        handled = true;
       }
-      else if(param == "bar") {
-        //handled
+      if (param == "OUT_OF_BOUNDS")
+      {
+        m_out_of_bounds_var=value;
+        handled = true;
       }
+      if (param == "HAVE_FLAG") 
+      {
+        m_have_flag_var=value;
+        handled = true;
+      }
+      if (param == "IN_TAG_RANGE") 
+      {
+        m_in_tag_range_var=value;
+        handled = true;
+      }
+      if (param == "IN_FLAG_ZONE") 
+      {
+        m_flag_zone_var=value;
+        handled = true;
+      }
+
+      if(!handled)
+        reportUnhandledConfigWarning(orig);
+
+      handled = false; // reset
     }
   }
   
@@ -144,11 +161,10 @@ bool LEDInterpreter::OnStartUp()
 
 void LEDInterpreter::RegisterVariables()
 {
-  Register("TAGGED"       , 0);     // need to edit variables names for actual use
-  Register("IN_FLAG_ZONE" , 0);
-  Register("HAVE_FLAG"    , 0);
-  Register("OUT_OF_BOUNDS", 0);
-  Register("ALL_OFF"      , 0);
-  Register("ALL_ON"       , 0);
+  Register(m_tagged_var        , 0);
+  Register(m_out_of_bounds_var , 0);
+  Register(m_have_flag_var     , 0);
+  Register(m_in_tag_range_var  , 0);
+  Register(m_flag_zone_var     , 0);\
 }
 

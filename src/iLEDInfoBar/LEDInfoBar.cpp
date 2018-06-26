@@ -173,8 +173,7 @@ bool LEDInfoBar::serialSetup()
 
   if (m_serial->IsGoodSerialComms()) {
     m_serial->Run();
-    string msg = "Serial port opened. Communicating over port ";
-    msg += m_serial_port;
+    string msg = "Serial port opened. Communicating over port " + m_serial_port;
 
     if (debug) cout << '\t' << msg << endl;
     reportEvent(msg);

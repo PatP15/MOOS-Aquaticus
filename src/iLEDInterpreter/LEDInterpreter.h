@@ -9,9 +9,10 @@
 #define LEDInterpreter_HEADER
 
 #include "MOOS/libMOOS/MOOSLib.h"
+#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "iLEDInfoBar_enums.h"
 
-class LEDInterpreter : public CMOOSApp
+class LEDInterpreter : public AppCastingMOOSApp
 {
  public:
    LEDInterpreter();
@@ -27,6 +28,11 @@ class LEDInterpreter : public CMOOSApp
    void RegisterVariables();
 
  private: // Configuration variables
+	std::string   m_tagged_var;
+	std::string   m_out_of_bounds_var;
+	std::string   m_have_flag_var;
+	std::string   m_in_tag_range_var;
+	std::string   m_flag_zone_var;
 
  private: // State variables
 };
