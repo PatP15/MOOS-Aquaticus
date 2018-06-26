@@ -16,13 +16,9 @@ LEDInfoBar::LEDInfoBar()
 {
   if (debug)
     cout << "\nI'm in the LEDInfoBar constructor\n";
-  // Icons state is set to m_OFF to start
-  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_TAGGED,       m_OFF));
-  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_HAVE_FLAG,    m_OFF));
-  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_FLAG_ZONE,    m_OFF));
-  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_IN_TAG_RANGE, m_OFF));
-  // m_icons.insert(pair<TYPE_ENUM, STATE_ENUM>(m_OUT_OF_BOUNDS,m_OFF));
+
   m_icons = new int [m_NUM_ICONS];
+
   for (int i=0; i<m_NUM_ICONS; i++)
     m_icons[i] = m_OFF;
 }
@@ -51,31 +47,36 @@ bool LEDInfoBar::OnNewMail(MOOSMSG_LIST &NewMail)
     string sval  = msg.GetString(); 
     string str_out;
 
-    if(key == "TAGGED")
+    if (debug)
+    {
+      cout << key << "=" << sval << endl;
+    }
+
+    if(key == m_tagged_var)
     {
       if (sval=="blinking") m_icons[m_TAGGED] = m_BLINKING;       // check for blink
       else m_icons[m_TAGGED] = (sval=="true" ? m_ACTIVE : m_OFF); // updating state var
       str_out = toString(m_TAGGED, m_icons[m_TAGGED]);            // building str for ardunio
     }
-    else if(key == "IN_FLAG_ZONE")
-    {
+    else if(key == m_flag_zone_var)
+    { 
       if (sval=="blinking") m_icons[m_FLAG_ZONE] = m_BLINKING;
       else m_icons[m_FLAG_ZONE] = (sval=="true" ? m_ACTIVE : m_OFF);
       str_out = toString(m_FLAG_ZONE, m_icons[m_FLAG_ZONE]);
     }
-    else if(key == "OUT_OF_BOUNDS")
+    else if(key == m_out_of_bounds_var)
     {
       if (sval=="blinking") m_icons[m_OUT_OF_BOUNDS] = m_BLINKING;
       else m_icons[m_OUT_OF_BOUNDS] = (sval=="true" ? m_ACTIVE : m_OFF);
       str_out = toString(m_OUT_OF_BOUNDS, m_icons[m_OUT_OF_BOUNDS]);
     }
-    else if(key == "HAVE_FLAG")
+    else if(key == m_have_flag_var)
     {
       if (sval=="blinking") m_icons[m_HAVE_FLAG] = m_BLINKING;
       else m_icons[m_HAVE_FLAG] = (sval=="true" ? m_ACTIVE : m_OFF);
       str_out = toString(m_HAVE_FLAG, m_icons[m_HAVE_FLAG]);
     }
-    else if (key == "IN_TAG_RANGE")
+    else if (key == m_in_tag_range_var)
     {
       if (sval=="blinking") m_icons[m_IN_TAG_RANGE] = m_BLINKING;
       else m_icons[m_IN_TAG_RANGE] = (sval=="true" ? m_ACTIVE : m_OFF);
@@ -115,13 +116,7 @@ bool LEDInfoBar::OnConnectToServer()
 {
   if (debug)
     cout << "\nI'm in OnConnectToServer()\n";
-   // register for variables here
-   // possibly look at the mission file?
-   // m_MissionReader.GetConfigurationParam("Name", <string>);
-   // m_Comms.Register("VARNAME", 0);
-	
-   RegisterVariables();
-   return(true);
+  return(true);
 }
 //---------------------------------------------------------
 // Procedure: toString(int i)
@@ -212,7 +207,10 @@ bool LEDInfoBar::OnStartUp()
       string line  = *p;
       string param = toupper(biteStringX(line, '='));
       string value = line;
-    
+      
+      if (debug)
+        cout << "value=" << value << endl;
+
       if(param == "PORT") { // define the port where we access the ardunio
         m_serial_port = line;
         handled = true;
@@ -228,6 +226,31 @@ bool LEDInfoBar::OnStartUp()
       }
       if(param == "TEAM_COLOR") {
         m_team_color=value;
+        handled = true;
+      }
+      if(param == "TAGGED")
+      {
+        m_tagged_var=value;
+        handled = true;
+      }
+      if (param == "OUT_OF_BOUNDS")
+      {
+        m_out_of_bounds_var=value;
+        handled = true;
+      }
+      if (param == "HAVE_FLAG") 
+      {
+        m_have_flag_var=value;
+        handled = true;
+      }
+      if (param == "IN_TAG_RANGE") 
+      {
+        m_in_tag_range_var=value;
+        handled = true;
+      }
+      if (param == "IN_FLAG_ZONE") 
+      {
+        m_flag_zone_var=value;
         handled = true;
       }
 
@@ -257,12 +280,13 @@ void LEDInfoBar::RegisterVariables()
   if (debug)
    cout << "\nI'm in RegisterVariables()\n";
 
-  Register("TAGGED"       , 0);
-  Register("IN_FLAG_ZONE" , 0);
-  Register("HAVE_FLAG"    , 0);
-  Register("OUT_OF_BOUNDS", 0);
-  Register("ALL_OFF"      , 0);
-  Register("ALL_ON"       , 0);
+  Register(m_tagged_var        , 0);
+  Register(m_out_of_bounds_var , 0);
+  Register(m_have_flag_var     , 0);
+  Register(m_in_tag_range_var  , 0);
+  Register(m_flag_zone_var     , 0);
+  Register("ALL_OFF"           , 0);
+  Register("ALL_ON"            , 0);
 }
 
 // bool buildReport()

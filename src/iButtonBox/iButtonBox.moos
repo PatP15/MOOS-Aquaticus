@@ -6,7 +6,7 @@ ProcessConfig = iButtonBox
    AppTick   = 4
    CommsTick = 4
 
-    PORT = /dev/tty2
+    PORT = /dev/cu.usbmodemFD121
     BAUDRATE = 9600
     
     BUTTON_0_NAME = SPEECH_BUTTON

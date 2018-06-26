@@ -1,5 +1,5 @@
-const int buttonPin[] = {2, 3, 4, 5};
-int buttonValue[] = {1, 1 ,1 ,1};
+const int buttonPin[] = {3,4,5,6};
+int buttonValue[] = {1,1,1,1};
 
 void setup() {
   for(int i = 0; i < (sizeof(buttonPin) / sizeof(buttonPin[0])); i++){

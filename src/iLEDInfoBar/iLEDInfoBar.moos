@@ -32,10 +32,16 @@ ProcessConfig = iLEDInfoBar
    AppTick    = 4
    CommsTick  = 4
    TEAM_COLOR = blue
-   PORT	  	  = /dev/cu.usbmodemFD121
+   PORT	  	  = /dev/cu.usbmodem3869091
    BAUDRATE   = 9600
 
-}
+   // LED vars to register
+   TAGGED			= TAGGED				
+   OUT_OF_BOUNDS	= OUT_OF_BOUNDS			
+   HAVE_FLAG		= HAVE_FLAG		
+   IN_TAG_RANGE		= IN_TAG_RANGE		
+   IN_FLAG_ZONE		= IN_FLAG_ZONE		
+}				
 
 //------------------------------------------------------------------
 // pLogger configuration block
