@@ -120,7 +120,7 @@ Behavior = BHV_OpRegionRecover
 
 
 //#############################################################################
-Behavior = BHV_AvdColregsV2
+Behavior = BHV_AvdColregsV17
 {
   name                    = active_avd_
   pwt                     = 200
@@ -223,7 +223,7 @@ Behavior = BHV_Waypoint
 }
 
 //#############################################################################
-Behavior = BHV_AvdColregsV2
+Behavior = BHV_AvdColregsV17
 {
   name                    = avd_
   pwt                     = 200
