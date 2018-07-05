@@ -37,7 +37,7 @@ class LEDInfoBar : public AppCastingMOOSApp
 protected:
     // relevant to comms with arduino
   bool serialSetup();
-  //bool buildReport();
+  bool buildReport();
 
   int           m_baudrate;
   bool          m_valid_serial_connection;

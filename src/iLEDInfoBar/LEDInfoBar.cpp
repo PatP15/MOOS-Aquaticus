@@ -35,10 +35,10 @@ LEDInfoBar::~LEDInfoBar()
 
 bool LEDInfoBar::OnNewMail(MOOSMSG_LIST &NewMail)
 {
-  if (debug)
-    cout << "\nI'm in OnNewMail()\n";
-
   AppCastingMOOSApp::OnNewMail(NewMail);
+
+  if (debug)
+  cout << "\nI'm in OnNewMail()\n";
 
   MOOSMSG_LIST::iterator p; 
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
@@ -157,6 +157,7 @@ bool LEDInfoBar::Iterate()
     m_valid_serial_connection = serialSetup(); // not connected, set it up
   }
 
+  AppCastingMOOSApp::PostReport();
   return(true);
 }
 
@@ -190,10 +191,10 @@ bool LEDInfoBar::serialSetup()
 
 bool LEDInfoBar::OnStartUp()
 {
+  AppCastingMOOSApp::OnStartUp();
+
   if (debug)
     cout << "\nI'm in OnStartUp()\n";
-
-  AppCastingMOOSApp::OnStartUp();
 
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
@@ -263,9 +264,17 @@ bool LEDInfoBar::OnStartUp()
 
   // now that we have everything to set up connection, do that now
   if(serialSetup())
-    Notify("SERIAL_OPEN", "true");
+  {
+    m_Comms.Notify("SERIAL_OPEN", "true");
+    reportEvent("Serial port is open");
+  }
   else
-    Notify("SERIAL_OPEN", "false");
+  {
+    m_Comms.Notify("SERIAL_OPEN", "false");
+    reportEvent("Serial port is NOT open");
+  }
+
+  // AppCastingMOOSApp::RegisterVariables();
 
   RegisterVariables();	
   return(true);
@@ -276,6 +285,8 @@ bool LEDInfoBar::OnStartUp()
 
 void LEDInfoBar::RegisterVariables()
 {
+  AppCastingMOOSApp::RegisterVariables();
+
   if (debug)
    cout << "\nI'm in RegisterVariables()\n";
 
@@ -288,9 +299,9 @@ void LEDInfoBar::RegisterVariables()
   Register("ALL_ON"            , 0);
 }
 
-// bool buildReport()
-// {
-//   AppCastingMOOSApp::buildReport();
-//   return(true);
-// }
+bool LEDInfoBar::buildReport()
+{
+  m_msgs << "I'm in buildReport()\n";
+  return(true);
+}
 

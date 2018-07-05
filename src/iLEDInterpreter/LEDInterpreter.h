@@ -23,6 +23,7 @@ class LEDInterpreter : public AppCastingMOOSApp
    bool Iterate();
    bool OnConnectToServer();
    bool OnStartUp();
+   bool buildReport();
 
  protected:
    void RegisterVariables();

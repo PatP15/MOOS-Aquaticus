@@ -85,10 +85,10 @@ ProcessConfig = iLEDInterpreter
 
    // LED vars to register
    // the values need to be changed to the correct var names from uFldxxManager
-   TAGGED			= iTAGGED				
+   TAGGED			= TAGGED // mikes var is named tag and has true as value				
    OUT_OF_BOUNDS	= iOUT_OF_BOUNDS			
-   HAVE_FLAG		= iHAVE_FLAG		
-   IN_TAG_RANGE		= iIN_TAG_RANGE		
-   IN_FLAG_ZONE		= iIN_FLAG_ZONE	
+   HAVE_FLAG		= HAS_FLAG		
+   IN_TAG_RANGE		= iIN_TAG_RANGE	// needs modifications to mission file	
+   IN_FLAG_ZONE		= iIN_FLAG_ZONE//near_post // this will be a string to parse need to modify mission
 }
 

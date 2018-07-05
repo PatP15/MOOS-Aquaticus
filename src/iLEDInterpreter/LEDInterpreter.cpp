@@ -31,6 +31,8 @@ LEDInterpreter::~LEDInterpreter()
 
 bool LEDInterpreter::OnNewMail(MOOSMSG_LIST &NewMail)
 {
+  AppCastingMOOSApp::OnNewMail(NewMail);
+
   MOOSMSG_LIST::iterator p;
   bool handled = false;
    
@@ -96,6 +98,7 @@ bool LEDInterpreter::OnConnectToServer()
 
 bool LEDInterpreter::Iterate()
 {
+  AppCastingMOOSApp::Iterate();
   return(true);
 }
 
@@ -105,6 +108,8 @@ bool LEDInterpreter::Iterate()
 
 bool LEDInterpreter::OnStartUp()
 {
+  AppCastingMOOSApp::OnStartUp();
+
   list<string> sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   bool handled = false;
@@ -161,6 +166,8 @@ bool LEDInterpreter::OnStartUp()
 
 void LEDInterpreter::RegisterVariables()
 {
+  AppCastingMOOSApp::RegisterVariables();
+
   Register(m_tagged_var        , 0);
   Register(m_out_of_bounds_var , 0);
   Register(m_have_flag_var     , 0);
@@ -168,3 +175,8 @@ void LEDInterpreter::RegisterVariables()
   Register(m_flag_zone_var     , 0);\
 }
 
+bool LEDInterpreter::buildReport()
+{
+  m_msgs << "I'm in buildReport()\n";
+  return(true);
+}
