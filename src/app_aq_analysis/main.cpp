@@ -13,6 +13,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <string.h>
+#include <math.h>
 #include "MBUtils.h"
 #include "LogUtils.h"
 #include "ReleaseInfo.h"
@@ -142,10 +143,10 @@ int main(int argc, char *argv[])
   //incoming to participant includes
   //1) isay: Game + Robots 2) Teamspeak for human players
   
-  Fl_Window win(400,400,"Testing");
+  Fl_Window win(800,800,"Testing");
   win.begin();
   Fl_Chart chart1( 0,0,100,100,"Blue One");
-  Fl_Chart chart2( 0,150,200,100,"SAY_MOOS");
+  Fl_Chart chart2( 5,150,750,100,"SAY_MOOS");
   Fl_Button but( 10, 300, 70, 30, "Click me");
   win.end();
   chart1.type(FL_FILL_CHART);
@@ -164,22 +165,56 @@ int main(int argc, char *argv[])
   //let's perform a while loop until the vector runs out -- only coloring vector
   //specified events and the rest grey
   std::vector<double>::iterator it = say_moos_times.begin();
-  int time_increment = 0;
+  double time_increment = 0.0;
+  double increment_time_by = 1.0;
+  double say_moos_time_last = say_moos_times.back();
+  int timeline_index = 1;
+  std::string tick_marks;
 
   while(it != say_moos_times.end()) {
     std::string str_time = intToString(time_increment);
     int color_choice;
-    int say_event_time_int = *it;
+    double say_event_time = *it;
 
-    if(say_event_time_int == time_increment) {
+    cout <<endl << "Building Timeline at t= " << time_increment <<endl;
+    if(time_increment == floor(time_increment)) {
+      tick_marks = str_time;
+    }
+    else {
+      tick_marks = "";
+    }
+    
+    if(say_event_time >= time_increment && say_event_time <= time_increment + increment_time_by) {
       color_choice = 12;
-      ++it;
+      cout << "********************Inserting blip here " << endl;
+      int height = 10; //height with first item
+      //check for other events at same point in time
+      bool in_desc = true;
+      while (in_desc == true) {
+        ++it;
+        double same_say_event_time = *it;
+
+        if(same_say_event_time >= time_increment && same_say_event_time <= time_increment + increment_time_by) {
+          height += 10;
+          cout << "adding + 10 height" << endl;
+        }
+        else {
+          break; //break out of the building height loop 
+          }
+      }
+
+      chart2.insert(timeline_index, height,tick_marks.c_str(), color_choice);
     }
     else {
       color_choice = 49; //49 is default color
+
+     chart2.insert(timeline_index, 10, tick_marks.c_str(), color_choice);
     }
-    chart2.insert(time_increment+1, 10,str_time.c_str(), color_choice);
-    time_increment++;
+    time_increment+=increment_time_by;
+    if(time_increment > say_moos_time_last) {
+      break;
+    }
+    timeline_index++;
   }
 
   but.callback(but_cb);
