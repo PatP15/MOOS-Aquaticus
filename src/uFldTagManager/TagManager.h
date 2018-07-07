@@ -71,6 +71,7 @@ class TagManager : public AppCastingMOOSApp
   void    processVTag(VTag);
   void    checkForExpiredTags();
   void    checkForOutOfZoneVehicles();
+  void    postOnFieldStatus(std::string vname="");
   void    postTagCircles();
     
   void    postHumanTagPairs(std::string src_vname, std::string tar_vname);
@@ -99,6 +100,7 @@ class TagManager : public AppCastingMOOSApp
   // Node (position) records: Map keyed on vehicle name
   std::map<std::string, NodeRecord>   m_map_node_records;
   std::map<std::string, unsigned int> m_map_node_reports_rcd;
+  std::map<std::string, bool>         m_map_node_onfield;
 
   // Perspective of vehicles doing tagging: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_requested;
@@ -123,13 +125,16 @@ class TagManager : public AppCastingMOOSApp
 
   // Keep track of notag post times, to limit frequency
   std::map<std::string, double>  m_map_prev_notag_post;
-  
+
+  double        m_time_last_onfield_post;
+    
  protected: // Configuration variables
   double        m_tag_range;
   double        m_tag_min_interval;
 
   double        m_tag_duration;
-
+  double        m_onfield_post_interval;
+  
   XYPolygon     m_zone_one;
   XYPolygon     m_zone_two;
   std::string   m_zone_one_color;
@@ -138,6 +143,9 @@ class TagManager : public AppCastingMOOSApp
   std::string   m_team_two;
   std::string   m_human_platform;
 
+  std::string   m_zone_one_post_var;
+  std::string   m_zone_two_post_var;
+  
   unsigned int  m_tag_events;
   bool          m_tag_circle;
   std::string   m_tag_circle_color;

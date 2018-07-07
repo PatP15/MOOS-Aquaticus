@@ -119,11 +119,16 @@ void showExampleConfigAndExit()
   blk("                                                                ");
   blk("  notag_post = SAY_MOOS=say={No Tag $REASON},rate=200           ");
   blk("                                                                ");
+  blk("  onfield_post_interval = 10 // default (in seconds)            ");
+  blk("                                                                ");
   blk("  team_one = red     // default                                 ");
   blk("  team_two = blue    // default                                 ");
   blk("                                                                ");
   blk("  zone_one = pts={0,-20:120,-20:120,-100:0,-100}                ");
   blk("  zone_two = pts={0,-100:120,-100:120,-180:0,-180}              ");
+  blk("                                                                ");
+  blk("  zone_one_post_var = UTM_ZONE_ONE  // default                  ");
+  blk("  zone_two_post_var = UTM_ZONE_TWO  // default                  ");
   blk("                                                                ");
   blk("  zone_one_color = pink           // default                    ");
   blk("  zone_one_color = light_blue     // default                    ");
@@ -180,6 +185,7 @@ void showInterfaceAndExit()
   blk("  TAG_RELEASE_VNAME   = vname=betty,time=85.86929               ");
   blk("  TAGGED_VEHICLES     = betty,gus,henry                         ");
   blk("  TAGGED_VNAME        = true                                    ");
+  blk("  ONFIELD_VNAME       = true                                    ");
   blk("                                                                ");
   blk("  VIEW_CIRCLE     = x=60.7,y=-65.98,radius=5,duration=0,        ");
   blk("                    label=betty,edge_color=red,fill_color=red,  ");
@@ -196,6 +202,13 @@ void showInterfaceAndExit()
   blk("  VIEW_COMMS_PULSE = label=one,sx=4,sy=2,tx=44,ty=55,           ");
   blk("                     beam_width=10,duration=5,fill=0.3,         ");
   blk("                     fill_color=yellow,edge_color=green         ");
+  blk("                                                                ");
+  blk("  UTM_ZONE_ONE     = pts={59.4,21:-12.8,-13.5:22.1,-85.7:       ");
+  blk("                     93.9,-51.2},label=red,edge_color=gray50,   ");
+  blk("                     vertex_color=gray50,fill_color=pink,       ");
+  blk("                     vertex_size=1,edge_size=1,                 ");
+  blk("                     fill_transparency=0.1                      ");
+  blk("  UTM_ZONE_TWO     = (similar)                                  ");
   exit(0);
 }
 

@@ -58,11 +58,17 @@ TagManager::TagManager()
   m_team_one = "red";
   m_team_two = "blue";
 
+  m_zone_one_post_var = "UTM_ZONE_ONE";
+  m_zone_two_post_var = "UTM_ZONE_TWO";
+  
   m_notag_gap = 5;
 
+  m_onfield_post_interval = 10; // seconds
+  
   // Initialize state variables
   m_tag_events = 0;       // Counter for tag events
-  
+
+  m_time_last_onfield_post = 0;
 }
 
 //---------------------------------------------------------
@@ -130,6 +136,10 @@ bool TagManager::OnStartUp()
       handled = handleConfigZone(1, value);
     else if(param == "zone_two")
       handled = handleConfigZone(2, value);
+    else if(param == "zone_one_post_var")
+      handled = setNonWhiteVarOnString(m_zone_one_post_var, value);
+    else if(param == "zone_two_post_var")
+      handled = setNonWhiteVarOnString(m_zone_two_post_var, value);
     else if(param == "team_one")
       handled = handleConfigTeamName(1, value);
     else if(param == "team_two")
@@ -159,6 +169,8 @@ bool TagManager::OnStartUp()
       handled = setColorOnString(m_zone_two_color, value);
     else if(param == "tag_circle_range")
       handled = setNonNegDoubleOnString(m_tag_circle_range, value);
+    else if(param == "onfield_post_interval")
+      handled = setNonNegDoubleOnString(m_onfield_post_interval, value);
     else if((param == "human_platform") && isKnownVehicleType(value))
       m_human_platform = value;
     else
@@ -182,7 +194,8 @@ bool TagManager::Iterate()
   processVTags();
   checkForExpiredTags();
   checkForOutOfZoneVehicles();
-
+  postOnFieldStatus();
+  
   postTagSummary();
   
   if(m_tag_circle)
@@ -740,6 +753,32 @@ void TagManager::checkForExpiredTags()
 }
 
 //------------------------------------------------------------
+// Procedure: postOnFieldStatus()
+
+void TagManager::postOnFieldStatus(string vname)
+{
+  if(vname != "") {
+    string msg_var = "ONFIELD_" + toupper(vname);
+    string msg_val = boolToString(m_map_node_onfield[vname]);
+    Notify(msg_var, msg_val);
+    return;
+  }
+
+  double curr_time = MOOSTime();
+  if((curr_time - m_time_last_onfield_post) > m_onfield_post_interval) {
+    m_time_last_onfield_post = curr_time;
+    
+    map<string, bool>::iterator p;
+    for(p=m_map_node_onfield.begin(); p!=m_map_node_onfield.end(); p++) {
+      string vname = p->first;
+      string msg_var = "ONFIELD_" + toupper(vname);
+      string msg_val = boolToString(m_map_node_onfield[vname]);
+      Notify(msg_var, msg_val);
+    }
+  }
+}
+
+//------------------------------------------------------------
 // Procedure: checkForOutOfZoneVehicles()
 
 void TagManager::checkForOutOfZoneVehicles()
@@ -752,9 +791,14 @@ void TagManager::checkForOutOfZoneVehicles()
     double vx = record.getX();
     double vy = record.getY();
 
+    bool onfield_status_change = false;
+    
     if(!m_zone_one.contains(vx, vy) && !m_zone_two.contains(vx, vy)) {
-      if(m_map_node_vtags_nowtagged.count(vname) &&
-	 !m_map_node_vtags_nowtagged[vname]) {
+      if(!m_map_node_onfield.count(vname) || m_map_node_onfield[vname])
+	onfield_status_change = true;
+      m_map_node_onfield[vname] = false;
+
+      if(!m_map_node_vtags_nowtagged.count(vname) || !m_map_node_vtags_nowtagged[vname]) {
 	m_map_node_vtags_beentagged[vname]++;
 	m_map_node_vtags_nowtagged[vname] = true;
 	m_map_node_vtags_tagreason[vname] = "boundary";
@@ -767,6 +811,15 @@ void TagManager::checkForOutOfZoneVehicles()
 	  postRobotTagPairs("tag_manager", vname);
       }
     }
+    else {
+      if(!m_map_node_onfield.count(vname) || !m_map_node_onfield[vname])
+	onfield_status_change = true;
+      m_map_node_onfield[vname] = true;
+    }
+
+    if(onfield_status_change)
+      postOnFieldStatus(vname);
+    
   }
 }
 
@@ -1100,6 +1153,11 @@ void TagManager::postZonePolys()
 
   Notify("VIEW_POLYGON", spec_one);
   Notify("VIEW_POLYGON", spec_two);
+
+  if(m_zone_one_post_var != "")
+    Notify(m_zone_one_post_var, spec_one);
+  if(m_zone_two_post_var != "")
+    Notify(m_zone_two_post_var, spec_two);
 }
 
 
@@ -1206,9 +1264,9 @@ bool TagManager::buildReport()
   // Part 4: Build report from perspective of vehicles being tagged.
   m_msgs << "Tag Receiver Stats:         " << endl;
   m_msgs << "=================================================" << endl;
-  ACTable actabb(5);
-  actabb << "     | Times  | Currently | Time   |          ";
-  actabb << "Name | Tagged | Tagged    | Remain | Taggable ";
+  ACTable actabb(6);
+  actabb << "     | Times  | Currently | Time   |          | On ";
+  actabb << "Name | Tagged | Tagged    | Remain | Taggable | Field ";
   actabb.addHeaderLines();
 
   for(pp=m_map_teams.begin(); pp!=m_map_teams.end(); pp++) {
@@ -1223,6 +1281,10 @@ bool TagManager::buildReport()
       if(m_map_node_vtags_nowtagged.count(vname))
 	now_tagged = m_map_node_vtags_nowtagged[vname];
 
+      bool now_onfield = false;
+      if(m_map_node_onfield.count(vname))
+	now_onfield = m_map_node_onfield[vname];
+
       double time_remaining = 0;
       if(m_map_node_vtags_timetagged.count(vname)) {
 	double elapsed = (m_curr_time - m_map_node_vtags_timetagged[vname]);
@@ -1235,7 +1297,8 @@ bool TagManager::buildReport()
       string now_tagged_s  = boolToString(now_tagged);
       string trem  = doubleToString(time_remaining,2);
       string tgabl = boolToString(!now_tagged);
-      actabb << vname << times << now_tagged_s << trem << tgabl;
+      string onfld = boolToString(now_onfield);
+      actabb << vname << times << now_tagged_s << trem << tgabl << onfld;
     }
   }
 
