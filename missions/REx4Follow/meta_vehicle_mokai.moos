@@ -31,9 +31,9 @@ Processconfig = ANTLER
  // Run = iHealth_KF100 @NewConsole = false
   Run = iGPSDevice          @ NewConsole = false
   Run = pDeadManPost        @ NewConsole = false
-  Run = iSay @ NewConsole = true
-  Run = uSpeechRec @ NewConsole = true
-  Run = uDialogManager @ NewConsole = true
+//  Run = iSay @ NewConsole = true
+//  Run = uSpeechRec @ NewConsole = true
+//  Run = uDialogManager @ NewConsole = true
 }
 #include plug_iSay.moos
 #include plug_uSpeechRec.moos
