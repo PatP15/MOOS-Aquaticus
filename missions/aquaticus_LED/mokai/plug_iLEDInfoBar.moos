@@ -10,9 +10,9 @@ ProcessConfig = iLEDInfoBar
    BAUDRATE   = 9600
 
    // LED vars to register
-   TAGGED			   = TAGGED				
-   OUT_OF_BOUNDS	   = OUT_OF_BOUNDS			
-   HAVE_FLAG		   = HAVE_FLAG		
-   IN_TAG_RANGE		= IN_TAG_RANGE		
-   IN_FLAG_ZONE		= IN_FLAG_ZONE		
+   TAGGED        = LED_TAGGED			  	
+   OUT_OF_BOUNDS = LED_OUT_OF_BOUNDS	  			
+   HAVE_FLAG     = LED_HAVE_FLAG		  
+   IN_TAG_RANGE  = LED_IN_TAG_RANGE		
+   IN_FLAG_ZONE  = LED_IN_FLAG_ZONE		
 }			

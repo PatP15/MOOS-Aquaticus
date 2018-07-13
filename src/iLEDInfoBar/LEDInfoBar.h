@@ -31,6 +31,7 @@ class LEDInfoBar : public AppCastingMOOSApp
   bool OnConnectToServer();
   bool OnStartUp();
   void RegisterVariables();
+  int  toEnum(std::string state);
   std::string toString(int i);
   std::string toString(int type, int state);
 

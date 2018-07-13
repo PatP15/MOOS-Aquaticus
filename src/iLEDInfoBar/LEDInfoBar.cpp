@@ -46,49 +46,45 @@ bool LEDInfoBar::OnNewMail(MOOSMSG_LIST &NewMail)
     string key   = msg.GetKey();
     string sval  = msg.GetString(); 
     string str_out;
+    string state_str = sval;
+    int    state = toEnum(state_str);
 
     if (debug)
     {
       cout << key << "=" << sval << endl;
     }
 
-    if(key == m_tagged_var)
-    {
-      if (sval=="blinking") m_icons[m_TAGGED] = m_BLINKING;       // check for blink
-      else m_icons[m_TAGGED] = (sval=="true" ? m_ACTIVE : m_OFF); // updating state var
-      str_out = toString(m_TAGGED, m_icons[m_TAGGED]);            // building str for ardunio
+    if (key == m_tagged_var) { 
+      m_icons[m_TAGGED] = state; // updating state var
+      str_out = toString(m_TAGGED, m_icons[m_TAGGED]);        
     }
-    else if(key == m_flag_zone_var)
-    { 
-      if (sval=="blinking") m_icons[m_FLAG_ZONE] = m_BLINKING;
-      else m_icons[m_FLAG_ZONE] = (sval=="true" ? m_ACTIVE : m_OFF);
+    else if (key == m_flag_zone_var) {
+      m_icons[m_FLAG_ZONE] = state;
       str_out = toString(m_FLAG_ZONE, m_icons[m_FLAG_ZONE]);
     }
-    else if(key == m_out_of_bounds_var)
-    {
-      if (sval=="blinking") m_icons[m_OUT_OF_BOUNDS] = m_BLINKING;
-      else m_icons[m_OUT_OF_BOUNDS] = (sval=="true" ? m_ACTIVE : m_OFF);
+    else if (key == m_out_of_bounds_var) {
+      m_icons[m_OUT_OF_BOUNDS] = state;
       str_out = toString(m_OUT_OF_BOUNDS, m_icons[m_OUT_OF_BOUNDS]);
     }
-    else if(key == m_have_flag_var)
-    {
-      if (sval=="blinking") m_icons[m_HAVE_FLAG] = m_BLINKING;
-      else m_icons[m_HAVE_FLAG] = (sval=="true" ? m_ACTIVE : m_OFF);
+    else if (key == m_have_flag_var) {
+      m_icons[m_HAVE_FLAG] = state;
       str_out = toString(m_HAVE_FLAG, m_icons[m_HAVE_FLAG]);
     }
-    else if (key == m_in_tag_range_var)
-    {
-      if (sval=="blinking") m_icons[m_IN_TAG_RANGE] = m_BLINKING;
-      else m_icons[m_IN_TAG_RANGE] = (sval=="true" ? m_ACTIVE : m_OFF);
+    else if (key == m_in_tag_range_var) {
+      m_icons[m_IN_TAG_RANGE] = state;
       str_out = toString(m_IN_TAG_RANGE, m_icons[m_IN_TAG_RANGE]);     
     }
+
+    //================
+    // For Debugging
+    //================
     else if (key == "ALL_OFF")    // for debugging
     {
-      str_out = toString(ALL_OFF, m_OFF);
+      str_out = toString(ALL_OFF, state);
     }
     else if (key == "ALL_ON")     // for debugging
     {
-      str_out = toString(ALL_ON, (sval=="true" ? m_ACTIVE : m_OFF));
+      str_out = toString(ALL_ON, state);
     }
       
     m_serial->WriteToSerialPort(str_out);
@@ -118,6 +114,24 @@ bool LEDInfoBar::OnConnectToServer()
     cout << "\nI'm in OnConnectToServer()\n";
   return(true);
 }
+
+//---------------------------------------------------------
+// Procedure: toEnum(int i)
+//           for state as a string to enum
+int LEDInfoBar::toEnum(string state)
+{
+  if (state == "blinking") {
+    return(m_BLINKING);
+  }
+  else if (state == "true") {
+    return(m_ACTIVE);
+  }
+  else if (state == "false") {
+    return(m_OFF);
+  }
+  return(m_OFF);
+}
+
 //---------------------------------------------------------
 // Procedure: toString(int i)
 //            quick enum > string
@@ -135,7 +149,10 @@ string LEDInfoBar::toString(int type, int state)
 {
   stringstream ss;
   ss << type << state;
-  cout << "toString() : type|state = " << ss.str() << endl;
+
+  if (debug)
+    cout << "toString() : type|state = " << ss.str() << endl;
+
   return(ss.str());
 }
 
@@ -267,6 +284,11 @@ bool LEDInfoBar::OnStartUp()
   {
     m_Comms.Notify("SERIAL_OPEN", "true");
     reportEvent("Serial port is open");
+
+    // This makes sure all the LEDS start off 
+    // (if a game ends and a new one starts, the NeoPixels have a cache to store their last value)
+    m_serial->WriteToSerialPort(toString(ALL_OFF, true));
+    m_serial->SerialSend();
   }
   else
   {
@@ -301,7 +323,17 @@ void LEDInfoBar::RegisterVariables()
 
 bool LEDInfoBar::buildReport()
 {
-  m_msgs << "I'm in buildReport()\n";
+  m_msgs << " ======================================                            \n"
+         << "  ICON STATES                                                      \n"
+         << "    [0]= off [1]= active [2]= blinking                             \n"
+         << " ======================================                          \n\n"
+         << " " << m_tagged_var << " [" << m_icons[m_TAGGED]               << "]\n"
+         << " " << m_out_of_bounds_var << " [" << m_icons[m_OUT_OF_BOUNDS] << "]\n"
+         << " " << m_have_flag_var << " [" << m_icons[m_HAVE_FLAG]         << "]\n"
+         << " " << m_in_tag_range_var << " [" << m_icons[m_IN_TAG_RANGE]   << "]\n"
+         << " " << m_flag_zone_var << " [" << m_icons[m_FLAG_ZONE]         << "]\n"
+         << endl;
+
   return(true);
 }
 

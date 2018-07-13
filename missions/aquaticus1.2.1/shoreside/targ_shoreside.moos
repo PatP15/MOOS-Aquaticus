@@ -44,13 +44,19 @@ ProcessConfig = uFldFlagManager
   CommsTick     = 2
 
   flag = x=50,y=-24, color=red, label=red
-  flag = x=-58,y=-71, color=blue, label=blue
+  flag = x=-52,y=-70, color=blue, label=blue
 
-  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
-  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
+//  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+//  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
 
-  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
-  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
+  grab_post = var=SAY_MOOS, sval={file=sounds/grab_post_$VNAME.wav}
+  grab_post = var=SAY_MOOS_ALL, sval={file=sounds/grab_post_$VNAME.wav}
+
+//  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
+//  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
+
+  lose_post = var=SAY_MOOS, sval={file=sounds/lose_post_$FLAG.wav}
+  lose_post = var=SAY_MOOS_ALL, sval={file=sounds/lose_post_$FLAG.wav}
 
   near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
   near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
@@ -58,14 +64,18 @@ ProcessConfig = uFldFlagManager
   away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
   away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
 
-  deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
-  deny_post = var=SAY_MOOS_$UP_VNAME, sval={say={Grab denied $REASON}}
+  deny_post = var=SAY_MOOS, sval={file=sounds/deny_post_$REASON.wav}
+  deny_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/deny_post$REASON.wav}
 
   home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
   home_post = var=FLAG_RESET, sval={vname=$VNAME}
 
-	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
-	goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
+//	goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
+//	goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
+
+	goal_post = var=SAY_MOOS, sval={file=sounds/goal_post_$VTEAM.wav}
+	goal_post = var=SAY_MOOS_ALL, sval={file=sounds/goal_post_$VTEAM.wav}
+
 }
 
 //--------------------------------------------------
@@ -88,11 +98,19 @@ ProcessConfig = uFldTagManager
   tag_duration = 10000
 
   //robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
-  human_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
-  human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
+//  human_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
+//  human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
+
+  human_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
+  human_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
+
   // human_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
-  robot_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
-  robot_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
+//  robot_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
+//  robot_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
+
+  robot_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
+  robot_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
+
   // robot_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
 
   // Return Flag
@@ -106,11 +124,17 @@ ProcessConfig = uFldTagManager
   // human_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
   // robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
   // robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
-  human_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
-  human_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+
+//  human_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
+//  human_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  human_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
+  human_untag_post = SAY_MOOS=file=sounds/untag_post_$TARGET.wav
   human_untag_post = TAGGED_$UP_TARGET=false
-  robot_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
-  robot_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  
+//  robot_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
+//  robot_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  robot_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
+  robot_untag_post = SAY_MOOS=file=sounds/untag_post_$TARGET.wav
   robot_untag_post = TAGGED_$UP_TARGET=false
 
   team_one=red
@@ -169,15 +193,16 @@ ProcessConfig = uFldShoreBroker
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
   qbridge  = TAGGED
   qbridge  = HAS_FLAG
-  qbridge  = ACTION, AGGRESSIVE
+  qbridge  = ACTION, AGGRESSIVE, SHIELD_REQUEST
   qbridge  = SAY_MOOS
 
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
-
+  bridge  = src=TAGGED_VEHICLES
   bridge   = src=UP_LOITER_$N, alias=UP_LOITER
   bridge   = src=HELM_MAP_CLEAR, alias=HELM_MAP_CLEAR
   bridge   = src=FLAG_SUMMARY
+  bridge   = src=MULTI_NOTIFY
 }
 
 
@@ -253,7 +278,6 @@ ProcessConfig = pMarineViewer
   button_three = UNTAG_REQUEST=vname=felix
   button_three = UNTAG_REQUEST=vname=gus
   button_three = FLAG_RESET=all
-  button_three = RETURN_ALL=true
 
   op_vertex = x=56,   y=16,  lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-83, y=-49,  lwidth=1,lcolor=yellow,looped=true,group=moa
@@ -261,29 +285,38 @@ ProcessConfig = pMarineViewer
   op_vertex = x=82,   y=-56, lwidth=1,lcolor=yellow,looped=true,group=moa
 
 
-  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
-  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
-  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
+  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:evan:felix:gus:mokai_red:mokai_blue:hal:ida:jing
+  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK, var=ACTION, sval=ATTACK, receivers=evan:felix:gus:hal:ida:jing
-  cmd = label=ATTACK, var=AGGRESSIVE, sval=true, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK, var=AGGRESSIVE, sval=true, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=evan:felix:gus:hal:ida:jing
-  cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=COVER, var=ACTION, sval=COVER, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=COVER, var=ACTION, sval=COVER, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=TRAIL, var=ACTION, sval=TRAIL, receivers=evan:felix:gus:hal:ida:jing
+  cmd = label=TRAIL, var=ACTION, sval=TRAIL, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
 
-  cmd = label=STATION, var=ACTION,  sval=STATION,  receivers=all:evan:felix:gus:hal:ida:jing
+  cmd = label=STATION, var=ACTION,  sval=STATION,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+
+  cmd = label=PROTECT, var=ACTION,  sval=PROTECT,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  
+  cmd = label=SHIELD, var=ACTION,  sval=SHIELD,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+
+  cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=blue_two,  receivers=blue_one:blue_two:blue_three:blue_four
+
+  cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four
+
 }
 
 //--------------------------------------------------------

@@ -35,6 +35,12 @@ class LEDInterpreter : public AppCastingMOOSApp
 	std::string   m_in_tag_range_var;
 	std::string   m_flag_zone_var;
 
+   bool tag_received;
+   bool bounds_received;
+   bool have_flag_received;
+   bool tag_zone_received;
+   bool flag_zone_received;
+
  private: // State variables
 };
 

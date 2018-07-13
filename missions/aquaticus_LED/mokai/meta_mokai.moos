@@ -19,7 +19,7 @@ Processconfig = ANTLER
   Run = uProcessWatch       @ NewConsole = false
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
-  Run = iLEDInterpreter     @ NewConsole = false
+  //Run = iLEDInterpreter     @ NewConsole = false
   Run = iLEDInfoBar         @ NewConsole = false
 #ifdef VOICE ON
   Run = uSpeechRec          @ NewConsole = false
