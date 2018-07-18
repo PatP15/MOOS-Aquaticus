@@ -59,7 +59,7 @@ ProcessConfig = uFldFlagManager
   away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
 
   deny_post = var=SAY_MOOS, sval={file=sounds/deny_post_$REASON.wav}
-  deny_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/deny_post$REASON.wav}
+  deny_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/deny_post_$REASON.wav}
 
   home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
   home_post = var=FLAG_RESET, sval={vname=$VNAME}
@@ -95,15 +95,15 @@ ProcessConfig = uFldTagManager
 //  human_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
 //  human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
 
-  human_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
-  human_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
+  human_tag_post   = SAY_MOOS_ALL=file=sounds/tag_post_$TARGET.wav
+  human_tag_post   = SAY_MOOS=file=sounds/tag_post_$TARGET.wav
 
   // human_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
 //  robot_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
 //  robot_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
 
-  robot_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
-  robot_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
+  robot_tag_post   = SAY_MOOS_ALL=file=sounds/tag_post_$TARGET.wav
+  robot_tag_post   = SAY_MOOS=file=sounds/tag_post_$TARGET.wav
 
   // robot_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
 
