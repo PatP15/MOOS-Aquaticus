@@ -15,7 +15,7 @@ SET(SRC
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   MESSAGE( STATUS "NOT ON AN APPLE OS! Assuming Linux")
   SET(SPEECH_LIBS pulse pulse-simple asound)
-endif (NOT ${APPLE}NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+endif (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ADD_EXECUTABLE(uSpeechRec ${SRC})
 
