@@ -94,7 +94,7 @@ bool ButtonBox::Iterate()
     parseSerialString(data);
 
 
-    for(int i=0; i<= m_button_values.size(); i++){
+    for(int i=0; i < m_button_values.size(); i++){
       if(previous_button_values.size() < i){
         previous_button_values.push_back(m_button_values[i]);
       }
@@ -106,7 +106,9 @@ bool ButtonBox::Iterate()
     }
   }
 
+  reportEvent("Reached post report!");
   AppCastingMOOSApp::PostReport();
+  reportEvent("Passed post report!");
   return(true);
 }
 
@@ -191,7 +193,7 @@ bool ButtonBox::buildReport()
     m_msgs << "	No current button values." << endl;
   }
 
-  for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
+  for(int i = 0; i < m_button_values.size(); i++) {
     m_msgs << getName(i) << ": " << m_button_values[i] << endl;
   }
 
