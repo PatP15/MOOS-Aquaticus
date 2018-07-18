@@ -74,14 +74,19 @@ bool ButtonBox::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
-  m_valid_serial_connection = m_serial->IsGoodSerialComms(); //check for good connection to arduino
-
-  if(!m_valid_serial_connection){
-    m_valid_serial_connection = serialSetup(); // setup interface to arduino
+  if(!m_serial->IsGoodSerialComms()){
+    if(m_valid_serial_connection){
+      reportRunWarning("Serial communication stoped.");
+    }
+    m_valid_serial_connection = serialSetup();
   }
 
+  bool new_data = m_serial->DataAvailable();
+  std::stringstream ss;
+  ss << "Connected: " << std::boolalpha << m_valid_serial_connection << "| Data Available: " << std::boolalpha << new_data << "\n";
+  reportEvent(ss.str());
 
-  while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
+  while(m_valid_serial_connection && new_data){ // grab data from arduino
     string data = m_serial->GetNextSentence();
 
     reportEvent("Data: " + data);
@@ -199,7 +204,7 @@ bool ButtonBox::buildReport()
 
   m_msgs << endl << "STATUS" << endl << "-----" << endl;
   m_msgs << "	Valid serial connection: " << std::boolalpha << m_valid_serial_connection << endl;
-  m_msgs << " Data available: " << std::boolalpha << m_serial->DataAvailable();
+  m_msgs << "\tData available: " << std::boolalpha << (bool) m_serial->DataAvailable() << endl;
 
   m_msgs << endl;
 
