@@ -193,9 +193,9 @@ bool ButtonBox::buildReport()
     m_msgs << "	No current button values." << endl;
   }
 
-  for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
-    m_msgs << getName(i) << ": " << m_button_values[i] << endl;
-  }
+  //for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
+    //m_msgs << getName(i) << ": " << m_button_values[i] << endl;
+  //}
 
   return(true);
 }
