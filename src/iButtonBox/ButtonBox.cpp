@@ -185,7 +185,7 @@ bool ButtonBox::buildReport()
 
   m_msgs << endl << "STATUS" << endl << "-----" << endl;
   m_msgs << "	Valid serial connection: " << std::boolalpha << m_valid_serial_connection << endl;
-  m_msgs << "\tData available: " << std::boolalpha << (bool) m_serial->DataAvailable() << endl;
+  //m_msgs << "\tData available: " << std::boolalpha << (bool) m_serial->DataAvailable() << endl;
 
   m_msgs << endl;
 
@@ -193,9 +193,9 @@ bool ButtonBox::buildReport()
     m_msgs << "	No current button values." << endl;
   }
 
-  //for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
-    //m_msgs << getName(i) << ": " << m_button_values[i] << endl;
-  //}
+  for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
+    m_msgs << getName(i) << ": " << m_button_values[i] << endl;
+  }
 
   return(true);
 }
