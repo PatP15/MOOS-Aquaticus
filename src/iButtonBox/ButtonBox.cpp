@@ -80,6 +80,7 @@ bool ButtonBox::Iterate()
     m_valid_serial_connection = serialSetup(); // setup interface to arduino
   }
 
+
   while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
     string data = m_serial->GetNextSentence();
 
@@ -198,6 +199,7 @@ bool ButtonBox::buildReport()
 
   m_msgs << endl << "STATUS" << endl << "-----" << endl;
   m_msgs << "	Valid serial connection: " << std::boolalpha << m_valid_serial_connection << endl;
+  m_msgs << " Data available: " << std::boolalpha << m_serial->DataAvailable();
 
   m_msgs << endl;
 
