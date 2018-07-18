@@ -76,14 +76,14 @@ bool ButtonBox::Iterate()
 
   if(!m_serial->IsGoodSerialComms()){
     if(m_valid_serial_connection){
-      reportRunWarning("Serial communication stoped.");
+      reportRunWarning("Serial communication stopped.");
     }
     m_valid_serial_connection = serialSetup();
   }
 
   bool new_data = m_serial->DataAvailable();
   std::stringstream ss;
-  ss << "Connected: " << std::boolalpha << m_valid_serial_connection << "| Data Available: " << std::boolalpha << new_data << "\n";
+  ss << "Connected: " << std::boolalpha << m_valid_serial_connection << " | Data Available: " << std::boolalpha << new_data << "\n";
   reportEvent(ss.str());
 
   while(m_valid_serial_connection && new_data){ // grab data from arduino
@@ -92,40 +92,19 @@ bool ButtonBox::Iterate()
     reportEvent("Data: " + data);
 
     parseSerialString(data);
-  }
 
-  if (iterate_counter == 0) {
 
-    //reportEvent("In first iterate loop: " + to_string(iterate_counter));
-    //reportEvent("size of button values array: " + to_string(m_button_values.size()));
-
-    for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { //looks at current button values and posts them
-
-      previous_button_values.push_back(m_button_values[i]); //move current values (first time) to comparison values
-      m_Comms.Notify(getName(i), m_button_values[i]); //send first time values to MOOS
-
+    for(int i=0; i<= m_button_values.size(); i++){
+      if(previous_button_values.size() < i){
+        previous_button_values.push_back(m_button_values[i]);
+      }
+      
+      if(previous_button_values[i] != m_button_values[i]){
+        m_Comms.Notify(getName(i), m_button_values[i]);
+        previous_button_values[i] = m_button_values[i];
+      }
     }
-
-  } else { //any other iteration
-
-    //reportEvent("In second iterate loop: " + to_string(iterate_counter));
-    //reportEvent("Size of button values array: " + to_string(m_button_values.size()));
-
-    for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) { // post data to moos variables
-
-      if (previous_button_values[i] != m_button_values[i]) { //if there are changed button values, send them, if not, do nothing
-
-	       m_Comms.Notify(getName(i), m_button_values[i]);
-         previous_button_values[i] = m_button_values[i];//send changed values
-
-	    }
-
-    }
-
   }
-
-  iterate_counter++;
-
 
   AppCastingMOOSApp::PostReport();
   return(true);
