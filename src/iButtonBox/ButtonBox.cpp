@@ -82,20 +82,13 @@ bool ButtonBox::Iterate()
   }
 
   bool new_data = m_serial->DataAvailable();
-  std::stringstream ss;
-  ss << "Connected: " << std::boolalpha << m_valid_serial_connection << " | Data Available: " << std::boolalpha << new_data << "\n";
-  reportEvent(ss.str());
-
   while(m_valid_serial_connection && new_data){ // grab data from arduino
     string data = m_serial->GetNextSentence();
-
-    reportEvent("Data: " + data);
-
+    
     parseSerialString(data);
 
-
     for(int i=0; i < m_button_values.size(); i++){
-      if(previous_button_values.size() < i){
+      if(previous_button_values.size() <= i){
         previous_button_values.push_back(m_button_values[i]);
       }
       
@@ -104,11 +97,10 @@ bool ButtonBox::Iterate()
         previous_button_values[i] = m_button_values[i];
       }
     }
+    new_data = m_serial->DataAvailable();
   }
 
-  reportEvent("Reached post report!");
   AppCastingMOOSApp::PostReport();
-  reportEvent("Passed post report!");
   return(true);
 }
 
@@ -178,14 +170,13 @@ void ButtonBox::registerVariables()
 
 bool ButtonBox::buildReport()
 {
-
   m_msgs << endl << "SETUP" << endl << "-----" << endl;
   m_msgs << "	PORT: " << m_serial_port << endl;
   m_msgs << "	BAUDRATE: " << m_baudrate << endl;
 
   m_msgs << endl << "STATUS" << endl << "-----" << endl;
   m_msgs << "	Valid serial connection: " << std::boolalpha << m_valid_serial_connection << endl;
-  //m_msgs << "\tData available: " << std::boolalpha << (bool) m_serial->DataAvailable() << endl;
+  m_msgs << "\tData available: " << std::boolalpha << (bool) m_serial->DataAvailable() << endl;
 
   m_msgs << endl;
 
@@ -219,7 +210,10 @@ bool ButtonBox::serialSetup()
 
 void ButtonBox::parseSerialString(std::string data) //parse data sent via serial from arduino
 {
-  reportEvent(data);
+  if(data.size() == 0){
+    reportRunWarning("Empty string sent to parser.");
+    return;
+  }
   if(data.at(0) != '$'){
     reportRunWarning("Malformed data string! Does not begin with $ char");
     return;
