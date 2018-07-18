@@ -88,8 +88,6 @@ bool ButtonBox::Iterate()
     parseSerialString(data);
   }
 
-  reportEvent("Got to first iterate loop");
-
   if (iterate_counter == 0) {
 
     //reportEvent("In first iterate loop: " + to_string(iterate_counter));
@@ -233,6 +231,7 @@ bool ButtonBox::serialSetup()
 
 void ButtonBox::parseSerialString(std::string data) //parse data sent via serial from arduino
 {
+  reportEvent(data);
   if(data.at(0) != '$'){
     reportRunWarning("Malformed data string! Does not begin with $ char");
     return;
