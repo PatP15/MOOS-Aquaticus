@@ -62,6 +62,14 @@ bool SpeechRec::OnNewMail(MOOSMSG_LIST &NewMail)
 
     if(key == "FOO") 
       cout << "great!";
+    else if( key == "SPEECH_ACTIVE"){
+      if(sval == "TRUE"){
+        unpauseRec();
+      }
+      else if(sval == "FALSE"){
+        pauseRec();
+      }
+    }
     else if( key == "SPEECH_PAUSE") {
       if(sval == "TRUE") {
 	pauseRec();
@@ -457,7 +465,9 @@ bool SpeechRec::OnStartUp()
 void SpeechRec::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  Register("SPEECH_PAUSE", 0);  
+  Register("SPEECH_PAUSE", 0);
+  Register("SPEECH_ACTIVE",0);
+                              
   // Register("FOOBAR", 0);  
 }
 

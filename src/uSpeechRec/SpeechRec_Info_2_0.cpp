@@ -76,6 +76,7 @@ void showExampleConfigAndExit()
   blk("  //can be set to start in a 'Paused' state                     ");
   blk("  //will then need to be unpaused by publishing FALSE to        "); 
   blk("  //SPEECH_PAUSE to be put back into an 'Active' state          ");
+  blk("  //SPEECH_ACTIVE has the same function but is reversed.        ");                                
   blk("  StartState = Paused                                           ");
   blk("}                                                               ");
   blk("                                                                ");
@@ -98,6 +99,7 @@ void showInterfaceAndExit()
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
   blk("   SPEECH_PAUSE = TRUE/FALSE to pause/unpause speech recognition");
+  blk("   SPEECH_ACTIVE = FALSE/TRUE to pause/unpause speech recognition");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
