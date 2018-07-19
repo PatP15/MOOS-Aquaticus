@@ -19,6 +19,7 @@ Processconfig = ANTLER
   Run = uProcessWatch       @ NewConsole = false
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
+  Run = iButtonBox          @ NewConsole = false
 #ifdef VOICE ON
   Run = uSpeechRec          @ NewConsole = false
 #elseifdef VOICE OFF
@@ -82,3 +83,5 @@ Processconfig = ANTLER
 #include plug_pHelmIvP.moos
 
 #include plug_pMarinePID.moos
+
+#include plug_iButtonBox.moos
