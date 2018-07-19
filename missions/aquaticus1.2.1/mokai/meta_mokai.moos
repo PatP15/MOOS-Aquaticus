@@ -38,7 +38,12 @@ Processconfig = ANTLER
   Run = iOS5000             @ NewConsole = false
   Run = iGPSDevice          @ NewConsole = false
 #endif
+#ifdef HRM YES
+  Run = iZephyrHRM          @ NewConsole = false
+#endif
 }
+
+#include plug_iZephyrHRM.moos
 
 #include ../plug_iSay.moos
 

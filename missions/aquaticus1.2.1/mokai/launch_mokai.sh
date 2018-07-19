@@ -16,6 +16,7 @@ JOY_ID="0"
 TEAMMATE1=""
 TEAMMATE2=""
 VOICE="ON"
+HRM="NO"
 
 case "$1" in
     r1|red_one)
@@ -143,6 +144,9 @@ for arg in "${@:4}"; do
     elif [ "${arg}" = "--voice-off" -o "${arg}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
+    elif [ "${arg}" = "--heart-rate-monitor" -o "${arg}" = "-hrm" ] ; then
+        HRM="YES"
+        echo "iZephyrHRM enabled."
     else
         echo "Undefined switch:" $arg
         HELP="yes"
@@ -183,12 +187,13 @@ if [ "${HELP}" = "yes" ]; then
 
     echo ""
     echo "POSSIBLE SWITCHES:"
-    echo "  --semi-sim,   -ss   : Semi-autonomous simulation (w/ joysticks)"
-    echo "  --sim,        -s    : Full simulation"
-    echo "  --voice-on,   -von  : Voice recognition on"
-    echo "  --voice-off,  -voff : Voice recognition off"
-    echo "  --just_build, -J"
-    echo "  --help,       -H"
+    echo "  --semi-sim,            -ss   : Semi-autonomous simulation (w/ joysticks)"
+    echo "  --sim,                 -s    : Full simulation"
+    echo "  --voice-on,            -von  : Voice recognition on"
+    echo "  --voice-off,           -voff : Voice recognition off"
+    echo "  --heart-rate-monitor , -hrm  : HRM enabled"
+    echo "  --just_build,          -J    : Only build targ file"
+    echo "  --help,                -H    : Display this help message"
     exit 0;
 fi
 
@@ -227,6 +232,7 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        TEAMMATE2=$TEAMMATE2         \
        VOICE=$VOICE                 \
        START_POS=$START_POS         \
+       HRM=$HRM                     \
        $SIM
 
 echo "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv ."
