@@ -14,6 +14,7 @@ SHARE_LISTEN="9313"
 BUTTON="5"
 JOY_ID="0"
 TEAMMATE=""
+HRM="NO"
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -67,6 +68,9 @@ for ARGI; do
     elif [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
+    elif [ "${ARGI}" = "--heart-rate-monitor" -o "${ARGI}" = "-hrm" ] ; then
+        HRM="YES"
+        echo "HRM Enabled."
     else
       echo "Undefined argument:" $ARGI
       echo "Please use -h for help."
@@ -88,6 +92,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --sim,        -s    : Full simulation"
     echo "  --voice-on,   -von  : Voice recognition on"
     echo "  --voice-off,  -voff : Voice recognition off"
+    echo "  --heart-rate-monitor, -hrm : HRM Enabled"
     echo "  --just_build, -j"
     echo "  --help,       -h"
     exit 0;
@@ -121,6 +126,7 @@ nsplug meta_mokai.moos targ_${VTEAM}_one.moos -f  \
        TEAMMATE=$TEAMMATE           \
        VOICE=$VOICE                 \
        START_POS=$START_POS         \
+       HRM=$HRM                     \
        $SIM
 
 echo "Assembling BHV file targ_${VTEAM}_one.bhv ."
