@@ -5,10 +5,10 @@ ProcessConfig = uTimerScript
 
   script_atomic = false
   paused = false
+  delay_reset = 2
   reset_max = unlimited
   reset_time = all-posted
   condition = BUTTON_FLAG_GRAB = TRUE
-  event = var=FLAG_GRAB_REQUEST, val="vname=$(VNAME)",time=0
-  event = var=FOO, val=BAR, time=5
+  event = var=FLAG_GRAB_REQUEST, val="vname=$(VNAME)"
 
 }              
