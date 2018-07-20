@@ -1,0 +1,13 @@
+ProcessConfig = uTimerScript                                         
+{                                                               
+  AppTick   = 4                                                 
+  CommsTick = 4                                                 
+
+  script-_atomic = false
+  paused = false
+  reset_max = unlimited
+  reset_time = all-posted
+  condition = BUTTON_FLAG_GRAB = TRUE
+  event = var=FLAG_GRAB_REQUEST, val="vname=$(VNAME)",time=5
+
+}              

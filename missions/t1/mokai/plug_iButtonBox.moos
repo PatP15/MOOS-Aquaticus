@@ -6,7 +6,8 @@ ProcessConfig = iButtonBox
 	PORT = /dev/ttyACM1 //this adress can change each time an arduino is plugged in
 	BAUDRATE = 9600
 	BUTTON_0_NAME = SPEECH_ACTIVE
-    BUTTON_1_NAME = TO_HUMANS_REC_BUTTON
+  BUTTON_1_NAME = TO_HUMANS_REC_BUTTON
+  BUTTON_2_NAME = BUTTON_FLAG_GRAB
 
 }
 

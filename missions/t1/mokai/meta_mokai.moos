@@ -20,6 +20,7 @@ Processconfig = ANTLER
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
 	Run = iButtonBox          @NewConsole = false
+	Run = uTimerScript          @NewConsole = false
 #ifdef VOICE ON
   Run = uSpeechRec          @ NewConsole = false
 #elseifdef VOICE OFF
@@ -85,3 +86,5 @@ Processconfig = ANTLER
 #include plug_pMarinePID.moos
 
 #include plug_iButtonBox.moos
+
+#include plug_uTimerScript.moos
