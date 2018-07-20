@@ -3,7 +3,7 @@ ProcessConfig = uTimerScript
   AppTick   = 4                                                 
   CommsTick = 4                                                 
 
-  script-_atomic = false
+  script_atomic = false
   paused = false
   reset_max = unlimited
   reset_time = all-posted
