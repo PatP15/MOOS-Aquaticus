@@ -27,9 +27,9 @@ IF(BUILD_ALL)
   ADD_SUBDIRECTORY(pMapValues)
   ADD_SUBDIRECTORY(iGPSDevice)
   ADD_SUBDIRECTORY(iOS5000)
-  ADD_SUBDIRECTORY(uSimM200)
-  ADD_SUBDIRECTORY(pComms_client)
-  ADD_SUBDIRECTORY(pComms_server)
+#  ADD_SUBDIRECTORY(uSimM200)
+#  ADD_SUBDIRECTORY(pComms_client)
+#  ADD_SUBDIRECTORY(pComms_server)
   ADD_SUBDIRECTORY(app_aq_analysis)
   #  ADD_SUBDIRECTORY(uFleetManager)
   #  ADD_SUBDIRECTORY(pShorePing)
@@ -66,6 +66,10 @@ ADD_SUBDIRECTORY(pRecord)
   ADD_SUBDIRECTORY(app_keyprog)
   ADD_SUBDIRECTORY(iLEDInfoBar)
   ADD_SUBDIRECTORY(iLEDInterpreter)
+IF(BUILD_VOIP)
+  ADD_SUBDIRECTORY(iMumbleClient)
+ENDIF()
+
 
 ##############################################################################
 #                           END of CMakeLists.txt
