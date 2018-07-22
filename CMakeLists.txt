@@ -136,13 +136,13 @@ IF (${APPLE})
 		message(STATUS "Detected use of 'Homebrew' for dependencies")
 		INCLUDE_DIRECTORIES(/usr/local/include)
 		LINK_DIRECTORIES(/usr/local/lib)
-	ENDIF()
+	ENDIF( )
 
 ENDIF(${APPLE})
 
 
 #=============================================================================
 # Add Subdirectories
-#=============================================================================
+ADD_SUBDIRECTORY(src_third_parties)
 ADD_SUBDIRECTORY(src)
 #ADD_SUBDIRECTORY(src_attic)
