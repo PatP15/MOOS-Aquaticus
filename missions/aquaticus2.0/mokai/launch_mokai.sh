@@ -134,6 +134,7 @@ for arg in "${@:4}"; do
         echo "Just building files; no vehicle launch."
     elif [ "${arg}" = "--sim" -o "${arg}" = "-s" ] ; then
         SIM="SIM=FULL"
+        SHORE_IP="localhost"
         echo "Full simulation mode ON."
     elif [ "${arg}" = "--semi-sim" -o "${arg}" = "-ss" ] ; then
         SIM="SIM=SEMI"
