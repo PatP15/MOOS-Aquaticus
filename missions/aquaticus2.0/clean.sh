@@ -43,5 +43,6 @@ cd shoreside
 rm -rf  $VERBOSE   MOOSLog_*  LOG_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
+rm -f   $VERBOSE   murmur/murmur.log
 
 cd ..
