@@ -4,6 +4,7 @@
 #-------------------------------------------------------
 TIME_WARP=1
 JUST_MAKE="no"
+VOIP="false"
 VTEAM1="red"
 VTEAM2="blue"
 SHORE_IP="localhost"
@@ -14,6 +15,7 @@ RED_FLAG="x=50,y=-24"
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         echo "$0 [SWITCHES]"
+        echo "  --voip, -v       , Launch Murmur VoIP server"
         echo "  --shore-port=    , set up a shore listening port. (Default is $SHORE_LISTEN)"
         echo "  --shore-ip=      , set up a shore listening IP. (Default is $SHORE_IP)"
         echo "  --just_make, -j    "
@@ -23,6 +25,8 @@ for ARGI; do
         TIME_WARP=$ARGI
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_MAKE="yes"
+    elif [ "${ARGI}" = "--voip" -o "${ARGI}" = "-v" ]; then
+        VOIP="true"
     elif [ "${ARGI:0:11}" = "--shore-ip=" ] ; then
         SHORE_IP="${ARGI#--shore-ip=*}"
     elif [ "${ARGI:0:13}" = "--shore-port=" ] ; then
@@ -55,11 +59,32 @@ fi
 #-------------------------------------------------------
 #  Part 3: Launch the Shoreside
 #-------------------------------------------------------
+
+if [ "${VOIP}" = "true" ]; then
+  echo "Launching Murmur VoIP Server Daemon"
+  cd murmur
+
+  if [ -x "$(command -v murmurd)" ]; then
+    # This will fail if murmurd is an alias
+    murmurd -ini murmur.ini
+  else 
+    echo "ERROR: You requested a VoIP Server, but murmurd wasn't found!"
+    echo "Is it in your \$PATH and executable?"
+    VOIP="error"
+  fi
+  cd ..
+fi
+
 echo "Launching $SNAME MOOS Community (WARP=$TIME_WARP)"
 pAntler targ_shoreside.moos >& /dev/null &
 echo "Done Launching Shoreside "
 
 uMAC targ_shoreside.moos
+
+if [ "${VOIP}" = "true" ]; then
+  echo "Killing Murmur Server"
+  killall -m murmurd
+fi
 
 # echo "Killing all processes ... "
 # kill -- -$$
