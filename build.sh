@@ -5,6 +5,7 @@ BUILD_TYPE="None"
 CMD_LINE_ARGS=""
 BUILD_ALL="ON"
 BUILD_VOIP="OFF"
+BUILD_HRM="OFF"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -17,7 +18,8 @@ for ARGI; do
     printf "  --debug,   -d                     \n"
     printf "  --release, -r                     \n"
     printf "  --minimal, -m                     \n"
-    printf "  --voip                     \n"
+    printf "  --voip                            \n"
+    printf "  --hrm                             \n"
     printf "Notes:                              \n"
     printf " (1) All other command line args will be passed as args    \n"
     printf "     to \"make\" when it is eventually invoked.            \n"
@@ -34,6 +36,8 @@ for ARGI; do
       BUILD_ALL="OFF"
   elif [ "${ARGI}" = "--voip" ] ; then
    BUILD_VOIP="ON"
+  elif [ "${ARGI}" = "--hrm" ] ; then
+   BUILD_HRM="ON"
   else
     CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
   fi
@@ -46,7 +50,7 @@ done
 mkdir -p build
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_VOIP=$BUILD_VOIP -DBUILD_ALL=$BUILD_ALL ../
+cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_VOIP=$BUILD_VOIP -DBUILD_HRM=$BUILD_HRM -DBUILD_ALL=$BUILD_ALL ../
 
 make ${CMD_LINE_ARGS}
 cd ${INVOCATION_ABS_DIR}

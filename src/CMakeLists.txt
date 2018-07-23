@@ -69,7 +69,9 @@ ADD_SUBDIRECTORY(pRecord)
 IF(BUILD_VOIP)
   ADD_SUBDIRECTORY(iMumbleClient)
 ENDIF()
-
+IF(BUILD_HRM)
+  ADD_SUBDIRECTORY(iZephyrHRM)
+ENDIF()
 
 ##############################################################################
 #                           END of CMakeLists.txt
