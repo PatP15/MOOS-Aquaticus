@@ -24,6 +24,7 @@ Processconfig = ANTLER
 	Run = uTimerScript          @NewConsole = false ~ uTimerScriptTag
 #ifdef VOICE ON
   Run = uSpeechRec          @ NewConsole = false
+  Run = pRecord             @ NewConsole = false ~ pRecordSpeechRec
 #elseifdef VOICE OFF
   Run = uTermCommand        @ NewConsole = true
 #endif
@@ -91,3 +92,5 @@ Processconfig = ANTLER
 #include plug_uTimerScript_grab.moos
 
 #include plug_uTimerScript_tag.moos
+
+#include plug_pRecord_speech_rec.moos
