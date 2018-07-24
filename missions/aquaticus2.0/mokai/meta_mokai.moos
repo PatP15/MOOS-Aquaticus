@@ -20,6 +20,7 @@ Processconfig = ANTLER
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
   Run = iButtonBox          @ NewConsole = false
+  Run = iLEDInfoBar         @ NewConsole = false
 #ifdef VOICE ON
   Run = iMumbleClient       @ NewConsole = false
   Run = uSpeechRec          @ NewConsole = false
@@ -88,3 +89,5 @@ Processconfig = ANTLER
 #include plug_pMarinePID.moos
 
 #include plug_iButtonBox.moos
+
+#include plug_iLEDInfoBar.moos
