@@ -86,6 +86,7 @@ if [ "${VOIP}" = "true" ]; then
   killall -m murmurd
 fi
 
-# echo "Killing all processes ... "
-# kill -- -$$
-# echo "Done killing processes.   "
+sleep .2 # Give them a chance to exit with grace
+echo "Killing all processes ... "
+kill -- -$$
+echo "Done killing processes.   "
