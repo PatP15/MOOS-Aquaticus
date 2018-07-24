@@ -191,11 +191,6 @@ bool ButtonBox::OnStartUp()
   }
 
   m_valid_serial_connection = serialSetup(true);
-  /*if(!m_valid_serial_connection){
-    std::stringstream ss;
-    ss << "Unable to open serial: " << m_serial_port << " with baud: " << m_baudrate;
-    reportRunWarning(ss.str());
-  }*/
 
   registerVariables();
   return(true);
@@ -250,7 +245,12 @@ bool ButtonBox::serialSetup(bool reportErrors)
     return(true);
   }
   if(reportErrors)
-    reportRunWarning(errMsg);
+  if(!m_valid_serial_connection){
+    std::stringstream ss;
+    ss << "Unable to open serial: " << m_serial_port << " with baud: " << m_baudrate;
+    ss << "Err: " << errMsg;
+    reportRunWarning(ss.str());
+  }
 
   return(false);
 }
