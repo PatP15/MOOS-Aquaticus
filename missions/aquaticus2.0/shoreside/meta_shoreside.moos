@@ -27,8 +27,6 @@ Processconfig = ANTLER
   Run = uFldTagManager  @ NewConsole = false
 
   Run = iSay            @ NewConsole = false
-
-  Run = pTimeWatch 	@ NewConsole = false
 }
 
 //--------------------------------------------------
