@@ -244,11 +244,10 @@ bool ButtonBox::serialSetup(bool reportErrors)
     reportEvent(msg);
     return(true);
   }
-  if(reportErrors)
-  if(!m_valid_serial_connection){
+  if(reportErrors){
     std::stringstream ss;
     ss << "Unable to open serial: " << m_serial_port << " with baud: " << m_baudrate;
-    ss << "Err: " << errMsg;
+    ss << " Err: " << errMsg;
     reportRunWarning(ss.str());
   }
 
