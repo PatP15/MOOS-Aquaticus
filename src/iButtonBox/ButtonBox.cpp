@@ -99,11 +99,16 @@ bool ButtonBox::Iterate()
         for(unsigned int j=0; j<posts->size(); j++){
           VarDataPair pair = posts->at(j);
 
+          std::stringstream report;
+          report << "NEW POST: var:" << pair.get_var() << " val:";
           if(!pair.is_string()){
             Notify(pair.get_var(), pair.get_ddata());
+            report << pair.get_ddata() << " (ddata)";
           }else{
             Notify(pair.get_var(), pair.get_sdata());
+            report << pair.get_sdata() << " (sdata)";
           }
+          reportEvent(report.str());
         }
 
         m_last_button_values[i] = m_button_values[i];
