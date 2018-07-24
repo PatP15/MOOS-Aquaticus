@@ -32,7 +32,7 @@ class ButtonBox : public AppCastingMOOSApp
  protected:
    void registerVariables();
    void parseSerialString(std::string data);
-   bool serialSetup();
+   bool serialSetup(bool reportErrors);
 
 
  private: // Configuration variables

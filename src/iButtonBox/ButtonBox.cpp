@@ -76,7 +76,7 @@ bool ButtonBox::Iterate()
     if(m_valid_serial_connection){
       reportRunWarning("Serial communication stopped.");
     }
-    m_valid_serial_connection = serialSetup();
+    m_valid_serial_connection = serialSetup(false);
   }
 
   while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
@@ -190,12 +190,12 @@ bool ButtonBox::OnStartUp()
 
   }
 
-  m_valid_serial_connection = serialSetup();
-  if(!m_valid_serial_connection){
+  m_valid_serial_connection = serialSetup(true);
+  /*if(!m_valid_serial_connection){
     std::stringstream ss;
     ss << "Unable to open serial: " << m_serial_port << " with baud: " << m_baudrate;
     reportRunWarning(ss.str());
-  }
+  }*/
 
   registerVariables();
   return(true);
@@ -237,7 +237,7 @@ bool ButtonBox::buildReport()
   return(true);
 }
 
-bool ButtonBox::serialSetup()
+bool ButtonBox::serialSetup(bool reportErrors)
 {
   std::string errMsg = "";
   m_serial = new SerialComms(m_serial_port, m_baudrate, errMsg);
@@ -249,6 +249,8 @@ bool ButtonBox::serialSetup()
     reportEvent(msg);
     return(true);
   }
+  if(reportErrors)
+    reportRunWarning(errMsg);
 
   return(false);
 }
