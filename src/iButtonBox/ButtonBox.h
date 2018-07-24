@@ -41,6 +41,7 @@ class ButtonBox : public AppCastingMOOSApp
 
   SerialComms* m_serial;
   bool m_valid_serial_connection;
+  bool m_first_read;
 
   std::map<int, std::vector<VarDataPair> > m_button_up_posts;
   std::map<int, std::vector<VarDataPair> > m_button_down_posts;

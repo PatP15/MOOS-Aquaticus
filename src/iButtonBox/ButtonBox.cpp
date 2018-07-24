@@ -17,6 +17,7 @@ using namespace std;
 
 ButtonBox::ButtonBox()
 {
+  m_first_read = true;
 }
 
 //---------------------------------------------------------
@@ -82,6 +83,13 @@ bool ButtonBox::Iterate()
   while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
     string data = m_serial->GetNextSentence();
     
+    if(m_first_read){
+      //Dump first read beacuase it is almost always mangled
+      m_first_read = false;
+      continue;
+    }
+
+
     parseSerialString(data);
 
     for(int i=0; i < m_button_values.size(); i++){
