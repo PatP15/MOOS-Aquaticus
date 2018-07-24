@@ -17,8 +17,6 @@ using namespace std;
 
 ButtonBox::ButtonBox()
 {
-
-  iterate_counter = 0;
 }
 
 //---------------------------------------------------------
@@ -81,25 +79,37 @@ bool ButtonBox::Iterate()
     m_valid_serial_connection = serialSetup();
   }
 
-  bool new_data = m_serial->DataAvailable();
-  while(m_valid_serial_connection && new_data){ // grab data from arduino
+  while(m_valid_serial_connection && m_serial->DataAvailable()){ // grab data from arduino
     string data = m_serial->GetNextSentence();
     
     parseSerialString(data);
 
     for(int i=0; i < m_button_values.size(); i++){
-      if(previous_button_values.size() <= i){
-        previous_button_values.push_back(m_button_values[i]);
+      if(m_last_button_values.size() <= i){
+        m_last_button_values.push_back(m_button_values[i]);
       }
       
-      if(previous_button_values[i] != m_button_values[i]){
-        m_Comms.Notify(getName(i), m_button_values[i]);
-        previous_button_values[i] = m_button_values[i];
+      if(m_last_button_values[i] != m_button_values[i]){
+        std::vector<VarDataPair> *posts;
+        if(m_button_values[i])
+          posts = &m_button_down_posts[i];
+        else
+          posts = &m_button_up_posts[i];
+
+        for(unsigned int j=0; j<posts->size(); j++){
+          VarDataPair pair = posts->at(j);
+
+          if(!pair.is_string()){
+            Notify(pair.get_var(), pair.get_ddata());
+          }else{
+            Notify(pair.get_var(), pair.get_sdata());
+          }
+        }
+
+        m_last_button_values[i] = m_button_values[i];
       }
     }
-    new_data = m_serial->DataAvailable();
   }
-
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -139,9 +149,40 @@ bool ButtonBox::OnStartUp()
         m_baudrate = atoi(line.c_str());
     }
 
-    if(param.substr(0,7) == "BUTTON_" && param.substr(param.length() - 5, param.length() ) == "_NAME"){ // grab the name of the buttons
+    if(param.substr(0,7) == "BUTTON_" && param.substr(param.length() - 10, param.length() ) == "_DOWN_POST"){ 
+      // grabs the button down post data
       handled = true;
-      m_button_names[param] = line;
+
+      int button_number = atoi(param.substr(7,param.length()-5).c_str());
+
+      VarDataPair pair = stringToVarDataPair(line);
+      if(pair.valid()){
+        std::map<int, std::vector<VarDataPair> >::iterator it;
+        it = m_button_down_posts.find(button_number);
+
+        m_button_down_posts[button_number].push_back(pair);
+      }else{
+        reportConfigWarning("Invalid VarDataPair: "+line); 
+      }
+
+    }
+
+    if(param.substr(0,7) == "BUTTON_" && param.substr(param.length() - 8, param.length() ) == "_UP_POST"){ 
+      // grabs the button down post data
+      handled = true;
+
+      int button_number = atoi(param.substr(7,param.length()-5).c_str());
+
+      VarDataPair pair = stringToVarDataPair(line);
+      if(pair.valid()){
+        std::map<int, std::vector<VarDataPair> >::iterator it;
+        it = m_button_up_posts.find(button_number);
+
+        m_button_up_posts[button_number].push_back(pair);
+      }else{
+        reportConfigWarning("Invalid VarDataPair: "+line); 
+      }
+
     }
 
     if(!handled)
@@ -150,6 +191,8 @@ bool ButtonBox::OnStartUp()
   }
 
   m_valid_serial_connection = serialSetup();
+  if(!m_valid_serial_connection)
+    reportRunWarning("Unable to open serial port");
 
   registerVariables();
   return(true);
@@ -185,7 +228,7 @@ bool ButtonBox::buildReport()
   }
 
   for(std::vector<int>::size_type i = 0; i != m_button_values.size(); i++) {
-    m_msgs << getName(i) << ": " << m_button_values[i] << endl;
+    m_msgs << "\tBUTTON #"<< i << ": " << m_button_values[i] << endl;
   }
 
   return(true);
@@ -204,7 +247,6 @@ bool ButtonBox::serialSetup()
     return(true);
   }
 
-  reportRunWarning("Unable to open serial port: " + errMsg);
   return(false);
 }
 
@@ -224,43 +266,29 @@ void ButtonBox::parseSerialString(std::string data) //parse data sent via serial
   for(unsigned int i = 0; i<values.length(); i++) {
     char c = values[i];
     if(c != '0' && c != '1' && c != ','){
-      std::string err = "Malformed data string! Unrecognised char: ";
-      err += c;
+      std::string err = "Malformed data string: ";
+      err += data;
       reportRunWarning(err);
       return;
     }
   }
 
   std::stringstream ss(values);
-  std::vector<std::string> button_values;
-  while( ss.good() ){
+  m_button_values.clear();
+  while(ss.good()){
     string substr;
-    getline( ss, substr, ',' );
+    getline(ss, substr, ',');
 
     if(substr.compare("0") == 0){
-      button_values.push_back("TRUE");
+      m_button_values.push_back(true);
     }else if(substr.compare("1") == 0){
-      button_values.push_back("FALSE");
+      m_button_values.push_back(false);
+    }else{
+      std::string err = "Malformed data string: ";
+      err += data;
+      reportRunWarning(err);
+      return;
     }
   }
-
-  m_button_values = button_values;
 }
 
-std::string ButtonBox::getName(int button_index){ //grab names of buttons for moos variables (defined in .moos file/config area)
-    std::string key = "BUTTON_";
-    std::ostringstream oss;
-    oss << button_index << "_NAME";
-    key += oss.str();
-
-    if(m_button_names.find(key) == m_button_names.end()){
-      oss.str("");
-      oss.clear();
-
-      oss << "BUTTON_" << button_index;
-      return oss.str();
-    }
-
-    return m_button_names[key];
-
-}

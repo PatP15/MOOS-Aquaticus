@@ -10,6 +10,7 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "SerialComms.h"
+#include "VarDataPair.h"
 
 #include <cstdlib>
 
@@ -33,7 +34,6 @@ class ButtonBox : public AppCastingMOOSApp
    void parseSerialString(std::string data);
    bool serialSetup();
 
-  std::string getName(int button_index);
 
  private: // Configuration variables
   std::string m_serial_port;
@@ -42,11 +42,12 @@ class ButtonBox : public AppCastingMOOSApp
   SerialComms* m_serial;
   bool m_valid_serial_connection;
 
-  std::vector<std::string> previous_button_values;
-  int iterate_counter;
+  std::map<int, std::vector<VarDataPair> > m_button_up_posts;
+  std::map<int, std::vector<VarDataPair> > m_button_down_posts;
+  std::vector<bool> m_last_button_values;
+  std::vector<bool> m_button_values;
 
-  std::map <std::string, std::string> m_button_names;
-  std::vector<std::string> m_button_values;
+
 };
 
 #endif
