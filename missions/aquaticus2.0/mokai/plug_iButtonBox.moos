@@ -4,7 +4,7 @@ ProcessConfig = iButtonBox
 	CommsTick = 10
 
 //this adress can change each time an arduino is plugged in
-	PORT = /dev/ttyAMC1
+	PORT = /dev/ttyACM1
 //  PORT = /dev/tty.usbmodemFA131
 	BAUDRATE = 9600
 
