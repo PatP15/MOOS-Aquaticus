@@ -5,7 +5,7 @@
 #  Emulation, shoreside running on a different machine:     IP address of that machine (often 192.168.2.1)
 #  Actual vehicle:                                          IP address of the shoreside computer
 #SHORE_IP="localhost"
-SHORE_IP=192.168.1.225
+SHORE_IP=192.168.1.145
 SHORE_LISTEN=9100
 SHARE_LISTEN=9104
 
