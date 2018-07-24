@@ -296,6 +296,10 @@ ProcessConfig = pMarineViewer
   button_three = UNTAG_REQUEST=vname=gus
   button_three = FLAG_RESET=all
 
+  button_four = PAUSE # DEPLOY_ALL=false
+  button_four = MOOS_MANUAL_OVERRIDE_ALL=true
+  button_four = AQUATICUS_GAME_STATE=pause
+
   op_vertex = x=56,   y=16,  lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-83, y=-49,  lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=-53, y=-114, lwidth=1,lcolor=yellow,looped=true,group=moa
