@@ -75,8 +75,7 @@ void showExampleConfigAndExit()
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
   blk("  MAC=A0:B1:C2:D3:E4:F5 // The mac address of the Zephyr sensor ");
-  blk("  CHANNEL=1 // The bluetooth channel you want to communicate over (0-39)
-");
+  blk("  CHANNEL=1 // The bluetooth channel you want to communicate over (0-39)");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
