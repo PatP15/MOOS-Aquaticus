@@ -129,8 +129,8 @@ bool ZephyrHRM::BTThread(void* param){
   status = -1;
   while(status !=0){
     status = connect(s, (struct sockaddr*)&addr, sizeof(addr));
-    data->connected = true;
   }
+  data->connected = true;
 
   usleep(1000);
 
