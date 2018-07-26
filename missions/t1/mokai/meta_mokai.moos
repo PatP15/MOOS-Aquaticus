@@ -20,8 +20,8 @@ Processconfig = ANTLER
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
 	Run = iButtonBox          @NewConsole = false
-	Run = uTimerScript          @NewConsole = false ~ uTimerScriptGrab
-	Run = uTimerScript          @NewConsole = false ~ uTimerScriptTag
+//	Run = uTimerScript          @NewConsole = false ~ uTimerScriptGrab
+//	Run = uTimerScript          @NewConsole = false ~ uTimerScriptTag
 #ifdef VOICE ON
   Run = uSpeechRec          @ NewConsole = false
   Run = pRecord             @ NewConsole = false ~ pRecordSpeechRec
