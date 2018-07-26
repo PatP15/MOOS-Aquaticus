@@ -129,6 +129,11 @@ bool ZephyrHRM::BTThread(void* param){
   status = -1;
   while(status !=0){
     status = connect(s, (struct sockaddr*)&addr, sizeof(addr));
+
+    if(status != 0){
+      close(s);
+      s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+    }
   }
   data->connected = true;
 
