@@ -118,7 +118,7 @@ void ZephyrHRM::gotLifeSign(){
   m_last_life_sign_time = MOOSTime();
 }
 bool ZephyrHRM::isConnectionStale(){
-  return if(MOOSTime() - m_last_life_sign_time > 30);
+  return (MOOSTime() - m_last_life_sign_time > 30);
 }
 
 
@@ -138,7 +138,7 @@ bool ZephyrHRM::BTThread(void* param){
   data->buf_end = 0;
 
   while(1){
-    if(!data->connected || isConnectionStale()){
+    if(!data->connected || main_t->isConnectionStale()){
       //Connect to HRM if not connected or stale
       data->connected = false;
       status = -1;
