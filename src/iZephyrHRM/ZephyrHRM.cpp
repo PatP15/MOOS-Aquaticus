@@ -114,6 +114,14 @@ bool ZephyrHRM::requestSummaryPacket(int &s, bool active){
   return true;
 }
 
+void ZephyrHRM::gotLifeSign(){
+  m_last_life_sign_time = MOOSTime();
+}
+bool ZephyrHRM::isConnectionStale(){
+  return if(MOOSTime() - m_last_life_sign_time > 30);
+}
+
+
 bool ZephyrHRM::BTThread(void* param){
   struct bt_data* data = (struct bt_data*)param;
   ZephyrHRM* main_t = (ZephyrHRM*) data->call_back;
@@ -126,26 +134,31 @@ bool ZephyrHRM::BTThread(void* param){
   addr.rc_channel = (uint8_t) data->channel;
   str2ba(data->mac.c_str(), &addr.rc_bdaddr);
 
-  status = -1;
-  while(status !=0){
-    status = connect(s, (struct sockaddr*)&addr, sizeof(addr));
-
-    if(status != 0){
-      close(s);
-      s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
-    }
-  }
-  data->connected = true;
-
-  usleep(1000);
-
-  requestGeneralPacket(s, true);
-  requestSummaryPacket(s, true);
-
   data->buf_begin = 0;
   data->buf_end = 0;
 
   while(1){
+    if(!data->connected || isConnectionStale()){
+      //Connect to HRM if not connected or stale
+      data->connected = false;
+      status = -1;
+      while(status !=0){
+        status = connect(s, (struct sockaddr*)&addr, sizeof(addr));
+
+        if(status != 0){
+          //If connection failed fd is no longer usable
+          close(s);
+          s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+        }
+      }
+      data->connected = true;
+
+      usleep(1000);
+
+      requestGeneralPacket(s, true);
+      requestSummaryPacket(s, true);
+    }
+
     //Mutex lock to prevent race conditions
     data->lock.Lock();
     int bytes_read = read(s, data->buf, data->buf_size-(data->buf_end));
@@ -269,6 +282,7 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
       reportEvent("General packet request NAK.\n");
   }else if(msgID == 0x23){
     m_life_sign_c += 1;
+    gotLifeSign();
   }else if(msgID == 0x2C){
     //Event Packet
   }else if(msgID == 0x20){
