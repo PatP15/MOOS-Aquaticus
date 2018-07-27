@@ -118,7 +118,7 @@ void ZephyrHRM::gotLifeSign(){
   m_last_life_sign_time = MOOSTime();
 }
 bool ZephyrHRM::isConnectionStale(){
-  return (MOOSTime() - m_last_life_sign_time > 30);
+  return ((MOOSTime() - m_last_life_sign_time) > 30);
 }
 
 
@@ -474,13 +474,15 @@ bool ZephyrHRM::buildReport()
   m_msgs << "\n============ Connection Status ============\n";
   m_msgs << "MAC: " << m_bt_mac.c_str() << "\n";
   m_msgs << "Channel: " << m_bt_channel << "\n";
-  m_msgs << "Connected: " << std::boolalpha << m_comms_data->connected << "\n\n";
+  m_msgs << "Connected: " << std::boolalpha << m_comms_data->connected << "\n";
+  m_msgs << "Connection Stale: " << std::boolalpha << isConnectionStale() << "\n\n"
 
   if(m_comms_data->connected){
     m_msgs << "=============== Packet Info ===============\n";
     m_msgs << "Failed writes: " << m_comms_data->failed_writes << "\n";
     m_msgs << "Number of packets: " << m_packet_num << "\n";
-    m_msgs << "Life sign count: " << m_life_sign_c << "\n\n";
+    m_msgs << "Life sign count: " << m_life_sign_c << "\n";
+    m_msgs << "Last life sign MOOSTime: " << m_last_life_sign_time << "\n\n";
     m_msgs << "=============== General Info===============\n";
     m_msgs << "Worn Status: " << std::boolalpha << m_last_hrm_data.worn << "\n";
     m_msgs << "Heart Rate Confidence: " << m_last_hrm_data.hr_conf << " %\n";
