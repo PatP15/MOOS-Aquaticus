@@ -11,8 +11,8 @@ ProcessConfig = iButtonBox
   BUTTON_1_UP_POST = var=TO_HUMANS_REC_BUTTON, sval=FALSE
   BUTTON_1_DOWN_POST = var=TO_HUMANS_REC_BUTTON, sval=TRUE
 
-  BUTTON_2_DOWN_POST = var=FLAG_GRAB_REQUEST, sval="vname=$(VNAME)"
+  BUTTON_2_DOWN_POST = var=FLAG_GRAB_REQUEST, sval=vname=$(VNAME)
 
-  BUTTON_3_DOWN_POST = var=TAG_REQUEST, sval="vname=$(VNAME)"
+  BUTTON_3_DOWN_POST = var=TAG_REQUEST, sval=vname=$(VNAME)
 }
 
