@@ -40,6 +40,8 @@ class ZephyrHRM : public AppCastingMOOSApp
    static bool sendLifeSign(int &s);
    static bool requestGeneralPacket(int &s, bool active);
    static bool requestSummaryPacket(int &s, bool active);
+   void gotLifeSign();
+   bool isConnectionStale();
    void NewBytes();
    void ReportPacket(struct zephyr_packet* packet);
 
