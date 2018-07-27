@@ -475,7 +475,7 @@ bool ZephyrHRM::buildReport()
   m_msgs << "MAC: " << m_bt_mac.c_str() << "\n";
   m_msgs << "Channel: " << m_bt_channel << "\n";
   m_msgs << "Connected: " << std::boolalpha << m_comms_data->connected << "\n";
-  m_msgs << "Connection Stale: " << std::boolalpha << isConnectionStale() << "\n\n"
+  m_msgs << "Connection Stale: " << std::boolalpha << isConnectionStale() << "\n\n";
 
   if(m_comms_data->connected){
     m_msgs << "=============== Packet Info ===============\n";
