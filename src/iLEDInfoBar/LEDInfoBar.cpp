@@ -287,7 +287,7 @@ bool LEDInfoBar::OnStartUp()
 
     // This makes sure all the LEDS start off 
     // (if a game ends and a new one starts, the NeoPixels have a cache to store their last value)
-    m_serial->WriteToSerialPort(toString(ALL_OFF, true));
+    m_serial->WriteToSerialPort(toString(ALL_ON, false));
     m_serial->SerialSend();
   }
   else
@@ -317,7 +317,6 @@ void LEDInfoBar::RegisterVariables()
   Register(m_have_flag_var     , 0);
   Register(m_in_tag_range_var  , 0);
   Register(m_flag_zone_var     , 0);
-  Register("ALL_OFF"           , 0);
   Register("ALL_ON"            , 0);
 }
 

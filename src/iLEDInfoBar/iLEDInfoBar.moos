@@ -21,7 +21,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB    		     @ NewConsole = false
   //Run = uTimerScript	     @ NewConsole = false
   Run = iLEDInfoBar		     @ NewConsole = false
-  Run = iLEDInterpreter		 @ NewConsole = false
+ // Run = iLEDInterpreter		 @ NewConsole = false
   //Run = pLogger 		     @ NewConsole = false
 }
 
@@ -33,7 +33,7 @@ ProcessConfig = iLEDInfoBar
    AppTick    = 4
    CommsTick  = 4
    TEAM_COLOR = blue
-   PORT	  	  = /dev/cu.usbmodem3869091
+   PORT	  	  = /dev/cu.usbmodem4299101
    BAUDRATE   = 9600
 
    // LED vars to register

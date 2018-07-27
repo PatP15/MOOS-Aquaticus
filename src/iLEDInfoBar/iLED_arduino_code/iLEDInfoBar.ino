@@ -53,8 +53,7 @@ void changeState(int, int);
 uint32_t getPixelColor(int);
 //void blink(int);
 int ctoi(char);
-void allOn();
-void allOff();
+void allOn(bool);
 void setupColors();
 void blink();
 bool updateBlinkingList(int, int);
@@ -71,10 +70,6 @@ void setup()
   while (!Serial){;}
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  
-  pinMode(DEBUG, OUTPUT);
-  digitalWrite(DEBUG, HIGH);
-  //debug();
 
   for (int i=0; i<NUM_PIXELS; i++) blinkingIcons[i]='!';
 }
@@ -83,7 +78,6 @@ void setup()
 ///           LOOP              ///
 void loop()
 {
-  if (benchtest) start();
   if (Serial.available() > 0) 
   {
     digitalWrite(DEBUG, HIGH);
@@ -91,10 +85,6 @@ void loop()
     char buffer[5];
     Serial.readBytes(buffer, 2);  // read 2 bytes from Serial port
     int type  = ctoi(buffer[0]);
-
-    if (type == ALL_ON)  { allOn(); return; }   // for debugging
-    if (type == ALL_OFF) { allOff(); return; }  // for debugging
-
     int state = ctoi(buffer[1]);
     strip.setBrightness(100);
     changeState(type, state);
@@ -106,15 +96,12 @@ void loop()
   //debug();
   blink();
   strip.show();
-  
-  if (benchtest) printElapsedTime(stop());
 }
 
 ///////////////////////////////////
 ///     UTILITY FUNCTIONS       ///
 void changeState(int type, int state)
 {
-  if (benchtest) start();
   if (state == m_OFF)
   {
     strip.setPixelColor(type+OFFSET,blank);
@@ -133,20 +120,22 @@ void changeState(int type, int state)
   {
     strip.setPixelColor(type+OFFSET,blank);
   }
-  if (benchtest) printElapsedTime(stop());
+  else if (type == ALL_ON)
+  {
+    (state == m_ACTIVE ? allOn(true) : allOn(false));
+  }
 }
 
 uint32_t getPixelColor(int type)
 {
-  if (benchtest) start();
   switch (type) // set Icon colors here
   {
-    case m_HAVE_FLAG:     if (benchtest) printElapsedTime(stop()); return (green);
-    case m_FLAG_ZONE:     if (benchtest) printElapsedTime(stop()); return (green);
-    case m_OUT_OF_BOUNDS:  return (red);
-    case m_TAGGED:        if (benchtest) printElapsedTime(stop()); return (red);
-    case m_IN_TAG_RANGE:  if (benchtest) printElapsedTime(stop()); return (yellow);
-    case m_ROBOT_HEALTH:  if (benchtest) printElapsedTime(stop()); return (red);
+    case m_HAVE_FLAG:     return (green);
+    case m_FLAG_ZONE:     return (green);
+    case m_OUT_OF_BOUNDS: return (red);
+    case m_TAGGED:        return (red);
+    case m_IN_TAG_RANGE:  return (yellow);
+    case m_ROBOT_ICON:  return (red);
     default:              return (blank);
   }
 }
@@ -161,8 +150,6 @@ void debug()
 
 void blink()
 {
-  //debug();
-  if (benchtest) start();
   currentMillis = millis();  // for blinking lights
   if (currentMillis - previousMillis >= interval) {
     // save the last time LED blinked
@@ -172,11 +159,8 @@ void blink()
       if (blinkingIcons[i]=='!') return;
       changeState(blinkingIcons[i], (on ? m_ACTIVE : OFF_BLINK));
     }
-    
-    debug();
     (on ? on=false : on=true); // swap on and off for blink
   }
-  if (benchtest) printElapsedTime(stop());
 }
 
 void add(int type)
@@ -197,36 +181,24 @@ void add(int type)
 
 bool updateBlinkingList(int type, int state)
 {
-  if (benchtest) start();
   for (int i=0;i<NUM_PIXELS;i++)
     if (blinkingIcons[i] == type){  // if type in list
-      if (benchtest) printElapsedTime(stop());
+      
       if (state == m_OFF) blinkingIcons[i]='!'; // && new state off, remove from list
       return(true); // either is or was on list
     }
   // if exit loop then type not in list
   if (state != m_OFF) // if not in list && new state is not OFF, then add to list
     add(type);
-  if (benchtest) printElapsedTime(stop());
+  
   return(false);
 }
 
-void allOff()
+void allOn(bool state = true)
 {
-  if (benchtest) start();
   for (unsigned int i=0; i<NUM_PIXELS; i++)
-    strip.setPixelColor(i,blank);
+    strip.setPixelColor(i,(state ? green : blank));
   strip.show();
-  if (benchtest) printElapsedTime(stop());
-}
-
-void allOn()
-{
-  if (benchtest) start();
-  for (unsigned int i=0; i<NUM_PIXELS; i++)
-    strip.setPixelColor(i,green);
-  strip.show();
-  if (benchtest) printElapsedTime(stop());
 }
 
 int ctoi(char ch) { return (ch - 48); }
