@@ -150,8 +150,8 @@ bool ZephyrHRM::BTThread(void* param){
           close(s);
           s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
         }
-        main_t->gotLifeSign();
       }
+      main_t->gotLifeSign();
       data->connected = true;
 
       usleep(1000);
