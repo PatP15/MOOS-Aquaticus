@@ -67,7 +67,7 @@ class ZephyrHRM : public AppCastingMOOSApp
    int m_bt_channel;
    int m_packet_num;
    int m_life_sign_c;
-   float m_last_life_sign_time;
+   double m_last_life_sign_time;
    static const int m_bt_data_buf_size = 1024;
    unsigned char m_bt_data_buf[m_bt_data_buf_size];
 

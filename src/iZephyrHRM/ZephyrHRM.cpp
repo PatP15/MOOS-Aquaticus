@@ -1,8 +1,8 @@
 /************************************************************/
-/*    NAME:                                               */
+/*    NAME: Carter Fendley                                  */
 /*    ORGN: MIT                                             */
-/*    FILE: ZephyrHRM.cpp                                        */
-/*    DATE:                                                 */
+/*    FILE: ZephyrHRM.cpp                                   */
+/*    DATE: 07/30/2018                                      */
 /************************************************************/
 
 #include "ZephyrHRM.h"
@@ -115,10 +115,10 @@ bool ZephyrHRM::requestSummaryPacket(int &s, bool active){
 }
 
 void ZephyrHRM::gotLifeSign(){
-  m_last_life_sign_time = MOOSTime();
+  m_last_life_sign_time = MOOSLocalTime();
 }
 bool ZephyrHRM::isConnectionStale(){
-  return ((MOOSTime() - m_last_life_sign_time) > 30);
+  return ((MOOSLocalTime() - m_last_life_sign_time) > 30);
 }
 
 
@@ -127,15 +127,16 @@ bool ZephyrHRM::BTThread(void* param){
   ZephyrHRM* main_t = (ZephyrHRM*) data->call_back;
 
   int s, status;
-  s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+  s = 0;
+
+  struct timeval tv;
+  tv.tv_sec = 15;
+  tv.tv_usec = 0;
 
   struct sockaddr_rc addr = {0};
   addr.rc_family = AF_BLUETOOTH;
   addr.rc_channel = (uint8_t) data->channel;
   str2ba(data->mac.c_str(), &addr.rc_bdaddr);
-
-  data->buf_begin = 0;
-  data->buf_end = 0;
 
   while(1){
     if(!data->connected || main_t->isConnectionStale()){
@@ -143,14 +144,17 @@ bool ZephyrHRM::BTThread(void* param){
       data->connected = false;
       status = -1;
       while(status !=0){
-        status = connect(s, (struct sockaddr*)&addr, sizeof(addr));
-
-        if(status != 0){
-          //If connection failed fd is no longer usable
+        if(s != 0){
+          //Close fd if it's not
           close(s);
-          s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+          s = 0;
         }
+        s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+
+        status = connect(s, (struct sockaddr*)&addr, sizeof(addr));
       }
+      //Set timout to 15sec
+      setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
       main_t->gotLifeSign();
       data->connected = true;
 
@@ -158,6 +162,9 @@ bool ZephyrHRM::BTThread(void* param){
 
       requestGeneralPacket(s, true);
       requestSummaryPacket(s, true);
+
+      data->buf_begin = 0;
+      data->buf_end = 0;
     }
 
     //Mutex lock to prevent race conditions
@@ -475,14 +482,12 @@ bool ZephyrHRM::buildReport()
   m_msgs << "MAC: " << m_bt_mac.c_str() << "\n";
   m_msgs << "Channel: " << m_bt_channel << "\n";
   m_msgs << "Connected: " << std::boolalpha << m_comms_data->connected << "\n";
-  m_msgs << "Connection Stale: " << std::boolalpha << isConnectionStale() << "\n\n";
 
   if(m_comms_data->connected){
     m_msgs << "=============== Packet Info ===============\n";
     m_msgs << "Failed writes: " << m_comms_data->failed_writes << "\n";
     m_msgs << "Number of packets: " << m_packet_num << "\n";
     m_msgs << "Life sign count: " << m_life_sign_c << "\n";
-    m_msgs << "Last life sign MOOSTime: " << m_last_life_sign_time << "\n\n";
     m_msgs << "=============== General Info===============\n";
     m_msgs << "Worn Status: " << std::boolalpha << m_last_hrm_data.worn << "\n";
     m_msgs << "Heart Rate Confidence: " << m_last_hrm_data.hr_conf << " %\n";
