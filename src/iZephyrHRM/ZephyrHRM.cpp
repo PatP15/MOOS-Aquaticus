@@ -300,7 +300,6 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     int hr = (int) payload[9] & 0xFF; 
     double resp_rate = (double) ((short)(payload[11] & 0xFF) | ((payload[12] & 0xFF) << 8)) / 10;
     
-    int hr_confidence = (int) payload[37];
     short posture = (short) ((payload[15] & 0xFF) | ((payload[16] & 0xFF) << 8));
 
     short vmu_tmp = (short) ((payload[17] & 0xFF) | ((payload[18] & 0xFF) << 8));
@@ -321,17 +320,17 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
 
     std::stringstream ss;
     ss << "ms=" << ms << ",hr=" << hr << ",br=" \
-    << resp_rate << ",hr_conf=" << hr_confidence << ",posture=" << posture << ",worn_status=" << worn_status \
+    << resp_rate << ",posture=" << posture << ",worn_status=" << worn_status \
     << ",ecg_amp=" << ecg_amp << ",ecg_noise=" << ecg_noise;
     Notify("HRM_GENERAL_PACKET", ss.str());
 
       m_last_hrm_data.hr = hr;
-      Notify("HEART_RATE", hr);
+      Notify("HRM_HEART_RATE", hr);
       m_last_hrm_data.posture = posture;
-      Notify("POSTURE", posture);
+      Notify("HRM_POSTURE", posture);
       m_last_hrm_data.bat_volt = bat_volt;
       m_last_hrm_data.resp_rate = resp_rate;
-      Notify("RESPERATION_RATE", resp_rate);
+      Notify("HRM_RESPERATION_RATE", resp_rate);
   }else if(msgID == 0xBD){
     if(end == ACK)
       reportEvent("Summary packet request ACK. Summary packets should now be streaming");
@@ -354,9 +353,9 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     Notify("HRM_SUMMARY_PACKET", ss.str());
 
       m_last_hrm_data.hrv = hrv;
-      Notify("HEART_RATE_VARIABILITY", hrv);
+      Notify("HRM_HEART_RATE_VARIABILITY", hrv);
       m_last_hrm_data.hr_conf = hr_conf;
-      Notify("HEART_RATE_CONFIDENCE", hr_conf);
+      Notify("HRM_HEART_RATE_CONFIDENCE", hr_conf);
   }else{
     std::stringstream warning;
     //warning << "Unhandled packet with ID: " << std::setw(2) << (0xFF & msgID);
