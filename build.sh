@@ -6,6 +6,8 @@ CMD_LINE_ARGS=""
 BUILD_ALL="ON"
 BUILD_VOIP="OFF"
 BUILD_HRM="OFF"
+BUILD_WEBCAM="OFF"
+BUILD_MOKAI="OFF"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -20,6 +22,8 @@ for ARGI; do
     printf "  --minimal, -m                     \n"
     printf "  --voip                            \n"
     printf "  --hrm                             \n"
+    printf "  --cam                             \n"
+    printf "  --mokai                             \n"
     printf "Notes:                              \n"
     printf " (1) All other command line args will be passed as args    \n"
     printf "     to \"make\" when it is eventually invoked.            \n"
@@ -37,7 +41,12 @@ for ARGI; do
   elif [ "${ARGI}" = "--voip" ] ; then
    BUILD_VOIP="ON"
   elif [ "${ARGI}" = "--hrm" ] ; then
-   BUILD_HRM="ON"
+      BUILD_HRM="ON"
+  elif [ "${ARGI}" = "--cam" ] ; then
+      BUILD_WEBCAM="ON"
+  elif [ "${ARGI}" = "--mokai" ] ; then
+      BUILD_MOKAI="ON"
+      BUILD_ALL="OFF"
   else
     CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
   fi
@@ -50,7 +59,7 @@ done
 mkdir -p build
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_VOIP=$BUILD_VOIP -DBUILD_HRM=$BUILD_HRM -DBUILD_ALL=$BUILD_ALL ../
+cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_MOKAI=$BUILD_MOKAI -DBUILD_WEBCAM=$BUILD_WEBCAM -DBUILD_VOIP=$BUILD_VOIP -DBUILD_HRM=$BUILD_HRM -DBUILD_ALL=$BUILD_ALL ../
 
 make ${CMD_LINE_ARGS}
 cd ${INVOCATION_ABS_DIR}
