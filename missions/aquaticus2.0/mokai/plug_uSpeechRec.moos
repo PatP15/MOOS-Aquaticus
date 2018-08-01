@@ -5,4 +5,6 @@ ProcessConfig = uSpeechRec
   CommsTick = 4
 
   JuliusConf = Alpha.jconf
+
+StartState = Paused
 }
