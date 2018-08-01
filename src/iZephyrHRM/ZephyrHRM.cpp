@@ -295,20 +295,38 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     //Event Packet
   }else if(msgID == 0x20){
     //GENERAL PACKET
+    int year = (int) (payload[1] & 0xFF) | ((payload[2] 0xFF) << 8);
+    char month = (payload[3]);
+    char day = (payload[4]);
+    long ms = (long) (payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) ((payload[8] & 0xFF) << 24);
+  
     int hr = (int) payload[9] & 0xFF;
     double resp_rate = (double) ((short)(payload[11] & 0xFF) | ((payload[12] & 0xFF) << 8))/10;
     
     int hr_confidence = (int) payload[37];
     short posture = (short) ((payload[15] & 0xFF) | ((payload[16] & 0xFF) << 8));
+
+    short vmu_tmp = (short) (payload[17] & 0xFF) | ((payload[18] & 0xFF) << 8);
+    double vmu = (double) vmu_tmp / 100;
     
     short bat_temp = (short) (payload[21] & 0xFF) | ((payload[22] & 0xFF) << 8);
     double bat_volt = (double) (bat_temp/1000);
 
+    double ecg_amp = (double) (payload[25] & 0xFF) | ((payload[26] & 0xFF) << 8);
+    double ecg_noise = (double) (payload[27] & 0xFF) | ((payload[28] & 0xFF) << 8);
+
     unsigned char worn_status = (payload[52] & 0x80) >> 7;
+
     if(worn_status == 0x1)
       m_last_hrm_data.worn = true;
     else
       m_last_hrm_data.worn = false;
+
+    std::stringstream ss;
+    ss << "year="<< year << ",month=" << month << ",day=" << day << ",ms=" << ms << ",hr=" << hr << ",br=" \
+    << resp_rate << ",hr_conf=" << hr_conf << ",posture=" << posture << ",worn_status=" << worn_status \
+    << ",ecg_amp=" << ecg_amp << ",ecg_noise=" << ecg_noise;
+    Notify("HRM_GENERAL_PACKET", ss.str());
 
       m_last_hrm_data.hr = hr;
       Notify("HEART_RATE", hr);
@@ -326,9 +344,18 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
   }else if(msgID == 0x2B){
     //SUMMARY PACKET
     //ReportPacket(packet);
+    int year = (int) (payload[1] & 0xFF) | ((payload[2] 0xFF) << 8);
+    char month = (payload[3]);
+    char day = (payload[4]);
+    long ms = (long) (payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) ((payload[8] & 0xFF) << 24);
+  
     short hr_conf = (short) (payload[34] & 0xFF);
     int hrv = (int)((payload[35] & 0xFF) | ((payload[36] & 0xFF) << 8));
     
+    std::stringstream ss;
+    ss << "year="<< year << ",month=" << month << ",day=" << day << ",ms=" << ms << ",hr_conf=" << hr_conf << ",hrv=" << hrv;
+    Notify("HRM_SUMMARY_PACKET", ss.str());
+
       m_last_hrm_data.hrv = hrv;
       Notify("HEART_RATE_VARIABILITY", hrv);
       m_last_hrm_data.hr_conf = hr_conf;
