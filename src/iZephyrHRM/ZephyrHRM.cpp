@@ -295,13 +295,10 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     //Event Packet
   }else if(msgID == 0x20){
     //GENERAL PACKET
-    int year = (int) ((payload[1] & 0xFF) | ((payload[2] & 0xFF) << 8));
-    char month = (payload[3]);
-    char day = (payload[4]);
-    long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
+    long ms = (long) ((payload 16) | ((payload[8] & 0xFF) << 24));
   
-    int hr = (int) payload[9] & 0xFF;
-    double resp_rate = (double) ((short)(payload[11] & 0xFF) | ((payload[12] & 0xFF) << 8))/10;
+    int hr = (int) payload[9] 
+    double resp_rate = (double
     
     int hr_confidence = (int) payload[37];
     short posture = (short) ((payload[15] & 0xFF) | ((payload[16] & 0xFF) << 8));
@@ -323,7 +320,7 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
       m_last_hrm_data.worn = false;
 
     std::stringstream ss;
-    ss << "year="<< year << ",month=" << month << ",day=" << day << ",ms=" << ms << ",hr=" << hr << ",br=" \
+    ss << "ms=" << ms << ",hr=" << hr << ",br=" \
     << resp_rate << ",hr_conf=" << hr_confidence << ",posture=" << posture << ",worn_status=" << worn_status \
     << ",ecg_amp=" << ecg_amp << ",ecg_noise=" << ecg_noise;
     Notify("HRM_GENERAL_PACKET", ss.str());
