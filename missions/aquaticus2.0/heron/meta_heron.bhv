@@ -13,7 +13,7 @@ set MODE = RECOVERING {
 	MODE = ACTIVE
   RECOVER = true
 }
-	
+
 set MODE     = RETURNING {
   MODE       = ACTIVE
   RETURN     = true
@@ -98,7 +98,7 @@ set MODE     = SHIELDING {
   ACTION     = SHIELD
 }
 
-set MODE     = STATIONNING {
+set MODE     = STATIONING {
   MODE       = ACTIVE:INGAME:TEAMPLAY
   ACTION     = STATION
 }
@@ -209,7 +209,7 @@ Behavior = BHV_Waypoint
   pwt                     = 50
   perpetual               = true
   updates		  = UPDATE_WPT
-  condition               = (MODE == UNTAGGED) and (MODE == ATTACKING_RIGHT) 
+  condition               = (MODE == UNTAGGED) and (MODE == ATTACKING_RIGHT)
   runflag                 = BOT_DIALOG_STATUS=Attacking
   endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
   endflag                 = TAGGED=true
@@ -310,7 +310,7 @@ Behavior = BHV_StationKeep
 {
   name                    = station_keep
   pwt                     = 100
-  condition               = MODE==STATIONNING // example
+  condition               = MODE==STATIONING // example
   runflag                 = BOT_DIALOG_STATUS=Stationing
 
   center_activate         = true
@@ -385,13 +385,13 @@ Behavior = BHV_Defense_Multi
   pwt                     = 100
   condition               = MODE==PROTECTING
   runflag                 = BOT_DIALOG_STATUS=Protecting
-  
+
   flag                    = $(UNTAG_POS)
   enemy_flag       	  = $(GRAB_POS)
   team	 		  = $(VTEAM)
   self	 		  = $(VNAME)
   teammate		  = $(HERON_TEAMMATE)
-  
+
   speed                   = 2  //default
   distance_from_flag      = 20 //default
 
@@ -404,13 +404,13 @@ Behavior = BHV_Cover
   pwt                     = 100
   condition               = MODE==SHIELDING
   runflag                 = BOT_DIALOG_STATUS=Covering
-  
+
   team	                  = $(VTEAM)
   requestor               = $(VTEAM)_one
   enemy_flag		  = $(GRAB_POS)
   self	     		  = $(VNAME)
   updates		  = SHIELD_REQUEST
-  
+
   speed                   = 2  //default
   distance_from_flag      = 10 //default
 
