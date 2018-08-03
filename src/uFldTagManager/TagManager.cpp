@@ -191,6 +191,7 @@ bool TagManager::OnStartUp()
 bool TagManager::Iterate()
 {
   AppCastingMOOSApp::Iterate();
+  updateCanTagStates();
   processVTags();
   checkForExpiredTags();
   checkForOutOfZoneVehicles();
@@ -562,6 +563,101 @@ bool TagManager::handleConfigRobotUnTagPost(string str)
 }
 
 
+
+//------------------------------------------------------------
+// Procedure: updateCanTagStates()
+
+void TagManager::updateCanTagStates()
+{
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
+    string vname = p->first;
+    updateCanTagState(vname);
+  }
+}
+
+//------------------------------------------------------------
+// Procedure: updateCanTagState()
+
+void TagManager::updateCanTagState(string vname)
+{
+  if(m_map_node_records.count(vname) == 0)
+    return;
+
+  NodeRecord record = m_map_node_records[vname];
+  double vx = record.getX();
+  double vy = record.getY();
+  string vteam = record.getGroup();
+
+  bool first_look = (m_map_node_vtags_can_tag.count(vname) == 0);
+  bool can_tag_prev = m_map_node_vtags_can_tag[vname];
+  bool can_tag = true;
+  
+  // Part 1A: Check if this/tagging vehicle is currently itself tagged
+  if(m_map_node_vtags_nowtagged[vname])
+    can_tag = false;
+  
+  // Part 1B: Check if tag allowed based on freq and last tag
+  double elapsed = m_curr_time - m_map_node_vtags_last_tag[vname];
+  if(elapsed < m_tag_min_interval) 
+    can_tag = false;
+
+
+  // Part 2: Check if tag-target vehicle in zone for tagging
+  bool in_own_zone = false;
+  if((vteam == m_team_one) && (m_zone_one.contains(vx, vy)))
+    in_own_zone = true;
+  else if((vteam == m_team_two) && (m_zone_two.contains(vx, vy)))
+    in_own_zone = true;
+  if(!in_own_zone)
+    can_tag = false;
+
+
+  // Part 3: Measure and collect the range to each non-team member
+  //         Taking note of the closest target.
+  string taggable_node;
+  map<string, NodeRecord>::iterator p;
+  for(p=m_map_node_records.begin(); p!=m_map_node_records.end(); p++) {
+    string targ_name = p->first;
+    string targ_team = p->second.getGroup();
+    if((vname != targ_name) && (vteam != targ_team)) {
+      double targ_x    = p->second.getX();
+      double targ_y    = p->second.getY();
+
+      // Check if target is currently untagged
+      bool targ_currently_tagged = m_map_node_vtags_nowtagged[targ_name]; 
+    
+      // Check if target is in enemy territory
+      bool targ_in_enemy_zone = false;
+      if((vteam == m_team_one) && (m_zone_one.contains(targ_x, targ_y)))
+	targ_in_enemy_zone = true;
+      if((vteam == m_team_two) && (m_zone_two.contains(targ_x, targ_y)))
+	targ_in_enemy_zone = true;
+      
+      // Check the target range
+      if(targ_in_enemy_zone && !targ_currently_tagged) {
+	double targ_range = getTrueNodeRange(vx, vy, targ_name);
+	if(targ_range <= m_tag_range)
+	  taggable_node = targ_name;
+      }
+    }
+  }
+  if(taggable_node == "")
+    can_tag = false;
+
+  // Part 4: Update can_tag status and post a message if changed.
+  bool changed = false;
+  if(can_tag_prev != can_tag)
+    changed = true;
+
+  if(!changed && !first_look)
+    return;
+  
+  m_map_node_vtags_can_tag[vname] = can_tag;
+  
+  Notify("CANTAG_"+toupper(vname), boolToString(can_tag));
+  
+}
 
 //------------------------------------------------------------
 // Procedure: processVTags

@@ -67,8 +67,10 @@ class TagManager : public AppCastingMOOSApp
   double  getTrueNodeRange(double, double, std::string);
 
   void    processVTags();
-  void    postTagSummary();
   void    processVTag(VTag);
+  void    updateCanTagStates();
+  void    updateCanTagState(std::string vname);
+  void    postTagSummary();
   void    checkForExpiredTags();
   void    checkForOutOfZoneVehicles();
   void    postOnFieldStatus(std::string vname="");
@@ -110,7 +112,10 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_vtags_rejzone;
   std::map<std::string, unsigned int> m_map_node_vtags_rejself;
   std::map<std::string, double>       m_map_node_vtags_last_tag;
+  std::map<std::string, bool>         m_map_node_vtags_can_tag;
 
+  
+  
   // Perspective of vehicles being tagged: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
   std::map<std::string, bool>         m_map_node_vtags_nowtagged;

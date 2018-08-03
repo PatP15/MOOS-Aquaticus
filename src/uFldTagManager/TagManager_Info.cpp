@@ -99,7 +99,7 @@ void showExampleConfigAndExit()
   blk("  tag_circle = true         // default                          ");
   blk("  tag_circle_range = 5      // default (in meters)              ");
   blk("  tag_circle_color = green  // default                          ");
-  blk("  oop_circle_color = yellow // default                          ");
+  blk("  oob_circle_color = yellow // default                          ");
   blk("  tag_min_interval = 10     // default (in seconds)             ");
   blk("  tag_duration     = 30     // default (in seconds)             ");
   blk("                                                                ");
@@ -186,6 +186,7 @@ void showInterfaceAndExit()
   blk("  TAGGED_VEHICLES     = betty,gus,henry                         ");
   blk("  TAGGED_VNAME        = true                                    ");
   blk("  ONFIELD_VNAME       = true                                    ");
+  blk("  CANTAG_VNAME        = true                                    ");
   blk("                                                                ");
   blk("  VIEW_CIRCLE     = x=60.7,y=-65.98,radius=5,duration=0,        ");
   blk("                    label=betty,edge_color=red,fill_color=red,  ");
