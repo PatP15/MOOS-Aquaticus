@@ -291,11 +291,14 @@ ProcessConfig = pMarineViewer
   button_two   = RETURN  # RETURN_ALL=true
   button_two   = RETURN  # STATION_KEEP_ALL=false
 
-  button_three = CTF_RESET   # UNTAG_REQUEST=vname=mokai_red
-  button_three = UNTAG_REQUEST=vname=mokai_blue
-  button_three = UNTAG_REQUEST=vname=evan
-  button_three = UNTAG_REQUEST=vname=felix
-  button_three = UNTAG_REQUEST=vname=gus
+  button_three = CTF_RESET   # UNTAG_REQUEST=vname=red_one
+  button_three = UNTAG_REQUEST=vname=red_two
+  button_three = UNTAG_REQUEST=vname=red_three
+  button_three = UNTAG_REQUEST=vname=red_four
+  button_three = UNTAG_REQUEST=vname=blue_one
+  button_three = UNTAG_REQUEST=vname=blue_two
+  button_three = UNTAG_REQUEST=vname=blue_three
+  button_three = UNTAG_REQUEST=vname=blue_four
   button_three = FLAG_RESET=all
 
   button_four = PAUSE # DEPLOY_ALL=false
