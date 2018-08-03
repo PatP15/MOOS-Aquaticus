@@ -222,6 +222,8 @@ ProcessConfig = uFldShoreBroker
   qbridge = LED_TAGGED
   qbridge = LED_HAVE_FLAG
   qbridge = LED_IN_FLAG_ZONE
+
+  qbridge = AQUATICUS_GAME
 }
 
 
@@ -280,9 +282,9 @@ ProcessConfig = pMarineViewer
   scope = NODE_BROKER_PING
   scope = DEPLOY_ALL
 
-  action = STATION_KEEP_ALL = false
-  action = STATION_KEEP_ALL = true
-  action = CHASE_ALL = false
+  action = AQUATICUS_GAME_ALL = play
+  action = AQUATICUS_GAME_ALL = pause
+  action = AQUATICUS_GAME_ALL = stop
 
   button_one   = DEPLOY  # DEPLOY_ALL=true
   button_one   = MOOS_MANUAL_OVERRIDE_ALL=false
