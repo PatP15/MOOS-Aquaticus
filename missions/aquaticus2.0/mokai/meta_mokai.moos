@@ -24,6 +24,7 @@ Processconfig = ANTLER
 #ifdef VOICE ON
   Run = iMumbleClient       @ NewConsole = false
   Run = uSpeechRec          @ NewConsole = false
+  Run = pRecord             @ NewConsole = false ~ pRecordSpeechRec
 #elseifdef VOICE OFF
   Run = uTermCommand        @ NewConsole = true
 #endif
@@ -91,3 +92,5 @@ Processconfig = ANTLER
 #include plug_iButtonBox.moos
 
 #include plug_iLEDInfoBar.moos
+
+#include plug_pRecord_speech_rec.moos
