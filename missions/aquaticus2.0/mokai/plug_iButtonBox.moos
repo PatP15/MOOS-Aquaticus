@@ -8,16 +8,22 @@ ProcessConfig = iButtonBox
 //  PORT = /dev/tty.usbmodemFA131
 	BAUDRATE = 9600
 
+    //SPEECH BUTTOn
 	BUTTON_0_UP_POST = var=SPEECH_ACTIVE, sval=FALSE 
 
     BUTTON_0_DOWN_POST = var=SPEECH_ACTIVE, sval=TRUE
-  BUTTON_0_DOWN_POST = var=SAY_MOOS, sval=file=sounds/quick_bell.wav
-    
+    BUTTON_0_DOWN_POST = var=SAY_MOOS, sval=file=sounds/quick_bell.wav
+   
+    //VOIP BUTTON
     BUTTON_1_UP_POST = var=BUTTON_VOIP, sval=FALSE
-    BUTTON_1_DOWN_POST = var=BUTTON_VOIP, sval=TRUE
 
+    BUTTON_1_DOWN_POST = var=BUTTON_VOIP, sval=TRUE
+    BUTTON_1_DOWN_POST = var=SAY_MOOS, sval=file=sounds/quick_bell.wav
+
+    //GRAB BUTTON
     BUTTON_2_DOWN_POST = var=FLAG_GRAB_REQUEST, sval=vname=$(VNAME)
 
+    //TAB BUTTON
     BUTTON_3_DOWN_POST = var=TAG_REQUEST, sval=vname=$(VNAME)
 }
 
