@@ -198,6 +198,8 @@ ProcessConfig = uFldShoreBroker
   bridge   = src=HELM_MAP_CLEAR, alias=HELM_MAP_CLEAR
   bridge   = src=FLAG_SUMMARY
 
+  qbridge = AQUATICUS_GAME
+
 }
 
 
@@ -256,9 +258,9 @@ ProcessConfig = pMarineViewer
   scope = NODE_BROKER_PING
   scope = DEPLOY_ALL
 
-  action = STATION_KEEP_ALL = false
-  action = STATION_KEEP_ALL = true
-  action = CHASE_ALL = false
+  action = AQUATICUS_GAME_ALL = start
+  action = AQUATICUS_GAME_ALL = pause
+  action = AQUATICUS_GAME_ALL = stop
 
   button_one   = DEPLOY  # DEPLOY_ALL=true
   button_one   = MOOS_MANUAL_OVERRIDE_ALL=false
