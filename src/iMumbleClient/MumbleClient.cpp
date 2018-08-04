@@ -223,12 +223,11 @@ bool MumbleClient::OnStartUp()
 void MumbleClient::initMumbleLink() {
   // Begin with everything
   thread server_thread([this]() {
-    mumLibLock.lock();
-
     // Configure Mumble
     this->cb = new MumbleCallbackHandler(this->audioBuffers.playBuffer);
     mumlib::MumlibConfiguration conf;
     //conf.opusEncoderBitrate = 48000; // Higher = better quality, more bandwidth
+    mumLibLock.lock();
     this->mum = new mumlib::Mumlib(*cb, conf);
 
     // Attempt to maintain a connection forever
