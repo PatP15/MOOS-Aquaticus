@@ -295,7 +295,7 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     //Event Packet
   }else if(msgID == 0x20){
     //GENERAL PACKET
-    long ms = (long) ((payload[5]) & 0xFF) | ((payload[6] & 0xFF) << 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24);
+    long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF) << 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
   
     int hr = (int) payload[9] & 0xFF; 
     double resp_rate = (double) ((short)(payload[11] & 0xFF) | ((payload[12] & 0xFF) << 8)) / 10;
