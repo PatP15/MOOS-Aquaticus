@@ -18,5 +18,5 @@ ProcessConfig = pBasicContactMgr
   default_cpa_range_color   = gray30
 
 
-  Alert = id=trail, var=TRAIL_INFO, val="name=$[VNAME] # contact=mokai", alert_range=140
+  Alert = id=trail, var=TRAIL_INFO, val="name=$[RNAME] # contact=mokai", alert_range=140
 }

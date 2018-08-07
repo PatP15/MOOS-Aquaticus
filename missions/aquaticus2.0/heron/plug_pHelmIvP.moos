@@ -5,7 +5,7 @@ ProcessConfig = pHelmIvP
   CommsTick  = 4
   
   //ivp_behavior_dirs = /Users/carterf/src/moos-ivp-colregs/trunk/lib
-  Behaviors    = targ_$(VNAME).bhv
+  Behaviors    = targ_$(RNAME).bhv
   Verbose      = false
   Domain       = course:0:359:360
 #ifdef VTYPE uuv

@@ -1,6 +1,6 @@
 ServerHost = localhost
 ServerPort = $(VPORT)
-Community  = $(VNAME)
+Community  = $(RNAME)
 
 #include ../plug_origin_warp.moos
 

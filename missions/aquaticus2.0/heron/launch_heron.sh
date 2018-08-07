@@ -10,6 +10,7 @@ HELP="no"
 JUST_BUILD="no"
 VTEAM=""
 VNAME=""
+RNAME=""
 VMODEL="M300"
 
 START_POS="56,16,240"
@@ -28,34 +29,42 @@ HERON_TEAMMATE=""
 case "$1" in
     e|evan)
         HERON_IP=192.168.5.1
+        VNAME="EVAN"
         echo "EVAN heron selected."
         ;;
     f|felix)
         HERON_IP=192.168.6.1
+        VNAME="FELIX"
         echo "FELIX heron selected."
         ;;
     g|gus)
         HERON_IP=192.168.7.1
+        VNAME="GUS"
         echo "GUS heron selected."
         ;;
     h|hal)
         HERON_IP=192.168.8.1
+        VNAME="HAL"
         echo "HAL heron selected."
         ;;
     i|ida)
         HERON_IP=192.168.9.1
+        VNAME="IDA"
         echo "IDA heron selected."
         ;;
     j|jing)
         HERON_IP=192.168.10.1
+        VNAME="JING"
         echo "JING heron selected."
         ;;
     k|kirk)
         HERON_IP=192.168.11.1
+        VNAME="KIRK"
         echo "KIRK heron selected."
         ;;
     l|luke)
 	    HERON_IP=192.168.12.1
+      VNAME="LUKE"
 	    echo "LUKE heron selected."
 	    ;;
     *)
@@ -67,42 +76,42 @@ esac
 case "$2" in
     r1|red_one)
         VTEAM="red"
-        VNAME="red_one"
+        RNAME="red_one"
         VPORT="9011"
         SHARE_LISTEN="9311"
         echo "Vehicle set to red one."
         ;;
     r2|red_two)
         VTEAM="red"
-        VNAME="red_two"
+        RNAME="red_two"
         VPORT="9012"
         SHARE_LISTEN="9312"
         echo "Vehicle set to red two."
         ;;
     r3|red_three)
         VTEAM="red"
-        VNAME="red_three"
+        RNAME="red_three"
         VPORT="9013"
         SHARE_LISTEN="9313"
         echo "Vehicle set to red two."
         ;;
     r4|red_four)
         VTEAM="red"
-        VNAME="red_four"
+        RNAME="red_four"
         VPORT="9014"
         SHARE_LISTEN="9314"
         echo "Vehicle set to red two."
         ;;
     b1|blue_one)
         VTEAM="blue"
-        VNAME="blue_one"
+        RNAME="blue_one"
         VPORT="9015"
         SHARE_LISTEN="9315"
         echo "Vehicle set to blue one."
         ;;
     b2|blue_two)
         VTEAM="blue"
-        VNAME="blue_two"
+        RNAME="blue_two"
         VPORT="9016"
         SHARE_LISTEN="9316"
 	PLAYERS="b1,b3,b4"
@@ -110,14 +119,14 @@ case "$2" in
         ;;
     b3|blue_three)
         VTEAM="blue"
-        VNAME="blue_three"
+        RNAME="blue_three"
         VPORT="9017"
         SHARE_LISTEN="9317"
         echo "Vehicle set to blue three."
         ;;
     b4|blue_four)
         VTEAM="blue"
-        VNAME="blue_four"
+        RNAME="blue_four"
         VPORT="9018"
         SHARE_LISTEN="9318"
         echo "Vehicle set to blue four."
@@ -217,10 +226,10 @@ fi
 
 if [ "${HELP}" = "yes" ]; then
     echo ""
-    echo "USAGE: $0 <heron_name> <vehicle_name> <heron_teammate_vehicale_name> [SWITCHES]"
+    echo "USAGE: $0 <heron_vehicle_name> <vehicle_role> <heron_teammate_vehicle_role> [SWITCHES]"
     
     echo ""
-    echo "POSSIBLE HERON NAMES:"
+    echo "POSSIBLE HERON VEHICLE NAMES:"
     echo "  evan,         e   : Evan heron."
     echo "  felix,        f   : Felix heron."
     echo "  gus,          g   : Gus heron."
@@ -231,7 +240,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  luke,         l   : Luke heron."
 
     echo ""
-    echo "POSSIBLE VEHICLE NAMES (and heron teammate_names):"
+    echo "POSSIBLE ROLES (and heron teammate_roles):"
     echo "  blue_one,     b1  : Vehicle one on blue team."
     echo "  blue_two,     b2  : Vehicle two on blue team."
     echo "  blue_three,   b3  : Vehicle three on blue team."
@@ -264,16 +273,17 @@ if [[ -n $START_POS_X && (-n $START_POS_Y && -n $START_POS_A)]]; then
 elif [[ -z $START_POS_X && (-z $START_POS_Y && -z $START_POS_A) ]]; then
   echo "Starting from default postion: " $START_POS
 else [[ -z $START_POS_X || (-z $START_POS_Y || -z $START_POS_A) ]]
-  echo "When specifing a strating coordinate, all 3 should be specified (x,y,a)."
+  echo "When specifying a starting coordinate, all 3 should be specified (x,y,a)."
   echo "See help (-h)."
   exit 1
 fi
 
-echo "Assembling MOOS file targ_${VNAME}.moos"
+echo "Assembling MOOS file targ_${RNAME}.moos"
 
 
-nsplug meta_heron.moos targ_${VNAME}.moos -f \
+nsplug meta_heron.moos targ_${RNAME}.moos -f \
     VNAME=$VNAME                 \
+    RNAME=$RNAME                 \
     VPORT=$VPORT                 \
     WARP=$TIME_WARP              \
     SHARE_LISTEN=$SHARE_LISTEN   \
@@ -289,13 +299,14 @@ nsplug meta_heron.moos targ_${VNAME}.moos -f \
     START_POS=$START_POS         \
     $SIM
 
-echo "Assembling BHV file targ_${VNAME}.bhv"
-nsplug meta_heron.bhv targ_${VNAME}.bhv -f  \
+echo "Assembling BHV file targ_${RNAME}.bhv"
+nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
         VTEAM=$VTEAM                \
         VNAME=$VNAME                \
+        RNAME=$RNAME                 \
         GRAB_POS=$GRAB_POS          \
         GRABR_POS=$GRABR_POS           \
         GRABL_POS=$GRABL_POS             \
@@ -312,10 +323,10 @@ fi
 #  Part 4: Launch the processes
 #-------------------------------------------------------
 
-echo "Launching $VNAME MOOS Community "
-pAntler targ_${VNAME}.moos >& /dev/null &
+echo "Launching $RNAME MOOS Community "
+pAntler targ_${RNAME}.moos >& /dev/null &
 
-uMAC targ_${VNAME}.moos
+uMAC targ_${RNAME}.moos
 
 echo "Killing all processes ..."
 kill -- -$$
