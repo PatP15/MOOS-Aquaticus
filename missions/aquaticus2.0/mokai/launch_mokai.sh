@@ -9,6 +9,7 @@ JUST_BUILD="no"
 START_POS="0,0,0"
 VNAME=""
 VTEAM=""
+RNAME=""
 VPORT="9013"
 SHARE_LISTEN="9313"
 BUTTON="5"
@@ -18,59 +19,84 @@ TEAMMATE2=""
 VOICE="ON"
 HRM="NO"
 
+
 case "$1" in
+    d|donatello)
+        VNAME="DONA"
+        echo "donatello mokai selected."
+        ;;
+    l|leonardo)
+        VNAME="LEON"
+        echo "leon mokai selected."
+        ;;
+    m|michelangelo)
+        VNAME="MICH"
+        echo "michelangelo mokai selected."
+        ;;
+    r|raphael)
+        VNAME="RAPH"
+        echo "raphael mokai selected."
+        ;;
+    *)
+        HELP="yes"
+        echo "Error invalid positional argument!"
+        ;;
+esac
+
+
+case "$2" in
     r1|red_one)
         VTEAM="red"
-        VNAME="red_one"
+        RNAME="red_one"
         VPORT="9011"
         SHARE_LISTEN="9311"
         echo "Vehicle set to red one."
         ;;
     r2|red_two)
         VTEAM="red"
-        VNAME="red_two"
+        RNAME="red_two"
         VPORT="9012"
         SHARE_LISTEN="9312"
         echo "Vehicle set to red two."
         ;;
     r3|red_three)
         VTEAM="red"
-        VNAME="red_three"
+        RNAME="red_three"
         VPORT="9013"
         SHARE_LISTEN="9313"
         echo "Vehicle set to red two."
         ;;
     r4|red_four)
         VTEAM="red"
-        VNAME="red_four"
+        RNAME="red_four"
         VPORT="9014"
         SHARE_LISTEN="9314"
         echo "Vehicle set to red two."
         ;;
     b1|blue_one)
         VTEAM="blue"
-        VNAME="blue_one"
+        RNAME="blue_one"
         VPORT="9015"
         SHARE_LISTEN="9315"
         echo "Vehicle set to blue one."
         ;;
     b2|blue_two)
         VTEAM="blue"
-        VNAME="blue_two"
+        RNAME="blue_two"
         VPORT="9016"
         SHARE_LISTEN="9316"
         echo "Vehicle set to blue two."
         ;;
     b3|blue_three)
         VTEAM="blue"
-        VNAME="blue_three"
+        RNAME="blue_three"
         VPORT="9017"
         SHARE_LISTEN="9317"
         echo "Vehicle set to blue three."
         ;;
     b4|blue_four)
         VTEAM="blue"
-        VNAME="blue_four"
+        RNAME="blue_four"
         VPORT="9018"
         SHARE_LISTEN="9318"
         echo "Vehicle set to blue four."
@@ -81,7 +107,7 @@ case "$1" in
         ;;
 esac
 
-for arg in "${@:2:2}"; do
+for arg in "${@:3:2}"; do
     REQUESTED_TEAMMATE=""
     case "$arg" in
         r1|red_one)
@@ -124,7 +150,7 @@ for arg in "${@:2:2}"; do
     fi
 done
 	
-for arg in "${@:4}"; do
+for arg in "${@:5}"; do
     if [ "${arg}" = "--help" -o "${arg}" = "-H" ] ; then
         HELP="yes"
     elif [ "${arg//[^0-9]/}" = "$arg" -a "$TIME_WARP" = 1 ]; then
@@ -172,10 +198,17 @@ fi
 
 if [ "${HELP}" = "yes" ]; then
     echo ""
-    echo "$0 <vehical_name> <teammate1_name> <teammate2_name> [SWITCHES]"
+    echo "$0 <vehical_name> <vehicle_role> <teammate1_role> <teammate2_role> [SWITCHES]"
 
     echo ""
-    echo "POSSIBLE VEHICLE OR TEAMMATE NAMES:"
+    echo "POSSIBLE MOKAI VEHICLE NAMES:"
+    echo "  donatello,    d     : Mokai vehicle name donatello."  
+    echo "  leonardo,     l     : Mokai vehicle name leonardo."
+    echo "  michelangelo, m     : Mokai vehicle name michelangelo."
+    echo "  raphael,      r     : Mokai vehicle name raphael."
+
+    echo ""
+    echo "POSSIBLE VEHICLE ROLES OR TEAMMATE ROLES:"
     echo "  blue_one,     b1    : Vehicle one on blue team."
     echo "  blue_two,     b2    : Vehicle two on blue team."
     echo "  blue_three,   b3    : Vehicle three on blue team."
@@ -216,10 +249,11 @@ if [ -z $TEAMMATE2 ]; then
     exit 2
 fi
 
-echo "Assembling MOOS file targ_${VNAME}_${VTEAM}.moos ."
+echo "Assembling MOOS file targ_${RNAME}_${VTEAM}.moos ."
 
-nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
+nsplug meta_mokai.moos targ_${RNAME}_${VTEAM}.moos -f  \
        VNAME="${VNAME}"             \
+       RNAME="${RNAME}"             \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$TIME_WARP              \
@@ -236,10 +270,11 @@ nsplug meta_mokai.moos targ_${VNAME}_${VTEAM}.moos -f  \
        HRM=$HRM                     \
        $SIM
 
-echo "Assembling BHV file targ_${VNAME}_${VTEAM}.bhv ."
+echo "Assembling BHV file targ_${RNAME}_${VTEAM}.bhv ."
 
-nsplug meta_mokai.bhv targ_${VNAME}_${VTEAM}.bhv -f  \
+nsplug meta_mokai.bhv targ_${RNAME}_${VTEAM}.bhv -f  \
        VNAME="${VNAME}"             \
+       RNAME="${RNAME}"             \
        VPORT=$VPORT                 \
        SHARE_LISTEN=$SHARE_LISTEN   \
        WARP=$WARP                   \
@@ -261,12 +296,12 @@ if [ ${JUST_BUILD} = "yes" ] ; then
     exit 0
 fi
 
-if [ ! -e targ_${VNAME}_${VTEAM}.moos ]; then echo "no targ_${VNAME}_${VTEAM}.moos!"; exit 1; fi
-if [ ! -e targ_${VNAME}_${VTEAM}.bhv ]; then echo "no targ_${VNAME}_${VTEAM}.bhv!"; exit 1; fi
+if [ ! -e targ_${RNAME}_${VTEAM}.moos ]; then echo "no targ_${RNAME}_${VTEAM}.moos!"; exit 1; fi
+if [ ! -e targ_${RNAME}_${VTEAM}.bhv ]; then echo "no targ_${RNAME}_${VTEAM}.bhv!"; exit 1; fi
 
-echo "Launching $VNAME MOOS Community."
-pAntler targ_${VNAME}_${VTEAM}.moos >& /dev/null &
-uMAC targ_${VNAME}_${VTEAM}.moos
+echo "Launching $RNAME MOOS Community."
+pAntler targ_${RNAME}_${VTEAM}.moos >& /dev/null &
+uMAC targ_${RNAME}_${VTEAM}.moos
 
 echo "Killing all processes ..."
 kill -- -$$

@@ -17,6 +17,8 @@ ProcessConfig = pRecordSpeechRec
 //pRecord saves the directory relative to execution of the      
 //program with date and time appended.                          
 //If not specified, defaults to "pRecord_saves"               
-  SAVE_DIR_PREFIX = SPEECH_REC_SAVE                                 
+//  SAVE_DIR_PREFIX = SPEECH_REC_SAVE
+    SAVE_DIR_PREFIX = SPCH_%(VNAME)_%(RNAME)
+                                
                                                                 
 }   

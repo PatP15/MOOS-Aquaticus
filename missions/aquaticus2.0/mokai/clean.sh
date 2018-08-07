@@ -26,3 +26,6 @@ done
 rm -rf  $VERBOSE   MOOSLog_*  LOG_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
+rm -rf  $VERBOSE   SPCH_*
+rm -rf  $VERBOSE   VOIP_*
+rm -rf  $VERBOSE   AMB_*

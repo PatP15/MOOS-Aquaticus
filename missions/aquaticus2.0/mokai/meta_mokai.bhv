@@ -44,7 +44,7 @@ Behavior = BHV_Waypoint
 
   condition               = MODE == UNTAGGED
 
-  endflag                 = FLAG_GRAB_REQUEST=vname=$(VNAME)
+  endflag                 = FLAG_GRAB_REQUEST=vname=$(RNAME)
   endflag                 = TAGGED=true
 
   speed                   = 5 // meters per second

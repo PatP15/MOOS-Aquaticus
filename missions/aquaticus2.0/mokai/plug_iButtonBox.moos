@@ -21,9 +21,9 @@ ProcessConfig = iButtonBox
     BUTTON_1_DOWN_POST = var=SAY_MOOS, sval=file=sounds/quick_bell.wav
 
     //GRAB BUTTON
-    BUTTON_2_DOWN_POST = var=FLAG_GRAB_REQUEST, sval=vname=$(VNAME)
+    BUTTON_2_DOWN_POST = var=FLAG_GRAB_REQUEST, sval=vname=$(RNAME)
 
     //TAB BUTTON
-    BUTTON_3_DOWN_POST = var=TAG_REQUEST, sval=vname=$(VNAME)
+    BUTTON_3_DOWN_POST = var=TAG_REQUEST, sval=vname=$(RNAME)
 }
 
