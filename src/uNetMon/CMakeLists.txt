@@ -10,7 +10,7 @@ SET(SRC
 )
 
 ADD_EXECUTABLE(uNetMon ${SRC})
-set_target_properties(iMumbleClient PROPERTIES
+set_target_properties(uNetMon PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
