@@ -18,6 +18,7 @@ TEAMMATE1=""
 TEAMMATE2=""
 VOICE="ON"
 HRM="NO"
+HRM_DEVICE=""
 
 
 case "$1" in
@@ -171,9 +172,14 @@ for arg in "${@:5}"; do
     elif [ "${arg}" = "--voice-off" -o "${arg}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
-    elif [ "${arg}" = "--heart-rate-monitor" -o "${arg}" = "-hrm" ] ; then
+    elif [ "${arg}" = "--heart-rate-monitor1" -o "${arg}" = "-hrm1" ] ; then
         HRM="YES"
-        echo "iZephyrHRM enabled."
+        HRM_DEVICE="1"
+        echo "iZephyrHRM enabled. With HRM1"
+    elif [ "${arg}" = "--heart-rate-monitor2" -o "${arg}" = "-hrm2" ] ; then
+        HRM="YES"
+        HRM_DEVICE="2"
+        echo "iZephyrHRM enabled. With HRM2"
     else
         echo "Undefined switch:" $arg
         HELP="yes"
@@ -268,6 +274,7 @@ nsplug meta_mokai.moos targ_${RNAME}_${VTEAM}.moos -f  \
        VOICE=$VOICE                 \
        START_POS=$START_POS         \
        HRM=$HRM                     \
+       HRM_DEVICE=$HRM_DEVICE       \
        $SIM
 
 echo "Assembling BHV file targ_${RNAME}_${VTEAM}.bhv ."
