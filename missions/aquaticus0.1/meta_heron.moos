@@ -23,6 +23,10 @@ ProcessConfig = ANTLER
   Run = uFldMessageHandler @ NewConsole = false
   Run = pRangeEvent        @ NewConsole = false
 
+#ifdef VNAME evan
+  Run = iLEDInfoBar        @ NewConsole = false
+#endif
+
 #ifdef SIM YES
   Run = uSimMarine         @ NewConsole = false
 #else
@@ -48,3 +52,7 @@ ProcessConfig = ANTLER
 #include plug_uProcessWatch.moos
 #include plug_pBasicContactMgr.moos
 #include plug_pRangeEvent.moos
+
+#ifdef VNAME evan
+#include plug_iLEDInfoBar.moos
+#endif
