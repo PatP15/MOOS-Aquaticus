@@ -43,30 +43,54 @@ ProcessConfig = pShare
 
 ProcessConfig = uFldFlagManager
 {
-  AppTick       = 4
-  CommsTick     = 4
-  
-  default_flag_range = 15
+  AppTick       = 2
+  CommsTick     = 2
 
-  flag_follows_vehicle = true
+  flag = $(RED_FLAG), color=red, label=red
+  flag = $(BLUE_FLAG), color=blue, label=blue
 
-  near_flag_range_buffer = 5
+//  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
+//  grab_post = var=SAY_MOOS_ALL, sval={say={$VNAME has the $FLAG flag}}
 
-  flag = $(RED_FLAG), color=red, label=red, range=15
-  flag = $(BLUE_FLAG), color=blue, label=blue, range=15
+  grab_post = var=SAY_MOOS, sval={file=sounds/grab_post_$VNAME.wav}
+  grab_post = var=SAY_MOOS_ALL, sval={file=sounds/grab_post_$VNAME.wav}
 
-  grab_post = var=SAY_MOOS, sval={say={$VNAME has the $FLAG flag}}
-  //lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been reset}}
+  grab_post = var=LED_HAVE_FLAG_$UP_VNAME, sval={true}  
 
-  //near_post = var=SAY_MOOS, sval={say={$VNAME is near the $FLAG flag}}
+//  lose_post = var=SAY_MOOS, sval={say={the $FLAG flag has been returned}}
+//  lose_post = var=SAY_MOOS_ALL, sval={say={the $FLAG flag has been returned}}
+
+  lose_post = var=SAY_MOOS, sval={file=sounds/lose_post_$FLAG.wav}
+  lose_post = var=SAY_MOOS_ALL, sval={file=sounds/lose_post_$FLAG.wav}
+
+  lose_post = var=LED_HAVE_FLAG_$UP_VNAME, sval={false}  
+
   near_post = var=SAY_MOOS, sval={file=sounds/shipbell.wav}
+  near_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/shipbell.wav}
+
+  near_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={true}  
+
   away_post = var=SAY_MOOS, sval={file=sounds/buzzer.wav}
+  away_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/buzzer.wav}
 
-  //deny_post = var=SAY_MOOS, sval={file=sounds/sf-no-soup.wav}
-  deny_post = var=SAY_MOOS, sval={say={Grab denied $REASON}}
+  away_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={false}  
 
-  goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored and returned the $FLAG flag}}
-  home_post = var=SAY_MOOS, sval={say={$VNAME has returned home}}
+  deny_post = var=SAY_MOOS, sval={file=sounds/deny_post_$REASON.wav}
+  deny_post = var=SAY_MOOS_$UP_VNAME, sval={file=sounds/deny_post_$REASON.wav}
+
+  home_post = var=UNTAG_REQUEST, sval={vname=$VNAME}
+  home_post = var=FLAG_RESET, sval={vname=$VNAME}
+
+  home_post = var=LED_HAVE_FLAG_$UP_VNAME, sval={false} 
+
+//  goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored}}
+//  goal_post = var=SAY_MOOS_ALL, sval={say={$VTEAM has scored}}
+
+  goal_post = var=SAY_MOOS, sval={file=sounds/goal_post_$VTEAM.wav}
+  goal_post = var=SAY_MOOS_ALL, sval={file=sounds/goal_post_$VTEAM.wav}
+
+  goal_post = var=LED_HAVE_FLAG_$UP_VNAME, sval={false} 
+
 
   near_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={true}
   away_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={false}
@@ -92,13 +116,21 @@ ProcessConfig = uFldTagManager
 
   tag_duration = 10000
 
-	robot_tag_post   = TESTING=true
-	
   //robot_tag_post   = MOOS_MANUAL_OVERRIDE_$UP_TARGET=true
-  human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
-  human_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
-  robot_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
-  robot_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
+//  human_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
+//  human_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
+
+  human_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
+  human_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
+
+  // human_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
+//  robot_tag_post   = SAY_MOOS_ALL=say={$TARGET_has_been_tagged},rate=200
+//  robot_tag_post   = SAY_MOOS=say={$TARGET_has_been_tagged},rate=200
+
+  robot_tag_post   = SAY_MOOS_ALL=file=tag_post_$TARGET.wav
+  robot_tag_post   = SAY_MOOS=file=tag_post_$TARGET.wav
+
+  // robot_tag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_tagged},rate=200
 
   // Return Flag
   human_tag_post   = FLAG_RESET=vname=$TARGET
@@ -106,42 +138,41 @@ ProcessConfig = uFldTagManager
   human_tag_post   = TAGGED_$UP_TARGET=true
   robot_tag_post   = TAGGED_$UP_TARGET=true
 
-	notag_post = SAY_MOOS_$UP_SOURCE=say={No Tag $REASON},rate=200 
-	
+  robot_tag_post   = LED_TAGGED_$UP_TARGET=true
+  human_tag_post   = LED_TAGGED_$UP_TARGET=true
+
   //robot_untag_post = MOOS_MANUAL_OVERRIDE_$UP_TARGET=false
   // human_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
   // human_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
+  // robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  // robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
 
-  //robot_untag_post   = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
-  //robot_untag_post   = SAY_MOOS_$UP_TARGET=say={you_have_been_untagged},rate=200
+//  human_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
+//  human_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  human_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
+  human_untag_post = SAY_MOOS=file=sounds/untag_post_$TARGET.wav
+  human_untag_post = TAGGED_$UP_TARGET=false
 
-	robot_untag_post   = TEST_UNTAG=$TARGET_has_been_untagged,rate=200
-
-
-	human_untag_post = TAGGED_$UP_TARGET=false
+  human_untag_post = LED_TAGGED_$UP_TARGET=false
+  
+//  robot_untag_post = SAY_MOOS_ALL=say={$TARGET_has_been_untagged},rate=200
+//  robot_untag_post = SAY_MOOS=say={$TARGET_has_been_untagged},rate=200
+  robot_untag_post = SAY_MOOS_ALL=file=sounds/untag_post_$TARGET.wav
+  robot_untag_post = SAY_MOOS=file=sounds/untag_post_$TARGET.wav
   robot_untag_post = TAGGED_$UP_TARGET=false
+
+  robot_untag_post = LED_TAGGED_$UP_TARGET=false
 
   team_one=red
   team_two=blue
 
-  // NW: -85.00   -48.00  
-	// NE:  59.37    20.97  
-  // SW: -50.51  -120.19  
-  // SE:  93.86   -51.22  
+  zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
+  zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
 
-	// NMid -12.81  -13.51 
-	// SMid  22.09  -85.70 
-
-	
-  zone_one = pts={ 59.37,20.97 : -12.81,-13.51 : 22.09,-85.7 : 93.86,-51.22 }
-  zone_two = pts={ -12.81,-13.51 : -85,-48 : -50.51,-120.19 : 22.09,-85.7 }
-
-  //zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
-  //zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
-	
   zone_one_color = pink
   zone_two_color = dodger_blue
 }
+
 
 //--------------------------------------------------
 // ufldnodecomms Configuration Block
@@ -177,6 +208,8 @@ ProcessConfig = uFldShoreBroker
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
   qbridge  = TAGGED, ACTION, LOITER_UPDATES, GO_GRAB, LED_TAGGED
   qbridge  = SAY_MOOS, HAS_FLAG, ONFIELD, CANTAG, LED_IN_FLAG_ZONE
+  qbridge  = LED_TAGGED, LED_HAVE_FLAG, LED_IN_FLAG_ZONE
+  qbridge  = ONFIELD, CANTAG
 
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
