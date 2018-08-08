@@ -609,7 +609,8 @@ void FlagManager::updateVehiclesInFlagRange()
     if(!m_map_near_flag_zone[vname] && vname_near_flag_zone)
       invokePosts("near", vname, vteam, flag_name);
 
-    if(m_map_in_flag_zone[vname] && !vname_in_flag_zone)
+    if((m_map_in_flag_zone[vname] || (m_map_near_flag_zone[vname]))
+	&& !vname_near_flag_zone)
       invokePosts("away", vname, vteam, flag_name);
 
     m_map_in_flag_zone[vname] = vname_in_flag_zone;
