@@ -15,6 +15,7 @@ BUTTON="5"
 JOY_ID="0"
 TEAMMATE=""
 HRM="NO"
+HRM_DEVICE=""
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -68,9 +69,14 @@ for ARGI; do
     elif [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
-    elif [ "${ARGI}" = "--heart-rate-monitor" -o "${ARGI}" = "-hrm" ] ; then
+    elif [ "${arg}" = "--heart-rate-monitor1" -o "${arg}" = "-hrm1" ] ; then
         HRM="YES"
-        echo "HRM Enabled."
+        HRM_DEVICE="1"
+        echo "iZephyrHRM enabled. With HRM1"
+    elif [ "${arg}" = "--heart-rate-monitor2" -o "${arg}" = "-hrm2" ] ; then
+        HRM="YES"
+        HRM_DEVICE="2"
+        echo "iZephyrHRM enabled. With HRM2"
     else
       echo "Undefined argument:" $ARGI
       echo "Please use -h for help."
@@ -92,7 +98,8 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --sim,        -s    : Full simulation"
     echo "  --voice-on,   -von  : Voice recognition on"
     echo "  --voice-off,  -voff : Voice recognition off"
-    echo "  --heart-rate-monitor, -hrm : HRM Enabled"
+    echo "  --heart-rate-monitor1, -hrm1 : HRM Enabled"
+    echo "  --heart-rate-monitor2, -hrm2 : HRM Enabled"
     echo "  --just_build, -j"
     echo "  --help,       -h"
     exit 0;
@@ -127,6 +134,7 @@ nsplug meta_mokai.moos targ_${VTEAM}_one.moos -f  \
        VOICE=$VOICE                 \
        START_POS=$START_POS         \
        HRM=$HRM                     \
+       HRM_DEVICE=$HRM_DEVICE       \
        $SIM
 
 echo "Assembling BHV file targ_${VTEAM}_one.bhv ."
