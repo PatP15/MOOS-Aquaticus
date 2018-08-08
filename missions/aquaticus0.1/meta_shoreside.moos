@@ -67,6 +67,10 @@ ProcessConfig = uFldFlagManager
 
   goal_post = var=SAY_MOOS, sval={say={$VTEAM has scored and returned the $FLAG flag}}
   home_post = var=SAY_MOOS, sval={say={$VNAME has returned home}}
+
+  near_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={true}
+  away_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={false}
+
 }
 
 //--------------------------------------------------
@@ -171,8 +175,8 @@ ProcessConfig = uFldShoreBroker
 
   qbridge  = DEPLOY, RETURN, STATION_KEEP, NODE_REPORT, NODE_MESSAGE
   qbridge  = MOOS_MANUAL_OVERRIDE, APPCAST_REQ, AVOID, CHASE
-  qbridge  = TAGGED, ACTION, LOITER_UPDATES, GO_GRAB
-  qbridge  = SAY_MOOS, HAS_FLAG
+  qbridge  = TAGGED, ACTION, LOITER_UPDATES, GO_GRAB, LED_TAGGED
+  qbridge  = SAY_MOOS, HAS_FLAG, ONFIELD, CANTAG, LED_IN_FLAG_ZONE
 
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
@@ -236,6 +240,9 @@ ProcessConfig = pMarineViewer
   appcast_viewable = true
   appcast_color_scheme = indigo
 	
+  scope = LED_IN_FLAG_ZONE_EVAN
+  scope = LED_IN_FLAG_ZONE_GUS
+
   scope = CANTAG_EVAN
   scope = ONFIELD_EVAN 
 
