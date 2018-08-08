@@ -25,15 +25,20 @@ ZephyrHRM::ZephyrHRM()
   m_bt_channel = 1;
   m_packet_num = 0;
   m_life_sign_c = 0;
+  
+  m_last_gp.ms = -1;
+  m_last_gp.br = -1;
+  m_last_gp.hr = -1;
+  m_last_gp.posture = -1;
+  m_last_gp.activity_level = -1;
+  m_last_gp.bat_volt = -1;
+  m_last_gp.ecg_amp = -1;
+  m_last_gp.ecg_noise = -1;
+  m_last_gp.worn = false;
 
-  m_last_hrm_data.worn = false;
-  m_last_hrm_data.hr_conf = -1;
-  m_last_hrm_data.bat_volt = -1;
-
-  m_last_hrm_data.hr = -1;
-  m_last_hrm_data.hrv = -1;
-  m_last_hrm_data.posture = -1;
-  m_last_hrm_data.resp_rate = -1;
+  m_last_sp.ms = -1;
+  m_last_sp.hrv = -1;
+  m_last_sp.hr_conf = -1;
 }
 
 //---------------------------------------------------------
@@ -70,7 +75,7 @@ bool ZephyrHRM::sendLifeSign(int &s){
   unsigned char life_sign[] = {0x02, 0x23, 0x00, 0x00, 0x03};
   int size = sizeof(life_sign);
   int status = write(s, life_sign, size);
-
+ 
   if (status != size)
     return false;
   return true;
@@ -296,7 +301,7 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
   }else if(msgID == 0x20){
     //GENERAL PACKET
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF) << 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
-  
+   
     int hr = (int) payload[9] & 0xFF; 
     double resp_rate = (double) ((short)(payload[11] & 0xFF) | ((payload[12] & 0xFF) << 8)) / 10;
     
@@ -312,25 +317,24 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     double ecg_noise = (double) ((payload[27] & 0xFF) | ((payload[28] & 0xFF) << 8));
 
     unsigned char worn_status = (payload[52] & 0x80) >> 7;
+    bool worn;
 
     if(worn_status == 0x1)
-      m_last_hrm_data.worn = true;
+      worn = true;
     else
-      m_last_hrm_data.worn = false;
+      worn = false;
 
-    std::stringstream ss;
-    ss << "ms=" << ms << ",hr=" << hr << ",br=" \
-    << resp_rate << ",posture=" << posture << ",worn_status=" << worn_status \
-    << ",ecg_amp=" << ecg_amp << ",ecg_noise=" << ecg_noise;
-    Notify("HRM_GENERAL_PACKET", ss.str());
-
-      m_last_hrm_data.hr = hr;
-      Notify("HRM_HEART_RATE", hr);
-      m_last_hrm_data.posture = posture;
-      Notify("HRM_POSTURE", posture);
-      m_last_hrm_data.bat_volt = bat_volt;
-      m_last_hrm_data.resp_rate = resp_rate;
-      Notify("HRM_RESPERATION_RATE", resp_rate);
+    m_last_gp.ms = ms;
+    m_last_gp.hr = hr;
+    m_last_gp.br = resp_rate;
+    m_last_gp.posture = posture;
+    m_last_gp.activity_level = vmu;
+    m_last_gp.bat_volt = bat_volt;
+    m_last_gp.ecg_amp = ecg_amp;
+    m_last_gp.ecg_noise = ecg_noise;
+    m_last_gp.worn = worn;
+    
+    GPNotify(m_last_gp);
   }else if(msgID == 0xBD){
     if(end == ACK)
       reportEvent("Summary packet request ACK. Summary packets should now be streaming");
@@ -339,23 +343,16 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     
   }else if(msgID == 0x2B){
     //SUMMARY PACKET
-    //ReportPacket(packet);
-    int year = (int) ((payload[1] & 0xFF) | ((payload[2] & 0xFF) << 8));
-    char month = (payload[3]);
-    char day = (payload[4]);
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
   
     short hr_conf = (short) (payload[34] & 0xFF);
     int hrv = (int)((payload[35] & 0xFF) | ((payload[36] & 0xFF) << 8));
-    
-    std::stringstream ss;
-    ss << "year="<< year << ",month=" << month << ",day=" << day << ",ms=" << ms << ",hr_conf=" << hr_conf << ",hrv=" << hrv;
-    Notify("HRM_SUMMARY_PACKET", ss.str());
+   
+    m_last_sp.ms = ms;
+    m_last_sp.hr_conf = hr_conf;
+    m_last_sp.hrv = hrv;
 
-      m_last_hrm_data.hrv = hrv;
-      Notify("HRM_HEART_RATE_VARIABILITY", hrv);
-      m_last_hrm_data.hr_conf = hr_conf;
-      Notify("HRM_HEART_RATE_CONFIDENCE", hr_conf);
+    SPNotify(m_last_sp);
   }else{
     std::stringstream warning;
     //warning << "Unhandled packet with ID: " << std::setw(2) << (0xFF & msgID);
@@ -367,9 +364,51 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
   m_packet_num += 1;
 }
 
+// -------------------------------------------------------
+// GPNotify (General Packet Notify)
+// Used to notify db of general packet
+//
+void ZephyrHRM::GPNotify(struct general_packet &gp){
+  Notify("HRM_HR", gp.hr);
+  Notify("HRM_BR", gp.br);
+  Notify("HRM_POSTURE", gp.posture);
+  Notify("HRM_ACTIVITY_LEVEL", gp.activity_level);
+  Notify("HRM_BATVOLT", gp.bat_volt);
+  Notify("HRM_ECG_AMP", gp.ecg_amp);
+  Notify("HRM_ECG_NOISE", gp.ecg_noise);
+  Notify("HRM_WORN", gp.worn);
+
+  std::stringstream ss;
+  ss << "ms=" << gp.ms;
+  ss << ",hr=" << gp.hr;
+  ss << ",br=" << gp.br;
+  ss << ",posture=" << gp.posture;
+  ss << ",activity_level=" << gp.activity_level;
+  ss << ",bat_volt=" << gp.bat_volt;
+  ss << ",ecg_amp=" << gp.ecg_amp;
+  ss << ",worn=" << gp.worn;
+
+  Notify("HRM_GENERAL_PACKET", ss.str());
+}
+
+// -------------------------------------------------------
+// SPNotify (Summary Packet Notify)
+// Used to notify db of summary packet
+//
+void ZephyrHRM::SPNotify(struct summary_packet &sp){
+  Notify("HRM_HRV", sp.hrv);
+  Notify("HRM_HR_CONFIDENCE", sp.hr_conf);
+
+  std::stringstream ss;
+  ss << "ms=" << sp.ms;
+  ss << ",hrv=" << sp.hrv;
+  ss << ",hr_confidence=" << sp.hr_conf;
+
+  Notify("HRM_SUMMARY_PACKET", ss.str());
+}
+
 //---------------------------------------------------------
 // Procedure: OnNewMail
-
 bool ZephyrHRM::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);
@@ -401,7 +440,6 @@ bool ZephyrHRM::OnNewMail(MOOSMSG_LIST &NewMail)
 
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
-
 bool ZephyrHRM::OnConnectToServer()
 {
    registerVariables();
@@ -511,16 +549,30 @@ bool ZephyrHRM::buildReport()
     m_msgs << "Failed writes: " << m_comms_data->failed_writes << "\n";
     m_msgs << "Number of packets: " << m_packet_num << "\n";
     m_msgs << "Life sign count: " << m_life_sign_c << "\n";
-    m_msgs << "=============== General Info===============\n";
-    m_msgs << "Worn Status: " << std::boolalpha << m_last_hrm_data.worn << "\n";
-    m_msgs << "Heart Rate Confidence: " << m_last_hrm_data.hr_conf << " %\n";
-    m_msgs << "Battery Voltage: " << m_last_hrm_data.bat_volt << " V\n\n";
-    m_msgs << "=============== Vital Signs ===============\n";
-    m_msgs << "Heart Rate: " << m_last_hrm_data.hr << " bpm\n";
-    m_msgs << "Heart Rate Variability: " << m_last_hrm_data.hrv << " ibi\n";
-    m_msgs << "Posture: " << m_last_hrm_data.posture << " deg\n";
-    m_msgs << "Resp Rate: " << m_last_hrm_data.resp_rate << " bpm\n";
 
+    m_msgs << "============== General Packet =============\n";
+    //Time GP info
+    m_msgs << "Last GP time: " << ((m_last_gp.ms / (1000*60*60)) % 24) << ":";
+    m_msgs << ((m_last_gp.ms / (1000*60)) % 60) << ":";
+    m_msgs << (m_last_gp.ms / 1000) % 60 << "\n";
+
+    //Other GP info
+    m_msgs << "HR: " << m_last_gp.hr << " bpm\n";
+    m_msgs << "BR: " << m_last_gp.br << " bpm\n";
+    m_msgs << "Posture: " << m_last_gp.posture << " deg\n";
+    m_msgs << "Activity Level: " << m_last_gp.activity_level << " VMU(g)\n";
+    m_msgs << "ECG Amplitude: " << m_last_gp.ecg_amp << " V\n";
+    m_msgs << "ECG Noise: " << m_last_gp.ecg_noise << " V\n";
+    m_msgs << "Worn Status: " << std::boolalpha << m_last_gp.worn << "\n";
+
+    m_msgs << "============= Summary Packet =============\n";
+    //Time GP info
+    m_msgs << "Last SP time: " << ((m_last_sp.ms / (1000*60*60)) % 24) << ":";
+    m_msgs << ((m_last_sp.ms / (1000*60)) % 60) << ":";
+    m_msgs << (m_last_sp.ms / 1000) % 60 << "\n";
+
+    m_msgs << "HRV: "<< m_last_sp.hrv << " ms\n";
+    m_msgs << "HR Confidence: "<<m_last_sp.hr_conf << " %\n";
   }
 
   return(true);

@@ -30,6 +30,28 @@ struct hrm_data{
   double resp_rate;
 };
 
+struct general_packet{
+  long ms; 
+
+  short br;
+  short hr;
+  short posture;
+  short activity_level;
+
+  double bat_volt;
+  double ecg_amp;
+  double ecg_noise;
+
+  bool worn;
+};
+
+struct summary_packet{
+  long ms;
+
+  int hrv; 
+  short hr_conf;
+};
+
 
 class ZephyrHRM : public AppCastingMOOSApp
 {
@@ -59,6 +81,8 @@ class ZephyrHRM : public AppCastingMOOSApp
    static unsigned crc8(unsigned char const *data, size_t len);
    static void CopyRange(const unsigned char* in, int start, int size, unsigned char* out);
    void NewPacket(struct zephyr_packet* packet);
+   void GPNotify(struct general_packet &gp);
+   void SPNotify(struct summary_packet &sp);
 
  private:
    CMOOSThread* m_bt_thread;
@@ -71,8 +95,10 @@ class ZephyrHRM : public AppCastingMOOSApp
    static const int m_bt_data_buf_size = 1024;
    unsigned char m_bt_data_buf[m_bt_data_buf_size];
 
-   struct hrm_data m_last_hrm_data;
    struct bt_data* m_comms_data; 
+
+   struct general_packet m_last_gp;
+   struct summary_packet m_last_sp;
 
    const static int STX = 0x02;
    const static int ETX = 0x03;
