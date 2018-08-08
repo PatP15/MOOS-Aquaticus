@@ -7,6 +7,10 @@
 /*                  The Mumble team, and Misha              */
 /************************************************************/
 
+#ifdef DUMP_CORE
+#include <sys/resource.h>
+#endif
+
 #include <thread>
 #include <iterator>
 #include <mutex>
@@ -62,6 +66,15 @@ static int paCallback(const void *_inputBuffer,
 // Constructor
 
 MumbleClient::MumbleClient() {
+  #ifdef DUMP_CORE
+  // https://stackoverflow.com/a/15395871/1709894
+  reportConfigWarning("Core Dumps Enabled: " + intToString(getpid()));
+  cout << "PID:" << getpid() << endl;
+  struct rlimit core_limits;
+  core_limits.rlim_cur = core_limits.rlim_max = RLIM_INFINITY;
+  setrlimit(RLIMIT_CORE, &core_limits);
+  #endif
+
   audioBuffers.recordBuffer = std::make_shared<RingBuffer<int16_t>>(MAX_SAMPLES);
   audioBuffers.playBuffer = std::make_shared<RingBuffer<int16_t>>(MAX_SAMPLES);
 
@@ -141,9 +154,9 @@ bool MumbleClient::OnConnectToServer() {
 bool MumbleClient::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  if (!joinedDefaultChannel &&
+  if (this->m_mumbleServerChannelId != "-1" &&
+      !joinedDefaultChannel &&
       mumLibLock.try_lock() &&
-      this->m_mumbleServerChannelId != "-1" &&
       this->mum != nullptr &&
       this->mum->getConnectionState() == mumlib::ConnectionState::CONNECTED) {
     if (isInteger(this->m_mumbleServerChannelId)) {
@@ -242,6 +255,8 @@ void MumbleClient::initMumbleLink() {
         errMessage.append(e.what());
         this->reportRunWarning(errMessage);
         this->mum->disconnect(); // After recovering from a bad connection, mumlib fails to reset the connection status
+        mumLibLock.unlock();
+        this->audioBuffers.recordBuffer->empty(); // Clear the buffer
         std::this_thread::sleep_for(std::chrono::seconds(3)); // How long to wait until retrying
       }
     }
@@ -292,9 +307,7 @@ bool MumbleClient::buildReport() {
   m_msgs << "Hearing:    " << boolToString(this->notifiedHearingAudio) << endl;
   m_msgs << "Trigger:    " << this->m_sendAudioKey << endl;
   m_msgs << endl;
-  mumLibLock.lock();
   m_msgs << "Connected:  " << boolToString(this->mum->getConnectionState() == mumlib::ConnectionState::CONNECTED) << endl;
-  mumLibLock.unlock();
   // TODO This data is what the values are desired to be, consult with mumlib::userState for real information
   m_msgs << "Username:   " << this->m_mumbleServerUsername << endl;
   m_msgs << "Server:     " << this->m_mumbleServerAddress << ":" << intToString(this->m_mumbleServerPort) << endl;
