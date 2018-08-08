@@ -68,11 +68,6 @@ set MODE     = AVOIDING {
   AGGRESSIVE = false
 }
 
-set MODE     = INTERCEPTING {
-  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
-  ACTION     = INTERCEPT
-}
-
 set MODE     = PASSIVE {
   MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
   ACTION     = DEFEND
@@ -281,28 +276,6 @@ Behavior = BHV_Loiter
 
   polygon                 = radial:: x=0,y=0,radius=10,pts=8 // example
   center_assign           = $(UNTAG_POS)
-}
-
-//#############################################################################
-Behavior = BHV_CutRange
-{
-  name                    = cutrange_
-  pwt                     = 100
-  condition               = MODE == INTERCEPTING
-  runflag                 = BOT_DIALOG_STATUS=Intercepting
-  updates                 = CR_INTERCEPT_UPDATES
-  templating              = spawn
-
-  contact                 = v
-  decay                   = 15,30
-  extrapolate             = false
-  on_no_contact_ok        = true
-  time_on_leg             = 60
-
-  giveup_dist             = 0
-  patience                = 50
-  pwt_inner_dist          = 12
-  pwt_outer_dist          = 20
 }
 
 //#############################################################################
