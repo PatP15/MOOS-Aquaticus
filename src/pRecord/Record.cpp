@@ -48,9 +48,14 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
 
             err = Pa_ReadStream(stream, threadData->audiobuffer->recording, FRAMES_PER_BUFFER); //read a buffer of audio from the stream
 
-            threadData->audiodata->recordedSamples = (short *) realloc(threadData->audiodata->recordedSamples, //reallocate recording array to make space for the buffer that was just recorded
+            if (threadData->audiodata->recordedSamples == 0) {
+                threadData->audiodata->recordedSamples = (short *) malloc(threadData->audiobuffer->size * (threadData->buffer_counter));
+            }
+            else {
+                threadData->audiodata->recordedSamples = (short *) realloc(threadData->audiodata->recordedSamples, //reallocate recording array to make space for the buffer that was just recorded
                                                                        threadData->audiobuffer->size *
                                                                        (threadData->buffer_counter));
+            }
 
             threadData->audiodata->size = threadData->audiobuffer->size * (threadData->buffer_counter); // update size variable
 
