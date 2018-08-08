@@ -21,7 +21,7 @@ ProcessConfig = ANTLER
   Run = uFldNodeBroker     @ NewConsole = false
   Run = pDeadManPost       @ NewConsole = false
   Run = uFldMessageHandler @ NewConsole = false
-  Run = pRangeEvent        @ NewConsole = false
+//  Run = pRangeEvent        @ NewConsole = false
 
 #ifdef VNAME evan
   Run = iLEDInfoBar        @ NewConsole = false

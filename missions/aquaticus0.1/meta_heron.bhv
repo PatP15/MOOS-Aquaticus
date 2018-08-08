@@ -74,7 +74,7 @@ set MODE = LOITERING {
 
 
 //----------------------------------------------
-Behavior = BHV_OpRegionRecover
+//Behavior = BHV_OpRegionRecover
 {
   name         = recover
   pwt          = 300
@@ -88,7 +88,7 @@ Behavior = BHV_OpRegionRecover
 }
 
 //----------------------------------------------
-Behavior = BHV_AvdColregsV17
+//Behavior = BHV_AvdColregsV17
 {
   name       = colavd_one_
   pwt        = 300
@@ -211,6 +211,7 @@ Behavior = BHV_Waypoint
   capture_radius = 5.0
      slip_radius = 10.0
           points = $(GRAB_POS)
+//          points = 0,20
 }
 
 //----------------------------------------------
