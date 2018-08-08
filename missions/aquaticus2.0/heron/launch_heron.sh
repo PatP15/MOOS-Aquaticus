@@ -22,6 +22,45 @@ GRABL_POS=""
 UNTAG_POS=""
 
 HERON_TEAMMATE=""
+HERON_TEAMMATE_VTEAM=""
+
+function help(){
+    echo ""
+    echo "USAGE: $0 <heron_vehicle_name> <vehicle_role> <heron_teammate_vehicle_role> [SWITCHES]"
+    
+    echo ""
+    echo "POSSIBLE HERON VEHICLE NAMES:"
+    echo "  evan,         e   : Evan heron."
+    echo "  felix,        f   : Felix heron."
+    echo "  gus,          g   : Gus heron."
+    echo "  hal,          h   : Hal heron."
+    echo "  ida,          i   : Ida heron."
+    echo "  jing,         j   : Jing heron."
+    echo "  kirk,         k   : Kirk heron."
+    echo "  luke,         l   : Luke heron."
+
+    echo ""
+    echo "POSSIBLE ROLES (and heron teammate_roles):"
+    echo "  blue_one,     b1  : Vehicle one on blue team."
+    echo "  blue_two,     b2  : Vehicle two on blue team."
+    echo "  blue_three,   b3  : Vehicle three on blue team."
+    echo "  blue_four,    b4  : Vehicle four on blue team."
+
+    echo "  red_one,      r1  : Vehicle one on red team."
+    echo "  red_two,      r2  : Vehicle two on red team."
+    echo "  red_three,    r3  : Vehicle three on red team."
+    echo "  red_four,     r4  : Vehicle four on red team."
+
+    echo ""
+    echo "POSSIBLE SWITCHES:"
+    echo "  --sim,        -s  : Simulation mode."
+    echo "  --start-x=        : Start from x position (requires x y a)."
+    echo "  --start-y=        : Start from y position (requires x y a)."
+    echo "  --start-a=        : Start from angle (requires x y a)."
+    echo "  --just_build, -J  : Just build targ files."
+    echo "  --help,       -H  : Display this message."
+    exit 0
+}
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -68,8 +107,7 @@ case "$1" in
 	    echo "LUKE heron selected."
 	    ;;
     *)
-        HELP="yes"
-        echo "Error invalid positional argument!"
+        echo "!!! Error invalid positional argument $1 !!!"
         ;;
 esac
 
@@ -132,8 +170,8 @@ case "$2" in
         echo "Vehicle set to blue four."
         ;;
     *)
-        HELP="yes"
-        echo "Error invalid positional argument!"
+        echo "!!! Error invalid positional argument $2 !!!"
+        help
         ;;
 esac
 
@@ -141,46 +179,57 @@ esac
 case "$3" in
     r1|red_one)
         HERON_TEAMMATE="red_one"
+        HERON_TEAMMATE_VTEAM="red"
         echo "Vehicle set to red one."
         ;;
     r2|red_two)
         HERON_TEAMMATE="red_two"
+        HERON_TEAMMATE_VTEAM="red"
         echo "Vehicle set to red two."
         ;;
     r3|red_three)
         HERON_TEAMMATE="red_three"
+        HERON_TEAMMATE_VTEAM="red"
         echo "Vehicle set to red three."
         ;;
     r4|red_four)
         HERON_TEAMMATE="red_four"
+        HERON_TEAMMATE_VTEAM="red"
         echo "Vehicle set to red four."
         ;;
     b1|blue_one)
         HERON_TEAMMATE="blue_one"
+        HERON_TEAMMATE_VTEAM="blue"
         echo "Vehicle set to blue one."
         ;;
     b2|blue_two)
         HERON_TEAMMATE="blue_two"
+        HERON_TEAMMATE_VTEAM="blue"
         echo "Vehicle set to blue two."
         ;;
     b3|blue_three)
         HERON_TEAMMATE="blue_three"
+        HERON_TEAMMATE_VTEAM="blue"
         echo "Vehicle set to blue three."
         ;;
     b4|blue_four)
         HERON_TEAMMATE="blue_four"
+        HERON_TEAMMATE_VTEAM="blue"
         echo "Vehicle set to blue four."
         ;;
     *)
-        HELP="yes"
-        echo "Error invalid positional argument!"
+        echo "!!! Error invalid positional argument $3 !!!"
         ;;
 esac
 
+if [[ "$HERON_TEAMMATE_VTEAM" != "$VTEAM" ]]; then
+    echo "!!! Error teammate team can not be different then vehicle team !!!"
+    help
+fi
 
 for arg in "${@:4}"; do
     if [ "${arg}" = "--help" -o "${arg}" = "-H" ]; then
-        HELP="yes"
+        help
     elif [ "${arg//[^0-9]/}" = "$arg" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$arg
         echo "Time warp set to: " $arg
@@ -198,7 +247,7 @@ for arg in "${@:4}"; do
         START_POS_A="${arg#--start-a=*}"
     else
         echo "Undefined switch:" $arg
-        HELP="yes"
+        help
     fi
 done
 
@@ -221,50 +270,7 @@ elif [ "${VTEAM}" = "blue" ]; then
 fi
    
 #-------------------------------------------------------
-#  Part 2: Handle Ill-formed command-line arguments
-#-------------------------------------------------------
-
-if [ "${HELP}" = "yes" ]; then
-    echo ""
-    echo "USAGE: $0 <heron_vehicle_name> <vehicle_role> <heron_teammate_vehicle_role> [SWITCHES]"
-    
-    echo ""
-    echo "POSSIBLE HERON VEHICLE NAMES:"
-    echo "  evan,         e   : Evan heron."
-    echo "  felix,        f   : Felix heron."
-    echo "  gus,          g   : Gus heron."
-    echo "  hal,          h   : Hal heron."
-    echo "  ida,          i   : Ida heron."
-    echo "  jing,         j   : Jing heron."
-    echo "  kirk,         k   : Kirk heron."
-    echo "  luke,         l   : Luke heron."
-
-    echo ""
-    echo "POSSIBLE ROLES (and heron teammate_roles):"
-    echo "  blue_one,     b1  : Vehicle one on blue team."
-    echo "  blue_two,     b2  : Vehicle two on blue team."
-    echo "  blue_three,   b3  : Vehicle three on blue team."
-    echo "  blue_four,    b4  : Vehicle four on blue team."
-
-    echo "  red_one,      r1  : Vehicle one on red team."
-    echo "  red_two,      r2  : Vehicle two on red team."
-    echo "  red_three,    r3  : Vehicle three on red team."
-    echo "  red_four,     r4  : Vehicle four on red team."
-
-    echo ""
-    echo "POSSIBLE SWITCHES:"
-    echo "  --sim,        -s  : Simulation mode."
-    echo "  --start-x=        : Start from x position (requires x y a)."
-    echo "  --start-y=        : Start from y position (requires x y a)."
-    echo "  --start-a=        : Start from angle (requires x y a)."
-    echo "  --just_build, -J  : Just build targ files."
-    echo "  --help,       -H  : Display this message."
-    exit 0;
-fi
-
-
-#-------------------------------------------------------
-#  Part 3: Create the .moos and .bhv files.
+#  Part 2: Create the .moos and .bhv files.
 #-------------------------------------------------------
 
 if [[ -n $START_POS_X && (-n $START_POS_Y && -n $START_POS_A)]]; then
@@ -320,7 +326,7 @@ if [ ${JUST_BUILD} = "yes" ] ; then
 fi
 
 #-------------------------------------------------------
-#  Part 4: Launch the processes
+#  Part 3: Launch the processes
 #-------------------------------------------------------
 
 echo "Launching $RNAME MOOS Community "

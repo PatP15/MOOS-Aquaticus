@@ -231,7 +231,7 @@ for arg in "${@:5}"; do
         echo "iZephyrHRM enabled. With HRM2"
     else
         echo "Undefined switch:" $arg
-        HELP="yes"
+        help
     fi
 done
 
@@ -249,42 +249,6 @@ elif [ "${VTEAM}" = "blue" ]; then
     RETURN_POS="-52,-70"
     BUTTON="2"
     echo "Blue team selected."
-fi
-
-if [ "${HELP}" = "yes" ]; then
-    echo ""
-    echo "$0 <vehical_name> <vehicle_role> <teammate1_role> <teammate2_role> [SWITCHES]"
-
-    echo ""
-    echo "POSSIBLE MOKAI VEHICLE NAMES:"
-    echo "  donatello,    d     : Mokai vehicle name donatello."  
-    echo "  leonardo,     l     : Mokai vehicle name leonardo."
-    echo "  michelangelo, m     : Mokai vehicle name michelangelo."
-    echo "  raphael,      r     : Mokai vehicle name raphael."
-
-    echo ""
-    echo "POSSIBLE VEHICLE ROLES OR TEAMMATE ROLES:"
-    echo "  blue_one,     b1    : Vehicle one on blue team."
-    echo "  blue_two,     b2    : Vehicle two on blue team."
-    echo "  blue_three,   b3    : Vehicle three on blue team."
-    echo "  blue_four,    b4    : Vehicle four on blue team."
-
-    echo "  red_one,      r1    : Vehicle one on red team."
-    echo "  red_two,      r2    : Vehicle two on red team."
-    echo "  red_three,    r3    : Vehicle three on red team."
-    echo "  red_four,     r4    : Vehicle four on red team."
-
-    echo ""
-    echo "POSSIBLE SWITCHES:"
-    echo "  --semi-sim,             -ss    : Semi-autonomous simulation (w/ joysticks)"
-    echo "  --sim,                  -s     : Full simulation"
-    echo "  --voice-on,             -von   : Voice recognition on"
-    echo "  --voice-off,            -voff  : Voice recognition off"
-    echo "  --heart-rate-monitor1 , -hrm1  : HRM1 enabled"
-    echo "  --heart-rate-monitor2 , -hrm2  : HRM2 enabled"
-    echo "  --just_build,           -J     : Only build targ file"
-    echo "  --help,                 -H     : Display this help message"
-    exit 0;
 fi
 
 if [ -z $VTEAM ]; then
