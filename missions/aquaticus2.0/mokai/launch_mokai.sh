@@ -20,6 +20,42 @@ VOICE="ON"
 HRM="NO"
 HRM_DEVICE=""
 
+function help(){
+    echo ""
+    echo "$0 <vehical_name> <vehicle_role> <teammate1_role> <teammate2_role> [SWITCHES]"
+
+    echo ""
+    echo "POSSIBLE MOKAI VEHICLE NAMES:"
+    echo "  donatello,    d     : Mokai vehicle name donatello."  
+    echo "  leonardo,     l     : Mokai vehicle name leonardo."
+    echo "  michelangelo, m     : Mokai vehicle name michelangelo."
+    echo "  raphael,      r     : Mokai vehicle name raphael."
+
+    echo ""
+    echo "POSSIBLE VEHICLE ROLES OR TEAMMATE ROLES:"
+    echo "  blue_one,     b1    : Vehicle one on blue team."
+    echo "  blue_two,     b2    : Vehicle two on blue team."
+    echo "  blue_three,   b3    : Vehicle three on blue team."
+    echo "  blue_four,    b4    : Vehicle four on blue team."
+
+    echo "  red_one,      r1    : Vehicle one on red team."
+    echo "  red_two,      r2    : Vehicle two on red team."
+    echo "  red_three,    r3    : Vehicle three on red team."
+    echo "  red_four,     r4    : Vehicle four on red team."
+
+    echo ""
+    echo "POSSIBLE SWITCHES:"
+    echo "  --semi-sim,             -ss    : Semi-autonomous simulation (w/ joysticks)"
+    echo "  --sim,                  -s     : Full simulation"
+    echo "  --voice-on,             -von   : Voice recognition on"
+    echo "  --voice-off,            -voff  : Voice recognition off"
+    echo "  --heart-rate-monitor1 , -hrm1  : HRM1 enabled"
+    echo "  --heart-rate-monitor2 , -hrm2  : HRM2 enabled"
+    echo "  --just_build,           -J     : Only build targ file"
+    echo "  --help,                 -H     : Display this help message"
+    exit 0
+}
+
 
 case "$1" in
     d|donatello)
@@ -39,8 +75,8 @@ case "$1" in
         echo "raphael mokai selected."
         ;;
     *)
-        HELP="yes"
-        echo "Error invalid positional argument!"
+        echo "!!! Error invalid positional argument: $1 !!!"
+        help
         ;;
 esac
 
@@ -103,44 +139,57 @@ case "$2" in
         echo "Vehicle set to blue four."
         ;;
     *)
-        HELP="yes"
-        echo "Error invalid positional argument!"
+        echo "!!! Error invalid positional argument: $2 !!!"
+        help
         ;;
 esac
 
 for arg in "${@:3:2}"; do
     REQUESTED_TEAMMATE=""
+    TEAMMATE_TEAM=""
     case "$arg" in
         r1|red_one)
+            TEAMMATE_TEAM="red"
             REQUESTED_TEAMMATE="red_one"
             ;;
         r2|red_two)
+            TEAMMATE_TEAM="red"
             REQUESTED_TEAMMATE="red_two"
             ;;
         r3|red_three)
+            TEAMMATE_TEAM="red"
             REQUESTED_TEAMMATE="red_three"
             ;;
         r4|red_four)
+            TEAMMATE_TEAM="red"
             REQUESTED_TEAMMATE="red_four"
             ;;
         b1|blue_one)
+            TEAMMATE_TEAM="blue"
             REQUESTED_TEAMMATE="blue_one"
             ;;
         b2|blue_two)
+            TEAMMATE_TEAM="blue"
             REQUESTED_TEAMMATE="blue_two"
             ;;
         b3|blue_three)
+            TEAMMATE_TEAM="blue"
             REQUESTED_TEAMMATE="blue_three"
             ;;
         b4|blue_four)
+            TEAMMATE_TEAM="blue"
             REQUESTED_TEAMMATE="blue_four"
             ;;
         *)
-            HELP="yes"
-            echo "Error invalid teammate name!"
+            echo "!!! Error invalid teammate name: $arg !!!"
+            help
             ;;
     esac
-    
+   
+    if [[ "$TEAMMATE_TEAM" != "$VTEAM" ]]; then
+        echo "!!! Error teammate team can not be different then vehicle team !!!"
+        help
+    fi
        
     if [ -z $TEAMMATE1 ]; then
         TEAMMATE1=$REQUESTED_TEAMMATE
@@ -153,7 +202,7 @@ done
 	
 for arg in "${@:5}"; do
     if [ "${arg}" = "--help" -o "${arg}" = "-H" ] ; then
-        HELP="yes"
+        help
     elif [ "${arg//[^0-9]/}" = "$arg" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$arg
     elif [ "${arg}" = "--just_build" -o "${arg}" = "-J" ] ; then
