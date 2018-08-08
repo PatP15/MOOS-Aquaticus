@@ -3,7 +3,7 @@ ProcessConfig = iButtonBox
 	AppTick = 10
 	CommsTick = 10
 
-	PORT = /dev/ttyACM1 //this adress can change each time an arduino is plugged in
+	PORT = /dev/ButtonBox
 	BAUDRATE = 9600
 	BUTTON_0_UP_POST = var=SPEECH_ACTIVE, sval=FALSE
   BUTTON_0_DOWN_POST = var=SPEECH_ACTIVE, sval=TRUE
