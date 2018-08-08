@@ -227,13 +227,14 @@ if [ "${HELP}" = "yes" ]; then
 
     echo ""
     echo "POSSIBLE SWITCHES:"
-    echo "  --semi-sim,            -ss   : Semi-autonomous simulation (w/ joysticks)"
-    echo "  --sim,                 -s    : Full simulation"
-    echo "  --voice-on,            -von  : Voice recognition on"
-    echo "  --voice-off,           -voff : Voice recognition off"
-    echo "  --heart-rate-monitor , -hrm  : HRM enabled"
-    echo "  --just_build,          -J    : Only build targ file"
-    echo "  --help,                -H    : Display this help message"
+    echo "  --semi-sim,             -ss    : Semi-autonomous simulation (w/ joysticks)"
+    echo "  --sim,                  -s     : Full simulation"
+    echo "  --voice-on,             -von   : Voice recognition on"
+    echo "  --voice-off,            -voff  : Voice recognition off"
+    echo "  --heart-rate-monitor1 , -hrm1  : HRM1 enabled"
+    echo "  --heart-rate-monitor2 , -hrm2  : HRM2 enabled"
+    echo "  --just_build,           -J     : Only build targ file"
+    echo "  --help,                 -H     : Display this help message"
     exit 0;
 fi
 
