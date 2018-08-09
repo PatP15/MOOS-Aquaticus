@@ -17,6 +17,9 @@ TEAMMATE=""
 HRM="NO"
 HRM_DEVICE=""
 
+CID=000
+PID=000
+
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
         HELP="yes"
@@ -77,6 +80,12 @@ for ARGI; do
         HRM="YES"
         HRM_DEVICE="2"
         echo "iZephyrHRM enabled. With HRM2"
+    elif [ "${ARGI:0:6}" = "--pid=" ] ; then
+        PID="${ARGI#--pid=*}"
+        PID=$(printf "%03d" $PID)
+    elif [ "${ARGI:0:6}" = "--cid=" ] ; then
+        CID="${ARGI#--cid=*}"
+        CID=$(printf "%03d" $CID)
     else
       echo "Undefined argument:" $ARGI
       echo "Please use -h for help."
@@ -100,6 +109,8 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --voice-off,  -voff : Voice recognition off"
     echo "  --heart-rate-monitor1, -hrm1 : HRM Enabled"
     echo "  --heart-rate-monitor2, -hrm2 : HRM Enabled"
+    echo "  --cid=              : Competition id (for log file)"
+    echo "  --pid=              : Participant id (for log file)"
     echo "  --just_build, -j"
     echo "  --help,       -h"
     exit 0;
@@ -135,6 +146,8 @@ nsplug meta_mokai.moos targ_${VTEAM}_one.moos -f  \
        START_POS=$START_POS         \
        HRM=$HRM                     \
        HRM_DEVICE=$HRM_DEVICE       \
+       CID=$CID                     \
+       PID=$PID                     \
        $SIM
 
 echo "Assembling BHV file targ_${VTEAM}_one.bhv ."

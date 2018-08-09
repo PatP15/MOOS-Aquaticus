@@ -23,6 +23,8 @@ UNTAG_POS=""
 ENEMIES="EVAN,FELIX,MOKAI_RED,MOKAI_BLUE"
 DEFENSE_MODE=""
 
+CID=000
+
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
 #-------------------------------------------------------
@@ -128,6 +130,9 @@ for ARGI; do
         START_POS_Y="${ARGI#--start-y=*}"
     elif [ "${ARGI:0:10}" = "--start-a=" ] ; then
         START_POS_A="${ARGI#--start-a=*}"
+    elif [ "${ARGI:0:6}" = "--cid=" ] ; then
+        CID="${ARGI#--cid=*}"
+        CID=$(printf "%03d" $CID)
     else
         echo "Undefined argument:" $ARGI
         echo "Please use -h for help."
@@ -157,6 +162,7 @@ if [ "${HELP}" = "yes" ]; then
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
     echo "  --start-a=        : Start from angle (requires x y a)."
+    echo "  --cid=            : Competition id (for log file)"
     echo "  --just_build, -j"
     echo "  --help, -h"
     exit 0;
@@ -215,6 +221,7 @@ nsplug meta_m200.moos targ_${VNAME}.moos -f \
     VTYPE="kayak"                \
     VTEAM=$VTEAM                 \
     START_POS=$START_POS         \
+    CID=$CID                     \
     $SIM
 
 echo "Assembling BHV file targ_${VNAME}.bhv"

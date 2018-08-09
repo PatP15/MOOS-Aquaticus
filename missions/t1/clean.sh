@@ -24,7 +24,7 @@ done
 #-------------------------------------------------------
 cd m200
 
-rm -rf  $VERBOSE   MOOSLog_*  LOG_*
+rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
 
@@ -32,7 +32,7 @@ cd ..
 
 cd mokai
 
-rm -rf  $VERBOSE   MOOSLog_*  LOG_*
+rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
 
@@ -40,7 +40,7 @@ cd ..
 
 cd shoreside
 
-rm -rf  $VERBOSE   MOOSLog_*  LOG_*
+rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
 
