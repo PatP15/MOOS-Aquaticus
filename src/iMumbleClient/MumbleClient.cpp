@@ -52,7 +52,7 @@ static int paCallback(const void *_inputBuffer,
   const size_t available_samples = paData->playBuffer->getRemaining();
   if(requested_samples > available_samples) {
     paData->playBuffer->top(outputBuffer, 0, available_samples);
-    for(size_t i = available_samples; i < requested_samples - available_samples; i++) {
+    for(size_t i = available_samples; i < requested_samples; i++) {
       outputBuffer[i] = 0;
     }
   } else {
@@ -88,6 +88,23 @@ MumbleClient::MumbleClient() {
   audioBuffers.recordBuffer = std::make_shared<RingBuffer<int16_t>>(MAX_SAMPLES);
   audioBuffers.playBuffer = std::make_shared<RingBuffer<int16_t>>(MAX_SAMPLES);
 
+  initPortAudio();
+}
+
+//---------------------------------------------------------
+// Destructor
+
+MumbleClient::~MumbleClient() {
+  this->mum->disconnect();
+  Pa_Terminate();
+}
+
+void MumbleClient::initPortAudio() {
+  Pa_Terminate();
+
+  audioBuffers.recordBuffer->empty();
+  audioBuffers.playBuffer->empty();
+
   Pa_Initialize();
 
   Pa_OpenDefaultStream(&audioStream,
@@ -105,14 +122,6 @@ MumbleClient::MumbleClient() {
     errText.append(Pa_GetErrorText(err));
     reportRunWarning(errText);
   }
-}
-
-//---------------------------------------------------------
-// Destructor
-
-MumbleClient::~MumbleClient()
-{
-  Pa_Terminate();
 }
 
 //---------------------------------------------------------
@@ -165,6 +174,17 @@ bool MumbleClient::OnConnectToServer() {
 bool MumbleClient::Iterate()
 {
   AppCastingMOOSApp::Iterate();
+
+  if (this->audioBuffers.playBuffer->getRemaining() >= this->audioBuffers.playBuffer->getSize()) {
+    // Reset PortAudio, all buffers, all streams, and start over
+    // Ideally this will not happen, but should prevent some edge case scenarios where PortAudio locks up
+    reportRunWarning("Audio Buffer filled");
+    //audioBuffers.recordBuffer->empty();
+    //audioBuffers.playBuffer->empty();
+
+    //initPortAudio();
+  }
+
   // Tell the DB we are hearing things
   if (this->audioBuffers.playBuffer->isEmpty() && this->notifiedHearingAudio) {
     // Not hearing anything, need to notify
@@ -177,15 +197,17 @@ bool MumbleClient::Iterate()
   }
 
   if (this->m_mumbleServerChannelId != "-1" && !joinedDefaultChannel && this->mumConnected && mumLibLock.try_lock()) {
-    cout << "chan" << this->m_mumbleServerChannelId << "end" << endl;
     if (isInteger(this->m_mumbleServerChannelId)) {
       this->mum->joinChannel(stoi(this->m_mumbleServerChannelId));
+      this->joinedDefaultChannel = true;
     } else {
       string channelId = tokStringParse(this->cb->channelList, this->m_mumbleServerChannelId, ',', '=');
-      reportEvent("Found channel ID " + channelId + " matching " + m_mumbleServerChannelId);
-      this->mum->joinChannel(stoi(channelId));
+      if (!channelId.empty()) {
+        reportEvent("Found channel ID " + channelId + " matching " + m_mumbleServerChannelId);
+        this->mum->joinChannel(stoi(channelId));
+        this->joinedDefaultChannel = true;
+      }
     }
-    this->joinedDefaultChannel = true;
     mumLibLock.unlock();
   }
 
@@ -230,7 +252,7 @@ bool MumbleClient::OnStartUp()
       m_mumbleServerPort = stoi(value);
     } else if (param == "CLIENT_USERNAME") {
       m_mumbleServerUsername = value;
-    } else if (param == "CHANNEL_ID" && param != "") {
+    } else if (param == "CHANNEL_ID") {
       m_mumbleServerChannelId = value;
     }
     else { handled = false; }
@@ -252,12 +274,12 @@ void MumbleClient::initMumbleLink() {
     this->cb = new MumbleCallbackHandler(this->audioBuffers.playBuffer);
     mumlib::MumlibConfiguration conf;
     //conf.opusEncoderBitrate = 48000; // Higher = better quality, more bandwidth
-    mumLibLock.lock();
     this->mum = new mumlib::Mumlib(*cb, conf);
 
     // Attempt to maintain a connection forever
     while (!mumConnected) {
       try {
+        mumLibLock.lock();
         this->mum->connect(this->m_mumbleServerAddress, this->m_mumbleServerPort, this->m_mumbleServerUsername, "");
         this->joinedDefaultChannel = false;
         this->mumConnected = true;
@@ -317,8 +339,10 @@ void MumbleClient::registerVariables() {
 // Procedure: buildReport()
 
 bool MumbleClient::buildReport() {
-  m_msgs << "Speaking:   " << boolToString(this->audioBuffers.shouldRecord) << endl;
-  m_msgs << "Hearing:    " << boolToString(this->notifiedHearingAudio) << endl;
+  m_msgs << "Speaking:   " << boolToString(this->audioBuffers.shouldRecord) <<
+         " (" << ulintToString(this->audioBuffers.recordBuffer->getRemaining()) << ")" << endl;
+  m_msgs << "Hearing:    " << boolToString(this->notifiedHearingAudio) <<
+         " (" << ulintToString(this->audioBuffers.playBuffer->getRemaining()) << ")" << endl;
   m_msgs << "Trigger:    " << this->m_sendAudioKey << endl;
   m_msgs << endl;
   m_msgs << "Connected:  " << boolToString(this->mumConnected) << endl;

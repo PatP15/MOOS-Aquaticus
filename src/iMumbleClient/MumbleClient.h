@@ -34,6 +34,7 @@ class MumbleClient : public AppCastingMOOSApp
 
  protected:
     void initMumbleLink();
+    void initPortAudio();
 
  private: // Configuration variables
    std::string m_sendAudioKey = "SPEECH_BUTTON";
