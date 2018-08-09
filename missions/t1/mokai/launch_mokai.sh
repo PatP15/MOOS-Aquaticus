@@ -69,11 +69,11 @@ for ARGI; do
     elif [ "${ARGI}" = "--voice-off" -o "${ARGI}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
-    elif [ "${arg}" = "--heart-rate-monitor1" -o "${arg}" = "-hrm1" ] ; then
+    elif [ "${ARGI}" = "--heart-rate-monitor1" -o "${ARGI}" = "-hrm1" ] ; then
         HRM="YES"
         HRM_DEVICE="1"
         echo "iZephyrHRM enabled. With HRM1"
-    elif [ "${arg}" = "--heart-rate-monitor2" -o "${arg}" = "-hrm2" ] ; then
+    elif [ "${ARGI}" = "--heart-rate-monitor2" -o "${ARGI}" = "-hrm2" ] ; then
         HRM="YES"
         HRM_DEVICE="2"
         echo "iZephyrHRM enabled. With HRM2"
