@@ -24,6 +24,8 @@ UNTAG_POS=""
 HERON_TEAMMATE=""
 HERON_TEAMMATE_VTEAM=""
 
+CID=000 //COMP ID
+
 function help(){
     echo ""
     echo "USAGE: $0 <heron_vehicle_name> <vehicle_role> <heron_teammate_vehicle_role> [SWITCHES]"
@@ -57,6 +59,7 @@ function help(){
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
     echo "  --start-a=        : Start from angle (requires x y a)."
+    echo "  --cid             : Competition ID (for log file)"
     echo "  --just_build, -J  : Just build targ files."
     echo "  --help,       -H  : Display this message."
     exit 0
@@ -245,6 +248,9 @@ for arg in "${@:4}"; do
         START_POS_Y="${arg#--start-y=*}"
     elif [ "${arg:0:10}" = "--start-a=" ] ; then
         START_POS_A="${arg#--start-a=*}"
+    elif [ "${arg:0:6}" = "--cid=" ] ; then
+        CID="${arg#--cid=*}"
+        CID=$(printf "%03d" $CID)
     else
         echo "Undefined switch:" $arg
         help
@@ -303,6 +309,7 @@ nsplug meta_heron.moos targ_${RNAME}.moos -f \
     VTYPE="kayak"                \
     VTEAM=$VTEAM                 \
     START_POS=$START_POS         \
+    CID=$CID                     \
     $SIM
 
 echo "Assembling BHV file targ_${RNAME}.bhv"

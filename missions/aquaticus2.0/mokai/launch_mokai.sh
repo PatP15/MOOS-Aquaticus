@@ -20,6 +20,9 @@ VOICE="ON"
 HRM="NO"
 HRM_DEVICE=""
 
+CID="000" # COMP ID
+PID="000" # PARTICIPANT ID
+
 function help(){
     echo ""
     echo "$0 <vehical_name> <vehicle_role> <teammate1_role> <teammate2_role> [SWITCHES]"
@@ -51,6 +54,8 @@ function help(){
     echo "  --voice-off,            -voff  : Voice recognition off"
     echo "  --heart-rate-monitor1 , -hrm1  : HRM1 enabled"
     echo "  --heart-rate-monitor2 , -hrm2  : HRM2 enabled"
+    echo "  --pid=                         : Participant ID (for log file)"
+    echo "  --cid=                         : Competition ID (for log file)"
     echo "  --just_build,           -J     : Only build targ file"
     echo "  --help,                 -H     : Display this help message"
     exit 0
@@ -229,6 +234,12 @@ for arg in "${@:5}"; do
         HRM="YES"
         HRM_DEVICE="2"
         echo "iZephyrHRM enabled. With HRM2"
+    elif [ "${arg:0:6}" = "--pid=" ] ; then
+        PID="${arg#--pid=*}"
+        PID=$(printf "%03d" $PID)
+    elif [ "${arg:0:6}" = "--cid=" ] ; then
+        CID="${arg#--cid=*}"
+        CID=$(printf "%03d" $CID)
     else
         echo "Undefined switch:" $arg
         help
@@ -289,6 +300,8 @@ nsplug meta_mokai.moos targ_${RNAME}_${VTEAM}.moos -f  \
        START_POS=$START_POS         \
        HRM=$HRM                     \
        HRM_DEVICE=$HRM_DEVICE       \
+       CID=$CID                     \
+       PID=$PID                     \
        $SIM
 
 echo "Assembling BHV file targ_${RNAME}_${VTEAM}.bhv ."
