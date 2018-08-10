@@ -24,7 +24,7 @@ UNTAG_POS=""
 HERON_TEAMMATE=""
 HERON_TEAMMATE_VTEAM=""
 
-CID=000 //COMP ID
+CID=000 #COMP ID
 
 function help(){
     echo ""
@@ -106,7 +106,7 @@ case "$1" in
         ;;
     l|luke)
 	    HERON_IP=192.168.12.1
-      VNAME="LUKE"
+        VNAME="LUKE"
 	    echo "LUKE heron selected."
 	    ;;
     *)
