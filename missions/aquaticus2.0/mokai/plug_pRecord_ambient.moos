@@ -18,7 +18,7 @@ ProcessConfig = pRecordAmbient
 //program with date and time appended.                          
 //If not specified, defaults to "pRecord_saves"               
 //  SAVE_DIR_PREFIX = SPEECH_REC_SAVE
-    SAVE_DIR_PREFIX = AMB_%(VNAME)_%(RNAME)
+    SAVE_DIR_PREFIX = C%(CID)_P%(PID)_AMB_%(VNAME)_%(RNAME)
                                 
                                                                 
 }   

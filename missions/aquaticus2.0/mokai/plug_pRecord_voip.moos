@@ -18,7 +18,7 @@ ProcessConfig = pRecordVOIP
 //program with date and time appended.                          
 //If not specified, defaults to "pRecord_saves"               
 //  SAVE_DIR_PREFIX = SPEECH_REC_SAVE
-    SAVE_DIR_PREFIX = VOIP_%(VNAME)_%(RNAME)
+    SAVE_DIR_PREFIX = C%(CID)_P%(PID)_VOIP_%(VNAME)_%(RNAME)
                                 
                                                                 
 }   
