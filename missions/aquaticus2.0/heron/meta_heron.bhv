@@ -118,7 +118,7 @@ Behavior = BHV_OpRegionRecover
 Behavior = BHV_AvdColregsV17
 {
   name                    = active_avd_
-  pwt                     = 200
+  pwt                     = 300
 
   updates                 = CONTACT_INFO
 
@@ -133,7 +133,7 @@ Behavior = BHV_AvdColregsV17
   extrapolate             = false
 
   completed_dist          = 15
-  max_util_cpa_dist       = 15
+  max_util_cpa_dist       = 10
   min_util_cpa_dist       = 5
   pwt_grade               = linear
   pwt_inner_dist          = 10
@@ -218,7 +218,7 @@ Behavior = BHV_Waypoint
 }
 
 //#############################################################################
-Behavior = BHV_AvdColregsV17
+//Behavior = BHV_AvdColregsV17
 {
   name                    = avd_
   pwt                     = 200
