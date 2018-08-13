@@ -32,7 +32,7 @@ cd ..
 
 cd mokai
 
-rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_*
+rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_* C*_VOIP_* C*_SPCH_* C*_AMB_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
 

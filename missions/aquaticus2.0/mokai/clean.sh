@@ -23,9 +23,6 @@ done
 #  Part 2: Do the cleaning!
 #-------------------------------------------------------
 
-rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_*
+rm -rf  $VERBOSE   MOOSLog_*  C*_LOG_* C*_VOIP_* C*_SPCH_* C*_AMB_*
 rm -f   $VERBOSE   *~  targ_* *.moos++
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
-rm -rf  $VERBOSE   SPCH_*
-rm -rf  $VERBOSE   VOIP_*
-rm -rf  $VERBOSE   AMB_*
