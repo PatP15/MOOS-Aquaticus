@@ -27,7 +27,7 @@ ZephyrHRM::ZephyrHRM()
   
   //Determines if packets get reported as events
   m_summary_events = false;
-  m_general_events = false
+  m_general_events = false;
   
   m_last_gp.ms = -1;
   m_last_gp.br = -1;
