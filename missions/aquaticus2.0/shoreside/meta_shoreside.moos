@@ -39,6 +39,8 @@ ProcessConfig = uFldFlagManager
   AppTick       = 2
   CommsTick     = 2
 
+  near_flag_range_buffer = 0
+
   flag = $(RED_FLAG), color=red, label=red
   flag = $(BLUE_FLAG), color=blue, label=blue
 
