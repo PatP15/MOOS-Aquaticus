@@ -154,7 +154,7 @@ ProcessConfig = uFldTagManager
 
   robot_untag_post = LED_TAGGED_$UP_TARGET=false
 
-  notag_post - SAY_MOOS_$UP_SOURCE=say={Tag Denied $REASON},rate=200
+  notag_post = SAY_MOOS_$UP_SOURCE=say={Tag Denied $REASON},rate=200
   
   team_one=red
   team_two=blue
