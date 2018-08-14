@@ -515,7 +515,7 @@ bool ZephyrHRM::OnStartUp()
       }
 
       handled = true;
-    }else if(param == "general_packet_events")
+    }else if(param == "general_packet_events"){
       value = tolower(value);
       
       if(value == "true"){
@@ -529,7 +529,6 @@ bool ZephyrHRM::OnStartUp()
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
-
   }
   
   if(m_bt_mac == ""){
