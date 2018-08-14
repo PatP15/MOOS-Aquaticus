@@ -19,6 +19,7 @@
 #include "portaudio.h"
 #include "sndfile.h"
 #include <pthread.h>
+#include <thread>
 
 using namespace std;
 
@@ -80,6 +81,8 @@ void *recordAudio(void *audioStruct) { // Thread-able function to record audio t
 
         }
 
+      std::this_thread::sleep_for(std::chrono::nanoseconds(100)); // Don't overload the CPU
+
     }
 
     return NULL;
@@ -132,11 +135,12 @@ Record::Record()
 		      NULL,
 		      NULL);
 
-  if(err == Pa_StartStream(stream)) reportRunWarning("Error starting stream"); // starts stream - from now on we can read from or write to the stream
+  err = Pa_StartStream(stream);
+  if(err != 0) reportRunWarning(Pa_GetErrorText(err)); // starts stream - from now on we can read from or write to the stream
 
     pthread_t thread; // declares posix thread for running audio capture function
 
-    if ((err = pthread_create(&thread, NULL, recordAudio, &params)) != 0) reportRunWarning("Error creating thread"); // initializes thread
+    if (pthread_create(&thread, NULL, recordAudio, &params) != 0) reportRunWarning("Error creating thread"); // initializes thread
 
 
     
@@ -149,6 +153,7 @@ Record::~Record()
 {
 
     END = true;
+    Pa_Terminate();
 
 }
 
