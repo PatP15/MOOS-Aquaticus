@@ -334,8 +334,8 @@ if [ ! -e targ_${RNAME}_${VTEAM}.moos ]; then echo "no targ_${RNAME}_${VTEAM}.mo
 if [ ! -e targ_${RNAME}_${VTEAM}.bhv ]; then echo "no targ_${RNAME}_${VTEAM}.bhv!"; exit 1; fi
 
 echo "Launching $RNAME MOOS Community."
-pAntler targ_${RNAME}_${VTEAM}.moos >& /dev/null &
-uMAC targ_${RNAME}_${VTEAM}.moos
+pAntler targ_${RNAME}.moos >& /dev/null &
+uMAC targ_${RNAME}.moos
 
 echo "Killing all processes ..."
 kill -- -$$
