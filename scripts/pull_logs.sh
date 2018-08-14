@@ -1,15 +1,30 @@
 #!/bin/bash
 
 # ===============================
+# Parse command line options
+# ===============================
+
+SSH_USER=""
+CID=""
+
+for arg in "${@}"; do
+    if [ "${arg:0:11}" = "--ssh-user=" ]; then
+        SSH_USER="${arg#--ssh-user=*}"
+    elif [ "${arg:0:6}" = "--cid=" ]; then
+        CID="${arg#--cid=*}"
+        CID=$(printf "%03s" $CID)
+    fi
+done
+
+# ===============================
 # Get input from user
 # ===============================
 
-printf "CID: "
-read cid
-cid=$(printf "%03s" $cid)
-
-printf "oceanai username: "
-read username
+if [[ "$CID" == "" ]]; then
+    printf "CID: "
+    read CID
+    CID=$(printf "%03s" $CID)
+fi
 
 # ===============================
 # Get input from user
@@ -29,22 +44,45 @@ fi
 mkdir -p raw_logs
 
 printf "===============================\n"
-printf " Downloading logs from C${cid}\n" 
+printf " Downloading logs from C${CID}\n" 
 printf "===============================\n"
 
-rsync -rv --progress ${username}@oceanai.mit.edu:'/raiddrive/aquaticus_data/*/C'${cid}'*' raw_logs
+err_code=""
+if [[ "$SSH_USER" == "" ]]; then
+    rsync -rv --progress oceanai.mit.edu:'/raiddrive/aquaticus_data/*/C'${CID}'*' raw_logs
+    err_code="$?"
+else
+    rsync -rv --progress ${SSH_USER}@oceanai.mit.edu:'/raiddrive/aquaticus_data/*/C'${CID}'*' raw_logs
+    err_code="$?"
+fi
+
+if [ "$err_code" == "23" ]; then
+    printf "===============================\n"
+    printf " Error: C${CID} not on server.!\n"
+    printf "===============================\n"
+    exit 1
+elif [ "$err_code" != "0" ]; then
+    printf "===============================\n"
+    printf " Error with rsync!\n"
+    printf "===============================\n"
+    exit 1
+fi
 
 # ===============================
 # Untar files
 # ===============================
 
+printf "===============================\n"
+printf " Extracting Logs\n"
+printf "===============================\n"
+
 # Untar tar files
-for file in raw_logs/C${cid}*.tar; do
+for file in raw_logs/C${CID}*.tar; do
     tar -xvf $file -C raw_logs/.
 done
 
 # Untar tgz files
-for file in raw_logs/C${cid}*.tgz; do
+for file in raw_logs/C${CID}*.tgz; do
     tar -xvzf $file -C raw_logs/.
 done
 
@@ -52,15 +90,15 @@ done
 # Create file structure
 # ===============================
 
-printf "link logs in this directory [y/n]: "
+printf "link from C${CID} in current directory? [Y/n]: "
 read response
 
-if [[ "$response" != "y" && "$response" != "y" && "$response" != "yes" ]]; then
+if [[ "$response" == "N" || "$response" == "n" || "$response" != "no" ]]; then
     exit 0
 fi
 
 printf "===============================\n"
-printf " Linking logs from C${cid}\n" 
+printf " Linking logs from C${CID}\n" 
 printf "===============================\n"
 
-bllinks.sh --log_dir=raw_logs --cid="$cid"
+bllinks.sh --log_dir=raw_logs --cid="$CID"
