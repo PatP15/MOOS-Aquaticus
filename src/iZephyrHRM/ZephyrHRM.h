@@ -94,6 +94,9 @@ class ZephyrHRM : public AppCastingMOOSApp
    static const int m_bt_data_buf_size = 1024;
    unsigned char m_bt_data_buf[m_bt_data_buf_size];
 
+   bool m_general_events;
+   bool m_summary_events;
+
    struct bt_data* m_comms_data; 
 
    struct general_packet m_last_gp;

@@ -25,6 +25,10 @@ ZephyrHRM::ZephyrHRM()
   m_packet_num = 0;
   m_life_sign_c = 0;
   
+  //Determines if packets get reported as events
+  m_summary_events = false;
+  m_general_events = false
+  
   m_last_gp.ms = -1;
   m_last_gp.br = -1;
   m_last_gp.hr = -1;
@@ -307,6 +311,12 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     //Event Packet
   }else if(msgID == 0x20){
     //GENERAL PACKET
+    
+    if(m_general_events){
+      ReportPacket(payload);
+    }
+
+
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF) << 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
    
     int hr = (int) payload[9] & 0xFF; 
@@ -350,6 +360,11 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     
   }else if(msgID == 0x2B){
     //SUMMARY PACKET
+    
+    if(m_summary_events){
+      ReportPacket(payload);
+    }
+
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
   
     short hr_conf = (short) (payload[34] & 0xFF);
@@ -490,6 +505,26 @@ bool ZephyrHRM::OnStartUp()
 
     if(param == "mac") {
       m_bt_mac = value;
+      handled = true;
+    }else if(param == "summary_packet_events"){
+      value = tolower(value);
+      
+      if(value == "true"){
+        m_summary_events = true;
+      }else if(value == false){
+        m_summary_events = false;
+      }
+
+      handled = true;
+    }else if(param == "general_packet_events")
+      value = tolower(value);
+      
+      if(value == "true"){
+        m_general_events = true;
+      }else if(value == false){
+        m_general_events = false;
+      }
+
       handled = true;
     }
 
