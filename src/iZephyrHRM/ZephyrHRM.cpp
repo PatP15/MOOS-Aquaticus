@@ -203,7 +203,7 @@ void ZephyrHRM::ReportPacket(struct zephyr_packet* packet){
   std::stringstream ss;
   
   for(int i=0; i<packet->size; i++){
-    ss << "[" << i << "] 0x" << std::setw(2) << std::setfill('0') << std::hex << (int)(packet->data[i]) << ", ";
+    ss << "[" << std::dec << i << "] 0x" << std::setw(2) << std::setfill('0') << std::hex << (int)(packet->data[i]) << ", ";
   }
   ss << "\n";
   reportEvent(ss.str());
