@@ -7,14 +7,22 @@
 
 touch $1/md5_summary.txt
 for file in $(find -L -s $1 -type f); do
+    printf "Calculating md5 for ${file}... "
+
     printf "$(basename $file) - " >> $1/md5_summary.txt
     md5 -q $file >> $1/md5_summary.txt
+
+    printf "Done!\n"
 done
 
 touch $2/md5_summary.txt
 for file in $(find -L -s $2 -type f); do
+    printf "Calculating md5 for ${file}... "
+
     printf "$(basename $file) - " >> $2/md5_summary.txt
     md5 -q $file >> $2/md5_summary.txt
+
+    printf "Done!\n"
 done
 
 
