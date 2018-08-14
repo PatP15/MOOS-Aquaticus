@@ -16,6 +16,7 @@ Processconfig = ANTLER
   Run = pHostInfo           @ NewConsole = false
   Run = uFldNodeBroker      @ NewConsole = false
   Run = uFldMessageHandler  @ NewConsole = false
+  Run = uLoadWatch          @ NewConsole = false
   Run = uProcessWatch       @ NewConsole = false
   Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
@@ -48,6 +49,8 @@ Processconfig = ANTLER
   Run = iZephyrHRM          @ NewConsole = false
 #endif
 }
+
+#include ../plug_uLoadWatch.moos
 
 #include plug_iZephyrHRM.moos
 
