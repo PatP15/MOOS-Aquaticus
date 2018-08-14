@@ -52,8 +52,7 @@ function help(){
     echo "  --sim,                  -s     : Full simulation"
     echo "  --voice-on,             -von   : Voice recognition on"
     echo "  --voice-off,            -voff  : Voice recognition off"
-    echo "  --heart-rate-monitor1 , -hrm1  : HRM1 enabled"
-    echo "  --heart-rate-monitor2 , -hrm2  : HRM2 enabled"
+    echo "  --hrm=                         : Enable HRM #"
     echo "  --pid=                         : Participant ID (for log file)"
     echo "  --cid=                         : Competition ID (for log file)"
     echo "  --just_build,           -J     : Only build targ file"
@@ -226,14 +225,10 @@ for arg in "${@:5}"; do
     elif [ "${arg}" = "--voice-off" -o "${arg}" = "-voff" ] ; then
         VOICE="OFF"
         echo "Voice recognition OFF."
-    elif [ "${arg}" = "--heart-rate-monitor1" -o "${arg}" = "-hrm1" ] ; then
+    elif [ "${arg:0:6}" = "--hrm=" ] ; then
         HRM="YES"
-        HRM_DEVICE="1"
-        echo "iZephyrHRM enabled. With HRM1"
-    elif [ "${arg}" = "--heart-rate-monitor2" -o "${arg}" = "-hrm2" ] ; then
-        HRM="YES"
-        HRM_DEVICE="2"
-        echo "iZephyrHRM enabled. With HRM2"
+        HRM_DEVICE="${arg#--hrm=*}"
+        printf "HRM${HRM_DEVICE} selected!\n"
     elif [ "${arg:0:6}" = "--pid=" ] ; then
         PID="${arg#--pid=*}"
         PID=$(printf "%03d" $PID)
