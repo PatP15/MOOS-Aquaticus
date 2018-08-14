@@ -313,7 +313,7 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     //GENERAL PACKET
     
     if(m_general_events){
-      ReportPacket(payload);
+      ReportPacket(packet);
     }
 
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF) << 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
@@ -361,7 +361,7 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
     //SUMMARY PACKET
     
     if(m_summary_events){
-      ReportPacket(payload);
+      ReportPacket(packet);
     }
 
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
