@@ -280,9 +280,9 @@ if [ -z $TEAMMATE2 ]; then
     exit 2
 fi
 
-echo "Assembling MOOS file targ_${RNAME}_${VTEAM}.moos ."
+echo "Assembling MOOS file targ_${RNAME}.moos ."
 
-nsplug meta_mokai.moos targ_${RNAME}_${VTEAM}.moos -f  \
+nsplug meta_mokai.moos targ_${RNAME}.moos -f  \
        VNAME="${VNAME}"             \
        RNAME="${RNAME}"             \
        VPORT=$VPORT                 \
@@ -306,7 +306,7 @@ nsplug meta_mokai.moos targ_${RNAME}_${VTEAM}.moos -f  \
 
 echo "Assembling BHV file targ_${RNAME}_${VTEAM}.bhv ."
 
-nsplug meta_mokai.bhv targ_${RNAME}_${VTEAM}.bhv -f  \
+nsplug meta_mokai.bhv targ_${RNAME}.bhv -f  \
        VNAME="${VNAME}"             \
        RNAME="${RNAME}"             \
        VPORT=$VPORT                 \
@@ -330,8 +330,8 @@ if [ ${JUST_BUILD} = "yes" ] ; then
     exit 0
 fi
 
-if [ ! -e targ_${RNAME}_${VTEAM}.moos ]; then echo "no targ_${RNAME}_${VTEAM}.moos!"; exit 1; fi
-if [ ! -e targ_${RNAME}_${VTEAM}.bhv ]; then echo "no targ_${RNAME}_${VTEAM}.bhv!"; exit 1; fi
+if [ ! -e targ_${RNAME}.moos ]; then echo "no targ_${RNAME}_${VTEAM}.moos!"; exit 1; fi
+if [ ! -e targ_${RNAME}.bhv ]; then echo "no targ_${RNAME}_${VTEAM}.bhv!"; exit 1; fi
 
 echo "Launching $RNAME MOOS Community."
 pAntler targ_${RNAME}.moos >& /dev/null &
