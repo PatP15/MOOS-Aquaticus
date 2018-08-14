@@ -19,6 +19,20 @@ option(BUILD_ALL "Build all apps." ON)
 
 #============================================================================
  # List the subdirectories to build...
+
+IF(BUILD_VOIP)
+  ADD_SUBDIRECTORY(iMumbleClient)
+ENDIF()
+
+IF(BUILD_HRM)
+  ADD_SUBDIRECTORY(iZephyrHRM)
+ENDIF()
+
+IF(BUILD_WEBCAM)
+    ADD_SUBDIRECTORY(iWebCam)
+  ADD_SUBDIRECTORY(pCamViewer)
+ENDIF()
+
 IF(BUILD_ALL)
  ADD_SUBDIRECTORY(uFldTagManager)
 ADD_SUBDIRECTORY(uFldFlagManager)
@@ -66,19 +80,6 @@ ADD_SUBDIRECTORY(pNodeReportParse)
 #  ADD_SUBDIRECTORY(pShorePing)
 #  ADD_SUBDIRECTORY(pPingDisplay)
 ADD_SUBDIRECTORY(app_keyprog)
-
-IF(BUILD_WEBCAM)
-    ADD_SUBDIRECTORY(iWebCam)
-  ADD_SUBDIRECTORY(pCamViewer)
-ENDIF()
-
-IF(BUILD_VOIP)
-  ADD_SUBDIRECTORY(iMumbleClient)
-ENDIF()
-
-IF(BUILD_HRM)
-  ADD_SUBDIRECTORY(iZephyrHRM)
-ENDIF()
 
 ##############################################################################
 #                           END of CMakeLists.txt
