@@ -316,7 +316,6 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
       ReportPacket(payload);
     }
 
-
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF) << 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
    
     int hr = (int) payload[9] & 0xFF; 
@@ -511,7 +510,7 @@ bool ZephyrHRM::OnStartUp()
       
       if(value == "true"){
         m_summary_events = true;
-      }else if(value == false){
+      }else if(value == "false"){
         m_summary_events = false;
       }
 
@@ -521,7 +520,7 @@ bool ZephyrHRM::OnStartUp()
       
       if(value == "true"){
         m_general_events = true;
-      }else if(value == false){
+      }else if(value == "false"){
         m_general_events = false;
       }
 
