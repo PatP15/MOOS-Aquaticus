@@ -87,8 +87,6 @@ MumbleClient::MumbleClient() {
 
   audioBuffers.recordBuffer = std::make_shared<RingBuffer<int16_t>>(MAX_SAMPLES);
   audioBuffers.playBuffer = std::make_shared<RingBuffer<int16_t>>(MAX_SAMPLES);
-
-  initPortAudio();
 }
 
 //---------------------------------------------------------
@@ -100,10 +98,10 @@ MumbleClient::~MumbleClient() {
 }
 
 void MumbleClient::initPortAudio() {
-  Pa_Terminate();
-
   audioBuffers.recordBuffer->empty();
   audioBuffers.playBuffer->empty();
+
+  Pa_Terminate();
 
   Pa_Initialize();
 
@@ -163,7 +161,6 @@ bool MumbleClient::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool MumbleClient::OnConnectToServer() {
   registerVariables();
-  initMumbleLink();
   return(true);
 }
 
@@ -179,8 +176,8 @@ bool MumbleClient::Iterate()
     // Reset PortAudio, all buffers, all streams, and start over
     // Ideally this will not happen, but should prevent some edge case scenarios where PortAudio locks up
     reportRunWarning("Audio Buffer filled");
-    //audioBuffers.recordBuffer->empty();
-    //audioBuffers.playBuffer->empty();
+    audioBuffers.recordBuffer->empty();
+    audioBuffers.playBuffer->empty();
 
     //initPortAudio();
   }
@@ -212,8 +209,12 @@ bool MumbleClient::Iterate()
   }
 
   mumLibLock.lock();
-  this->mumConnected = (this->mum != nullptr && this->cb != nullptr
-    && this->cb->connectedOnce && this->mum->getConnectionState() == mumlib::ConnectionState::CONNECTED);
+  if (this->mum != nullptr && this->cb != nullptr && this->cb->connectedOnce) {
+    if (!mumConnected) std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    this->mumConnected = this->mum->getConnectionState() == mumlib::ConnectionState::CONNECTED;
+  } else {
+    mumConnected = false;
+  }
   mumLibLock.unlock();
 
   AppCastingMOOSApp::PostReport();
@@ -264,21 +265,24 @@ bool MumbleClient::OnStartUp()
 
   registerVariables();
 
+  initPortAudio();
+  initMumbleLink();
+
   return(true);
 }
 
 void MumbleClient::initMumbleLink() {
   // Begin with everything
   thread server_thread([this]() {
-    // Configure Mumble
-    this->cb = new MumbleCallbackHandler(this->audioBuffers.playBuffer);
-    mumlib::MumlibConfiguration conf;
-    //conf.opusEncoderBitrate = 48000; // Higher = better quality, more bandwidth
-    this->mum = new mumlib::Mumlib(*cb, conf);
-
     // Attempt to maintain a connection forever
     while (!mumConnected) {
       try {
+        // Configure Mumble
+        this->cb = new MumbleCallbackHandler(this->audioBuffers.playBuffer);
+        mumlib::MumlibConfiguration conf;
+        //conf.opusEncoderBitrate = 48000; // Higher = better quality, more bandwidth
+        this->mum = new mumlib::Mumlib(*cb, conf);
+
         mumLibLock.lock();
         this->mum->connect(this->m_mumbleServerAddress, this->m_mumbleServerPort, this->m_mumbleServerUsername, "");
         this->joinedDefaultChannel = false;
@@ -287,6 +291,7 @@ void MumbleClient::initMumbleLink() {
         this->mum->run();
       } catch (mumlib::MumlibException &e) {
         this->mumConnected = false;
+        this->cb->connectedOnce = false;
         string errMessage = "There was an issue trying to connect Murmur: ";
         errMessage.append(e.what());
         this->reportRunWarning(errMessage);
