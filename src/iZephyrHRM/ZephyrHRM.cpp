@@ -22,7 +22,6 @@ using namespace std;
 ZephyrHRM::ZephyrHRM()
 {
   m_bt_mac = "";
-  m_bt_channel = 1;
   m_packet_num = 0;
   m_life_sign_c = 0;
   
@@ -122,10 +121,10 @@ bool ZephyrHRM::requestSummaryPacket(int &s, bool active){
 void ZephyrHRM::gotLifeSign(){
   m_last_life_sign_time = MOOSLocalTime();
 }
-bool ZephyrHRM::isConnectionStale(){
-  return ((MOOSLocalTime() - m_last_life_sign_time) > 30);
-}
 
+bool ZephyrHRM::isConnectionStale(){
+  return ((MOOSLocalTime() - m_last_life_sign_time) > 5);
+}
 
 bool ZephyrHRM::BTThread(void* param){
   struct bt_data* data = (struct bt_data*)param;
@@ -135,7 +134,7 @@ bool ZephyrHRM::BTThread(void* param){
   s = 0;
 
   struct timeval tv;
-  tv.tv_sec = 15;
+  tv.tv_sec = 10;
   tv.tv_usec = 0;
 
   struct sockaddr_rc addr = {0};
@@ -143,7 +142,7 @@ bool ZephyrHRM::BTThread(void* param){
   addr.rc_channel = (uint8_t) data->channel;
   str2ba(data->mac.c_str(), &addr.rc_bdaddr);
 
-  while(1){
+  while(true){
     if(!data->connected || main_t->isConnectionStale()){
       //Connect to HRM if not connected or stale
       data->connected = false;
@@ -153,6 +152,14 @@ bool ZephyrHRM::BTThread(void* param){
           //Close fd if it's not
           close(s);
           s = 0;
+          
+          // Channel sweeping
+          if(data->channel <= 31){
+            data->channel += 1;
+          }else{
+            data->channel = 1;
+          }
+          addr.rc_channel = (uint8_t) data->channel;
         }
         s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 
@@ -485,10 +492,6 @@ bool ZephyrHRM::OnStartUp()
       m_bt_mac = value;
       handled = true;
     }
-    else if(param == "channel") {
-      std::istringstream(value) >> m_bt_channel;
-      handled = true;
-    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -502,7 +505,7 @@ bool ZephyrHRM::OnStartUp()
   m_comms_data = new bt_data();
 
   m_comms_data->mac = m_bt_mac;
-  m_comms_data->channel = m_bt_channel;
+  m_comms_data->channel = 1;
   m_comms_data->connected = false;
 
   m_comms_data->call_back = this;
@@ -541,7 +544,7 @@ bool ZephyrHRM::buildReport()
 {
   m_msgs << "\n============ Connection Status ============\n";
   m_msgs << "MAC: " << m_bt_mac.c_str() << "\n";
-  m_msgs << "Channel: " << m_bt_channel << "\n";
+  m_msgs << "Channel: " << m_comms_data->channel << "\n";
   m_msgs << "Connected: " << std::boolalpha << m_comms_data->connected << "\n";
 
   if(m_comms_data->connected){

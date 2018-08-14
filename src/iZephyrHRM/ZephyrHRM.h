@@ -88,7 +88,6 @@ class ZephyrHRM : public AppCastingMOOSApp
    CMOOSThread* m_bt_thread;
 
    std::string m_bt_mac;
-   int m_bt_channel;
    int m_packet_num;
    int m_life_sign_c;
    double m_last_life_sign_time;
