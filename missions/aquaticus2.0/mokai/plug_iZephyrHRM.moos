@@ -12,9 +12,11 @@ ProcessConfig = iZephyrHRM
 #elseifdef HRM_DEVICE 2
    //HRM 2
    MAC=A0:E6:F8:FA:9A:9D 
+   b30=true
 #elseifdef HRM_DEVICE 3
    //HRM 3
    MAC=A0:E6:F8:FA:94:61 
+   b30=true
 #endif
 
 }
