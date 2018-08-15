@@ -17,6 +17,10 @@ ProcessConfig = iZephyrHRM
    //HRM 3
    MAC=A0:E6:F8:FA:94:61 
    b30=true
+#elseifdef HRM_DEVICE 4
+   //HRM 4
+   MAC=A0:E6:F8:FA:A0:BC 
+   b30=true
 #endif
 
 }
