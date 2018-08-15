@@ -65,7 +65,9 @@ class FlagManager : public AppCastingMOOSApp
 		   std::string reason="");
   
   void postPolygons();
-   
+
+  void postHeartBeat();
+  
  private: // Config variables
   
   // Flag Configurations. Flag ownership is stored in XYMarker.
@@ -82,6 +84,7 @@ class FlagManager : public AppCastingMOOSApp
   std::string m_ungrabbed_color;
 
   double      m_near_flag_range_buffer;
+  bool        m_post_heartbeat;
   
   // Configurable MOOS postings upon defined events
   std::vector<VarDataPair> m_flag_grab_posts;
@@ -121,6 +124,11 @@ class FlagManager : public AppCastingMOOSApp
   
   // Grab request state vars
   unsigned int m_total_grab_requests_rcvd; 
+
+
+  // Heartbeat
+  unsigned int m_heartbeat_counter;
+  double       m_heartbeat_last;
 };
 
 #endif

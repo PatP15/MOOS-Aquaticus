@@ -92,6 +92,8 @@ void showExampleConfigAndExit()
   blk("  flag_follows_vehicle = true   // Default is true              ");
   blk("  near_flag_range_buffer = 5    // Default is 2                 ");
   blk("                                                                ");
+  blk("  post_heartbeat = false        // Default is true              ");
+  blk("                                                                ");
   blk("  flag = x=60, y=-30,  label=one, range=20, width=10            ");
   blk("  flag = x=60, y=-170, label=two, color=purple, type=diamond    ");
   blk("                                                                ");
@@ -140,6 +142,7 @@ void showInterfaceAndExit()
   blk("------------------------------------                            ");
   blk("  HAS_FLAG_VNAME     = true/false                               ");
   blk("  HAS_FLAG_ALL       = false (upon global reset)                ");
+  blk("  UFMG_HEARTBEAT     = 12345                                    ");
   blk("  VTEAM_FLAG_GRABBED = grabbed=one,grabbed=two                  ");
   blk("  FLAG_GRAB_REPORT   = grabbed=one,grabbed=two                  ");
   blk("  FLAG_GRAB_REPORT   = Nothing grabbed - vehicle is tagged      ");

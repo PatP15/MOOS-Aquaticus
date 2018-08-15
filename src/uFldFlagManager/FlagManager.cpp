@@ -45,7 +45,11 @@ FlagManager::FlagManager()
   m_poly_vertex_color = "blue";
   m_poly_edge_color = "grey50";
   m_poly_fill_color = "grey90";
-  
+
+  // Heartbeat variables
+  m_heartbeat_counter = 0;
+  m_heartbeat_last    = 0;
+  m_post_heartbeat    = true;
 }
 
 //---------------------------------------------------------
@@ -115,9 +119,33 @@ bool FlagManager::Iterate()
 
   if(m_flag_follows_vehicle)
     updateVehiclesFlagRender();
-  
+
+  if(m_post_heartbeat)
+    postHeartBeat();
+
   AppCastingMOOSApp::PostReport();
   return(true);
+}
+
+//---------------------------------------------------------
+// Procedure: postHeartBeat()
+//            Post heatbeat message to aid in log file syncing
+
+void FlagManager::postHeartBeat()
+{
+  double delta_time = m_curr_time - m_heartbeat_last;
+  if(delta_time > 15) {
+    m_heartbeat_last = m_curr_time;
+
+    // Post a 5-digit index based on time. This should allow
+    // the index sequence to pick up where it left off if the
+    // flag manager is re-started mid competition.
+    long int time_index = (long int)(m_curr_time);
+    time_index = time_index % 100000;
+
+    Notify("UFMG_HEARTBEAT", (double)(time_index));
+  }
+    
 }
 
 //---------------------------------------------------------
@@ -169,6 +197,8 @@ bool FlagManager::OnStartUp()
     
     else if(param == "flag_follows_vehicle")
       handled = setBooleanOnString(m_flag_follows_vehicle, value);
+    else if(param == "post_heartbeat")
+      handled = setBooleanOnString(m_post_heartbeat, value);
     
     else if(param == "default_flag_type") {
       value = tolower(value);
