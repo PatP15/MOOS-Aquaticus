@@ -28,6 +28,7 @@ ZephyrHRM::ZephyrHRM()
   //Determines if packets get reported as events
   m_summary_events = false;
   m_general_events = false;
+  m_b30 = false;
   
   m_last_gp.ms = -1;
   m_last_gp.br = -1;
@@ -366,7 +367,12 @@ void ZephyrHRM::NewPacket(struct zephyr_packet* packet){
 
     long ms = (long) ((payload[5] & 0xFF) | ((payload[6] & 0xFF)<< 8) | ((payload[7] & 0xFF) << 16) | ((payload[8] & 0xFF) << 24));
   
-    short hr_conf = (short) (payload[34] & 0xFF);
+    short hr_byte = 34;
+    if(m_b30){
+      hr_byte = 30;
+    }
+
+    short hr_conf = (short) (payload[hr_byte] & 0xFF);
     int hrv = (int)((payload[35] & 0xFF) | ((payload[36] & 0xFF) << 8));
    
     m_last_sp.ms = ms;
@@ -522,6 +528,16 @@ bool ZephyrHRM::OnStartUp()
         m_general_events = true;
       }else if(value == "false"){
         m_general_events = false;
+      }
+
+      handled = true;
+    }else if(param == "b30"){
+      value = tolower(value);
+      
+      if(value == "true"){
+        m_b30 = true;
+      }else if(value == "false"){
+        m_b30 = false;
       }
 
       handled = true;

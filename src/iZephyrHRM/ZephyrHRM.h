@@ -96,6 +96,7 @@ class ZephyrHRM : public AppCastingMOOSApp
 
    bool m_general_events;
    bool m_summary_events;
+   bool m_b30;
 
    struct bt_data* m_comms_data; 
 
