@@ -274,7 +274,7 @@ void ButtonBox::parseSerialString(std::string data) //parse data sent via serial
     return;
   }
   if(data.at(0) != '$'){
-    reportRunWarning("Malformed data string! Does not begin with $ char");
+    reportEvent("Malformed data string! Does not begin with $ char");
     return;
   }
 
@@ -285,7 +285,7 @@ void ButtonBox::parseSerialString(std::string data) //parse data sent via serial
     if(c != '0' && c != '1' && c != ','){
       std::string err = "Malformed data string: ";
       err += data;
-      reportRunWarning(err);
+      reportEvent(err);
       return;
     }
   }
