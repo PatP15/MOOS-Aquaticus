@@ -19,7 +19,7 @@ set_target_properties(iMumbleClient PROPERTIES
 )
 
 # Remove this when we figure out all of iMumbleClient's race conditions on Pablos
-target_compile_definitions(iMumbleClient PRIVATE DUMP_CORE)
+#target_compile_definitions(iMumbleClient PRIVATE DUMP_CORE)
 
 TARGET_LINK_LIBRARIES(iMumbleClient
    ${MOOS_LIBRARIES}
