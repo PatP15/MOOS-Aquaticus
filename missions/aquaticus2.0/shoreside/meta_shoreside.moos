@@ -229,6 +229,7 @@ ProcessConfig = uFldShoreBroker
   qbridge = LED_IN_FLAG_ZONE
 
   qbridge = AQUATICUS_GAME
+  qbridge = UFMG_HEARTBEAT
 }
 
 
