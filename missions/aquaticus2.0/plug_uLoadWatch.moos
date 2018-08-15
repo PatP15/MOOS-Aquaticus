@@ -4,4 +4,6 @@ ProcessConfig = uLoadWatch
   CommsTick = 4
 
   thresh = app=any,      gapthresh=1.5
+  thresh = app=iSay,     gapThresh=40.0 
+  // iSay is blocking when it plays audio, ignore unless it gets too out of hand
 }
