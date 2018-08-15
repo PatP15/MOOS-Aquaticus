@@ -431,10 +431,10 @@ ProcessConfig = uNetMon
    add_ip = group=mokai_pablos, ip=192.168.1.196, name=196
    add_ip = group=mokai_pablos, ip=192.168.1.197, name=197
 
-   add_ip = group=bullets, ip=192.168.1.x, name=mokai_3
-   add_ip = group=bullets, ip=192.168.1.x, name=mokai_2
-   add_ip = group=bullets, ip=192.168.1.21, name=mokai_1
-   add_ip = group=bullets, ip=192.168.1.16, name=mokai_0
+   add_ip = group=bullets, ip=192.168.1.22, name=Leo
+   add_ip = group=bullets, ip=192.168.1.21, name=Don
+   add_ip = group=bullets, ip=192.168.1.25, name=Mich
+   add_ip = group=bullets, ip=192.168.1.23, name=Raph
    add_ip = group=bullets, ip=192.168.1.15, name=antenna
 }
 
