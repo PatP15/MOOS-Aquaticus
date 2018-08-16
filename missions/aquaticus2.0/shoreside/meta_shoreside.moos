@@ -428,8 +428,10 @@ ProcessConfig = uNetMon
    add_ip = group=luke, ip=192.168.12.1, name=frontseat
    add_ip = group=luke, ip=192.168.12.100, name=backseat
 
-   add_ip = group=mokai_pablos, ip=192.168.1.196, name=196
-   add_ip = group=mokai_pablos, ip=192.168.1.197, name=197
+   add_ip = group=mokai_pablos, ip=192.168.1.161, name=161
+   add_ip = group=mokai_pablos, ip=192.168.1.163, name=163
+   add_ip = group=mokai_pablos, ip=192.168.1.164, name=164
+   add_ip = group=mokai_pablos, ip=192.168.1.167, name=167
 
    add_ip = group=bullets, ip=192.168.1.22, name=Leo
    add_ip = group=bullets, ip=192.168.1.21, name=Don
