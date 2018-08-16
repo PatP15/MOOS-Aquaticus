@@ -41,13 +41,7 @@ static int paCallback(const void *_inputBuffer,
   auto *inputBuffer = (int16_t*) _inputBuffer;
   auto *outputBuffer = (int16_t*) _outputBuffer;
 
-  // Dump the input into the send buffer
-  if(inputBuffer != nullptr && paData->shouldRecord) {
-    // Send the samples into the buffer
-    paData->recordBuffer->push(inputBuffer, 0, framesPerBuffer * NUM_CHANNELS);
-  }
-
-  // Do the same for the playback buffer
+  // Play the audio we have recieved
   const size_t requested_samples = (framesPerBuffer * NUM_CHANNELS);
   const size_t available_samples = paData->playBuffer->getRemaining();
   if(requested_samples > available_samples) {
@@ -57,6 +51,12 @@ static int paCallback(const void *_inputBuffer,
     }
   } else {
     paData->playBuffer->top(outputBuffer, 0, requested_samples);
+  }
+
+  // And send the audio we recorded
+  if(paData->shouldRecord) {
+    // Send the samples into the buffer
+    paData->recordBuffer->push(inputBuffer, 0, framesPerBuffer * NUM_CHANNELS);
   }
 
   return paContinue;
@@ -97,26 +97,32 @@ MumbleClient::~MumbleClient() {
   Pa_Terminate();
 }
 
-void MumbleClient::initPortAudio() {
+// This is unfortunately very overkill
+void MumbleClient::initPortAudio(bool killOld = false) {
+  reportEvent("Initializing Audio System");
+
+  if (killOld) {
+    if (Pa_AbortStream(audioStream) != paNoError) reportRunWarning("Error Stopping Stream");
+    if (Pa_Terminate() != paNoError) reportRunWarning("Error Terminating Port Audio");
+  }
+
   audioBuffers.recordBuffer->empty();
   audioBuffers.playBuffer->empty();
 
-  Pa_Terminate();
+  if (Pa_Initialize() != paNoError) reportRunWarning("Error Initializing Port Audio");
 
-  Pa_Initialize();
-
-  Pa_OpenDefaultStream(&audioStream,
+  if (Pa_OpenDefaultStream(&audioStream,
                        NUM_CHANNELS,
                        NUM_CHANNELS,
                        paInt16,
                        SAMPLE_RATE,
                        FRAMES_PER_BUFFER,
                        paCallback,
-                       &audioBuffers);
+                       &audioBuffers) != paNoError) reportRunWarning("Error Opening PA Stream");
 
   auto err = Pa_StartStream(audioStream);
   if (err) {
-    string errText = "Error starting audio engine: ";
+    string errText = "Error starting stream: ";
     errText.append(Pa_GetErrorText(err));
     reportRunWarning(errText);
   }
@@ -176,10 +182,7 @@ bool MumbleClient::Iterate()
     // Reset PortAudio, all buffers, all streams, and start over
     // Ideally this will not happen, but should prevent some edge case scenarios where PortAudio locks up
     reportRunWarning("Audio Buffer filled");
-    audioBuffers.recordBuffer->empty();
-    audioBuffers.playBuffer->empty();
-
-    //initPortAudio();
+    initPortAudio(true);
   }
 
   // Tell the DB we are hearing things
@@ -344,6 +347,7 @@ void MumbleClient::registerVariables() {
 // Procedure: buildReport()
 
 bool MumbleClient::buildReport() {
+  m_msgs << "Streaming:  " << boolToString(Pa_IsStreamStopped(audioStream) == 0) << endl;
   m_msgs << "Speaking:   " << boolToString(this->audioBuffers.shouldRecord) <<
          " (" << ulintToString(this->audioBuffers.recordBuffer->getRemaining()) << ")" << endl;
   m_msgs << "Hearing:    " << boolToString(this->notifiedHearingAudio) <<
