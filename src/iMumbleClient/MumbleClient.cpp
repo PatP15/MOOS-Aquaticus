@@ -41,7 +41,7 @@ static int paCallback(const void *_inputBuffer,
   auto *inputBuffer = (int16_t*) _inputBuffer;
   auto *outputBuffer = (int16_t*) _outputBuffer;
 
-  // Play the audio we have recieved
+  // Play the audio we have received
   const size_t requested_samples = (framesPerBuffer * NUM_CHANNELS);
   const size_t available_samples = paData->playBuffer->getRemaining();
   if(requested_samples > available_samples) {
@@ -54,7 +54,7 @@ static int paCallback(const void *_inputBuffer,
   }
 
   // And send the audio we recorded
-  if(paData->shouldRecord) {
+  if(inputBuffer != nullptr && paData->shouldRecord) {
     // Send the samples into the buffer
     paData->recordBuffer->push(inputBuffer, 0, framesPerBuffer * NUM_CHANNELS);
   }
@@ -102,7 +102,7 @@ void MumbleClient::initPortAudio(bool killOld = false) {
   reportEvent("Initializing Audio System");
 
   if (killOld) {
-    if (Pa_AbortStream(audioStream) != paNoError) reportRunWarning("Error Stopping Stream");
+    if (Pa_CloseStream(audioStream) != paNoError) reportRunWarning("Error Closing Stream");
     if (Pa_Terminate() != paNoError) reportRunWarning("Error Terminating Port Audio");
   }
 
@@ -347,7 +347,8 @@ void MumbleClient::registerVariables() {
 // Procedure: buildReport()
 
 bool MumbleClient::buildReport() {
-  m_msgs << "Streaming:  " << boolToString(Pa_IsStreamStopped(audioStream) == 0) << endl;
+  m_msgs << "Streaming:  " << boolToString(Pa_IsStreamStopped(audioStream) == 0) <<
+         " (" << ulintToString(Pa_GetStreamTime(audioStream)) << ")" << endl;
   m_msgs << "Speaking:   " << boolToString(this->audioBuffers.shouldRecord) <<
          " (" << ulintToString(this->audioBuffers.recordBuffer->getRemaining()) << ")" << endl;
   m_msgs << "Hearing:    " << boolToString(this->notifiedHearingAudio) <<

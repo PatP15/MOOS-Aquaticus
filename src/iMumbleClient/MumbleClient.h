@@ -51,7 +51,6 @@ class MumbleClient : public AppCastingMOOSApp
    bool mumConnected = false; // Mumlib isn't super thread safe, so avoid triggering calls to it
    bool joinedDefaultChannel = true; // Starts as true to avoid issues with Iterate and Thread race conditions
    bool notifiedHearingAudio = false;
-   int toleranceCounter = 0;
 };
 
 #endif
