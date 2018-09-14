@@ -125,7 +125,9 @@ ProcessConfig = uFldTagManager
 
   // Return Flag
   human_tag_post   = FLAG_RESET=vname=$TARGET
+  human_tag_post   = LED_HAVE_FLAG_$UP_TARGET=false
   robot_tag_post   = FLAG_RESET=vname=$TARGET
+  robot_tag_post   = LED_HAVE_FLAG_$UP_TARGET=false
   human_tag_post   = TAGGED_$UP_TARGET=true
   robot_tag_post   = TAGGED_$UP_TARGET=true
 
