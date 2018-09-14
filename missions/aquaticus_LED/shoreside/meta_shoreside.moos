@@ -162,6 +162,8 @@ ProcessConfig = uFldTagManager
 
   zone_one_color = pink
   zone_two_color = dodger_blue
+
+  onfield_post_interval = 1 //(seconds)
 }
 
 //---------------------------------------------------------
