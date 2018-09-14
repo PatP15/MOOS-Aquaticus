@@ -6,7 +6,7 @@ ProcessConfig = iLEDInfoBar
    AppTick    = 4
    CommsTick  = 4
    TEAM_COLOR = blue
-   PORT	  	  = /dev/LEDInfoBar
+   PORT	  	  = /dev/cu.usbmodem4636831
    BAUDRATE   = 9600
 
    // LED vars to register

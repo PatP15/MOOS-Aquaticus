@@ -71,6 +71,7 @@ ProcessConfig = uFldFlagManager
   near_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={true}
   away_post = var=LED_IN_FLAG_ZONE_$VNAME, sval={false}
 
+  near_flag_range_buffer = 0    // Default is 2
 }
 
 //--------------------------------------------------

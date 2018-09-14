@@ -39,6 +39,11 @@ Processconfig = ANTLER
 #else
   Run = iOS5000             @ NewConsole = false
   Run = iGPSDevice          @ NewConsole = false
+
+#ifdef VNAME red_one
+  Run = plug_iLEDInfoBar    @ NewConsole = false
+#endif
+  
 #endif
 }
 
