@@ -215,6 +215,7 @@ ProcessConfig = uFldShoreBroker
   qbridge  = ACTION, AGGRESSIVE, SHIELD_REQUEST
   qbridge  = SAY_MOOS
   qbridge  = ONFIELD
+  qbridge  = CANTAG
   
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
