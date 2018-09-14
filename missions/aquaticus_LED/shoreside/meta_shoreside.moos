@@ -212,7 +212,8 @@ ProcessConfig = uFldShoreBroker
   qbridge  = HAS_FLAG
   qbridge  = ACTION, AGGRESSIVE, SHIELD_REQUEST
   qbridge  = SAY_MOOS
-
+  qbridge  = ONFIELD
+  
   bridge   = src=IN_OWN_TERRITORY
   bridge   = src=IN_ENEMY_TERRITORY
   bridge  = src=TAGGED_VEHICLES
