@@ -323,7 +323,8 @@ bool TagManager::handleMailVTagPost(string launch_str)
   vtag.setVTeam(group);
   m_pending_vtags.push_back(vtag);
 
-#if 0 // Disabled by mikerb, moved to be in processVTag() after criteria met
+#if 0
+  // Disabled by mikerb, moved to be in processVTag() after criteria met
   // Part 5: Post the RangePulse for the requesting vehicle. This is
   // purely a visual artifact.
   double pulse_duration = 2;
@@ -727,7 +728,6 @@ void TagManager::processVTag(VTag vtag)
   // Tag request ok in terms of frequency, zone etc, so declare the
   // tag to be accepted and increment the counter.
   m_map_node_vtags_accepted[vname]++;
-  m_map_node_vtags_last_tag[vname] = m_curr_time;
 
   // Part 3: Measure and collect the range to each non-team member
   //         Taking note of the closest target.
@@ -795,7 +795,9 @@ void TagManager::processVTag(VTag vtag)
     m_map_node_vtags_nowtagged[node_closest] = true;
     m_map_node_vtags_tagreason[node_closest] = "enemy";
     m_map_node_vtags_timetagged[node_closest] = m_curr_time;
-    
+
+    m_map_node_vtags_last_tag[vname] = m_curr_time;
+
     if(node_closest_type != m_human_platform)
       postRobotTagPairs(vname, node_closest);
     else

@@ -113,8 +113,6 @@ class TagManager : public AppCastingMOOSApp
   std::map<std::string, unsigned int> m_map_node_vtags_rejself;
   std::map<std::string, double>       m_map_node_vtags_last_tag;
   std::map<std::string, bool>         m_map_node_vtags_can_tag;
-
-  
   
   // Perspective of vehicles being tagged: Map keyed on vehicle name
   std::map<std::string, unsigned int> m_map_node_vtags_beentagged;
