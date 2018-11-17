@@ -28,7 +28,6 @@ Processconfig = ANTLER
 
   Run = iSay            @ NewConsole = false
 
-  Run = uNetMon         @ NewConsole = true
 }
 
 //--------------------------------------------------
@@ -396,48 +395,3 @@ ProcessConfig = pTimeWatch
   threshhold = 30
   //local_offset = 30
 }
-
-//------------------------------------------------
-// uNetMon config block
-
-ProcessConfig = uNetMon
-{
-   AppTick   = 4
-   CommsTick = 4
-
-   add_ip = group=evan, ip=192.168.5.1, name=frontseat
-   add_ip = group=evan, ip=192.168.5.100, name=backseat
-
-   add_ip = group=felix, ip=192.168.6.1, name=frontseat
-   add_ip = group=felix, ip=192.168.6.100, name=backseat
-
-   add_ip = group=gus, ip=192.168.7.1, name=frontseat
-   add_ip = group=gus, ip=192.168.7.100, name=backseat
-
-   add_ip = group=hal, ip=192.168.8.1, name=frontseat
-   add_ip = group=hal, ip=192.168.8.100, name=backseat
-
-   add_ip = group=ida, ip=192.168.9.1, name=frontseat
-   add_ip = group=ida, ip=192.168.9.100, name=backseat
-
-   add_ip = group=jing, ip=192.168.10.1, name=frontseat
-   add_ip = group=jing, ip=192.168.10.100, name=backseat
-
-   add_ip = group=kirk, ip=192.168.11.1, name=frontseat
-   add_ip = group=kirk, ip=192.168.11.100, name=backseat
-
-   add_ip = group=luke, ip=192.168.12.1, name=frontseat
-   add_ip = group=luke, ip=192.168.12.100, name=backseat
-
-   add_ip = group=mokai_pablos, ip=192.168.1.161, name=161
-   add_ip = group=mokai_pablos, ip=192.168.1.163, name=163
-   add_ip = group=mokai_pablos, ip=192.168.1.164, name=164
-   add_ip = group=mokai_pablos, ip=192.168.1.167, name=167
-
-   add_ip = group=bullets, ip=192.168.1.22, name=Leo
-   add_ip = group=bullets, ip=192.168.1.21, name=Don
-   add_ip = group=bullets, ip=192.168.1.25, name=Mich
-   add_ip = group=bullets, ip=192.168.1.23, name=Raph
-   add_ip = group=bullets, ip=192.168.1.15, name=antenna
-}
-
