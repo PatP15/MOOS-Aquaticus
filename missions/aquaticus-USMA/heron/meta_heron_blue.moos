@@ -53,7 +53,7 @@ ProcessConfig = ANTLER
 
 #include plug_uProcessWatch.moos
 
-#include plug_pBasicContactMgr.moos
+#include plug_pBasicContactMgr_blue.moos
 
 #include plug_uSimMarine.moos
 

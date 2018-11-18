@@ -294,7 +294,7 @@ fi
 echo "Assembling MOOS file targ_${RNAME}.moos"
 
 
-nsplug meta_heron.moos targ_${RNAME}.moos -f \
+nsplug meta_heron_${VTEAM}.moos targ_${RNAME}.moos -f \
     VNAME=$VNAME                 \
     RNAME=$RNAME                 \
     VPORT=$VPORT                 \
@@ -314,7 +314,7 @@ nsplug meta_heron.moos targ_${RNAME}.moos -f \
     $SIM
 
 echo "Assembling BHV file targ_${RNAME}.bhv"
-nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
+nsplug meta_heron_${VTEAM}.bhv targ_${RNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \
         TRAIL_RANGE=$TRAIL_RANGE    \
         TRAIL_ANGLE=$TRAIL_ANGLE    \
