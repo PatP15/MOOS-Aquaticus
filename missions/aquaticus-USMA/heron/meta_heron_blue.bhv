@@ -115,7 +115,7 @@ Behavior = BHV_OpRegionRecover
 
 
 //#############################################################################
-Behavior = BHV_AvdColregsV17
+//Behavior = BHV_AvdColregsV17
 {
   name                    = active_avd_
   pwt                     = 300
