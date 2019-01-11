@@ -297,17 +297,20 @@ void SpeechRec::outputResult(Recog *recog, void *dummy)
       //AppCasting score information
       std::stringstream score_info;
 
-      score_info << "sentence: " << sentence;
-      score_info << ", confidencescores:";
+      score_info << "sentence= " << sentence;
+      score_info << ", confidencescores=";
       //confidence scores
       for(i=0; i <seqnum; i++) {
-        score_info << " " << s->confidence[i];
+        score_info << s->confidence[i];
+        if(i!=seqnum-1){
+          score_info << ":"; //separate confidence scores
+        }
       }
       //AM and LM scores
-      score_info << ", score" << (n+1) << ": " << s->score;
+      score_info << ", score" << (n+1) << "= " << s->score;
 
       if( r->lmtype == LM_PROB) {
-	score_info << " (AM: " << s->score_am << " LM: " << s->score_lm;
+	score_info << " (AM= " << s->score_am << " LM= " << s->score_lm;
       }
       if( r->lmtype == LM_DFA) {
 	//if this uses DFA grammar
