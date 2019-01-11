@@ -35,6 +35,10 @@ DialogManager::DialogManager()
   m_nicknames["felix"]="felix";
   m_nicknames["gus"]="gus";
   m_nicknames["team"]="all";
+
+  //initialize for backwards compatibility to use most likely sentence regardless of word confidence scores.
+  m_use_confidence = false;
+  m_confidence_thresh = 0.0;
 }
 
 //---------------------------------------------------------
@@ -315,6 +319,9 @@ bool DialogManager::OnStartUp()
     else if(param == "USE_WAV_FILES") {
       handled = handleWaveFiles(line);
     }
+    else if(param == "CONFIDENCE_THRESH"){
+      handled = handleConfidenceThresh(line);
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -523,6 +530,37 @@ bool DialogManager::handleWaveFiles(std::string line) {
     //}
 }
 
+//-------------------------------------------------------
+// Procedure: handleConfidenceThresh
+
+bool DialogManager::handleConfidenceThresh(std::string line) {
+  //decide whether to use Julius word confidence to reject
+  //the most likely sentence
+  //uses information from SPEECH_RECOGNITION_SCORE variable
+  //we are expecting a sentence that is formated as
+  //confidence_thresh = 0.7
+  //std::string variableName = toupper(biteStringX(line,'='));
+
+  if(line == "") { //config warning as missing proper format
+    return false;
+  }
+
+  double catchConfidenceThresh = atof(line.c_str());
+
+  if(catchConfidenceThresh == 0.0) { //invalid conversion atof
+    return false;
+  }
+  else if (catchConfidenceThresh < 0.0 || catchConfidenceThresh > 1.0){ //valid float but out of range
+    reportConfigWarning("confidence_thresh must be in range (0.0,1.0]");
+    return false;
+  }
+  else {  //confidence thresh set
+    m_use_confidence = true;
+    m_confidence_thresh = catchConfidenceThresh;
+    return false;
+  }
+}
+
 //---------------------------------------------------------
 // Procedure: registerVariables
 
@@ -555,6 +593,16 @@ bool DialogManager::buildReport()
   m_msgs << actab.getFormattedString();
   */
 
+  m_msgs << "Use Word Confidence Scores = ";
+  if(m_use_confidence == true) {
+    m_msgs << "YES";
+      }
+  else {
+    m_msgs << "NO";
+    
+  }
+  m_msgs << endl;
+  m_msgs << "Word confidence threshold = " << m_confidence_thresh << endl;
   m_msgs << "USE_WAV_FILES = " << m_use_wave_files << endl;
   
   //List action of speech sentences to variables published

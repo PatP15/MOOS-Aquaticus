@@ -46,6 +46,7 @@ class DialogManager : public AppCastingMOOSApp
   bool handleNickNameAssignments(std::string line);
   bool handleActionAssignments(std::string line);
   bool handleWaveFiles(std::string line);
+  bool handleConfidenceThresh(std::string line);
   bool triggerVariablePosts();
   std::string spacesToUnderscores(std::string line);
   
@@ -56,8 +57,10 @@ class DialogManager : public AppCastingMOOSApp
   std::map<std::string,bool> m_just_publish;
   std::map<std::string,std::string> m_confirm_word;
   std::map<std::string,std::string> m_decline_word;
+  float m_confidence_thresh;
 
  private: // State variables
+  bool m_use_confidence;
   std::string m_use_wave_files;
   std::string m_commanded_string;
   std::vector<std::string> m_conversation;

@@ -6,6 +6,9 @@ ProcessConfig = uDialogManager
    AppTick   = 4
    CommsTick = 4
 
+  //use Julius word confidence scores to reject
+  confidence_thresh = 0.7
+
    //Use_Wav_Files=Yes indicates using pre-existing wav files instead of local text-to-speech TTS capability
    //for speech dialog.  Options are yes or no.
    Use_Wav_Files = Yes
