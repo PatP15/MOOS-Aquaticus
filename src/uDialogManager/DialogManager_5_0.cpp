@@ -74,9 +74,9 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
           bool goOn;
           goOn = acceptConfidenceScores(sval);
           if(goOn == false) { //reject sentence because confidence scores are too low
-            reportRunWarning("Sentence Rejected Due to Low Confidence: " + sval);
-            string rejection = "Rejected due to low confidence: ";
+            string rejection = "Sentence Rejected Due to Low Confidence: ";
             rejection += sval;
+            reportRunWarning(rejection);
             m_Comms.Notify("DIALOG_ERROR",rejection);
             //TODO create audio feedback for user?
             continue;
@@ -590,7 +590,7 @@ bool DialogManager::handleConfidenceThresh(std::string line) {
   else {  //confidence thresh set
     m_use_confidence = true;
     m_confidence_thresh = catchConfidenceThresh;
-    return false;
+    return true;
   }
 }
 
@@ -602,6 +602,25 @@ bool DialogManager::acceptConfidenceScores(std::string sval) {
   //on the m_confidence_thresh
 
   //first need to strip out the confidence scores and make sure they are above thresh
+  std::string tempString;
+  //assumption is format is "sentence= BLUE THREE ATTACK, confidencescores=1:0.99:0.91:0.73, score=-12884.4"
+  //step 1: separate out confidencescores with tokStringParse
+  tempString = tokStringParse(sval, "confidencescores", ',', '=');
+  //step 2: use parseString to create vector of strings separated by ':' char
+  vector<string> temp_str_vector = parseString(tempString, ':');
+  //step 3: locally convert each string to check against threshold
+  //skip first and last as they are for the silence portions and should be 1.0
+  if(temp_str_vector.size()==2) {
+    //error as at minimum will be size 3 with first and last being silence
+    return false;
+  }
+  for(unsigned int i = 1; i<temp_str_vector.size()-1; i++){
+    float temp_float;
+    temp_float = atof(temp_str_vector[i].c_str());
+    if( temp_float < m_confidence_thresh){
+      return false; //any one of the words has less than confidence threshold then fail
+    }
+  }
 
   return true;
 }
@@ -614,6 +633,9 @@ std::string DialogManager::justSentence(std::string sval) {
   //SPEECH_RECOGNITION_SCORE
   //which includes speech confidence scores
   std::string tempString;
+  //assumption is format is "sentence= BLUE THREE ATTACK, confidencescores=1:0.99:0.91:0.73, score=-12884.4"
+  //step 1: separate out sentence with tokStringParse
+  tempString = tokStringParse(sval, "sentence", ',', '=');
 
   return tempString;
 }

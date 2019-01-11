@@ -76,6 +76,11 @@ void showExampleConfigAndExit()
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("  ");
+  blk("  //can reject sentences based on word confidence scores        ");
+  blk("  //threshold value range (0,-1.0]                              ");
+  blk("  //if not specified, reverts to accepting most likely sentence without considering word confidence ");
+  blk("  confidence_thresh = 0.7                                       ");
+  blk("  ");
   blk("  //indicate whether to use local text-to-speech (TTS) or       ");
   blk("  //pre-recorded wave files. Options are yes or no              ");
   blk("  Use_Wav_Files=Yes                                             ");
