@@ -1,7 +1,7 @@
 //------------------------------------------------
 // uDialogManager config block
 
-ProcessConfig = uDialogManager_4_0
+ProcessConfig = uDialogManager_5_0
 {
    AppTick   = 4
    CommsTick = 4

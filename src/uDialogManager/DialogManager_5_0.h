@@ -1,14 +1,15 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: DialogManager.h                                 */
+/*    FILE: DialogManager_5_0.h                             */
 /*    DATE: August 17th, 2015                               */
 /*    UPDATED: Aug. 10 2016                                 */
 /*    UPDATED: July 28 2017                                 */
+/*    UPDATED: January 11 2019                              */
 /************************************************************/
 
-#ifndef DialogManager_4_0_HEADER
-#define DialogManager_4_0_HEADER
+#ifndef DialogManager_5_0_HEADER
+#define DialogManager_5_0_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include <string>

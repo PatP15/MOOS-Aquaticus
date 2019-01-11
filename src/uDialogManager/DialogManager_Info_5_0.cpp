@@ -1,15 +1,16 @@
 /****************************************************************/
 /*   NAME: Michael "Misha" Novitzky                             */
 /*   ORGN: MIT Cambridge MA                                     */
-/*   FILE: DialogManager_Info_3_0.cpp                               */
+/*   FILE: DialogManager_Info_5_0.cpp                           */
 /*   DATE: August 17th, 2015                                    */
-/*   UPDATED: Aug. 10 2016                                 */
-/*   UPDATED: July 28 2017                                 */
+/*   UPDATED: Aug. 10 2016                                      */
+/*   UPDATED: July 28 2017                                      */
+/*   UPDATED: January 11 2019                                   */
 /****************************************************************/
 
 #include <cstdlib>
 #include <iostream>
-#include "DialogManager_Info_4_0.h"
+#include "DialogManager_Info_5_0.h"
 #include "ColorParse.h"
 #include "ReleaseInfo.h"
 
@@ -22,7 +23,7 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The uDialogManager_4_0 application is used for controlling the    "); 
+  blk("  The uDialogManager_5_0 application is used for controlling the    "); 
   blk("  dialog between speech recognition and the user.  It's main    ");
   blk("  function is to correct for errors in speech.              ");
   blk("                                                                ");
@@ -35,7 +36,7 @@ void showHelpAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("Usage: uDialogManager v4.0 file.moos [OPTIONS]                   ");
+  blu("Usage: uDialogManager v5.0 file.moos [OPTIONS]                   ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
@@ -67,7 +68,7 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uDialogManager v3.0 Example MOOS Configuration                   ");
+  blu("uDialogManager v5.0 Example MOOS Configuration                   ");
   blu("=============================================================== ");
   blk("                                                                ");
   blk("ProcessConfig = uDialogManager                                  ");
@@ -105,7 +106,7 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uDialogManager 3.0 INTERFACE                                    ");
+  blu("uDialogManager 5.0 INTERFACE                                    ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
@@ -113,6 +114,7 @@ void showInterfaceAndExit()
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
   blk("  SPEECH_RECOGNITION_SENTENCE = produced by speech recognition    ");
+  blk("  SPEECH_RECOGNITION_SCORE = produced by speech recognition with confidence scores   ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
@@ -128,7 +130,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uDialogManager 4.0", "gpl");
+  showReleaseInfo("uDialogManager 5.0", "gpl");
   exit(0);
 }
 

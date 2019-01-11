@@ -1,17 +1,18 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: main_3_0.cpp                                        */
+/*    FILE: main_5_0.cpp                                    */
 /*    DATE: August 17th, 2015                               */
 /*    UPDATED: Aug. 10 2016                                 */
 /*    UPDATED: July 28 2017                                 */
+/*    UPDATED: January 11 2019                              */
 /************************************************************/
 
 #include <string>
 #include "MBUtils.h"
 #include "ColorParse.h"
-#include "DialogManager_4_0.h"
-#include "DialogManager_Info_4_0.h"
+#include "DialogManager_5_0.h"
+#include "DialogManager_Info_5_0.h"
 
 using namespace std;
 

@@ -1,16 +1,17 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: DialogManager.cpp                               */
-/*    DATE: Aug. 17 2015                                   */
+/*    FILE: DialogManager_5_0.cpp                           */
+/*    DATE: Aug. 17 2015                                    */
 /*    UPDATED: Aug. 10 2016                                 */
 /*    UPDATED: July 28 2017                                 */
+/*    UPDATED: January 11 2019                              */
 /************************************************************/
 
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "DialogManager_4_0.h"
+#include "DialogManager_5_0.h"
 #include "unistd.h"
 
 using namespace std;
