@@ -49,6 +49,8 @@ class DialogManager : public AppCastingMOOSApp
   bool handleConfidenceThresh(std::string line);
   bool triggerVariablePosts();
   std::string spacesToUnderscores(std::string line);
+  bool acceptConfidenceScores(std::string sval);
+  std::string justSentence(std::string sval);
   
  private: // Configuration variables
   int m_number_ack_attempts;

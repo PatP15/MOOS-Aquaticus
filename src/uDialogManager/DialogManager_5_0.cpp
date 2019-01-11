@@ -63,7 +63,40 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
     bool   mstr  = msg.IsString();
     //#endif
     
-    if(key == "SPEECH_RECOGNITION_SENTENCE") {
+    if(key == "SPEECH_RECOGNITION_SENTENCE" || key == "SPEECH_RECOGNITION_SCORE") {
+      //check to see if uses sentence or score based on use confidence
+      if(m_use_confidence == true) {
+        if(key == "SPEECH_RECOGNITION_SENTENCE") { //we are waiting for SCORE
+          continue;
+        }
+        else { //SCORE has arrived
+
+          bool goOn;
+          goOn = acceptConfidenceScores(sval);
+          if(goOn == false) { //reject sentence because confidence scores are too low
+            reportRunWarning("Sentence Rejected Due to Low Confidence: " + sval);
+            string rejection = "Rejected due to low confidence: ";
+            rejection += sval;
+            m_Comms.Notify("DIALOG_ERROR",rejection);
+            //TODO create audio feedback for user?
+            continue;
+            
+          }
+          else if(goOn == true) { //word confidence has been accepted
+            //now strip out just recognized sentence and assign to sval
+            string tempSVAL;
+            tempSVAL = justSentence(sval);
+            sval = tempSVAL;
+          }
+        }
+      }
+      else if (m_use_confidence == false) {
+        if(key == "SPEECH_RECOGNITION_SCORE") {//we are looking for SENTENCE
+          continue;
+        } //otherwise, we have found SENTENCE and proceed as already accepted
+      }
+
+
       //A Finite State Machine (FSM) is used to determine the mode
       string keepConversation;
       keepConversation = "User: " + sval;
@@ -561,6 +594,30 @@ bool DialogManager::handleConfidenceThresh(std::string line) {
   }
 }
 
+//-------------------------------------------------------
+// Procedure: acceptConfidenceScores
+
+bool DialogManager::acceptConfidenceScores(std::string sval) {
+  //decide whether we will accept the confidence scores based
+  //on the m_confidence_thresh
+
+  //first need to strip out the confidence scores and make sure they are above thresh
+
+  return true;
+}
+
+//-------------------------------------------------------
+// Procedure: justSentence
+
+std::string DialogManager::justSentence(std::string sval) {
+  //strip out only the recognized sentence from
+  //SPEECH_RECOGNITION_SCORE
+  //which includes speech confidence scores
+  std::string tempString;
+
+  return tempString;
+}
+
 //---------------------------------------------------------
 // Procedure: registerVariables
 
@@ -569,6 +626,7 @@ void DialogManager::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
   m_Comms.Register("SPEECH_RECOGNITION_SENTENCE",0);
+  m_Comms.Register("SPEECH_RECOGNITION_SCORE",0);
 }
 
 
