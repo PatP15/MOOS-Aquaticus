@@ -1,17 +1,18 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: main_2_0.cpp                                    */
+/*    FILE: main_3_0.cpp                                    */
 /*    DATE: August 13th, 2015                               */
 /*    DATE: August 17th, 2017                               */
+/*    DATE: January 10th, 2019                              */
 /************************************************************/
 
 #include <string>
 #include <queue>
 #include "MBUtils.h"
 #include "ColorParse.h"
-#include "SpeechRec_2_0.h"
-#include "SpeechRec_Info_2_0.h"
+#include "SpeechRec_3_0.h"
+#include "SpeechRec_Info_3_0.h"
 
 using namespace std;
 //These following variables are for Julius Speech Rec
@@ -19,6 +20,7 @@ using namespace std;
 //to SpeechRec class
 std::queue<std::string> SpeechRec::m_messages;
 std::queue<std::string> SpeechRec::m_scores;
+std::queue<std::string> SpeechRec::m_errors;
 CMOOSLock SpeechRec::m_message_lock;
 
 int main(int argc, char *argv[])

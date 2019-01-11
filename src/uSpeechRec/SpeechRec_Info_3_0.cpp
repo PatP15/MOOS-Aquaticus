@@ -1,14 +1,15 @@
 /****************************************************************/
 /*   NAME: Michael "Misha" Novitzky                             */
 /*   ORGN: MIT Cambridge MA                                     */
-/*   FILE: SpeechRec_Info.cpp                                   */
+/*   FILE: SpeechRec_Info_3_0.cpp                               */
 /*   DATE: August 13th, 2015                                    */
 /*   DATE: August 17th, 2017                                    */
+/*   DATE: January 10th, 2019                                   */
 /****************************************************************/
 
 #include <cstdlib>
 #include <iostream>
-#include "SpeechRec_Info_2_0.h"
+#include "SpeechRec_Info_3_0.h"
 #include "ColorParse.h"
 #include "ReleaseInfo.h"
 
@@ -104,6 +105,8 @@ void showInterfaceAndExit()
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
   blk("  SPEECH_RECOGNITION_SENTENCE = string sentence produced by Julius");
+  blk("  SPEECH_RECOGNITION_SCORE = string sentence and scores produced by Julius");
+  blk("  SPEECH_RECOGNITION_ERROR = reason why Julius does not produce sentence");
   blk("                                                                ");
   exit(0);
 }
@@ -113,7 +116,7 @@ void showInterfaceAndExit()
 
 void showReleaseInfoAndExit()
 {
-  showReleaseInfo("uSpeechRec_2_0", "gpl");
+  showReleaseInfo("uSpeechRec_3_0", "gpl");
   exit(0);
 }
 

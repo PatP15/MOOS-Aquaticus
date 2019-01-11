@@ -4,9 +4,9 @@
 #--------------------------------------------------------
 
 SET(SRC
-  SpeechRec_2_0.cpp
-  SpeechRec_Info_2_0.cpp
-  main_2_0.cpp
+  SpeechRec_3_0.cpp
+  SpeechRec_Info_3_0.cpp
+  main_3_0.cpp
 )
 
 #To support compiling on OS X and Ubuntu

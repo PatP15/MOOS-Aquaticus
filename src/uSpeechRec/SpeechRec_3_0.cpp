@@ -1,16 +1,17 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: SpeechRec_2_0.cpp                               */
+/*    FILE: SpeechRec_3_0.cpp                               */
 /*    DATE: August 13th, 2015                               */
 /*    DATE: August 17th, 2017                               */
+/*    DATE: January 10th, 2019                              */
 /************************************************************/
 #include <algorithm>
 #include <ctype.h>
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "SpeechRec_2_0.h"
+#include "SpeechRec_3_0.h"
 #include <string>
 #include <iostream>
 
@@ -64,18 +65,18 @@ bool SpeechRec::OnNewMail(MOOSMSG_LIST &NewMail)
       cout << "great!";
     else if( key == "SPEECH_ACTIVE"){
       if(sval == "TRUE"){
-        unpauseRec();
+               unmuteRec();
       }
       else if(sval == "FALSE"){
-        pauseRec();
+               muteRec();
       }
     }
     else if( key == "SPEECH_PAUSE") {
       if(sval == "TRUE") {
-	pauseRec();
+  muteRec();
       }
       else if(sval == "FALSE") {
-	unpauseRec();
+        unmuteRec();
       }
     }
 
@@ -112,9 +113,17 @@ bool SpeechRec::Iterate()
   while(!m_messages.empty()) {
     std::string curr = m_messages.front();
     m_messages.pop();
-    Notify("SPEECH_RECOGNITION_SENTENCE",curr);
-    reportEvent("JULIUS SENTENCE " + curr + " " + m_scores.front());
+    std::string score = m_scores.front();
     m_scores.pop();
+    Notify("SPEECH_RECOGNITION_SENTENCE",curr);
+    Notify("SPEECH_RECOGNITION_SCORE", score);
+    reportEvent("JULIUS SENTENCE " + score);
+  }
+  while(!m_errors.empty()) {
+    std::string err = m_errors.front();
+    m_errors.pop();
+    Notify("SPEECH_RECOGNITION_ERROR",err);
+    reportEvent("JULIUS ERROR: " + err );
   }
   m_message_lock.UnLock();
 
@@ -149,6 +158,28 @@ void SpeechRec::pauseRec()
 void SpeechRec::unpauseRec()
 {
   j_request_resume(m_recog);
+  m_pause_state = "FALSE";
+}
+
+//---------------------------------------------------------
+// Procedure: muteRec
+// on receiving SPEECH_PAUSE = TRUE we mute speech rec
+
+void SpeechRec::muteRec()
+{
+  m_recog->jconf->preprocess.level_coef = 0.0f;
+  m_recog->adin->level_coef = 0.0f;
+  m_pause_state = "TRUE";
+}
+
+//---------------------------------------------------------
+// Procedure: unmuteRec
+// on receiving SPEECH_PAUSE = FALSE we unmute speech rec
+
+void SpeechRec::unmuteRec()
+{
+  m_recog->jconf->preprocess.level_coef = 1.0f;
+  m_recog->adin->level_coef = 1.0f;
   m_pause_state = "FALSE";
 }
 
@@ -191,25 +222,46 @@ void SpeechRec::outputResult(Recog *recog, void *dummy)
       //respond bases on status code
       switch(r->result.status) {
       case J_RESULT_STATUS_REJECT_POWER:
-	//"<input rejected by power>"
+	      m_message_lock.Lock();
+        m_errors.push("Rejected by Power"); 
+        m_message_lock.UnLock();
+ //"<input rejected by power>"
 	break;
       case J_RESULT_STATUS_TERMINATE:
-	//"<input terminated by request>"
+        m_message_lock.Lock();
+        m_errors.push("Terminated by Request"); 
+        m_message_lock.UnLock();
+//"<input terminated by request>"
 	break;
       case J_RESULT_STATUS_ONLY_SILENCE:
-	//"<input rejected by decoder (silence input result)>"
+        m_message_lock.Lock();
+        m_errors.push("Only Silence");
+        m_message_lock.UnLock();
+//"<input rejected by decoder (silence input result)>"
 	break;
       case J_RESULT_STATUS_REJECT_GMM:
-	//"<input rejected by GMM>"
+        m_message_lock.Lock();
+        m_errors.push("Rejected by GMM");
+        m_message_lock.UnLock();
+        //"<input rejected by GMM>"
 	break;
       case J_RESULT_STATUS_REJECT_SHORT:
-	//"<input rejected by short input>"
+        m_message_lock.Lock();
+        m_errors.push("Rejected by Short Input");
+        m_message_lock.UnLock();
+        //"<input rejected by short input>"
 	break;
       case J_RESULT_STATUS_FAIL:
-	//"<search failed>"
+        m_message_lock.Lock();
+        m_errors.push("Search Failed");
+        m_message_lock.UnLock();
+        //"<search failed>"
 	break;
       }
 
+      m_message_lock.Lock();
+      m_errors.push("Generic Julius Recognition Error"); 
+      m_message_lock.UnLock();
       //continue to next process instance
       continue;
     }
@@ -245,8 +297,14 @@ void SpeechRec::outputResult(Recog *recog, void *dummy)
       //AppCasting score information
       std::stringstream score_info;
 
+      score_info << "sentence: " << sentence;
+      score_info << ", confidencescores:";
+      //confidence scores
+      for(i=0; i <seqnum; i++) {
+        score_info << " " << s->confidence[i];
+      }
       //AM and LM scores
-      score_info << "score" << (n+1) << ": " << s->score;
+      score_info << ", score" << (n+1) << ": " << s->score;
 
       if( r->lmtype == LM_PROB) {
 	score_info << " (AM: " << s->score_am << " LM: " << s->score_lm;
@@ -355,10 +413,13 @@ bool SpeechRec::handleJuliusConf(std::string fileName)
     m_t->Start();
   }
 
-  //try to have start state from .moos file influence here
+  //have start state from .moos file influence here
   if(m_start_state == "PAUSED") {
-    pauseRec();
+        muteRec();
   }
+  else {
+  unmuteRec();
+}
   
   return true;
 

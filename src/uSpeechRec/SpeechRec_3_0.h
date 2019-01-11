@@ -1,9 +1,10 @@
 /************************************************************/
 /*    NAME: Michael "Misha" Novitzky                        */
 /*    ORGN: MIT                                             */
-/*    FILE: SpeechRec_2_0.h                                 */
+/*    FILE: SpeechRec_3_0.h                                 */
 /*    DATE: August 13th, 2015                               */
 /*    DATE: August 17th, 2017                               */
+/*    DATE: January 10th, 2019                              */
 /************************************************************/
 
 #ifndef SpeechRec_HEADER
@@ -35,6 +36,8 @@ class SpeechRec : public AppCastingMOOSApp
   bool internalStartJRecognize();
   void pauseRec();
   void unpauseRec();
+  void muteRec();
+  void unmuteRec();
  protected: // Standard AppCastingMOOSApp function to overload 
   bool buildReport();
 
@@ -46,6 +49,7 @@ class SpeechRec : public AppCastingMOOSApp
   static CMOOSLock m_message_lock;
   static std::queue<std::string> m_messages;
   static std::queue<std::string> m_scores;
+  static std::queue<std::string> m_errors;
   bool m_julius_debug;
   std::string m_julius_configuration;
   uint m_message_sequence;
