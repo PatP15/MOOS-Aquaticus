@@ -124,6 +124,8 @@ void showInterfaceAndExit()
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
   blk("  SPEECH_COMMANDED   = an acknowledged command                    ");
+  blk("  DIALOG_ERROR = posted when a sentence is rejected using word confidence score threshold");
+  blk(" ");
   blk("  SAY_MOOS           = sent to iSay for spoken dialogue or use of wave files to user ");
   blk(" ");
   blk("  any other var value pair publications can be defined per speech rec sentence in the .moos file ");
