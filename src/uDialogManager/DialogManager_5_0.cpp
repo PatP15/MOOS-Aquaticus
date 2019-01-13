@@ -78,7 +78,22 @@ bool DialogManager::OnNewMail(MOOSMSG_LIST &NewMail)
             rejection += sval;
             reportRunWarning(rejection);
             m_Comms.Notify("DIALOG_ERROR",rejection);
-            //TODO create audio feedback for user?
+
+            //trigger did not understand sequence
+            //which for now is "SAY_AGAIN"
+            std::string queryStatement = "SAY AGAIN";
+            if(m_use_wave_files == "YES") { //format string for using wave files
+              //replace spaces with underscores for file convention
+              std::string fileAckStatement;
+              fileAckStatement = tolower(queryStatement);
+              fileAckStatement = spacesToUnderscores(fileAckStatement);
+              fileAckStatement = "file=sounds/" + fileAckStatement;
+              fileAckStatement += ".wav";
+              m_Comms.Notify("SAY_MOOS",fileAckStatement);
+            }
+            else {
+              m_Comms.Notify("SAY_MOOS",queryStatement);
+            }
             continue;
             
           }
