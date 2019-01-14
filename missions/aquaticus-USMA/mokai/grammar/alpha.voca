@@ -31,10 +31,6 @@ SHIELD      sh iy l d
 YES         y eh s
 NO          n ow
 
-%INTERACT
-TAG         t ae g
-GRAB        g r ae b
-
 %COLOR
 BLUE	    b l uw
 RED	    r eh d
