@@ -265,6 +265,9 @@ if [ "${VTEAM}" = "red" ]; then
     UNTAG_POS="50,-24"
     RETURN_POS="5,0"
     START_POS="50,-24,240"
+    STATION_KEEP_MIDFIELD_ALONE="4.7,-35"
+    STATION_KEEP_MIDFIELD_LEFT="4.7,-55"
+    STATION_KEEP_MIDFIELD_RIGHT="4.7,-20"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
     GRAB_POS="50,-24"
@@ -325,8 +328,10 @@ nsplug meta_heron_${VTEAM}.bhv targ_${RNAME}.bhv -f  \
         GRABR_POS=$GRABR_POS           \
         GRABL_POS=$GRABL_POS             \
         UNTAG_POS=$UNTAG_POS        \
-        HERON_TEAMMATE=$HERON_TEAMMATE
-
+        HERON_TEAMMATE=$HERON_TEAMMATE \
+        STATION_KEEP_MIDFIELD_ALONE=$STATION_KEEP_MIDFIELD_ALONE \
+        STATION_KEEP_MIDFIELD_LEFT=$STATION_KEEP_MIDFIELD_LEFT \
+        STATION_KEEP_MIDFIELD_RIGHT=$STATION_KEEP_MIDFIELD_RIGHT
 
 if [ ${JUST_BUILD} = "yes" ] ; then
     echo "Files assembled; vehicle not launched; exiting per request."

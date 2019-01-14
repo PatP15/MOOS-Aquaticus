@@ -1,6 +1,6 @@
 initialize DEPLOY     = false
 initialize RETURN     = false
-initialize ACTION     = PROTECT
+initialize ACTION     = STATION_MIDFIELD
 initialize TAGGED     = false
 initialize AGGRESSIVE = false
 initialize RECOVER    = false
@@ -21,7 +21,7 @@ set MODE     = RETURNING {
 
 set MODE     = SOLOPLAY {
   MODE       = ACTIVE:INGAME
-  (((ACTION    = ATTACK) or ((ACTION = ATTACK_LEFT) or (ACTION = ATTACK_RIGHT))) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))) or (ACTION = PROTECT)
+  ((((ACTION    = ATTACK) or ((ACTION = ATTACK_LEFT) or (ACTION = ATTACK_RIGHT))) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))) or (ACTION = PROTECT)) or ((ACTION = STATION_MIDRIGHT) or ((ACTION = STATION_MIDFIELD) or (ACTION = STATION_MIDLEFT)))
 }
 
 set MODE     = TEAMPLAY {
@@ -76,6 +76,21 @@ set MODE     = PASSIVE {
 set MODE     = PROTECTING {
   MODE	     = ACTIVE:INGAME:SOLOPLAY:DEFENDING
   ACTION     = PROTECT
+}
+
+set MODE     = STATIONINGMIDALONE {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
+  ACTION     = STATION_MIDFIELD
+}
+
+set MODE     = STATIONINGMIDLEFT {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
+  ACTION     = STATION_MIDLEFT
+}
+
+set MODE     = STATIONINGMIDRIGHT {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
+  ACTION     = STATION_MIDRIGHT
 }
 
 set MODE     = TRAILING {
@@ -281,7 +296,7 @@ Behavior = BHV_Loiter
 //#############################################################################
 Behavior = BHV_StationKeep
 {
-  name                    = station_keep
+  name                    = station_keep_on_spot
   pwt                     = 100
   condition               = MODE==STATIONING // example
   runflag                 = BOT_DIALOG_STATUS=Stationing
@@ -302,6 +317,79 @@ Behavior = BHV_StationKeep
 }
 
 //#############################################################################
+Behavior = BHV_StationKeep
+{
+  name                    = station_keep_midfield_alone
+  pwt                     = 100
+  condition               = MODE==STATIONINGMIDALONE // example
+  runflag                 = BOT_DIALOG_STATUS=Stationing
+
+  center_activate         = false
+  station_pt              = $(STATION_KEEP_MIDFIELD_ALONE)
+  hibernation_radius      = -1
+  inner_radius            = 4
+  outer_radius            = 15
+  outer_speed             = 1.2
+  transit_speed           = 2.5
+  swing_time              = 0
+
+  visual_hints            = vertex_size = 1 // default
+  visual_hints            = edge_color = light_blue // default
+  visual_hints            = edge_size = 1 // default
+  visual_hints            = label_color = white // default
+  visual_hints            = vertex_color = red // default
+}
+
+//#############################################################################
+Behavior = BHV_StationKeep
+{
+  name                    = station_keep_midfield_left
+  pwt                     = 100
+  condition               = MODE==STATIONINGMIDLEFT // example
+  runflag                 = BOT_DIALOG_STATUS=Stationing
+
+  center_activate         = false
+  station_pt              = $(STATION_KEEP_MIDFIELD_LEFT)
+  hibernation_radius      = -1
+  inner_radius            = 4
+  outer_radius            = 15
+  outer_speed             = 1.2
+  transit_speed           = 2.5
+  swing_time              = 0
+
+  visual_hints            = vertex_size = 1 // default
+  visual_hints            = edge_color = light_blue // default
+  visual_hints            = edge_size = 1 // default
+  visual_hints            = label_color = white // default
+  visual_hints            = vertex_color = red // default
+}
+//#############################################################################
+
+//#############################################################################
+Behavior = BHV_StationKeep
+{
+  name                    = station_keep_midfield_right
+  pwt                     = 100
+  condition               = MODE==STATIONINGMIDRIGHT // example
+  runflag                 = BOT_DIALOG_STATUS=Stationing
+
+  center_activate         = false
+  station_pt              = $(STATION_KEEP_MIDFIELD_RIGHT)
+  hibernation_radius      = -1
+  inner_radius            = 4
+  outer_radius            = 15
+  outer_speed             = 1.2
+  transit_speed           = 2.5
+  swing_time              = 0
+
+  visual_hints            = vertex_size = 1 // default
+  visual_hints            = edge_color = light_blue // default
+  visual_hints            = edge_size = 1 // default
+  visual_hints            = label_color = white // default
+  visual_hints            = vertex_color = red // default
+}
+//#############################################################################
+
 Behavior = BHV_Trail
 {
   name                    = cover_mokai
