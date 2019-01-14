@@ -24,8 +24,8 @@ ProcessConfig = uTermCommand
   CMD = $(TEAMMATE2)_AttackLeft    --> SPEECH_RECOGNITION_SENTENCE --> "$(TEAMMATE2) ATTACK LEFT"
  
 
-  CMD = tag                   --> SPEECH_RECOGNITION_SENTENCE --> "TAG"
-  CMD = grab                  --> SPEECH_RECOGNITION_SENTENCE --> "GRAB"
+//  CMD = tag                   --> SPEECH_RECOGNITION_SENTENCE --> "TAG"
+//  CMD = grab                  --> SPEECH_RECOGNITION_SENTENCE --> "GRAB"
 
   CMD = yes                   --> SPEECH_RECOGNITION_SENTENCE --> "YES"
   CMD = no                    --> SPEECH_RECOGNITION_SENTENCE --> "NO"

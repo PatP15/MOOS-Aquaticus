@@ -4,6 +4,9 @@ ProcessConfig = uDialogManager
   AppTick   = 4
   CommsTick = 4
 
+ //use word confidence threshold to reject weak scoring words
+ confidence_thresh = 0.7
+
  //Indicate whether to use local text-to-speech (TTS) or pre-recorded wave files
  Use_Wav_Files=Yes
 
@@ -43,6 +46,6 @@ ProcessConfig = uDialogManager
 
   sentence = TEAM_Status    : NODE_MESSAGE_LOCAL = "src_node = $(RNAME),dest_node = $(TEAMMATE1),var_name=BOT_DIALOG_REQUEST,string_val=STATUS:src=$(RNAME)" + NODE_MESSAGE_LOCAL = "src_node = $(RNAME),dest_node = $(TEAMMATE2),var_name=BOT_DIALOG_REQUEST,string_val=STATUS:src=$(RNAME)"
 
-  sentence = tag {NOCONFIRM} : TAG_REQUEST       = "vname = $(RNAME)"
-  sentence = grab {NOCONFIRM} : FLAG_GRAB_REQUEST = "vname = $(RNAME)"
+//  sentence = tag {NOCONFIRM} : TAG_REQUEST       = "vname = $(RNAME)"
+//  sentence = grab {NOCONFIRM} : FLAG_GRAB_REQUEST = "vname = $(RNAME)"
 }
