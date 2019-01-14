@@ -318,38 +318,40 @@ ProcessConfig = pMarineViewer
   op_vertex = x=-53, y=-114, lwidth=1,lcolor=yellow,looped=true,group=moa
   op_vertex = x=82,   y=-56, lwidth=1,lcolor=yellow,looped=true,group=moa
 
+  cmd = label=STATION_MID_ALONE, var=ACTION,  sval=STATION_MIDFIELD,  receivers=all:red_one:red_two:blue_one:blue_two 
+   cmd = label=STATION_MID_LEFT, var=ACTION,  sval=STATION_MIDLEFT,  receivers=all:red_one:red_two:blue_one:blue_two 
+   cmd = label=STATION_MID_RIGHT, var=ACTION,  sval=STATION_MIDRIGHT,  receivers=all:red_one:red_two:blue_one:blue_two 
+  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:red_one:red_two:blue_one:blue_two
+  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:red_one:red_two:blue_one:blue_two
+  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
-  cmd = label=DEPLOY, var=MOOS_MANUAL_OVERRIDE, sval=false, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
-  cmd = label=DEPLOY, var=RETURN,  sval=false,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=RETURN, var=RETURN, sval=true, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:blue_one:blue_two
+  cmd = label=ATTACK, var=AGGRESSIVE, sval=true, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=ATTACK, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
-  cmd = label=ATTACK, var=AGGRESSIVE, sval=true, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:blue_one:blue_two
+  cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=ATTACK_NICELY, var=ACTION, sval=ATTACK, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
-  cmd = label=ATTACK_NICELY, var=AGGRESSIVE, sval=false, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=ATTACK_RIGHT, var=ACTION, sval=ATTACK_RIGHT, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=ATTACK_LEFT, var=ACTION, sval=ATTACK_LEFT, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=DEFEND, var=ACTION, sval=DEFEND, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=COVER, var=ACTION, sval=COVER, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=COVER, var=ACTION, sval=COVER, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=TRAIL, var=ACTION, sval=TRAIL, receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=TRAIL, var=ACTION, sval=TRAIL, receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=STATION, var=ACTION,  sval=STATION,  receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=STATION, var=ACTION,  sval=STATION,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
-
-  cmd = label=PROTECT, var=ACTION,  sval=PROTECT,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=PROTECT, var=ACTION,  sval=PROTECT,  receivers=all:red_one:red_two:blue_one:blue_two
   
-  cmd = label=SHIELD, var=ACTION,  sval=SHIELD,  receivers=all:red_one:red_two:red_three:red_four:blue_one:blue_two:blue_three:blue_four
+  cmd = label=SHIELD, var=ACTION,  sval=SHIELD,  receivers=all:red_one:red_two:blue_one:blue_two
 
-  cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=blue_two,  receivers=blue_one:blue_two:blue_three:blue_four
+  cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=blue_two,  receivers=blue_one:blue_two
 
-  cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four
+  cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two
 
 }
 
