@@ -21,7 +21,7 @@ set MODE     = RETURNING {
 
 set MODE     = SOLOPLAY {
   MODE       = ACTIVE:INGAME
-  ((((ACTION    = ATTACK) or ((ACTION = ATTACK_LEFT) or (ACTION = ATTACK_RIGHT))) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))) or (ACTION = PROTECT)) or ((ACTION = STATION_MIDRIGHT) or ((ACTION = STATION_MIDFIELD) or (ACTION = STATION_MIDLEFT)))
+  ((((ACTION    = ATTACK) or ((ACTION = ATTACK_LEFT) or (ACTION = ATTACK_RIGHT))) or ((ACTION = INTERCEPT) or (ACTION = DEFEND))) or (ACTION = PROTECT)) or ((ACTION = STATION_MIDRIGHT) or ((ACTION = STATION_MIDFIELD) or ((ACTION = STATION_MIDLEFT) or (ACTION = STATION_CLOSE))))
 }
 
 set MODE     = TEAMPLAY {
@@ -91,6 +91,11 @@ set MODE     = STATIONINGMIDLEFT {
 set MODE     = STATIONINGMIDRIGHT {
   MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
   ACTION     = STATION_MIDRIGHT
+}
+
+set MODE     = STATIONINGCLOSEFLAG {
+  MODE       = ACTIVE:INGAME:SOLOPLAY:DEFENDING
+  ACTION     = STATION_CLOSE
 }
 
 set MODE     = TRAILING {
@@ -388,8 +393,32 @@ Behavior = BHV_StationKeep
   visual_hints            = label_color = white // default
   visual_hints            = vertex_color = red // default
 }
-//#############################################################################
 
+//#############################################################################
+Behavior = BHV_StationKeep
+{
+  name                    = station_keep_close_flag
+  pwt                     = 100
+  condition               = MODE==STATIONINGCLOSEFLAG // example
+  runflag                 = BOT_DIALOG_STATUS=Stationing
+
+  center_activate         = false
+  station_pt              = $(STATION_KEEP_CLOSE_FLAG)
+  hibernation_radius      = -1
+  inner_radius            = 4
+  outer_radius            = 15
+  outer_speed             = 1.2
+  transit_speed           = 2.5
+  swing_time              = 0
+
+  visual_hints            = vertex_size = 1 // default
+  visual_hints            = edge_color = light_blue // default
+  visual_hints            = edge_size = 1 // default
+  visual_hints            = label_color = white // default
+  visual_hints            = vertex_color = red // default
+}
+
+//#############################################################################
 Behavior = BHV_Trail
 {
   name                    = cover_mokai
