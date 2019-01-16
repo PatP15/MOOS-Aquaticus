@@ -37,6 +37,7 @@ Processconfig = ANTLER
  #ifdef SIM SEMI
   Run = iJoystick           @ NewConsole = false
   Run = pMapValues          @ NewConsole = false
+  Run = uTimerScript        @ NewConsole = false
  #elseifdef SIM FULL
   Run = pHelmIvP            @ NewConsole = false
   Run = pMarinePID          @ NewConsole = false
@@ -103,3 +104,5 @@ Processconfig = ANTLER
 #include plug_pRecord_voip.moos
 
 #include plug_pRecord_ambient.moos
+
+#include plug_uTimerScript.moos
