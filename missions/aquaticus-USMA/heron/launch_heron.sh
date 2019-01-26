@@ -118,6 +118,8 @@ esac
 case "$2" in
     r1|red_one)
         VTEAM="red"
+        START_POS="43,-7.5,240"
+        STATION_KEEP_CLOSE_FLAG="25,-20"
         RNAME="red_one"
         VPORT="9011"
         SHARE_LISTEN="9311"
@@ -125,6 +127,8 @@ case "$2" in
         ;;
     r2|red_two)
         VTEAM="red"
+        START_POS="59,-35,240"
+        STATION_KEEP_CLOSE_FLAG="42,-44"
         RNAME="red_two"
         VPORT="9012"
         SHARE_LISTEN="9312"
@@ -132,6 +136,7 @@ case "$2" in
         ;;
     r3|red_three)
         VTEAM="red"
+        START_POS="56,16,240"
         RNAME="red_three"
         VPORT="9013"
         SHARE_LISTEN="9313"
@@ -139,6 +144,7 @@ case "$2" in
         ;;
     r4|red_four)
         VTEAM="red"
+        START_POS="56,16,240"
         RNAME="red_four"
         VPORT="9014"
         SHARE_LISTEN="9314"
@@ -146,6 +152,7 @@ case "$2" in
         ;;
     b1|blue_one)
         VTEAM="blue"
+        START_POS="-59,-56,60"
         RNAME="blue_one"
         VPORT="9015"
         SHARE_LISTEN="9315"
@@ -153,6 +160,7 @@ case "$2" in
         ;;
     b2|blue_two)
         VTEAM="blue"
+        START_POS="-43,-80,60"
         RNAME="blue_two"
         VPORT="9016"
         SHARE_LISTEN="9316"
@@ -161,6 +169,7 @@ case "$2" in
         ;;
     b3|blue_three)
         VTEAM="blue"
+        START_POS="-52,-70,60"
         RNAME="blue_three"
         VPORT="9017"
         SHARE_LISTEN="9317"
@@ -168,6 +177,7 @@ case "$2" in
         ;;
     b4|blue_four)
         VTEAM="blue"
+        START_POS="-52,-70,60"
         RNAME="blue_four"
         VPORT="9018"
         SHARE_LISTEN="9318"
@@ -264,11 +274,9 @@ if [ "${VTEAM}" = "red" ]; then
     GRABL_POS="-29,-83"
     UNTAG_POS="50,-24"
     RETURN_POS="5,0"
-    START_POS="50,-24,240"
-    STATION_KEEP_MIDFIELD_ALONE="4.7,-35"
-    STATION_KEEP_MIDFIELD_LEFT="4.7,-55"
-    STATION_KEEP_MIDFIELD_RIGHT="4.7,-20"
-    STATION_KEEP_CLOSE_FLAG="8,-35"
+    STATION_KEEP_MIDFIELD_ALONE="9,-43"
+    STATION_KEEP_MIDFIELD_LEFT="21,-60"
+    STATION_KEEP_MIDFIELD_RIGHT="3.5,-27"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
     GRAB_POS="50,-24"
@@ -276,7 +284,6 @@ elif [ "${VTEAM}" = "blue" ]; then
     GRABL_POS="19,-11"
     UNTAG_POS="-52,-70"
     RETURN_POS="5,0"
-    START_POS="-52,-70,60"
     echo "Blue team selected."
 fi
    
