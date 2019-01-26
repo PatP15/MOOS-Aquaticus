@@ -304,6 +304,9 @@ ProcessConfig = pMarineViewer
   action = menu_key=E4 # ACTION_RED_ONE = STATION_MIDLEFT
   action+ = menu_key=E4 # ACTION_RED_TWO = STATION_MIDRIGHT
 
+  action = menu_key=E5 # ACTION_RED_ONE = STATION_CLOSE
+  action+ = menu_key=E5 # ACTION_RED_TWO = STATION_CLOSE
+
   action = menu_key=H1 # ACTION_RED_ONE = ATTACK_LEFT
   action+ = menu_key=H1 # ACTION_RED_TWO = ATTACK
 
