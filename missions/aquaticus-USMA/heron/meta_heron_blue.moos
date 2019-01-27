@@ -29,6 +29,7 @@ ProcessConfig = ANTLER
   Run = pRangeEvent        @ NewConsole = false
   Run = pBotDialog         @ NewConsole = false
   Run = pNodeReportParse   @ NewConsole	= false
+  Run = pReliable          @ NewCOnsole = false
 }
 
 #include plug_iM200.moos
@@ -66,3 +67,5 @@ ProcessConfig = pNodeReportParse
   AppTick   = 4
   CommsTick = 4
 }
+
+#include plug_pReliable.moos
