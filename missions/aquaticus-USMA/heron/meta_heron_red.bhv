@@ -469,7 +469,7 @@ Behavior = BHV_Trail
 }
 
 //#############################################################################
-Behavior = BHV_Defense_Multi
+//Behavior = BHV_Defense_Multi
 {
   name                    = protect
   pwt                     = 100
@@ -485,6 +485,57 @@ Behavior = BHV_Defense_Multi
   speed                   = 2  //default
   distance_from_flag      = 20 //default
 
+}
+//#############################################################################
+Behavior = BHV_CutRange
+{
+  name                    = cutrange_aggressive_
+  pwt                     = 100
+  activeflag                 = BOT_DIALOG_STATUS=Intercepting
+//  activeflag                = AGGRESSIVE=true
+
+  condition               = MODE == PROTECTING
+  condition               = AGGRESSIVE=true
+  updates                 = CR_INTERCEPT_UPDATES
+//  templating              = spawn
+//  inactiveflag                  = AGGRESSIVE=false
+//  endflag                   = STATION=true
+//  endflag                   = AGGRESSIVE=false
+  contact                 = blue_one
+  decay                   = 15,30
+  extrapolate             = false
+  on_no_contact_ok        = true
+  time_on_leg             = 60
+
+  giveup_dist             = 50 //30
+  patience                = 50
+  pwt_inner_dist          = 0
+  pwt_outer_dist          = 50 //20
+}
+
+//#############################################################################
+Behavior = BHV_StationKeep
+{
+  name                    = station_keep_aggressive
+  pwt                     = 100
+  runflag                 = BOT_DIALOG_STATUS=Stationing
+//  condition               = MODE==STATIONNING // example
+  condition               = MODE == PROTECTING
+  condition               = AGGRESSIVE==false
+  center_activate         = false
+  station_pt              = 35,-30
+  hibernation_radius      = 5
+  inner_radius            = 4
+  outer_radius            = 15
+  outer_speed             = 5
+  transit_speed           = 5
+  swing_time              = 3
+
+  visual_hints            = vertex_size = 1 // default
+  visual_hints            = edge_color = light_blue // default
+  visual_hints            = edge_size = 1 // default
+  visual_hints            = label_color = white // default
+  visual_hints            = vertex_color = red // default
 }
 
 //#############################################################################
