@@ -310,6 +310,19 @@ ProcessConfig = pMarineViewer
   action = menu_key=H1 # ACTION_RED_ONE = ATTACK_LEFT
   action+ = menu_key=H1 # ACTION_RED_TWO = ATTACK
 
+  action = menu_key=H2 # ACTION_RED_ONE = PROTECT
+  action+ = menu_key=H2 # ACTION_RED_TWO = PROTECT
+  action+ = menu_key=H2 # AGGRESSIVE_RED_ONE=false
+  action+ = menu_key=H2 # AGGRESSIVE_RED_TWO=false
+
+  action = menu_key=H3 # ACTION_RED_ONE = PROTECT
+  action+ = menu_key=H3 # ACTION_RED_TWO = DEFEND
+  action+ = menu_key=H3 # AGGRESSIVE_RED_ONE=false
+
+  action = menu_key=H4 # ACTION_RED_ONE = PROTECT
+  action+ = menu_key=H4 # AGGRESSIVE_RED_ONE=false
+  action+ = menu_key=H4 # ACTION_RED_TWO = STATION_MIDFIELD
+
   action = menu_key=H5 # ACTION_RED_ONE = ATTACK_LEFT
   action+ = menu_key=H5 # ACTION_RED_TWO = ATTACK_RIGHT
           
