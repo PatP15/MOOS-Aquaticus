@@ -43,7 +43,6 @@ bool Reliable::OnNewMail(MOOSMSG_LIST &NewMail)
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
-    string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
@@ -68,6 +67,12 @@ bool Reliable::OnNewMail(MOOSMSG_LIST &NewMail)
 
     }
     else if(key == "ACTION") {
+
+      string msrc  = msg.GetSource();
+      if(msrc == "pReliable") {
+        //this post came from us so ignore switching
+        continue;
+      }
       //based on reliable we do right thing or not
       string sval  = msg.GetString(); 
       m_action_state = sval;
