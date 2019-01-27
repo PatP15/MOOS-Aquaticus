@@ -81,6 +81,7 @@ ADD_SUBDIRECTORY(pNodeReportParse)
 #  ADD_SUBDIRECTORY(pShorePing)
 #  ADD_SUBDIRECTORY(pPingDisplay)
 ADD_SUBDIRECTORY(app_keyprog)
+ADD_SUBDIRECTORY(pReliable)
 
 ##############################################################################
 #                           END of CMakeLists.txt
