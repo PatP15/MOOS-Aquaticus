@@ -322,8 +322,8 @@ nsplug meta_heron_${VTEAM}.moos targ_${RNAME}.moos -f \
     VTEAM=$VTEAM                 \
     START_POS=$START_POS         \
     CID=$CID                     \
-    $SIM
-
+    $SIM                         \
+    UNTAG_POS=$UNTAG_POS    
 echo "Assembling BHV file targ_${RNAME}.bhv"
 nsplug meta_heron_${VTEAM}.bhv targ_${RNAME}.bhv -f  \
         RETURN_POS=${RETURN_POS}    \

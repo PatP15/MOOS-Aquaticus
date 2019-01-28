@@ -8,5 +8,6 @@ ProcessConfig = pZoneTrackOpponents
 
    opfor=blue
    zone=-14,-83,82,16
+   point=$(UNTAG_POS)
 }
 
