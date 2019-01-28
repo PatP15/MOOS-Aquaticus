@@ -8,5 +8,6 @@ ProcessConfig = pZoneTrackOpponents
 
    opfor=blue
    zone=0,0,10,15
+   point=-52,-70
 }
 

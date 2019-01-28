@@ -31,6 +31,7 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
    void registerVariables();
   bool handleOpForAssignment(std::string orig);
   bool handleZoneAssignment(std::string orig);
+  bool handleHighValuePoint(std::string value);
   void handleMailNodeReport(std::string report);
 
  private: // Configuration variables
@@ -41,9 +42,15 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
   double m_max_x;
   double m_max_y;
   std::string m_in_zone;
+  bool m_high_value_point_set;
+  double m_high_value_point_x;
+  double m_high_value_point_y;
 
  private: // State variables
   std::map<std::string, NodeRecord> m_map_node_records;
+  std::map<std::string, double  > m_map_intruders_x;
+  std::map<std::string, double  > m_map_intruders_y;
+  std::map<std::string, std::string> m_map_intruders_name;
 };
 
 #endif 
