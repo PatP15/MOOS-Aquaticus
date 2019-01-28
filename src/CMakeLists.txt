@@ -82,7 +82,7 @@ ADD_SUBDIRECTORY(pNodeReportParse)
 #  ADD_SUBDIRECTORY(pPingDisplay)
 ADD_SUBDIRECTORY(app_keyprog)
 ADD_SUBDIRECTORY(pReliable)
-
+ADD_SUBDIRECTORY(pZoneTrackOpponents)
 ##############################################################################
 #                           END of CMakeLists.txt
 ##############################################################################
