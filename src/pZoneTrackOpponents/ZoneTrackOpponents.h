@@ -40,6 +40,7 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
   double m_min_y;
   double m_max_x;
   double m_max_y;
+  std::string m_in_zone;
 
  private: // State variables
   std::map<std::string, NodeRecord> m_map_node_records;

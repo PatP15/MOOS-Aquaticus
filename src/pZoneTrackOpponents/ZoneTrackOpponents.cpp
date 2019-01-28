@@ -55,6 +55,12 @@ bool ZoneTrackOpponents::OnNewMail(MOOSMSG_LIST &NewMail)
        std::string sval = msg.GetString();
        handleMailNodeReport(sval);
      }
+     else if (key == "NAV_X"){
+       
+     }
+     else if (key == "NAV_Y"){
+ 
+     }
      else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
        reportRunWarning("Unhandled Mail: " + key);
    }
@@ -105,12 +111,14 @@ bool ZoneTrackOpponents::Iterate()
           foundIntrudingContact = true;
           Notify("AGGRESSIVE","TRUE");
           Notify("AGGRESSIVE_CONTACT",contact_name);
+          m_in_zone = "TRUE";
         }
       }
     }
   }
   if(!foundIntrudingContact){
     Notify("AGGRESSIVE","FALSE");
+    m_in_zone = "FALSE";
   }
 
   AppCastingMOOSApp::PostReport();
@@ -150,7 +158,7 @@ bool ZoneTrackOpponents::OnStartUp()
       handled = handleZoneAssignment(orig);
     }
     else if(param == "opfor"){
-      handled = handleOpForAssignment(orig);
+      handled = handleOpForAssignment(value);
     }
 
     if(!handled)
@@ -182,15 +190,23 @@ void ZoneTrackOpponents::registerVariables()
 bool ZoneTrackOpponents::buildReport() 
 {
   m_msgs << "============================================ \n";
-  m_msgs << "File:                                        \n";
+  m_msgs << "Ownship: " << m_ownship << endl;
+  m_msgs << "OpFor: " << m_op_for << endl;
+  m_msgs << "min x: " << m_min_x << " max x: " << m_max_x << endl;
+  m_msgs << "min y: " << m_min_y << " max y: " << m_max_y << endl;
+  //show contacts and in or out of state
   m_msgs << "============================================ \n";
+  m_msgs << "In Zone: " << m_in_zone << endl;
+  m_msgs << "Contacts:" << endl;
+  map<std::string, NodeRecord>::const_iterator p;
+  for(p=m_map_node_records.begin(); p!=m_map_node_records.end();p++){
+    std::string contact_name = p->first;
+    NodeRecord node_record = p->second;
+    std::string x = doubleToString(node_record.getX());
+    std::string y = doubleToString(node_record.getY());
 
-  ACTable actab(4);
-  actab << "Alpha | Bravo | Charlie | Delta";
-  actab.addHeaderLines();
-  actab << "one" << "two" << "three" << "four";
-  m_msgs << actab.getFormattedString();
-
+    m_msgs << contact_name << " x: " << x << " y: " << y << endl;
+  }
   return(true);
 }
 
@@ -228,7 +244,7 @@ bool ZoneTrackOpponents::handleZoneAssignment(std::string orig)
 }
 
 //---------------------------------------------------------
-// Procedure: handleZoneAssignment
+// Procedure: handleMailNodeReport
 
 void ZoneTrackOpponents::handleMailNodeReport(std::string report)
 {
