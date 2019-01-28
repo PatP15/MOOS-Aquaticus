@@ -495,7 +495,7 @@ Behavior = BHV_CutRange
 //  activeflag                = AGGRESSIVE=true
 
   condition               = MODE == PROTECTING
-  condition               = AGGRESSIVE=true
+  condition               = AGGRESSIVE==TRUE
   updates                 = CR_INTERCEPT_UPDATES
 //  templating              = spawn
 //  inactiveflag                  = AGGRESSIVE=false
@@ -521,7 +521,7 @@ Behavior = BHV_StationKeep
   runflag                 = BOT_DIALOG_STATUS=Stationing
 //  condition               = MODE==STATIONNING // example
   condition               = MODE == PROTECTING
-  condition               = AGGRESSIVE==false
+  condition               = AGGRESSIVE==FALSE
   center_activate         = false
   station_pt              = 35,-30
   hibernation_radius      = 5
