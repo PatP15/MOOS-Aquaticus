@@ -10,6 +10,7 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "MBUtils.h"
+#include "NodeRecord.h"
 
 class ZoneTrackOpponents : public AppCastingMOOSApp
 {
@@ -30,8 +31,10 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
    void registerVariables();
   bool handleOpForAssignment(std::string orig);
   bool handleZoneAssignment(std::string orig);
+  void handleMailNodeReport(std::string report);
 
  private: // Configuration variables
+  std::string m_ownship;
   std::string m_op_for;
   double m_min_x;
   double m_min_y;
@@ -39,6 +42,7 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
   double m_max_y;
 
  private: // State variables
+  std::map<std::string, NodeRecord> m_map_node_records;
 };
 
 #endif 

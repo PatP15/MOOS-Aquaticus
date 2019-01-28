@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "ZoneTrackOpponents.h"
+#include "NodeRecordUtils.h"
 
 using namespace std;
 
@@ -50,7 +51,10 @@ bool ZoneTrackOpponents::OnNewMail(MOOSMSG_LIST &NewMail)
 
      if(key == "FOO") 
        cout << "great!";
-
+     else if (key == "NODE_REPORT"){
+       std::string sval = msg.GetString();
+       handleMailNodeReport(sval);
+     }
      else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
        reportRunWarning("Unhandled Mail: " + key);
    }
@@ -75,6 +79,40 @@ bool ZoneTrackOpponents::Iterate()
 {
   AppCastingMOOSApp::Iterate();
   // Do your thing here!
+  map<string, NodeRecord>::const_iterator p;
+  bool foundIntrudingContact = false;
+  for(p=m_map_node_records.begin(); p!=m_map_node_records.end();p++) {
+    std::string contact_name = p->first;
+    NodeRecord node_record = p->second;
+
+    //is contact name from opfor?
+    bool followContact = strContains(contact_name, m_op_for);
+
+    if(!followContact){
+      //not a contact of opposing force
+      continue;
+    }
+    else {
+      //extract location and check if within bounds
+      double op_for_x = node_record.getX();
+      double op_for_y = node_record.getY();
+
+      //check if within bounds
+      //check x first
+      if(op_for_x > m_min_x && op_for_x < m_max_x){
+        //ok now check within y
+        if(op_for_y > m_min_y && op_for_y < m_max_y){
+          foundIntrudingContact = true;
+          Notify("AGGRESSIVE","TRUE");
+          Notify("AGGRESSIVE_CONTACT",contact_name);
+        }
+      }
+    }
+  }
+  if(!foundIntrudingContact){
+    Notify("AGGRESSIVE","FALSE");
+  }
+
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -86,6 +124,8 @@ bool ZoneTrackOpponents::Iterate()
 bool ZoneTrackOpponents::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
+
+  m_ownship = m_host_community;
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
@@ -107,10 +147,10 @@ bool ZoneTrackOpponents::OnStartUp()
       handled = true;
     }
     else if(param == "zone"){
-      handleZoneAssignment(orig);
+      handled = handleZoneAssignment(orig);
     }
     else if(param == "opfor"){
-      handleOpForAssignment(orig);
+      handled = handleOpForAssignment(orig);
     }
 
     if(!handled)
@@ -187,6 +227,23 @@ bool ZoneTrackOpponents::handleZoneAssignment(std::string orig)
  return true;
 }
 
+//---------------------------------------------------------
+// Procedure: handleZoneAssignment
+
+void ZoneTrackOpponents::handleMailNodeReport(std::string report)
+{
+  NodeRecord new_node_record = string2NodeRecord(report, true);
+
+  //if incoming node matches own ship, we just ignore it
+  std::string vname = new_node_record.getName();
+
+  if(vname == m_ownship)
+    return;
+
+  m_map_node_records[vname] = new_node_record;
+
+}
+ 
 
 
 

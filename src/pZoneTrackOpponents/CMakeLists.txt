@@ -15,6 +15,8 @@ TARGET_LINK_LIBRARIES(pZoneTrackOpponents
    ${MOOS_LIBRARIES}
    apputil
    mbutil
+   geometry
+   contacts
    m
    pthread)
 
