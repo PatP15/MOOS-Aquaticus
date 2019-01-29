@@ -47,17 +47,17 @@ fi
 if [[ -z $NO_HERON ]]; then
   cd ./heron
   # Evan Blue
-  ./launch_heron.sh e r3 r4 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh e r1 r2 $TIME_WARP -s > /dev/null &
   sleep 1
   # Felix Red
-  ./launch_heron.sh f b3 b4 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh f r2 r2 $TIME_WARP -s > /dev/null &
   sleep 1
   # Hal Blue
-  ./launch_heron.sh h r4 r3 $TIME_WARP -s > /dev/null &
+  ./launch_heron.sh h b2 b1 $TIME_WARP -s > /dev/null &
   sleep 1
   # Ida Red
-  ./launch_heron.sh i b4 b3 $TIME_WARP -s > /dev/null &
-  sleep 1
+#  ./launch_heron.sh i b4 b3 $TIME_WARP -s > /dev/null &
+#  sleep 1
   cd ..
 fi
 
@@ -67,17 +67,17 @@ fi
 if [[ -z $NO_MOKAI ]]; then
   cd ./mokai
   # Blue one
-  ./launch_mokai.sh b1 b3 b4 $TIME_WARP -ss >& /dev/null &
+  ./launch_mokai.sh d b1 b2 b3 $TIME_WARP -ss >& /dev/null &
   sleep 1
   # Red one
-  ./launch_mokai.sh r1 r3 r4 $TIME_WARP -ss >& /dev/null &
-  sleep 1
+#  ./launch_mokai.sh r1 r3 r4 $TIME_WARP -ss >& /dev/null &
+#  sleep 1
   # Blue two
-  ./launch_mokai.sh b2 b3 b4 $TIME_WARP -ss >& /dev/null &
-  sleep 1
+#  ./launch_mokai.sh b2 b3 b4 $TIME_WARP -ss >& /dev/null &
+#  sleep 1
   # Red two
-  ./launch_mokai.sh r2 r3 r4 $TIME_WARP -ss >& /dev/null &
-  sleep 1
+ # ./launch_mokai.sh r2 r3 r4 $TIME_WARP -ss >& /dev/null &
+ # sleep 1
   cd ..
 fi
 
