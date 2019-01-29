@@ -29,7 +29,9 @@ ProcessConfig = ANTLER
   Run = pRangeEvent        @ NewConsole = false
   Run = pBotDialog         @ NewConsole = false
   Run = pNodeReportParse   @ NewConsole	= false
-  Run = pReliable          @ NewCOnsole = false
+  Run = pReliable          @ NewConsole = false
+  Run = pZoneTrackOpponents @ NewConsole = false
+  Run = pAuthority         @ NewConsole = false
 }
 
 #include plug_iM200.moos
@@ -69,3 +71,7 @@ ProcessConfig = pNodeReportParse
 }
 
 #include plug_pReliable.moos
+
+#include plug_pZoneTrackOpponents_blue.moos
+
+#include plug_pAuthority.moos
