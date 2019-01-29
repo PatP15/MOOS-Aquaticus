@@ -18,6 +18,7 @@ using namespace std;
 Authority::Authority()
 {
   m_internal_aggressive_state="FALSE";
+  m_authority_active = false;
 }
 
 //---------------------------------------------------------
@@ -55,6 +56,15 @@ bool Authority::OnNewMail(MOOSMSG_LIST &NewMail)
        //we will be bombarded with updates to AGGRESSIVE
        std::string sval = msg.GetString();
        handleAggressivePost(sval);
+     }
+     else if(key=="SELF_AUTHORIZE"){
+       std::string sval = msg.GetString();
+       if(sval == "TRUE"){
+         m_authority_active = true;
+       }
+       else if(sval =="FALSE"){
+         m_authority_active = false;
+       }
      }
 
      else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
@@ -139,14 +149,8 @@ void Authority::registerVariables()
 bool Authority::buildReport() 
 {
   m_msgs << "============================================ \n";
-  m_msgs << "File:                                        \n";
+  m_msgs << "Internal Aggressive State " << m_internal_aggressive_state << endl;
   m_msgs << "============================================ \n";
-
-  ACTable actab(4);
-  actab << "Alpha | Bravo | Charlie | Delta";
-  actab.addHeaderLines();
-  actab << "one" << "two" << "three" << "four";
-  m_msgs << actab.getFormattedString();
 
   return(true);
 }
@@ -162,8 +166,12 @@ void Authority::handleAggressivePost(std::string value)
   if(m_internal_aggressive_state == "FALSE" && value == "TRUE"){
     //this is transition from internally being FALSE to outside being true
   //when triggered do these notifications
-  Notify("ACTION","DEFEND");
-  Notify("SAY_MOOS_BLUE_ONE","file=sounds/defend_because_on_our_side.wav");
+
+    if(m_authority_active == true){
+      Notify("ACTION","DEFEND");
+      string triggerAudio = "src_node=" + m_host_community +",dest_node=blue_one,var_name=SAY_MOOS,string_val=file=sounds/defend_because_on_our_side.wav";
+      Notify("NODE_MESSAGE_LOCAL",triggerAudio);
+    }
   }
   m_internal_aggressive_state = value;
 

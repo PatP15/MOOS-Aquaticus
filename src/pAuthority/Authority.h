@@ -33,6 +33,7 @@ class Authority : public AppCastingMOOSApp
 
  private: // State variables
   std::string m_internal_aggressive_state;
+  bool m_authority_active;
 };
 
 #endif 
