@@ -139,6 +139,7 @@ void Authority::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("AGGRESSIVE",0);
+  Register("SELF_AUTHORIZE",0);
   // Register("FOOBAR", 0);
 }
 
@@ -151,6 +152,7 @@ bool Authority::buildReport()
   m_msgs << "============================================ \n";
   m_msgs << "Internal Aggressive State " << m_internal_aggressive_state << endl;
   m_msgs << "============================================ \n";
+  m_msgs << "Self Authorize: " << m_authority_active << endl;
 
   return(true);
 }
