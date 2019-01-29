@@ -230,6 +230,8 @@ ProcessConfig = uFldShoreBroker
 
   qbridge = AQUATICUS_GAME
   qbridge = UFMG_HEARTBEAT
+  qbridge = SELF_AUTHORIZE
+  qbridge = RELIABLE
 }
 
 
@@ -292,6 +294,12 @@ ProcessConfig = pMarineViewer
   action = AQUATICUS_GAME_ALL = pause
   action = AQUATICUS_GAME_ALL = stop
 
+  action = menu_key=RELIABLE # RELIABLE_BLUE_TWO=TRUE
+  action = menu_key=NOTRELIABLE # RELIABLE_BLUE_TWO=FALSE
+
+  action = menu_key=LOWAUTONOMY # SELF_AUTHORIZE_BLUE_TWO=FALSE
+  action = menu_key=HIGHAUTONOMY # SELF_AUTHORIZE_BLUE_TWO=TRUE
+
   action = menu_key=E1 # ACTION_RED_ONE = DEFEND
   action+ = menu_key=E1 # ACTION_RED_TWO = DEFEND
 
@@ -311,16 +319,16 @@ ProcessConfig = pMarineViewer
   action+ = menu_key=H1 # ACTION_RED_TWO = ATTACK
 
   action = menu_key=H2 # ACTION_RED_ONE = PROTECT
-  action+ = menu_key=H2 # ACTION_RED_TWO = PROTECT
-  action+ = menu_key=H2 # AGGRESSIVE_RED_ONE=false
+  action = menu_key=H2 # ACTION_RED_TWO = PROTECT
+  action = menu_key=H2 # AGGRESSIVE_RED_ONE=false
   action+ = menu_key=H2 # AGGRESSIVE_RED_TWO=false
 
   action = menu_key=H3 # ACTION_RED_ONE = PROTECT
-  action+ = menu_key=H3 # ACTION_RED_TWO = DEFEND
+  action = menu_key=H3 # ACTION_RED_TWO = DEFEND
   action+ = menu_key=H3 # AGGRESSIVE_RED_ONE=false
 
   action = menu_key=H4 # ACTION_RED_ONE = PROTECT
-  action+ = menu_key=H4 # AGGRESSIVE_RED_ONE=false
+  action = menu_key=H4 # AGGRESSIVE_RED_ONE=false
   action+ = menu_key=H4 # ACTION_RED_TWO = STATION_MIDFIELD
 
   action = menu_key=H5 # ACTION_RED_ONE = ATTACK_LEFT
