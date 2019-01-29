@@ -1,0 +1,39 @@
+Instructions to verify the aquaticus-USMA simulation.
+
+For any major update, update the SVN repository
+$ cd ~/moos-ivp-aquaticus
+
+$ svn update
+
+$./build.sh
+
+
+To run the simulation:
+
+$ cd ~/moos-ivp-aquaticus/missions/aquaticus-USMA
+
+$./launch_simulation.sh
+
+Four vehicles should be launched.  The two red team robots, the human operated vehicle blue_one and the autonomous teammate labelled blue_two.
+
+To initiate all the vehicles, press on the DEPLOY button in pMarineViewer in the lower right-hand corner.
+
+
+To test the autonomous robots:
+
+After the DEPLOY button has been selected in pMarineViewer, the autonomous robots will move to their default position.  Press the spacebar or alternatively, select the Action drop-down menu at the top of pMarineViewer and select 'Open Command GUI'
+
+This will open up the COMMAND GUI.  To verify an autonomous robot's different modes, find the group of buttons relevant to that robot (e.g. red_one) and then click on a button labeled with the mode you wish to test (e.g. ATTACK).  NOTE1: not all modes are active for all autonomous robots. NOTE2: the human operated vehicle BLUE_ONE does not respond to these buttons as it is supposed to be operated via game controller.
+
+
+To view the opponent red team trials E1-5, H1-5:
+
+In pMarineViewer, click on the Action drop-down menu at the top of the window.
+
+The labels for each trial is labeled <E#> or <H#>.  For example, to start <H2> trial, go down the drop-down menu and find anyone of the items that end in <H2> and click on it.  The robots should then initiate that trial.  Note: there are sometimes multiple buttons associated with a trial - this is simply for debugging purposes to see what is going on behind the scenes -- you will only need to click on one of the items to trigger all of them for a trial.
+
+
+
+To test independent variable settings  with autonomous teammate blue two:
+
+The different options such as RELIABLE/NOTRELIABLE and HIGH/LOW AUTONOMY can be selected view the Action drop-down menu in pMarineViewer.  They are so labeled at the end of each button with <RELIABLE> <NOTRELIABLE>, <LOWAUTONOMY>, <HIGHAUTONOMY> on the right side of the pull-down menu.
