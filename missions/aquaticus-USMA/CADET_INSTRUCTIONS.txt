@@ -47,3 +47,8 @@ round is the round number
 
 $ cd ~/moos-ivp-aquaticus/missions/aquaticus-USMA
 $ ./launch_simulation.sh --cid=# --pid=# --group=# --round=#
+
+To make all vehicles active:  Click on lower right button 'DEPLOY'
+
+To start the Aquaticus game: on the dropdown menu select 'AQUATICUS_GAME_ALL=TRUE'
+This will start the different trials 
