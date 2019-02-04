@@ -28,7 +28,48 @@ Processconfig = ANTLER
 
   Run = iSay            @ NewConsole = false
 
+#ifdef GROUPROUND
+  Run = uTimerScript    @ NewConsole = false
+#endif
+
 }
+
+//Possible Group 1 or 2
+//Possible Round 1-4
+//identify the right plug file to load for uTimeScript
+#ifdef GROUPROUND G1R1
+  #include plug_uTimerScript_Group_1_Round_1.moos
+#endif
+
+#ifdef GROUPROUND G1R2
+  #include plug_uTimerScript_Group_1_Round_2.moos
+#endif
+
+#ifdef GROUPROUND G1R3
+  #include plug_uTimerScript_Group_1_Round_3.moos
+#endif
+
+#ifdef GROUPROUND G1R4
+  #include plug_uTimerScript_Group_1_Round_4.moos
+#endif
+
+#ifdef GROUPROUND G2R1
+  #include plug_uTimerScript_Group_2_Round_1.moos
+#endif
+
+#ifdef GROUPROUND G2R2
+  #include plug_uTimerScript_Group_2_Round_2.moos
+#endif
+
+#ifdef GROUPROUND G2R3
+  #include plug_uTimerScript_Group_2_Round_3.moos
+#endif
+
+#ifdef GROUPROUND G2R4
+  #include plug_uTimerScript_Group_2_Round_4.moos
+#endif
+
+
 
 //--------------------------------------------------
 // uFldFlagMgr Configuration Block

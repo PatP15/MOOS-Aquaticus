@@ -13,6 +13,9 @@ BLUE_FLAG="x=-52,y=-70"
 RED_FLAG="x=50,y=-24"
 
 CID=000 # Competiton id
+GROUP=0 # Group id
+ROUND=0 # Round id
+
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -21,6 +24,8 @@ for ARGI; do
         echo "  --shore-port=    , set up a shore listening port. (Default is $SHORE_LISTEN)"
         echo "  --shore-ip=      , set up a shore listening IP. (Default is $SHORE_IP)"
         echo "  --cid=           , competition id (for log file)"
+        echo "  --group=         , id"
+        echo "  --round=         , round id"
         echo "  --just_make, -j    "
         echo "  --help, -h         "
         exit 0
@@ -37,11 +42,19 @@ for ARGI; do
     elif [ "${ARGI:0:6}" = "--cid=" ] ; then
         CID="${ARGI#--cid=*}"
         CID=$(printf "%03d" $CID)
+    elif [ "${ARGI:0:8}" = "--group=" ] ; then
+        GROUP="${ARGI#--group=*}"
+    elif [ "${ARGI:0:8}" = "--round=" ] ; then
+        ROUND="${ARGI#--round=*}"
     else
         echo "Bad Argument: " $ARGI
         exit 1
     fi
 done
+
+#combine group and round for meta file to select proper uTimerScript
+GROUP_ROUND=$(printf "G%dR%d" $GROUP $ROUND)
+echo $GROUP_ROUND
 
 #-------------------------------------------------------
 #  Part 1: Create the Shoreside MOOS file
@@ -49,7 +62,9 @@ done
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
        VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP CID=$CID     \
-       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG}
+       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG}                   \
+       GROUPROUND=${GROUP_ROUND}
+       
 
 if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit 1; fi
 
