@@ -12,7 +12,9 @@ SET(SRC
 ADD_EXECUTABLE(pZoneTrackOpponents ${SRC})
 
 TARGET_LINK_LIBRARIES(pZoneTrackOpponents
-   ${MOOS_LIBRARIES}
+  ${MOOS_LIBRARIES}
+  geometry
+  contacts
    apputil
    mbutil
    geometry
