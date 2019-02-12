@@ -38,6 +38,16 @@ To test independent variable settings  with autonomous teammate blue two:
 
 The different options such as RELIABLE/NOTRELIABLE and HIGH/LOW AUTONOMY can be selected view the Action drop-down menu in pMarineViewer.  They are so labeled at the end of each button with <RELIABLE> <NOTRELIABLE>, <LOWAUTONOMY>, <HIGHAUTONOMY> on the right side of the pull-down menu.
 
+To RUN the training per participant:
+$ cd ~/moos-ivp/aquaticus/missions/aquaticus-USMA
+$ ./train_1.sh
+
+train_1.sh will run just the human operate vehicle on the field to practice joystick control and game mechanics
+
+$ ./train_2.sh
+train_2.sh will run the human operated vehicle on the field and its autonomous robot teammate.
+
+Run ktm after end of each simulation round.  This ensures that nothing is accidentally still running from before.
 
 To run the simulation per participant per group and round:
 cid stands for competition id
