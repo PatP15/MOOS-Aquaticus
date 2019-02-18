@@ -2,6 +2,10 @@
 # The CMakeLists.txt for:                       iZephyrHRM
 # Author(s):                              
 #--------------------------------------------------------
+if( ${APPLE})
+message( FATAL_ERROR "iZephryHRM only builds in LINUX (not OSX)" )
+
+else(${APPLE})
 
 SET(SRC
   ZephyrHRM.cpp
@@ -20,3 +24,4 @@ TARGET_LINK_LIBRARIES(iZephyrHRM
    m
    pthread)
 
+endif(${APPLE})
