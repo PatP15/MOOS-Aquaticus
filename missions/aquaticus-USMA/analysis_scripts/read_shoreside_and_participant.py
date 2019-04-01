@@ -12,17 +12,34 @@ class TrialStats:
     SPEECH_COMMANDED=0
     TIME_FROM_AQUATICUS_GAME_START=0.0
 
+def next_ordered_key(od,key):
+    next = od._OrderedDict__map[key][1]
+    if next is od._OrderedDict__root:
+        raise ValueError("{!r} is the last key".format(key))
+    return next[2]
+
 #this function is independent of the class TrialStats in the sense that it works on an OrderedDict
 #with variable types of TrialStats
 #create a function that given the time of an event, will return the key to the appropriate scenario
 #this function will be useful for going through the participant's logs and aligning events with scenarios
-def find_proper_scenario_given_event_time(od,event_time):
+def find_proper_scenario_key_given_event_time(od,event_time):
+    keyList=sorted(d.keys())
+    lastKey = next(reversed(od))
+
     #scan through the events finding the appropriate key to return
     for key,value in od.items():
         print(key)
         #we check if at the last element and return that scenario's key
-
+        if lastKey == key:
+            return key
+        else:
         #else we return the current scenario key if time is <= current key and < next key
+            curr_scenario_time = od[key].TIME_FROM_AQUATICUS_GAME_START
+            next_key = next_ordered_key(od,key)
+            next_scenario_time = od[next_key].TIME_FROM_AQUATICUS_GAME_START
+            if(event_time >= curr_scenario_time and event_time < next_scenario_time):
+                return key
+
 
 
 
@@ -78,14 +95,14 @@ for line in file:
     elif(fields[1] == "SCENARIO"):
         trialDictionary[fields[3]] = TrialStats()
         latestKey = next(reversed(trialDictionary))
-        trialDictionary[latestKey].TIME_FROM_AQUATICUS_GAME_START = fields[0] - SHORESIDE_GAME_START
+        trialDictionary[latestKey].TIME_FROM_AQUATICUS_GAME_START = float(fields[0]) - SHORESIDE_GAME_START
     elif(fields[1]=="AQUATICUS_GAME"):
         if(fields[3]=="play"):
             SHORESIDE_GAME_START=fields[0]
 
 
 
-subprocess.call("aloggrep C001_P917_LOG_DONA_BLUE_ONE_20_3_2019_____12_57_11.alog AQUATICUS_GAME* uDialogManager uSpeechRec -q -nc -nr -gl -ac > participant_compact.txt")
+subprocess.call("aloggrep C001_P917_LOG_DONA_BLUE_ONE_20_3_2019_____12_57_11.alog AQUATICUS_GAME* uDialogManager uSpeechRec -q -nc -nr -gl -ac > participant_compact.txt",shell=True)
 
 file = open("participant_compact.txt","r")
 for line in file:
