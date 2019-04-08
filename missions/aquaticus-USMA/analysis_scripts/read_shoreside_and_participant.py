@@ -167,7 +167,7 @@ print("Blue Team: Grabs " + str(TOTAL_FLAG_GRABS_BLUE) + " Scores: " + str(TOTAL
 print("Red Team: Grabs " + str(TOTAL_FLAG_GRABS_RED) + " Scores: " + str(TOTAL_FLAG_SCORES_RED))
 
 for key, value in trialDictionary.items():
-    print(key)
+    print("Trial: " + key)
     print("Blue flag scores: " + str(value.BLUE_FLAG_SCORES))
     print("Blue flag grabs: " + str(value.BLUE_FLAG_GRABS))
     print("Red flag scores: " + str(value.RED_FLAG_SCORES))
