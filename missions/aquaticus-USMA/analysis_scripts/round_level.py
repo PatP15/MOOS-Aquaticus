@@ -67,8 +67,8 @@ for curr_dir in list_of_dirs:
 print("Shoreside Directory: " + shoreside_dir_name)
 
 subprocess.call('which aloggrep',shell=True)
-
-subprocess.call("aloggrep -q C001_LOG_SHORESIDE_20_3_2019_____12_57_12.alog AQUATICUS_GAME* GROUP SCENARIO ROUND SELF_AUTHORIZE* RELIABLE SAY_MOOS| egrep 'AQUATICUS_GAME|GROUP|SCENARIO|ROUND|SELF_AUTHORIZE|RELIABLE|grab|goal|tag' > shoreside_compact.txt",shell=True)
+alog_cmd = "aloggrep -q " + shoreside_dir_name + "/*.alog AQUATICUS_GAME* GROUP SCENARIO ROUND SELF_AUTHORIZE* RELIABLE SAY_MOOS| egrep 'AQUATICUS_GAME|GROUP|SCENARIO|ROUND|SELF_AUTHORIZE|RELIABLE|grab|goal|tag' > shoreside_compact.txt"
+subprocess.call(alog_cmd,shell=True)
 
 #populate important fields
 GROUP=""
@@ -131,8 +131,14 @@ if GROUP=="" or ROUND=="" or SELF_AUTHORIZE=="" or SHORESIDE_GAME_START==0.0 or 
     print("missing key game information: GROUP "+ GROUP + " ROUND: " + ROUND + " SELF_AUTHORIZE: " + SELF_AUTHORIZE + " SHORESIDE_GAME_START: " + str(SHORESIDE_GAME_START))
     sys.exit(1)
 
+participant_dir_name=""
+for curr_dir in list_of_dirs:
+    if(os.path.isdir(curr_dir)):
+        if('P9' in curr_dir):
+            participant_dir_name = curr_dir
 
-subprocess.call("aloggrep C001_P917_LOG_DONA_BLUE_ONE_20_3_2019_____12_57_11.alog AQUATICUS_GAME* uDialogManager uSpeechRec -q -nc -nr -gl -ac > participant_compact.txt",shell=True)
+participant_alog= "aloggrep " + participant_dir_name + "/*.alog AQUATICUS_GAME* uDialogManager uSpeechRec -q -nc -nr -gl -ac > participant_compact.txt"
+subprocess.call(participant_alog,shell=True)
 
 PARTICIPANT_GAME_START=0.0
 file = open("participant_compact.txt","r")
