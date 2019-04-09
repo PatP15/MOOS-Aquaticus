@@ -59,9 +59,9 @@ def ordered_dictionary_of_trials():
     subprocess.call(alog_cmd,shell=True)
 
     #populate important fields
-    GROUP=""
-    ROUND=""
-    SCENARIO=""
+    GROUP="0"
+    ROUND="0"
+    SCENARIO="0"
     SELF_AUTHORIZE=""
     RELIABLE=""
     TOTAL_FLAG_GRABS_BLUE=0
@@ -189,4 +189,5 @@ def ordered_dictionary_of_trials():
         print("DIALOG_ERROR: " + str(value.DIALOG_ERROR))
         print("COMMAND_CANCELED: " + str(value.COMMAND_CANCELED))
 
-    return trialDictionary
+    return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED
+
