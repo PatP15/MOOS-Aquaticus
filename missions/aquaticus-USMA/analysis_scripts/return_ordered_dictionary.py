@@ -62,13 +62,13 @@ def ordered_dictionary_of_trials():
     GROUP="0"
     ROUND="0"
     SCENARIO="0"
-    SELF_AUTHORIZE=""
-    RELIABLE=""
+    SELF_AUTHORIZE="N\A"
+    RELIABLE="N\A"
     TOTAL_FLAG_GRABS_BLUE=0
     TOTAL_FLAG_SCORES_BLUE=0
     TOTAL_FLAG_GRABS_RED=0
     TOTAL_FLAG_SCORES_RED=0
-    WIN_OR_LOSS=""
+    WIN_OR_LOSS="N\A"
     SHORESIDE_GAME_START=0.0
     file = open("shoreside_compact.txt","r")
     for line in file:
@@ -188,6 +188,10 @@ def ordered_dictionary_of_trials():
         print("Speech Commanded: " + str(value.SPEECH_COMMANDED))
         print("DIALOG_ERROR: " + str(value.DIALOG_ERROR))
         print("COMMAND_CANCELED: " + str(value.COMMAND_CANCELED))
+
+    while len(trialDictionary) < 10:
+        trialDictionary["error in scenarios"] = TrialStats()
+
 
     return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED
 

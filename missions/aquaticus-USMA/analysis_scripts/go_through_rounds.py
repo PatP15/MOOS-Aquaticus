@@ -80,7 +80,7 @@ def return_string_of_all_round_results():
         exit(1)
 
 
-    total_result_string = participant_id_clean + "," + results_r1 + results_r2 + results_r3 + results_r4 + '\n'
+    total_result_string = participant_id_clean + "," + results_r1 + "," + results_r2 + "," +results_r3 + "," + results_r4
 
     print(total_result_string)
 

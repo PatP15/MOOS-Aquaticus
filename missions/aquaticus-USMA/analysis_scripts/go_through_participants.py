@@ -42,6 +42,7 @@ for curr_dir in list_of_dirs:
         if('p' in curr_dir):
             print(curr_dir)
             os.chdir(curr_dir)
+            results_for_current_p = ""
             results_for_current_p = return_string_of_all_round_results()
             f.write('\n')
             f.write(results_for_current_p)
