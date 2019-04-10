@@ -189,8 +189,11 @@ def ordered_dictionary_of_trials():
         print("DIALOG_ERROR: " + str(value.DIALOG_ERROR))
         print("COMMAND_CANCELED: " + str(value.COMMAND_CANCELED))
 
+    x=1
     while len(trialDictionary) < 10:
-        trialDictionary["error in scenarios"] = TrialStats()
+        new_key_name = "error in scenario " + str(x)
+        trialDictionary[new_key_name] = TrialStats()
+        x+=1
 
 
     return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED
