@@ -41,11 +41,6 @@ for ARGI; do
     fi
 done
 
-echo "GROUP " $GROUP
-echo "ROUND " $ROUND
-echo "PID " $PID
-echo "CID " $CID
-
 if [ "${HELP}" = "yes" ]; then
   echo "$0 [SWITCHES]"
   echo "  XX                  : Time warp"
@@ -60,6 +55,20 @@ if [ "${HELP}" = "yes" ]; then
   echo "  --help, -h"
   exit 0;
 fi
+
+
+#Check to make sure GROUP and ROUND have been set....otherwise.....print and exit out
+if ((($GROUP < 1 || $GROUP > 2) || ($ROUND < 1 || $ROUND > 4))); then
+    echo "$0 [SWITCHES]"
+    echo "  GROUP set to " $GROUP " make sure it is 1 or 2"
+    echo "  ROUND set to " $ROUND " make sure it is set to 1-4"
+   exit 0;
+fi
+
+echo "GROUP " $GROUP
+echo "ROUND " $ROUND
+echo "PID " $PID
+echo "CID " $CID
 
 #-------------------------------------------------------
 #  Part 2: Launching herons
