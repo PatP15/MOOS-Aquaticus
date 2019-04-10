@@ -87,20 +87,20 @@ def ordered_dictionary_of_trials():
                 trialDictionary[latestKey].TIMES_TAGGED += 1
             elif "red" in fields[3]:
                 if "grab" in fields[3]:
-                    TOTAL_FLAG_GRABS_RED = TOTAL_FLAG_GRABS_RED + 1
+                    TOTAL_FLAG_GRABS_RED +=  1
                     latestKey = next(reversed(trialDictionary))
                     trialDictionary[latestKey].RED_FLAG_GRABS += 1
                 elif "goal" in fields[3]:
-                    TOTAL_FLAG_SCORES_RED = TOTAL_FLAG_SCORES_RED + 1
+                    TOTAL_FLAG_SCORES_RED +=  1
                     latestKey = next(reversed(trialDictionary))
                     trialDictionary[latestKey].RED_FLAG_SCORES += 1
             elif "blue" in fields[3]:
                 if "grab" in fields[3]:
-                    TOTAL_FLAG_GRABS_BLUE = TOTAL_FLAG_GRABS_BLUE + 1
+                    TOTAL_FLAG_GRABS_BLUE +=  1
                     latestKey = next(reversed(trialDictionary))
                     trialDictionary[latestKey].BLUE_FLAG_GRABS += 1
                 elif "goal" in fields[3]:
-                    TOTAL_FLAG_SCORES_BLUE = TOTAL_FLAG_SCORES_BLUE + 1
+                    TOTAL_FLAG_SCORES_BLUE +=  1
                     latestKey = next(reversed(trialDictionary))
                     trialDictionary[latestKey].BLUE_FLAG_SCORES += 1
         elif(fields[1] == "SELF_AUTHORIZE_BLUE_TWO"):
@@ -141,17 +141,17 @@ def ordered_dictionary_of_trials():
             #identify which key we are adding this too
             event_time = float(fields[0]) - float(PARTICIPANT_GAME_START)
             current_key = find_proper_scenario_key_given_event_time(trialDictionary,event_time)
-            trialDictionary[current_key].SPEECH_COMMANDED += trialDictionary[current_key].SPEECH_COMMANDED + 1
+            trialDictionary[current_key].SPEECH_COMMANDED +=  1
         elif(fields[1]=="DIALOG_ERROR"):
             #identify which key we are adding this too
             event_time = float(fields[0]) - float(PARTICIPANT_GAME_START)
             current_key = find_proper_scenario_key_given_event_time(trialDictionary,event_time)
-            trialDictionary[current_key].DIALOG_ERROR += trialDictionary[current_key].DIALOG_ERROR + 1
+            trialDictionary[current_key].DIALOG_ERROR +=  1
         elif(fields[1]=="COMMAND_CANCELED"):
             #identify which key we are adding this too
             event_time = float(fields[0]) - float(PARTICIPANT_GAME_START)
             current_key = find_proper_scenario_key_given_event_time(trialDictionary,event_time)
-            trialDictionary[current_key].COMMAND_CANCELED += trialDictionary[current_key].COMMAND_CANCELED + 1
+            trialDictionary[current_key].COMMAND_CANCELED +=  1
 
     #check for if proper information for participant log has been found
     if PARTICIPANT_GAME_START==0.0:
