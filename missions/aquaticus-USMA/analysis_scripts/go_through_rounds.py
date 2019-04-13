@@ -12,7 +12,7 @@ from return_ordered_dictionary import ordered_dictionary_of_trials
 def grab_round_results():
     results_string=""
 
-    catching_od , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED = ordered_dictionary_of_trials()
+    catching_od , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES= ordered_dictionary_of_trials()
 
     results_string=  GROUP + "," + ROUND + "," + SELF_AUTHORIZE +","+  WIN_OR_LOSS+","+ str(TOTAL_FLAG_GRABS_BLUE) +","+ str(TOTAL_FLAG_SCORES_BLUE) + "," + str(TOTAL_FLAG_GRABS_RED) + "," + str(TOTAL_FLAG_SCORES_RED)
 
@@ -29,7 +29,7 @@ def grab_round_results():
         results_string+= "," + str(value.DIALOG_ERROR)
         results_string+= "," + str(value.COMMAND_CANCELED)
 
-    return results_string
+    return results_string, LIST_OF_FLAG_EVENTS_AND_TIMES
 
 def return_string_of_all_round_results():
     results_r1=""
@@ -37,6 +37,11 @@ def return_string_of_all_round_results():
     results_r3=""
     results_r4=""
 
+    list_of_flag_events_r1=""
+    list_of_flag_events_r2=""
+    list_of_flag_events_r3=""
+    list_of_flag_events_r4=""
+    partipant_id_clean=""
     print "Hello, Python!"
     shoreside_dir_name=""
     cwd = os.getcwd()
@@ -56,21 +61,21 @@ def return_string_of_all_round_results():
             if('r1' in curr_dir):
                 print(curr_dir)
                 os.chdir(curr_dir)
-                results_r1 = grab_round_results()
+                results_r1, list_of_flag_events_r1 = grab_round_results()
             elif('r2' in curr_dir):
                 print(curr_dir)
                 os.chdir(curr_dir)
-                results_r2 = grab_round_results()
+                results_r2, list_of_flag_events_r2 = grab_round_results()
 
             elif('r3' in curr_dir):
                 print(curr_dir)
                 os.chdir(curr_dir)
-                results_r3 = grab_round_results()
+                results_r3, list_of_flag_events_r3 = grab_round_results()
 
             elif('r4' in curr_dir):
                 print(curr_dir)
                 os.chdir(curr_dir)
-                results_r4 = grab_round_results()
+                results_r4 , list_of_flag_events_r4 = grab_round_results()
 
 
         os.chdir(cwd)
@@ -84,4 +89,4 @@ def return_string_of_all_round_results():
 
     print(total_result_string)
 
-    return total_result_string
+    return total_result_string, participant_id_clean, list_of_flag_events_r1, list_of_flag_events_r2, list_of_flag_events_r3, list_of_flag_events_r4

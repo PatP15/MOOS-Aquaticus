@@ -59,6 +59,7 @@ def ordered_dictionary_of_trials():
     subprocess.call(alog_cmd,shell=True)
 
     #populate important fields
+    LIST_OF_FLAG_EVENTS_AND_TIMES=""
     GROUP="0"
     ROUND="0"
     SCENARIO="0"
@@ -99,10 +100,16 @@ def ordered_dictionary_of_trials():
                     TOTAL_FLAG_GRABS_BLUE +=  1
                     latestKey = next(reversed(trialDictionary))
                     trialDictionary[latestKey].BLUE_FLAG_GRABS += 1
+                    flag_event_time = float(fields[0]) - float(SHORESIDE_GAME_START)
+                    LIST_OF_FLAG_EVENTS_AND_TIMES+="BLUE_GRAB=" + str(flag_event_time) + " "
+                    
                 elif "goal" in fields[3]:
                     TOTAL_FLAG_SCORES_BLUE +=  1
                     latestKey = next(reversed(trialDictionary))
                     trialDictionary[latestKey].BLUE_FLAG_SCORES += 1
+
+                    flag_event_time = float(fields[0]) - float(SHORESIDE_GAME_START)
+                    LIST_OF_FLAG_EVENTS_AND_TIMES+="BLUE_SCORE=" + str(flag_event_time) + " "
         elif(fields[1] == "SELF_AUTHORIZE_BLUE_TWO"):
             SELF_AUTHORIZE = fields[3]
         elif(fields[1] == "SCENARIO"):
@@ -196,5 +203,4 @@ def ordered_dictionary_of_trials():
         x+=1
 
 
-    return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED
-
+    return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES

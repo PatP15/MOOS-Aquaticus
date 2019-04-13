@@ -12,6 +12,7 @@ from go_through_rounds import return_string_of_all_round_results
 
 #Step 1: open a file to write results out to
 f = open("all_participant_results.csv","w")
+g = open("all_participant_flag_events.csv", "w")
 
 #Step 2: write the header out
 header_string = "Participant ID "
@@ -29,6 +30,8 @@ for x in range(4):
 
 f.write(header_string)
 
+g.write("Participant ID, Round 1, Round 2, Round 3, Round 4")
+
 #Step 3: collect each participant's results
 #        and write it out to file line by line
 print "Hello, Python!"
@@ -43,9 +46,19 @@ for curr_dir in list_of_dirs:
             print(curr_dir)
             os.chdir(curr_dir)
             results_for_current_p = ""
-            results_for_current_p = return_string_of_all_round_results()
+            flag_events_r1=""
+            flag_events_r2=""
+            flag_events_r3=""
+            flag_events_r4=""
+            participant_id=""
+            results_for_current_p, participant_id, flag_events_r1, flag_events_r2, flag_events_r3, flag_events_r4 = return_string_of_all_round_results()
             f.write('\n')
             f.write(results_for_current_p)
 
+            g.write('\n')
+            g.write(participant_id + "," + flag_events_r1 + "," + flag_events_r2 + "," + flag_events_r3 + "," + flag_events_r4)
+
     os.chdir(cwd)
 
+f.close()
+g.close()
