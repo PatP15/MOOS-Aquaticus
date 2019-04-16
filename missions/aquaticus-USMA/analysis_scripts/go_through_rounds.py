@@ -16,20 +16,33 @@ def grab_round_results():
 
     results_string=  GROUP + "," + ROUND + "," + SELF_AUTHORIZE +","+  WIN_OR_LOSS+","+ str(TOTAL_FLAG_GRABS_BLUE) +","+ str(TOTAL_FLAG_SCORES_BLUE) + "," + str(TOTAL_FLAG_GRABS_RED) + "," + str(TOTAL_FLAG_SCORES_RED)
 
+    if (len(catching_od) == 0):
+        for i in range(10):
+            results_string+= ", N\A"
+            results_string+= ", N\A" 
+            results_string+= ", N\A" 
+            results_string+= ", N\A" 
+            results_string+= ", N\A" 
+            results_string+= ", N\A" 
+            results_string+= ", N\A" 
+            results_string+= ", N\A" 
+            results_string+= ", N\A"
+            results_string+= ", N\A"
 
-    for key, value in catching_od.items():
-        results_string+= "," + key
-        results_string+= "," + value.RELIABLE
-        results_string+= "," + str(value.BLUE_FLAG_SCORES)
-        results_string+= "," + str(value.BLUE_FLAG_GRABS)
-        results_string+= "," + str(value.RED_FLAG_SCORES)
-        results_string+= "," + str(value.RED_FLAG_GRABS)
-        results_string+= "," + str(value.TIMES_TAGGED)
-        results_string+= "," + str(value.SPEECH_COMMANDED)
-        results_string+= "," + str(value.DIALOG_ERROR)
-        results_string+= "," + str(value.COMMAND_CANCELED)
+    else:
+        for key, value in catching_od.items():
+            results_string+= "," + key
+            results_string+= "," + value.RELIABLE
+            results_string+= "," + str(value.BLUE_FLAG_SCORES)
+            results_string+= "," + str(value.BLUE_FLAG_GRABS)
+            results_string+= "," + str(value.RED_FLAG_SCORES)
+            results_string+= "," + str(value.RED_FLAG_GRABS)
+            results_string+= "," + str(value.TIMES_TAGGED)
+            results_string+= "," + str(value.SPEECH_COMMANDED)
+            results_string+= "," + str(value.DIALOG_ERROR)
+            results_string+= "," + str(value.COMMAND_CANCELED)
 
-    return results_string, LIST_OF_FLAG_EVENTS_AND_TIMES
+    return results_string, LIST_OF_FLAG_EVENTS_AND_TIMES, ROUND
 
 def return_string_of_all_round_results():
     results_r1=""
@@ -41,6 +54,8 @@ def return_string_of_all_round_results():
     list_of_flag_events_r2=""
     list_of_flag_events_r3=""
     list_of_flag_events_r4=""
+    list_of_zero_results = []
+    list_of_flag_zeros = []
     partipant_id_clean=""
     print "Hello, Python!"
     shoreside_dir_name=""
@@ -58,27 +73,46 @@ def return_string_of_all_round_results():
     print(list_of_dirs)
     for curr_dir in list_of_dirs:
         if(os.path.isdir(curr_dir)):
-            if('r1' in curr_dir):
+            if('r1' or 'r2' or 'r3' or 'r4' in curr_dir):
                 print(curr_dir)
                 os.chdir(curr_dir)
-                results_r1, list_of_flag_events_r1 = grab_round_results()
-            elif('r2' in curr_dir):
-                print(curr_dir)
-                os.chdir(curr_dir)
-                results_r2, list_of_flag_events_r2 = grab_round_results()
-
-            elif('r3' in curr_dir):
-                print(curr_dir)
-                os.chdir(curr_dir)
-                results_r3, list_of_flag_events_r3 = grab_round_results()
-
-            elif('r4' in curr_dir):
-                print(curr_dir)
-                os.chdir(curr_dir)
-                results_r4 , list_of_flag_events_r4 = grab_round_results()
-
+                results, list_of_flag_events, temp_ROUND = grab_round_results()
+                #go through and assign directly based on round number
+                #or put in a catch list to deal with later
+                if ("1.0" in temp_ROUND):
+                    results_r1 = results
+                    list_of_flag_events_r1 = list_of_flag_events
+                elif ("2.0" in temp_ROUND):
+                    results_r2 = results
+                    list_of_flag_events_r2 = list_of_flag_events
+                elif ("3.0" in temp_ROUND):
+                    results_r3 = results
+                    list_of_flag_events_r3 = list_of_flag_events
+                elif ("4.0" in temp_ROUND):
+                    results_r4 = results
+                    list_of_flag_events_r4 = list_of_flag_events
+                else: #catch the rounds labelled 0s
+                    list_of_zero_results.append(results)
+                    list_of_flag_zeros.append(list_of_flag_events)
 
         os.chdir(cwd)
+
+    #now go through list until empty
+    if (results_r1 == ""):
+        results_r1 = list_of_zero_results.pop()
+        list_of_flag_events_r1 = list_of_flag_zeros.pop()
+
+    if (results_r2 == ""):
+        results_r2 = list_of_zero_results.pop()
+        list_of_flag_events_r2 = list_of_flag_zeros.pop()
+
+    if (results_r3 == ""):
+        results_r3 = list_of_zero_results.pop()
+        list_of_flag_events_r3 = list_of_flag_zeros.pop()
+
+    if (results_r4 == ""):
+        results_r4 = list_of_zero_results.pop()
+        list_of_flag_events_r4 = list_of_flag_zeros.pop()
 
     if(results_r1=="" or results_r2=="" or results_r3=="" or results_r4==""):
         print("Unable to retrieve results from at least 1 round")

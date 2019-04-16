@@ -81,6 +81,8 @@ def ordered_dictionary_of_trials():
         elif(fields[1] == "ROUND"):
             ROUND=fields[3]
         elif(fields[1] == "SAY_MOOS"):
+            if (len(trialDictionary)==0):
+                continue
             if "deny" in fields[3]:
                 continue
             if fields[3] == "file=tag_post_blue_one.wav":
@@ -115,16 +117,15 @@ def ordered_dictionary_of_trials():
         elif(fields[1] == "SCENARIO"):
             #using the SCENARIO as the key to the ordered dictionary
             trialDictionary[fields[3]] = TrialStats()
-            latestKey = next(reversed(trialDictionary))
-            trialDictionary[latestKey].TIME_FROM_AQUATICUS_GAME_START = float(fields[0]) - float(SHORESIDE_GAME_START)
+            trialDictionary[fields[3]].TIME_FROM_AQUATICUS_GAME_START = float(fields[0]) - float(SHORESIDE_GAME_START)
         elif("AQUATICUS_GAME" in fields[1]):
             if(fields[3]=="play"):
                 SHORESIDE_GAME_START=fields[0]
 
     #check for if proper information in shoreside log has been found
-    if GROUP=="" or ROUND=="" or SELF_AUTHORIZE=="" or SHORESIDE_GAME_START==0.0 or (len(trialDictionary)==0):
-        print("missing key game information: GROUP "+ GROUP + " ROUND: " + ROUND + " SELF_AUTHORIZE: " + SELF_AUTHORIZE + " SHORESIDE_GAME_START: " + str(SHORESIDE_GAME_START))
-        sys.exit(1)
+    if GROUP=="0" or ROUND=="0" or SELF_AUTHORIZE=="N\A" or SHORESIDE_GAME_START==0.0 or (len(trialDictionary)==0):
+        print("missing key game information: GROUP "+ GROUP + " ROUND: " + ROUND + " SELF_AUTHORIZE: " + SELF_AUTHORIZE + " SHORESIDE_GAME_START: " + str(SHORESIDE_GAME_START) + " Length Dictionary of Scenarios: " + str(len(trialDictionary)))
+        return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES
 
     participant_dir_name=""
     for curr_dir in list_of_dirs:
