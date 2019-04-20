@@ -12,9 +12,9 @@ from return_ordered_dictionary import ordered_dictionary_of_trials
 def grab_round_results():
     results_string=""
 
-    catching_od , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES= ordered_dictionary_of_trials()
+    catching_od , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES, TOTAL_TIME_BLUE_ONE_TAGGED, TOTAL_TIMES_BLUE_SPEECH_COMMANDED, TOTAL_TIMES_BLUE_DIALOG_ERROR, TOTAL_TIMES_BLUE_COMMAND_CANCELED = ordered_dictionary_of_trials()
 
-    results_string=  GROUP + "," + ROUND + "," + SELF_AUTHORIZE +","+  WIN_OR_LOSS+","+ str(TOTAL_FLAG_GRABS_BLUE) +","+ str(TOTAL_FLAG_SCORES_BLUE) + "," + str(TOTAL_FLAG_GRABS_RED) + "," + str(TOTAL_FLAG_SCORES_RED)
+    results_string=  GROUP + "," + ROUND + "," + SELF_AUTHORIZE +","+  WIN_OR_LOSS+","+ str(TOTAL_FLAG_GRABS_BLUE) +","+ str(TOTAL_FLAG_SCORES_BLUE) + "," + str(TOTAL_FLAG_GRABS_RED) + "," + str(TOTAL_FLAG_SCORES_RED) + "," + str(TOTAL_TIME_BLUE_ONE_TAGGED) + "," + str(TOTAL_TIMES_BLUE_SPEECH_COMMANDED) + "," + str(TOTAL_TIMES_BLUE_DIALOG_ERROR) + "," + str(TOTAL_TIMES_BLUE_COMMAND_CANCELED)
 
     if (len(catching_od) == 0):
         for i in range(10):

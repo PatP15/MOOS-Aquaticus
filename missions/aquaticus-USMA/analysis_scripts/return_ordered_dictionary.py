@@ -55,7 +55,7 @@ def ordered_dictionary_of_trials():
     print("Shoreside Directory: " + shoreside_dir_name)
 
     subprocess.call('which aloggrep',shell=True)
-    alog_cmd = "aloggrep -q " + shoreside_dir_name + "/*.alog AQUATICUS_GAME* GROUP SCENARIO ROUND SELF_AUTHORIZE* RELIABLE SAY_MOOS| egrep 'AQUATICUS_GAME|GROUP|SCENARIO|ROUND|SELF_AUTHORIZE|RELIABLE|grab|goal|tag' > shoreside_compact.txt"
+    alog_cmd = "aloggrep -q " + shoreside_dir_name + "/*.alog AQUATICUS_GAME* GROUP SCENARIO ROUND SELF_AUTHORIZE* RELIABLE* SAY_MOOS| egrep 'AQUATICUS_GAME|GROUP|SCENARIO|ROUND|SELF_AUTHORIZE|RELIABLE|grab|goal|tag' > shoreside_compact.txt"
     subprocess.call(alog_cmd,shell=True)
 
     #populate important fields
@@ -65,10 +65,17 @@ def ordered_dictionary_of_trials():
     SCENARIO="0"
     SELF_AUTHORIZE="N\A"
     RELIABLE="N\A"
+    HOLD_RELIABLE_VALUE=""
     TOTAL_FLAG_GRABS_BLUE=0
     TOTAL_FLAG_SCORES_BLUE=0
     TOTAL_FLAG_GRABS_RED=0
     TOTAL_FLAG_SCORES_RED=0
+
+    TOTAL_TIMES_BLUE_ONE_TAGGED=0
+    TOTAL_TIMES_BLUE_SPEECH_COMMANDED=0
+    TOTAL_TIMES_BLUE_DIALOG_ERROR=0
+    TOTAL_TIMES_BLUE_COMMAND_CANCELED=0
+
     WIN_OR_LOSS="N\A"
     SHORESIDE_GAME_START=0.0
     file = open("shoreside_compact.txt","r")
@@ -86,6 +93,7 @@ def ordered_dictionary_of_trials():
             if "deny" in fields[3]:
                 continue
             if fields[3] == "file=tag_post_blue_one.wav":
+                TOTAL_TIMES_BLUE_ONE_TAGGED += 1
                 latestKey = next(reversed(trialDictionary))
                 trialDictionary[latestKey].TIMES_TAGGED += 1
             elif "red" in fields[3]:
@@ -118,14 +126,26 @@ def ordered_dictionary_of_trials():
             #using the SCENARIO as the key to the ordered dictionary
             trialDictionary[fields[3]] = TrialStats()
             trialDictionary[fields[3]].TIME_FROM_AQUATICUS_GAME_START = float(fields[0]) - float(SHORESIDE_GAME_START)
+            if(len(trialDictionary)==1):
+                #the first trial does not publish reliable at afterwards
+                trialDictionary[fields[3]].RELIABLE = HOLD_RELIABLE_VALUE
         elif("AQUATICUS_GAME" in fields[1]):
             if(fields[3]=="play"):
                 SHORESIDE_GAME_START=fields[0]
+        elif("RELIABLE" in fields[1]):
+            if ( not trialDictionary ):
+                HOLD_RELIABLE_VALUE = fields[3]
+                continue
+            else:
+                latestKey = next(reversed(trialDictionary))
+                trialDictionary[latestKey].RELIABLE = fields[3]
+
+
 
     #check for if proper information in shoreside log has been found
     if GROUP=="0" or ROUND=="0" or SELF_AUTHORIZE=="N\A" or SHORESIDE_GAME_START==0.0 or (len(trialDictionary)==0):
         print("missing key game information: GROUP "+ GROUP + " ROUND: " + ROUND + " SELF_AUTHORIZE: " + SELF_AUTHORIZE + " SHORESIDE_GAME_START: " + str(SHORESIDE_GAME_START) + " Length Dictionary of Scenarios: " + str(len(trialDictionary)))
-        return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES
+        return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES, TOTAL_TIMES_BLUE_ONE_TAGGED, TOTAL_TIMES_BLUE_SPEECH_COMMANDED, TOTAL_TIMES_BLUE_DIALOG_ERROR, TOTAL_TIMES_BLUE_COMMAND_CANCELED
 
     participant_dir_name=""
     for curr_dir in list_of_dirs:
@@ -146,16 +166,19 @@ def ordered_dictionary_of_trials():
             if(fields[3]=="play"):
                 PARTICIPANT_GAME_START=fields[0]
         elif(fields[1]=="SPEECH_COMMANDED"):
+            TOTAL_TIMES_BLUE_SPEECH_COMMANDED += 1
             #identify which key we are adding this too
             event_time = float(fields[0]) - float(PARTICIPANT_GAME_START)
             current_key = find_proper_scenario_key_given_event_time(trialDictionary,event_time)
             trialDictionary[current_key].SPEECH_COMMANDED +=  1
         elif(fields[1]=="DIALOG_ERROR"):
+            TOTAL_TIMES_BLUE_DIALOG_ERROR += 1
             #identify which key we are adding this too
             event_time = float(fields[0]) - float(PARTICIPANT_GAME_START)
             current_key = find_proper_scenario_key_given_event_time(trialDictionary,event_time)
             trialDictionary[current_key].DIALOG_ERROR +=  1
         elif(fields[1]=="COMMAND_CANCELED"):
+            TOTAL_TIMES_BLUE_COMMAND_CANCELED += 1
             #identify which key we are adding this too
             event_time = float(fields[0]) - float(PARTICIPANT_GAME_START)
             current_key = find_proper_scenario_key_given_event_time(trialDictionary,event_time)
@@ -184,6 +207,10 @@ def ordered_dictionary_of_trials():
     print("Blue Team Result: " + WIN_OR_LOSS)
     print("Blue Team: Grabs " + str(TOTAL_FLAG_GRABS_BLUE) + " Scores: " + str(TOTAL_FLAG_SCORES_BLUE))
     print("Red Team: Grabs " + str(TOTAL_FLAG_GRABS_RED) + " Scores: " + str(TOTAL_FLAG_SCORES_RED))
+    print("Blue One Total Times Tagged " + str(TOTAL_TIMES_BLUE_ONE_TAGGED))
+    print("Blue Total Speech Commanded " + str(TOTAL_TIMES_BLUE_SPEECH_COMMANDED))
+    print("Blue Total Dialog Error " + str(TOTAL_TIMES_BLUE_DIALOG_ERROR))
+    print("Blue Total Command Canceled " + str(TOTAL_TIMES_BLUE_COMMAND_CANCELED))
 
     for key, value in trialDictionary.items():
         print("Trial: " + key)
@@ -204,4 +231,4 @@ def ordered_dictionary_of_trials():
         x+=1
 
 
-    return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES
+    return trialDictionary , GROUP, ROUND, SELF_AUTHORIZE,  WIN_OR_LOSS, TOTAL_FLAG_GRABS_BLUE, TOTAL_FLAG_SCORES_BLUE, TOTAL_FLAG_GRABS_RED, TOTAL_FLAG_SCORES_RED, LIST_OF_FLAG_EVENTS_AND_TIMES, TOTAL_TIMES_BLUE_ONE_TAGGED, TOTAL_TIMES_BLUE_SPEECH_COMMANDED, TOTAL_TIMES_BLUE_DIALOG_ERROR, TOTAL_TIMES_BLUE_COMMAND_CANCELED

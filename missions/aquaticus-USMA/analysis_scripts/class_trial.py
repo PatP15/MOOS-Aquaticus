@@ -1,7 +1,7 @@
 #creating a class for keeping trial information
 class TrialStats:
     SCENARIO=""
-    RELIABLE="TRUE"
+    RELIABLE="N\A"
     BLUE_FLAG_GRABS=0
     BLUE_FLAG_SCORES=0
     RED_FLAG_GRABS=0
