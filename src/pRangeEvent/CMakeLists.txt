@@ -13,7 +13,7 @@ SET(SRC
 ADD_EXECUTABLE(pRangeEvent ${SRC})
 
 TARGET_LINK_LIBRARIES(pRangeEvent
-  MOOS
+  ${MOOS_LIBRARIES}
   contacts
   geometry
   apputil

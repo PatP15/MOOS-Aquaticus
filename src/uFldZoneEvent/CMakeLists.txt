@@ -12,7 +12,7 @@ SET(SRC
 ADD_EXECUTABLE(uFldZoneEvent ${SRC})
 
 TARGET_LINK_LIBRARIES(uFldZoneEvent
-  MOOS
+  ${MOOS_LIBRARIES}
   apputil
   geometry
   mbutil

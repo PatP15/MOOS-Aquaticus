@@ -16,7 +16,7 @@ SET(SRC
 ADD_EXECUTABLE(uFldTagManager ${SRC})
 
 TARGET_LINK_LIBRARIES(uFldTagManager
-  MOOS
+  ${MOOS_LIBRARIES}
   apputil
   geometry 
   mbutil
