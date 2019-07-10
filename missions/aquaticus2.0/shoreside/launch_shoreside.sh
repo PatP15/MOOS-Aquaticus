@@ -77,6 +77,8 @@ if [ "${VOIP}" = "true" ]; then
     echo "ERROR: You requested a VoIP Server, but murmurd wasn't found!"
     echo "Is it in your \$PATH and executable?"
     VOIP="error"
+    echo "Sleeping for 10 seconds..."
+    sleep 10s
   fi
   cd ..
 fi
