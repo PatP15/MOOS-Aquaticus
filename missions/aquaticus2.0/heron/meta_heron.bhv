@@ -352,7 +352,7 @@ Behavior = BHV_Trail
 }
 
 //#############################################################################
-Behavior = BHV_Defense_Multi
+//Behavior = BHV_Defense_Multi
 {
   name                    = protect
   pwt                     = 100
