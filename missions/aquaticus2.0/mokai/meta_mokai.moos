@@ -18,10 +18,10 @@ Processconfig = ANTLER
   Run = uFldMessageHandler  @ NewConsole = false
   Run = uLoadWatch          @ NewConsole = false
   Run = uProcessWatch       @ NewConsole = false
-  Run = pDeadManPost        @ NewConsole = false
+  // Run = pDeadManPost        @ NewConsole = false
   Run = iSay                @ NewConsole = false
   Run = iButtonBox          @ NewConsole = false
-  Run = iLEDInfoBar         @ NewConsole = false
+  // Run = iLEDInfoBar         @ NewConsole = false
 #ifdef VOICE ON
   Run = iMumbleClient       @ NewConsole = false
   Run = uSpeechRec          @ NewConsole = false
