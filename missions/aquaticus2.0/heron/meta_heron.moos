@@ -20,6 +20,7 @@ ProcessConfig = ANTLER
   Run = pHostInfo          @ NewConsole = false
   Run = uFldNodeBroker     @ NewConsole = false
   Run = pDeadManPost       @ NewConsole = false
+  Run = uVcGenMon          @ NewConsole = false
 #ifdef SIM
   Run = uSimMarine         @ NewConsole = false
 #else
@@ -60,6 +61,8 @@ ProcessConfig = ANTLER
 #include plug_pRangeEvent.moos
 
 #include plug_pBotDialog.moos
+
+#include ../plug_uVcGenMon.moos
 
 ProcessConfig = pNodeReportParse
 {
