@@ -98,6 +98,38 @@ set MODE     = STATIONING {
   ACTION     = STATION
 }
 
+Behavior = BHV_AvoidCollision
+ {
+   // General Behavior Parameters
+   // ---------------------------
+   name         = avdcollision_
+   pwt          = 300
+   updates      = CONTACT_INFO
+  endflag = CONTACT_RESOLVED = $[CONTACT]
+   templating   = spawn
+
+
+   // General Contact Behavior Parameters
+   // -----------------------------------
+       bearing_lines = white:0, green:0.65, yellow:0.8, red:1.0   // example
+
+             contact = optional_vehicle_name
+               decay = 15,30
+         extrapolate = true
+    on_no_contact_ok = true
+
+
+   // Parameters specific to this behavior
+   // ------------------------------------
+      completed_dist = 15
+   max_util_cpa_dist = 10
+   min_util_cpa_dist = 5
+           pwt_grade = linear
+      pwt_inner_dist = 10
+      pwt_outer_dist = 20
+ }
+
+
 //----------------------------------------------
 Behavior = BHV_OpRegionRecover
 {
@@ -115,7 +147,7 @@ Behavior = BHV_OpRegionRecover
 
 
 //#############################################################################
-Behavior = BHV_AvdColregsV17
+//Behavior = BHV_AvdColregsV17
 {
   name                    = active_avd_
   pwt                     = 300
