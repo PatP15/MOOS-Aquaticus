@@ -88,8 +88,8 @@ bool VcGenMon::Iterate() {
     long armClockSpeed = vcCmd.getClockSpeed();
     string throttleState = vcCmd.getThrottleHex();
 
-    m_Comms.Notify("SYSTEM_TEMPERATURE", voltage);
-    m_Comms.Notify("VIDEOCORE_VOLTAGE", temperature);
+    m_Comms.Notify("SYSTEM_TEMPERATURE", temperature);
+    m_Comms.Notify("VIDEOCORE_VOLTAGE", voltage);
     m_Comms.Notify("THROTTLE_STATE", throttleState);
     m_Comms.Notify("ARM_CLOCK_SPEED", armClockSpeed);
 
