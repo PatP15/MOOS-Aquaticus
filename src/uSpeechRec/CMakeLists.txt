@@ -32,7 +32,7 @@ TARGET_LINK_LIBRARIES(uSpeechRec
    dl
    portaudio
    z
+   sndfile
    ${SPEECH_LIBS})
-
 
 
