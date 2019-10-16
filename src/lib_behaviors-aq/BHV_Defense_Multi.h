@@ -1,7 +1,7 @@
 /************************************************************/
-/*    NAME: Jonathan Schwartz                                              */
+/*    NAME: Jonathan Schwartz                               */
 /*    ORGN: MIT                                             */
-/*    FILE: BHV_Defense.h                                      */
+/*    FILE: BHV_Defense.h                                   */
 /*    DATE:                                                 */
 /************************************************************/
 

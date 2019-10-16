@@ -728,7 +728,8 @@ void TagManager::processVTag(VTag vtag)
   // Tag request ok in terms of frequency, zone etc, so declare the
   // tag to be accepted and increment the counter.
   m_map_node_vtags_accepted[vname]++;
-
+  // old location mikerb
+  
   // Part 3: Measure and collect the range to each non-team member
   //         Taking note of the closest target.
   string node_closest;
@@ -796,7 +797,7 @@ void TagManager::processVTag(VTag vtag)
     m_map_node_vtags_tagreason[node_closest] = "enemy";
     m_map_node_vtags_timetagged[node_closest] = m_curr_time;
 
-    m_map_node_vtags_last_tag[vname] = m_curr_time;
+    m_map_node_vtags_last_tag[vname] = m_curr_time;  // new location mikerb
 
     if(node_closest_type != m_human_platform)
       postRobotTagPairs(vname, node_closest);
