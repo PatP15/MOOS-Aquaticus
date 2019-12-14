@@ -88,7 +88,7 @@ set MODE = LOITERING {
 }
 
 //----------------------------------------------
-//Behavior = BHV_AvdColregsV17
+Behavior = BHV_AvdColregsV17
 {
   name       = colavd_one_
   pwt        = 300
@@ -102,14 +102,14 @@ set MODE = LOITERING {
                  decay = 15,30
       on_no_contact_ok = true
            extrapolate = true
-  ignore_contact_group = $(VTEAM)
+//  ignore_contact_group = $(VTEAM)
 	
      completed_dist = 25
 
-  max_util_cpa_dist = 15
-  min_util_cpa_dist = 5
-     pwt_inner_dist = 10
-     pwt_outer_dist = 30
+  max_util_cpa_dist = 6
+  min_util_cpa_dist = 2
+     pwt_inner_dist = 8
+     pwt_outer_dist = 15
 
 //  max_util_cpa_dist = 85
 //  min_util_cpa_dist = 55
@@ -240,7 +240,7 @@ Behavior = BHV_Loiter
           speed = 1.4
         polygon = format=ellipse, x=0, y=0, degs=115, major=50, minor=10, pts=16
   center_assign = $(DEFEND_POS)
-      clockwise = true
+      clockwise = $(LCLOCK)
 	acquire_dist = 5
      patience = 80
 	

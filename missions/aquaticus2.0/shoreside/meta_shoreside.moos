@@ -352,6 +352,14 @@ ProcessConfig = pMarineViewer
 
   cmd = label=SWITCH, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four
 
+  cmd = label=SWITCHA, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four:rA:rB:rC:rD:rE:rF:rG:rH
+
+  cmd = label=SWITCHB, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four
+
+  cmd = label=SWITCHC, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four
+
+  cmd = label=SWITCHD, var=SHIELD_REQUEST,  sval=requestor=red_two,  receivers=all:red_one:red_two:red_three:red_four
+
 }
 
 //--------------------------------------------------------

@@ -24,7 +24,7 @@ ProcessConfig = ANTLER
 //  Run = pRangeEvent        @ NewConsole = false
 
 #ifdef VNAME evan
-  Run = iLEDInfoBar        @ NewConsole = false
+#  Run = iLEDInfoBar        @ NewConsole = false
 #endif
 
 #ifdef SIM YES

@@ -257,6 +257,12 @@ for arg in "${@:4}"; do
     fi
 done
 
+HERON_NAME=`get_vname.sh`
+echo "Heron name:"$HERON_NAME
+
+
+
+
 if [ "${VTEAM}" = "red" ]; then
     GRAB_POS="-52,-70"
     GRABR_POS="-46,-42"

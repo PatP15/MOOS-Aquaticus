@@ -17,13 +17,13 @@ ProcessConfig = pBasicContactMgr
   default_alert_range_color = gray70
   default_cpa_range_color   = gray30
 
-  alert = id=trail, var=INVADER_INFO, val="name=$[VNAME] # contact=$[VNAME]"
-  alert = id=trail, alert_range=400
-  alert = id=trail, cpa_range=600
-  alert = id=trail, alert_range_color=green
+  //alert = id=trail, var=INVADER_INFO, val="name=$[VNAME] # contact=$[VNAME]"
+  //alert = id=trail, alert_range=400
+  //alert = id=trail, cpa_range=600
+  //alert = id=trail, alert_range_color=green
 
-  alert = id=trail, inzone_post="$[VNAME] has entered the zone!!"
-  alert = id=trail, outzone_post="$[VNAME] has exited the zone!!"
+  //alert = id=trail, inzone_post="$[VNAME] has entered the zone!!"
+  //alert = id=trail, outzone_post="$[VNAME] has exited the zone!!"
 
 #ifdef  $(VTEAM) blue
   alert = id=trail, region=pts={-12.8,-13.5 :-85,-48 :-50.5,-120.2 :22.1,-85.7} 

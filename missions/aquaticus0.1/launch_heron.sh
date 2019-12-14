@@ -8,6 +8,7 @@ TRAIL_RANGE="3"
 TRAIL_ANGLE="330"
 VNAME="evan"
 VTEAM="red"
+LCLOCK="false"
 JUST_BUILD="no"
 
 VERBOSE="false"
@@ -47,6 +48,8 @@ for ARGI; do
         START_POS="${ARGI#--startpos=*}"
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
+    elif [ "${ARGI}" = "--lclock" -o "${ARGI}" = "-l" ] ; then
+        LCLOCK="true"
     elif [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ] ; then
         SIM="YES"
 	SHORE_IP="localhost"
@@ -121,15 +124,15 @@ nsplug meta_heron.moos targ_${VNAME}.moos -f --strict     \
        M300_IP=$M300_IP      HOSTIP_FORCE="localhost"    \
        VTYPE="kayak"         LOITER_POS=$LOITER_POS      \
        VTEAM=$VTEAM          START_POS=$START_POS        \
-       SIM=$SIM
+       SIM=$SIM              
     
 printf "Assembling BHV file targ_${VNAME}.bhv\n"
-nsplug meta_heron.bhv targ_${VNAME}.bhv -f --strict       \
+nsplug meta_heron.bhv targ_${VNAME}.bhv -f --strict      \
        RETURN_POS=${RETURN_POS}     VTEAM=$VTEAM         \
        TRAIL_RANGE=$TRAIL_RANGE     VNAME=$VNAME         \
        TRAIL_ANGLE=$TRAIL_ANGLE     GRAB_POS=$GRAB_POS   \
-       DEFEND_POS=$DEFEND_POS       UNTAG_POS=$UNTAG_POS         
-
+       DEFEND_POS=$DEFEND_POS       UNTAG_POS=$UNTAG_POS \
+       LCLOCK=$LCLOCK
 
 if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos"; exit; fi
 if [ ! -e targ_${VNAME}.bhv ];  then echo "no targ_${VNAME}.bhv"; exit; fi
