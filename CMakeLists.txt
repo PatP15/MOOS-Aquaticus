@@ -143,6 +143,28 @@ ENDIF(${APPLE})
 
 #=============================================================================
 # Add Subdirectories
-ADD_SUBDIRECTORY(src_third_parties)
 ADD_SUBDIRECTORY(src)
+
+message("!!!!!!**********************************************************searching for additional src folders")
+IF( IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src_devel)
+message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!found source devel")
+ADD_SUBDIRECTORY(src_devel)
+ENDIF( IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src_devel)
+
+IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_joystick)
+	ADD_SUBDIRECTORY(src_joystick)
+ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_joystick)
+
+IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_voice)
+	ADD_SUBDIRECTORY(src_voice)
+ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_voice)
+
+IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_vehicles)
+	ADD_SUBDIRECTORY(src_vehicles)
+ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_vehicles)
+
+IF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_third_parties)
+	ADD_SUBDIRECTORY(src_third_parties)
+ENDIF(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src_third_parties)
+
 #ADD_SUBDIRECTORY(src_attic)

@@ -1,9 +1,0 @@
-ServerHost = localhost
-ServerPort = 9000
-
-ProcessConfig = pCamViewer
-{
-   AppTick   = 4
-   CommsTick = 4
-}
-

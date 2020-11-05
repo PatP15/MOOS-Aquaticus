@@ -8,6 +8,7 @@ BUILD_VOIP="OFF"
 BUILD_HRM="OFF"
 BUILD_WEBCAM="OFF"
 BUILD_MOKAI="OFF"
+BUILD_SPEECH="OFF"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -21,6 +22,7 @@ for ARGI; do
     printf "  --release, -r                     \n"
     printf "  --minimal, -m                     \n"
     printf "  --voip                            \n"
+    printf "  --speech                           \n"
     printf "  --hrm                             \n"
     printf "  --cam                             \n"
     printf "  --mokai                             \n"
@@ -39,7 +41,9 @@ for ARGI; do
   elif [ "${ARGI}" = "--minimal" -o "${ARGI}" = "-m" ] ; then
       BUILD_ALL="OFF"
   elif [ "${ARGI}" = "--voip" ] ; then
-   BUILD_VOIP="ON"
+      BUILD_VOIP="ON"
+  elif [ "${ARGI}" = "--speech"] ; then
+      BUILD_SPEECH="ON"
   elif [ "${ARGI}" = "--hrm" ] ; then
       BUILD_HRM="ON"
   elif [ "${ARGI}" = "--cam" ] ; then

@@ -1,9 +1,0 @@
-//------------------------------------------------
-// pAuthority config block
-
-ProcessConfig = pAuthority
-{
-   AppTick   = 4
-   CommsTick = 4
-}
-
