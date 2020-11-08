@@ -42,7 +42,7 @@ for ARGI; do
       BUILD_ALL="OFF"
   elif [ "${ARGI}" = "--voip" ] ; then
       BUILD_VOIP="ON"
-  elif [ "${ARGI}" = "--speech"] ; then
+  elif [ "${ARGI}" = "--speech" ] ; then
       BUILD_SPEECH="ON"
   elif [ "${ARGI}" = "--hrm" ] ; then
       BUILD_HRM="ON"
@@ -63,7 +63,7 @@ done
 mkdir -p build
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_MOKAI=$BUILD_MOKAI -DBUILD_WEBCAM=$BUILD_WEBCAM -DBUILD_VOIP=$BUILD_VOIP -DBUILD_HRM=$BUILD_HRM -DBUILD_ALL=$BUILD_ALL ../
+cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_MOKAI=$BUILD_MOKAI -DBUILD_WEBCAM=$BUILD_WEBCAM -DBUILD_VOIP=$BUILD_VOIP -DBUILD_HRM=$BUILD_HRM -DBUILD_SPEECH=${BUILD_SPEECH} -DBUILD_MOKAI=${BUILD_MOKAI} -DBUILD_ALL=$BUILD_ALL ../
 
 make ${CMD_LINE_ARGS}
 cd ${INVOCATION_ABS_DIR}
