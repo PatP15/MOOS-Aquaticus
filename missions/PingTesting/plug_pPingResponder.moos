@@ -1,7 +1,0 @@
-ProcessConfig = pPingResponder
-{
-  incoming_var = PING 
-  outgoing_var = PING_RESPONSE
-
-  noise = true
-}
