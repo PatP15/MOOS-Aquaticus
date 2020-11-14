@@ -103,7 +103,7 @@ echo "Assembling MOOS file targ_${VNAME}.moos "
 nsplug meta_heron.moos targ_${VNAME}.moos -f --strict     \
        VNAME=$VNAME          SHARE_LISTEN=$SHARE_LISTEN  \
        VPORT=$VPORT          SHORE_LISTEN=$SHORE_LISTEN  \
-       WARP=$WARP            SHORE_IP=$SHORE_IP          \
+       WARP=$TIME_WARP       SHORE_IP=$SHORE_IP          \
        VTEAM=$VTEAM          HOSTIP_FORCE="localhost"    \
        VTYPE="kayak"         START_POS=$START_POS  
     
