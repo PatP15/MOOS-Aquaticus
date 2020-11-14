@@ -22,7 +22,6 @@ ProcessConfig = ANTLER
   Run = uFldMessageHandler @ NewConsole = false
   Run = uSimMarine         @ NewConsole = false
   Run = pContactMgrV20     @ NewConsole = false
-  //  Run = pBasicContactMgr   @ NewConsole = false
 	//  Run = pRangeEvent        @ NewConsole = false
 }
 
@@ -38,5 +37,4 @@ ProcessConfig = ANTLER
 #include plug_uFldMessageHandler.moos
 #include plug_uProcessWatch.moos
 #include plug_pRangeEvent.moos
-#include plug_pBasicContactMgr.moos
 #include plug_pContactMgrV20.moos

@@ -7,21 +7,14 @@
 #  Part 1: Set global var defaults
 #----------------------------------------------------------
 WARP=1
-
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
-
-TRAIL_RANGE="3"
-TRAIL_ANGLE="330"
 VNAME="evan"
 VTEAM="red"
 LCLOCK="false"
 JUST_BUILD="no"
-
-VERBOSE="false"
 START_POS=""
 RETURN_POS=""
-LOITER_POS="x=100,y=-180"
 GRAB_POS=""
 UNTAG_POS=""
 DEFEND_POS=""
@@ -43,13 +36,13 @@ for ARGI; do
 	exit 0;
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$WARP" = 1 ]; then
         WARP=$ARGI
-    elif [ "${ARGI:0:7}" = "--warp=" ] ; then
+    elif [ "${ARGI:0:7}" = "--warp=" ]; then
         WARP="${ARGI#--warp=*}"
-    elif [ "${ARGI:0:8}" = "--vname=" ] ; then
+    elif [ "${ARGI:0:8}" = "--vname=" ]; then
         VNAME="${ARGI#--vname=*}"
-    elif [ "${ARGI:0:8}" = "--vteam=" ] ; then
+    elif [ "${ARGI:0:8}" = "--vteam=" ]; then
         VTEAM="${ARGI#--vteam=*}"
-    elif [ "${ARGI:0:11}" = "--startpos=" ] ; then
+    elif [ "${ARGI:0:11}" = "--startpos=" ]; then
         START_POS="${ARGI#--startpos=*}"
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
@@ -64,16 +57,16 @@ done
 #-------------------------------------------------------
 # Part 2: Set Vehicle specific parameters
 #-------------------------------------------------------
-if [ "${VNAME}" = "evan" ] ; then
+if [ "${VNAME}" = "evan" ]; then
     VPORT="9005"
     SHARE_LISTEN="9305"
-elif [ "${VNAME}" = "felix" ] ; then
+elif [ "${VNAME}" = "felix" ]; then
     VPORT="9006"
     SHARE_LISTEN="9306"
-elif [ "${VNAME}" = "gus" ] ; then
+elif [ "${VNAME}" = "gus" ]; then
     VPORT="9007"
     SHARE_LISTEN="9307"
-elif [ "${VNAME}" = "hal" ] ; then
+elif [ "${VNAME}" = "hal" ]; then
     VPORT="9008"
     SHARE_LISTEN="9308"
 else
@@ -86,12 +79,12 @@ echo "$VNAME vehicle selected."
 #-------------------------------------------------------
 # Part 3: Set Team specific parameters
 #-------------------------------------------------------
-if [ "${VTEAM}" = "red" ] ; then
+if [ "${VTEAM}" = "red" ]; then
     GRAB_POS="20,40"
     RETURN_POS="140,40"
     UNTAG_POS="140,40"     
     DEFEND_POS="100,40"     
-elif [ "${VTEAM}" = "blue" ] ; then
+elif [ "${VTEAM}" = "blue" ]; then
     GRAB_POS="140,40"
     RETURN_POS="20,40"
     UNTAG_POS="20,40"    
@@ -122,10 +115,10 @@ nsplug meta_heron.bhv targ_${VNAME}.bhv -f --strict      \
        DEFEND_POS=$DEFEND_POS       UNTAG_POS=$UNTAG_POS \
        LCLOCK=$LCLOCK
 
-if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos"; exit; fi
-if [ ! -e targ_${VNAME}.bhv ];  then echo "no targ_${VNAME}.bhv"; exit; fi
+if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos"; exit 1; fi
+if [ ! -e targ_${VNAME}.bhv ];  then echo "no targ_${VNAME}.bhv"; exit 1; fi
 
-if [ ${JUST_BUILD} = "yes" ] ; then
+if [ ${JUST_BUILD} = "yes" ]; then
     echo "Files assembled; vehicle not launched; exiting per request."
     exit 0
 fi
