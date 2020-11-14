@@ -134,8 +134,11 @@ ProcessConfig = uFldTagManager
 	// SMid  22.09  -85.70 
 
 	
-  zone_one = pts={ 59.37,20.97 : -12.81,-13.51 : 22.09,-85.7 : 93.86,-51.22 }
-  zone_two = pts={ -12.81,-13.51 : -85,-48 : -50.51,-120.19 : 22.09,-85.7 }
+  //zone_one = pts={ 59.37,20.97 : -12.81,-13.51 : 22.09,-85.7 : 93.86,-51.22 }
+  //zone_two = pts={ -12.81,-13.51 : -85,-48 : -50.51,-120.19 : 22.09,-85.7 }
+
+  zone_one = pts={ 0,0 : 0,80 : 80,80 : 80,0 }
+  zone_two = pts={ 80,0 : 80,80 : 160,80 : 160,0 }
 
   //zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
   //zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
@@ -229,9 +232,9 @@ ProcessConfig = pMarineViewer
 
   tiff_file            = popolopen19_esrisat.tif
   //tiff_file            = MIT_SP.tif
-  set_pan_x            = 129
-  set_pan_y            = -364
-  zoom                 = 1.6
+  set_pan_x            = -570
+  set_pan_y            = -265
+  zoom                 = 1.43
   vehicles_shape_scale = 1.0
   vehicles_name_mode   = names
 
@@ -276,13 +279,13 @@ ProcessConfig = pMarineViewer
 //  op_vertex = x=59, y=21,        lwidth=1,lcolor=yellow,looped=true,group=moa
 
 	// Northwest Corner
-	op_vertex = x=-85, y=-48,        lwidth=1,lcolor=yellow,looped=true,group=moa
+	op_vertex = x=0, y=80,   lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Southwest Corner
-  op_vertex = x=-50.51, y=-120.19, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=0, y=0,   lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Southeast Corner
-  op_vertex = x=93.86, y=-51.22,   lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=160, y=0, lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Northeast Corner
-  op_vertex = x=59.37, y=20.97,    lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=160, y=80, lwidth=1,lcolor=yellow,looped=true,group=moa
 
 #include plug_commandfolio.txt	
 }
