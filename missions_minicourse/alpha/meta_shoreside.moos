@@ -125,24 +125,9 @@ ProcessConfig = uFldTagManager
   team_one=red
   team_two=blue
 
-  // NW: -85.00   -48.00  
-	// NE:  59.37    20.97  
-  // SW: -50.51  -120.19  
-  // SE:  93.86   -51.22  
-
-	// NMid -12.81  -13.51 
-	// SMid  22.09  -85.70 
-
-	
-  //zone_one = pts={ 59.37,20.97 : -12.81,-13.51 : 22.09,-85.7 : 93.86,-51.22 }
-  //zone_two = pts={ -12.81,-13.51 : -85,-48 : -50.51,-120.19 : 22.09,-85.7 }
-
   zone_one = pts={ 0,0 : 0,80 : 80,80 : 80,0 }
   zone_two = pts={ 80,0 : 80,80 : 160,80 : 160,0 }
 
-  //zone_one = pts={ 56,16 : -15,-17 : 17,-83 : 82,-56 }
-  //zone_two = pts={ -15,-17 : -83,-49 : -53,-114 : 17,-83 }
-	
   zone_one_color = pink
   zone_two_color = dodger_blue
 }
@@ -232,6 +217,7 @@ ProcessConfig = pMarineViewer
 
   tiff_file            = popolopen19_esrisat.tif
   //tiff_file            = MIT_SP.tif
+
   set_pan_x            = -690
   set_pan_y            = -225
   zoom                 = 2
@@ -273,17 +259,12 @@ ProcessConfig = pMarineViewer
 
   button_four  = STATION   # STATION_KEEP_ALL=true
 
-//	op_vertex = x=-85, y=-48,      lwidth=1,lcolor=yellow,looped=true,group=moa
-//  op_vertex = x=-53.1, y=-121.4, lwidth=1,lcolor=yellow,looped=true,group=moa
-//  op_vertex = x=90.9, y=-52.4,   lwidth=1,lcolor=yellow,looped=true,group=moa
-//  op_vertex = x=59, y=21,        lwidth=1,lcolor=yellow,looped=true,group=moa
-
 	// Northwest Corner
 	op_vertex = x=0, y=80,   lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Southwest Corner
-  op_vertex = x=0, y=0,   lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=0, y=0,    lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Southeast Corner
-  op_vertex = x=160, y=0, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=160, y=0,  lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Northeast Corner
   op_vertex = x=160, y=80, lwidth=1,lcolor=yellow,looped=true,group=moa
 
@@ -317,7 +298,6 @@ ProcessConfig = uProcessWatch
 }
 
 //------------------------------------------
-
 ProcessConfig = iSay
 {
   AppTick   = 5
@@ -329,30 +309,3 @@ ProcessConfig = iSay
   os_mode=both
   audio_dir=sounds
 }
-
-
-	//------------------------------------------------
-// uFldZoneEvent config block
-
-ProcessConfig = UFZEUntag
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  // dynamic values ($[VNAME], $[GROUP], $[TIME], $[VX], $[VY])
-
-  // zone name should correspond to the vehicle's group name to be active
-  zone_info = name=blue_untag # polygon=format=radial, $(BLUE_FLAG), radius=10, pts=10, snap=1
-  zone_info = name=blue_untag # post_var = UNTAG_REQUEST=vname=$[VNAME]
-  zone_info = name=blue_untag # post_var = FLAG_RESET=vname=$[VNAME]
-  zone_info = name=blue_untag # viewable=false  // default is true
-
-  //zone_info = name=blue_untag # color=blue  // default is orange
-  zone_info = name=blue_untag # group=blue
-	
-  zone_info = name=red_untag  # polygon=format=radial, $(RED_FLAG), radius=10, pts=10, snap=1
-  zone_info = name=red_untag  # post_var = UNTAG_REQUEST=vname=$[VNAME]
-  zone_info = name=red_untag  # post_var = FLAG_RESET=vname=$[VNAME]
-  zone_info = name=red_untag  # viewable=true # color=red # group = red
-}
-
