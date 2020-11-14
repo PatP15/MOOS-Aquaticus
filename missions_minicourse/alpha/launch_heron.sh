@@ -96,15 +96,15 @@ printf "$VNAME vehicle selected.  \n"
 # Part 3: Set Team specific parameters
 #-------------------------------------------------------
 if [ "${VTEAM}" = "red" ] ; then
-    GRAB_POS="-57,-71"
-    RETURN_POS="50,-26"
-    UNTAG_POS="50,-26"     
-    DEFEND_POS="25,-37"     
+    GRAB_POS="20,40"
+    RETURN_POS="140,40"
+    UNTAG_POS="140,40"     
+    DEFEND_POS="100,40"     
 elif [ "${VTEAM}" = "blue" ] ; then
-    GRAB_POS="57,-26"
-    RETURN_POS="-57,-71"
-    UNTAG_POS="-57,-71"    
-    DEFEND_POS="-25,-62"    
+    GRAB_POS="140,40"
+    RETURN_POS="20,40"
+    UNTAG_POS="20,40"    
+    DEFEND_POS="60,40"    
 else
     printf "Unrecognized or no vehicle team selected: $VTEAM \n";
     exit 1

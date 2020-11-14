@@ -16,30 +16,17 @@ ProcessConfig = ANTLER
   Run = pNodeReporter      @ NewConsole = false
   Run = pMarinePID         @ NewConsole = false
   Run = pHelmIvP           @ NewConsole = false
-  Run = pBasicContactMgr   @ NewConsole = false
   Run = pHostInfo          @ NewConsole = false
   Run = uFldNodeBroker     @ NewConsole = false
   Run = pDeadManPost       @ NewConsole = false
   Run = uFldMessageHandler @ NewConsole = false
-//  Run = pRangeEvent        @ NewConsole = false
-
-#ifdef VNAME evan
-#  Run = iLEDInfoBar        @ NewConsole = false
-#endif
-
-#ifdef SIM YES
   Run = uSimMarine         @ NewConsole = false
-#else
-  Run = iM200              @ NewConsole = false
-#endif
+  Run = pContactMgrV20     @ NewConsole = false
+  //  Run = pBasicContactMgr   @ NewConsole = false
+	//  Run = pRangeEvent        @ NewConsole = false
 }
 
-#ifdef SIM YES
 #include plug_uSimMarine.moos
-#else
-#include plug_iM200.moos
-#endif
-	
 #include plug_pShare.moos
 #include plug_pDeadManPost.moos
 #include plug_pLogger.moos
@@ -50,9 +37,6 @@ ProcessConfig = ANTLER
 #include plug_uFldNodeBroker.moos
 #include plug_uFldMessageHandler.moos
 #include plug_uProcessWatch.moos
-#include plug_pBasicContactMgr.moos
 #include plug_pRangeEvent.moos
-
-#ifdef VNAME evan
-#include plug_iLEDInfoBar.moos
-#endif
+#include plug_pBasicContactMgr.moos
+#include plug_pContactMgrV20.moos

@@ -232,9 +232,9 @@ ProcessConfig = pMarineViewer
 
   tiff_file            = popolopen19_esrisat.tif
   //tiff_file            = MIT_SP.tif
-  set_pan_x            = -570
-  set_pan_y            = -265
-  zoom                 = 1.43
+  set_pan_x            = -690
+  set_pan_y            = -225
+  zoom                 = 2
   vehicles_shape_scale = 1.0
   vehicles_name_mode   = names
 

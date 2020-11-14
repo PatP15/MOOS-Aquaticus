@@ -238,7 +238,7 @@ Behavior = BHV_Loiter
   updates   = LOITER_UPDATES
 
           speed = 1.4
-        polygon = format=ellipse, x=0, y=0, degs=115, major=50, minor=10, pts=16
+        polygon = format=ellipse, x=0, y=0, degs=90, major=50, minor=10, pts=16
   center_assign = $(DEFEND_POS)
       clockwise = $(LCLOCK)
 	acquire_dist = 5

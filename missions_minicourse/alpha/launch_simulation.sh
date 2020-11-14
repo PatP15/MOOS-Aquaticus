@@ -60,8 +60,7 @@ done
 #-----------------------------------------------
 if [ ${EVAN} = "yes" ] ; then
     ./launch_heron.sh --vname=evan   --startpos=35,50,170        \
-                      --vteam=blue   --lclock                    \
-		      --sim $TIME_WARP $JUST_MAKE  
+                      --vteam=blue   --sim $TIME_WARP $JUST_MAKE  
 
     if [ $? -ne 0 ]; then echo Launch of evan failed; exit 1;  fi
 fi
@@ -72,6 +71,7 @@ fi
 if [ ${FELIX} = "yes" ] ; then
     ./launch_heron.sh --vname=felix --startpos=35,15,20         \
 		      --vteam=blue  --sim $TIME_WARP $JUST_MAKE 
+
     if [ $? -ne 0 ]; then echo launch of Felix failed; exit 1; fi
 fi
     
