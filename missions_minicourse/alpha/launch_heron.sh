@@ -6,13 +6,13 @@
 #----------------------------------------------------------
 #  Part 1: Set global var defaults
 #----------------------------------------------------------
-WARP=1
+TIME_WARP=1
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
 VNAME="evan"
 VTEAM="red"
 LCLOCK="false"
-JUST_BUILD="no"
+JUST_MAKE="no"
 START_POS=""
 RETURN_POS=""
 GRAB_POS=""
@@ -26,26 +26,25 @@ echo "Initiate launch_heron.sh script"
 #-------------------------------------------------------
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	echo "launch_heron.sh [SWITCHES]                                "
+	echo "launch_heron.sh [SWITCHES] [time_warp]                    "
 	echo "Switches:                                                 "
+	echo "  --help, -h                                              "
+	echo "  --just_make, -j   Just create targ files, no launch     "
 	echo "  --vname=NAME      Set vehicle name {evan,felix,gus,hal} "
 	echo "  --vteam=TEAM      Set team name {red,blue}              "
-	echo "  --warp=WARP       Set the time warp                     "
-	echo "  --just_build, -j  Just build files                      "
-	echo "  --help, -h                                              "
+	echo "  --startpos=<pos>  Set the vehicle starting position     "
+	echo "  --lclock, -l      Defend loiter poly is clockwise       "
 	exit 0;
-    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$WARP" = 1 ]; then
-        WARP=$ARGI
-    elif [ "${ARGI:0:7}" = "--warp=" ]; then
-        WARP="${ARGI#--warp=*}"
+    elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
+        TIME_WARP=$ARGI
     elif [ "${ARGI:0:8}" = "--vname=" ]; then
         VNAME="${ARGI#--vname=*}"
     elif [ "${ARGI:0:8}" = "--vteam=" ]; then
         VTEAM="${ARGI#--vteam=*}"
     elif [ "${ARGI:0:11}" = "--startpos=" ]; then
         START_POS="${ARGI#--startpos=*}"
-    elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
-        JUST_BUILD="yes"
+    elif [ "${ARGI}" = "--just_make" -o "${ARGI}" = "-j" ] ; then
+        JUST_MAKE="yes"
     elif [ "${ARGI}" = "--lclock" -o "${ARGI}" = "-l" ] ; then
         LCLOCK="true"
     else
@@ -118,7 +117,7 @@ nsplug meta_heron.bhv targ_${VNAME}.bhv -f --strict      \
 if [ ! -e targ_${VNAME}.moos ]; then echo "no targ_${VNAME}.moos"; exit 1; fi
 if [ ! -e targ_${VNAME}.bhv ];  then echo "no targ_${VNAME}.bhv"; exit 1; fi
 
-if [ ${JUST_BUILD} = "yes" ]; then
+if [ ${JUST_MAKE} = "yes" ]; then
     echo "Files assembled; vehicle not launched; exiting per request."
     exit 0
 fi
