@@ -276,8 +276,8 @@ for arg in "${@:4}"; do
     fi
 done
 
-HERON_NAME=`get_vname.sh`
-echo "Heron name:"$HERON_NAME
+#HERON_NAME=`get_vname.sh`
+#echo "Heron name:"$HERON_NAME
 
 
 
