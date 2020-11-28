@@ -204,8 +204,8 @@ ProcessConfig = pLogger
   // Log it all!!!!!
   WildCardLogging = true
   WildCardOmitPattern = *_STATUS
-  WildCardOmitPattern = DB_VARSUMMARY
-  WildCardOmitPattern = DB_RWSUMMARY
+  //WildCardOmitPattern = DB_VARSUMMARY
+  //WildCardOmitPattern = DB_RWSUMMARY
 }
 
 //--------------------------------------------------------
@@ -215,8 +215,7 @@ ProcessConfig = pMarineViewer
   AppTick    = 4
   CommsTick  = 4
 
-  tiff_file            = popolopen19_esrisat.tif
-  //tiff_file            = MIT_SP.tif
+  tiff_file            = ../popolopen19_esrisat.tif
 
   set_pan_x            = -690
   set_pan_y            = -225
@@ -230,6 +229,9 @@ ProcessConfig = pMarineViewer
 	
   appcast_viewable = true
   appcast_color_scheme = indigo
+  nodes_font_size      = large
+  procs_font_size      = large
+  appcast_font_size    = large
 	
   scope = LED_IN_FLAG_ZONE_EVAN
   scope = LED_IN_FLAG_ZONE_GUS
@@ -252,7 +254,7 @@ ProcessConfig = pMarineViewer
   button_two   = RETURN  # RETURN_ALL=true
   button_two   = STATION_KEEP_ALL=false
 
-  button_three = PLAY # STATION_KEEP_GUS=true
+  button_three = PLAY # STATION_KEEP_GUS=false # color=green
   button_three = ACTION_EVAN=attack
   button_three = STATION_KEEP_EVAN=false
   button_three = GO_GRAB_EVAN=true

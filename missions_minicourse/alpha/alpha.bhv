@@ -43,7 +43,7 @@ Behavior = BHV_Waypoint
 	           polygon = 0,0 : 0,100 : 100,100 : 140,50 : 100,0
 
                order = normal
-             repeat  = 3
+             repeat  = 1
 
     visual_hints = nextpt_color=yellow
     visual_hints = nextpt_vertex_size=8

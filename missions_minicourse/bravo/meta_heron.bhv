@@ -106,7 +106,7 @@ Behavior = BHV_AvdColregsV17
 	
      completed_dist = 25
 
-  max_util_cpa_dist = 6
+  max_util_cpa_dist = 8
   min_util_cpa_dist = 2
      pwt_inner_dist = 8
      pwt_outer_dist = 15

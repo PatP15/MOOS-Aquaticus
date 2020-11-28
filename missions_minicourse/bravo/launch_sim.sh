@@ -17,16 +17,17 @@ HAL="no"
 #  Part 2: Check for and handle command-line arguments
 #-------------------------------------------------------
 for ARGI; do
-    if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	echo "launch_sim.sh [OPTIONS] [time_warp]         "
-	echo "Options:                                    "
-	echo "  --evan   Launch the vehicle EVAN          " 
-	echo "  --felix  Launch the vehicle FELIX         " 
-	echo "  --gus    Launch the vehicle GUS           " 
-	echo "  --hal    Launch the vehicle HAL           " 
-	echo "  --red    Launch the RED Team EVAN,FELIX   " 
-	echo "  --blue   Launch the BLUE Team, GUS,HAL    " 
-	echo "  -j       Just Build the target files      " 
+    if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ]; then
+	echo "launch_sim.sh [OPTIONS] [time_warp]                 "
+	echo "Options:                                            "
+	echo "  --evan     Launch the vehicle EVAN                " 
+	echo "  --felix    Launch the vehicle FELIX               " 
+	echo "  --gus      Launch the vehicle GUS                 " 
+	echo "  --hal      Launch the vehicle HAL                 " 
+	echo "  --red, -r  Launch the RED Team EVAN,FELIX         " 
+	echo "  --blue, -b Launch the BLUE Team, GUS,HAL          " 
+	echo "  --all, -a  Launch all vehicles, EVAN,FELIX,GUS,HAL" 
+	echo "  -j         Just Build the target files            " 
 	exit 0;
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then
         TIME_WARP=$ARGI
