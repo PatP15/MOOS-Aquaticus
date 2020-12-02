@@ -268,7 +268,7 @@ ProcessConfig = pMarineViewer
 	button_7 = GUS_Attack # GO_GRAB_GUS=true # color=pink
 	button_7 = ACTION_GUS=attack # STATION_KEEP_GUS = false
 	button_8 = GUS_Chase  # CHASE_GUS=true # color=pink
-	button_8 = STATION_KEEP_GUS = false
+	button_8 = STATION_KEEP_GUS=false # ACTION_GUS=defend
 
 	// Blue Team
 	
@@ -276,12 +276,11 @@ ProcessConfig = pMarineViewer
 	button_10 = EVAN_Defend  # ACTION_EVAN=defend # color=light_blue
 	button_10 = STATION_KEEP_EVAN=false # RETURN_EVAN=false
 
-	button_11  = EVAN_Attack # GO_GRAB_EVAN=true # color=light_blue
-	button_11  = ACTION_EVAN=attack # STATION_KEEP_EVAN = false
+	button_11 = EVAN_Attack # GO_GRAB_EVAN=true # color=light_blue
+	button_11 = ACTION_EVAN=attack # STATION_KEEP_EVAN = false
 	button_12 = EVAN_Chase  # CHASE_EVAN=true # color=light_blue
-	button_12 = STATION_KEEP_EVAN = false
+	button_12 = STATION_KEEP_EVAN=false # ACTION_EVAN=defend
 
-	
 	// Northwest Corner
 	op_vertex = x=0, y=80,   lwidth=1,lcolor=yellow,looped=true,group=moa
 	// Southwest Corner

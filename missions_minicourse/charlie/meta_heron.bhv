@@ -256,8 +256,8 @@ Behavior = BHV_CutRange
   updates    = CR_INTERCEPT_UPDATES
   templating = spawn
 
-	cnflag = @<20 CHASE = false
-  cnflag = @<20 TAG_REQUEST=vname=$[OWNSHIP]
+	cnflag = <15 CHASE = false
+  cnflag = <15 TAG_REQUEST=vname=$[OWNSHIP]
 	
            contact = v
              decay = 15,30  
