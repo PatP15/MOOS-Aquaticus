@@ -26,7 +26,7 @@ Processconfig = ANTLER
   Run = uFldNodeComms   @ NewConsole = false
 
   Run = pMarineViewer   @ NewConsole = false
-  Run = iSay            @ NewConsole = false
+//  Run = iSay            @ NewConsole = false
 }
 
 //---------------------------------------------------------
