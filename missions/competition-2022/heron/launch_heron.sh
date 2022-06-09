@@ -14,7 +14,7 @@ VNAME=""
 RNAME=""
 VMODEL="M300"
 
-START_POS="56,16,240"
+START_POS="140,40,240"
 RETURN_POS="5,0"
 LOITER_POS="x=100,y=-180"
 GRAB_POS=""
@@ -48,13 +48,8 @@ function help(){
     echo "POSSIBLE ROLES (and heron teammate_roles):"
     echo "  blue_one,     b1  : Vehicle one on blue team."
     echo "  blue_two,     b2  : Vehicle two on blue team."
-    echo "  blue_three,   b3  : Vehicle three on blue team."
-    echo "  blue_four,    b4  : Vehicle four on blue team."
-
     echo "  red_one,      r1  : Vehicle one on red team."
     echo "  red_two,      r2  : Vehicle two on red team."
-    echo "  red_three,    r3  : Vehicle three on red team."
-    echo "  red_four,     r4  : Vehicle four on red team."
 
     echo ""
     echo "POSSIBLE SWITCHES:"
@@ -124,7 +119,7 @@ case "$2" in
         VPORT="9011"
 	VR_PORT="9811"
         SHARE_LISTEN="9311"
-	START_ACTION="DEFEND"
+	START_ACTION="DEFEND_E"
         echo "Vehicle set to red one."
         ;;
     r2|red_two)
@@ -133,25 +128,7 @@ case "$2" in
         VPORT="9012"
 	VR_PORT="9812"
         SHARE_LISTEN="9312"
-	START_ACTION="ATTACK_LEFT"
-        echo "Vehicle set to red two."
-        ;;
-    r3|red_three)
-        VTEAM="red"
-        RNAME="red_three"
-        VPORT="9013"
-	VR_PORT="9813"
-        SHARE_LISTEN="9313"
-	START_ACTION="DEFEND"
-        echo "Vehicle set to red two."
-        ;;
-    r4|red_four)
-        VTEAM="red"
-        RNAME="red_four"
-        VPORT="9014"
-	VR_PORT="9814"
-        SHARE_LISTEN="9314"
-	START_ACTION="ATTACK_RIGHT"
+	START_ACTION="ATTACK_MED"
         echo "Vehicle set to red two."
         ;;
     b1|blue_one)
@@ -160,7 +137,7 @@ case "$2" in
         VPORT="9015"
 	VR_PORT="9815"
         SHARE_LISTEN="9315"
-	START_ACTION="DEFEND"
+	START_ACTION="DEFEND_MED"
         echo "Vehicle set to blue one."
         ;;
     b2|blue_two)
@@ -170,26 +147,8 @@ case "$2" in
 	VR_PORT="9816"
         SHARE_LISTEN="9316"
 	PLAYERS="b1,b3,b4"
-	START_ACTION="ATTACK_LEFT"
+	START_ACTION="ATTACK_E"
         echo "Vehicle set to blue two."
-        ;;
-    b3|blue_three)
-        VTEAM="blue"
-        RNAME="blue_three"
-        VPORT="9017"
-	VR_PORT="9817"
-        SHARE_LISTEN="9317"
-	START_ACTION="DEFEND"
-        echo "Vehicle set to blue three."
-        ;;
-    b4|blue_four)
-        VTEAM="blue"
-        RNAME="blue_four"
-        VPORT="9018"
-	VR_PORT="9818"
-        SHARE_LISTEN="9318"
-	START_ACTION="ATTACK_RIGHT"
-        echo "Vehicle set to blue four."
         ;;
     *)
         echo "!!! Error invalid positional argument $2 !!!"
@@ -209,16 +168,6 @@ case "$3" in
         HERON_TEAMMATE_VTEAM="red"
         echo "Vehicle set to red two."
         ;;
-    r3|red_three)
-        HERON_TEAMMATE="red_three"
-        HERON_TEAMMATE_VTEAM="red"
-        echo "Vehicle set to red three."
-        ;;
-    r4|red_four)
-        HERON_TEAMMATE="red_four"
-        HERON_TEAMMATE_VTEAM="red"
-        echo "Vehicle set to red four."
-        ;;
     b1|blue_one)
         HERON_TEAMMATE="blue_one"
         HERON_TEAMMATE_VTEAM="blue"
@@ -228,16 +177,6 @@ case "$3" in
         HERON_TEAMMATE="blue_two"
         HERON_TEAMMATE_VTEAM="blue"
         echo "Vehicle set to blue two."
-        ;;
-    b3|blue_three)
-        HERON_TEAMMATE="blue_three"
-        HERON_TEAMMATE_VTEAM="blue"
-        echo "Vehicle set to blue three."
-        ;;
-    b4|blue_four)
-        HERON_TEAMMATE="blue_four"
-        HERON_TEAMMATE_VTEAM="blue"
-        echo "Vehicle set to blue four."
         ;;
     *)
         echo "!!! Error invalid positional argument $3 !!!"
@@ -283,18 +222,18 @@ done
 
 
 if [ "${VTEAM}" = "red" ]; then
-    GRAB_POS="-52,-70"
-    GRABR_POS="-46,-42"
-    GRABL_POS="-29,-83"
-    UNTAG_POS="50,-24"
+    GRAB_POS="20,40"
+    GRABR_POS="20,20"
+    GRABL_POS="30,30"
+    UNTAG_POS="140,40"
     RETURN_POS="5,0"
     START_POS="50,-24,240"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
-    GRAB_POS="50,-24"
-    GRABR_POS="42,-55"
-    GRABL_POS="19,-11"
-    UNTAG_POS="-52,-70"
+    GRAB_POS="140,40"
+    GRABR_POS="130,30"
+    GRABL_POS="130,50"
+    UNTAG_POS="20,40"
     RETURN_POS="5,0"
     START_POS="-52,-70,60"
     echo "Blue team selected."

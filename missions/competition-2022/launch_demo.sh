@@ -41,16 +41,16 @@ fi
 if [[ -z $NO_HERON ]]; then
   cd ./heron
   # Gus Red
-  ./launch_heron.sh g r1 r2 $TIME_WARP -s --start-x=50 --start-y=-50 --start-a=240 > /dev/null &
+  ./launch_heron.sh g r1 r2 $TIME_WARP -s --start-x=140 --start-y=45 --start-a=240 > /dev/null &
   sleep 1
   # Luke Red
-  ./launch_heron.sh l r2 r1 $TIME_WARP -s --start-x=50 --start-y=-45 --start-a=240 > /dev/null &
+  ./launch_heron.sh l r2 r1 $TIME_WARP -s --start-x=140 --start-y=35 --start-a=240 > /dev/null &
   sleep 1
   # Kirk Blue
-  ./launch_heron.sh k b1 b2 $TIME_WARP -s --start-x=-52 --start-y=-55 --start-a=60 > /dev/null &
+  ./launch_heron.sh k b1 b2 $TIME_WARP -s --start-x=20 --start-y=45 --start-a=60 > /dev/null &
   sleep 1
   # Jing Blue
-  ./launch_heron.sh j b2 b1 $TIME_WARP -s --start-x=-52 --start-y=-70 --start-a=60 > /dev/null &
+  ./launch_heron.sh j b2 b1 $TIME_WARP -s --start-x=20 --start-y=35 --start-a=60 > /dev/null &
   sleep 1
   cd ..
 fi
