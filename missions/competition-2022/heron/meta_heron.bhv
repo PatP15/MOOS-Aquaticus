@@ -50,6 +50,21 @@ set MODE     = TAGGED {
 } UNTAGGED
 
 
+//----------------------------------------------
+Behavior = BHV_OpRegionRecover
+{
+  name         = recover
+  pwt          = 300
+  updates      = RECOVER_UPDATES
+  activeflag   = RECOVER = true
+  inactiveflag = RECOVER = false
+
+             polygon = pts={0,0 : 0,80: 160,80:160,0}
+        trigger_entry_time = 1
+        trigger_exit_time  = 1
+}
+
+
 Behavior = BHV_AvoidCollision
 {
    // General Behavior Parameters

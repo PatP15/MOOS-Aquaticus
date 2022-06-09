@@ -272,9 +272,9 @@ ProcessConfig = pMarineViewer
 
   //TIFF_FILE            = forrest19.tif
   TIFF_FILE            = popolopen19_esrisat.tif
-  set_pan_x            = 129
-  set_pan_y            = -364
-  zoom                 = 2.5
+  set_pan_x            = -600
+  set_pan_y            = -200
+  zoom                 = 1
   vehicles_shape_scale = 1.5
   vehicles_name_mode   = names
 
