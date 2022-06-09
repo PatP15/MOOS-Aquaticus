@@ -206,6 +206,8 @@ for arg in "${@:4}"; do
         START_POS_Y="${arg#--start-y=*}"
     elif [ "${arg:0:10}" = "--start-a=" ] ; then
         START_POS_A="${arg#--start-a=*}"
+    elif [ "${arg:0:7}" = "--role=" ] ; then
+        START_ACTION="${arg#--role=*}"
     elif [ "${arg:0:6}" = "--cid=" ] ; then
         CID="${arg#--cid=*}"
         CID=$(printf "%03d" $CID)
