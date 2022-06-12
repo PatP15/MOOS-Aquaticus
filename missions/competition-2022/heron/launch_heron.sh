@@ -26,6 +26,7 @@ HERON_TEAMMATE=""
 HERON_TEAMMATE_VTEAM=""
 
 CID=000 #COMP ID
+LOGPATH=./
 
 START_ACTION="PROTECT"
 
@@ -57,7 +58,8 @@ function help(){
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
     echo "  --start-a=        : Start from angle (requires x y a)."
-    echo "  --cid             : Competition ID (for log file)"
+    echo "  --cid=            : Competition ID (for log file)"
+    echo "  --logpath=        : Log path"
     echo "  --just_build, -J  : Just build targ files."
     echo "  --help,       -H  : Display this message."
     exit 0
@@ -211,6 +213,8 @@ for arg in "${@:4}"; do
     elif [ "${arg:0:6}" = "--cid=" ] ; then
         CID="${arg#--cid=*}"
         CID=$(printf "%03d" $CID)
+    elif [ "${arg:0:10}" = "--logpath=" ]; then
+        LOGPATH="${arg#--logpath=*}"
     else
         echo "Undefined switch:" $arg
         help
@@ -219,7 +223,7 @@ done
 
 #HERON_NAME=`get_vname.sh`
 #echo "Heron name:"$HERON_NAME
-
+echo $LOGPATH
 
 
 
@@ -268,7 +272,7 @@ nsplug meta_heron.moos targ_${RNAME}.moos -f \
     SHARE_LISTEN=$SHARE_LISTEN   \
     SHORE_LISTEN=$SHORE_LISTEN   \
     SHORE_IP=$SHORE_IP           \
-    HERON_IP=$HERON_IP             \
+    HERON_IP=$HERON_IP           \
     HOSTIP_FORCE="localhost"     \
     LOITER_POS=$LOITER_POS       \
     VARIATION=$VARIATION         \
@@ -277,21 +281,22 @@ nsplug meta_heron.moos targ_${RNAME}.moos -f \
     VTEAM=$VTEAM                 \
     START_POS=$START_POS         \
     CID=$CID                     \
+    LOGPATH=$LOGPATH             \
     $SIM
 
 echo "Assembling BHV file targ_${RNAME}.bhv"
 nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
-        RETURN_POS=${RETURN_POS}    \
-        TRAIL_RANGE=$TRAIL_RANGE    \
-        TRAIL_ANGLE=$TRAIL_ANGLE    \
-        VTEAM=$VTEAM                \
-        VNAME=$VNAME                \
-        RNAME=$RNAME                 \
-        GRAB_POS=$GRAB_POS          \
-        GRABR_POS=$GRABR_POS           \
-        GRABL_POS=$GRABL_POS             \
-        UNTAG_POS=$UNTAG_POS        \
-        HERON_TEAMMATE=$HERON_TEAMMATE \
+    RETURN_POS=${RETURN_POS}       \
+    TRAIL_RANGE=$TRAIL_RANGE       \
+    TRAIL_ANGLE=$TRAIL_ANGLE       \
+    VTEAM=$VTEAM                   \
+    VNAME=$VNAME                   \
+    RNAME=$RNAME                   \
+    GRAB_POS=$GRAB_POS             \
+    GRABR_POS=$GRABR_POS           \
+    GRABL_POS=$GRABL_POS           \
+    UNTAG_POS=$UNTAG_POS           \
+    HERON_TEAMMATE=$HERON_TEAMMATE \
 	START_ACTION=$START_ACTION
 
 

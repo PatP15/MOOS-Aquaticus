@@ -5,7 +5,7 @@ ProcessConfig = pLogger
   CommsTick   = 10
 
   File    = C%(CID)_LOG_%(VNAME)_%(RNAME)
-  PATH    = ./
+  PATH    = $(LOGPATH)
   SyncLog   = true @ 0.2
   AsyncLog   = true
   FileTimeStamp = true

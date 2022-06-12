@@ -14,6 +14,7 @@ RED_FLAG="x=140,y=40"
 VR_PORT="9800"
 
 CID=000 # Competiton id
+LOGPATH=./
 
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
@@ -22,6 +23,7 @@ for ARGI; do
         echo "  --shore-port=    , set up a shore listening port. (Default is $SHORE_LISTEN)"
         echo "  --shore-ip=      , set up a shore listening IP. (Default is $SHORE_IP)"
         echo "  --cid=           , competition id (for log file)"
+        echo "  --logpath=        : Log path"
         echo "  --just_make, -j    "
         echo "  --help, -h         "
         exit 0
@@ -38,6 +40,8 @@ for ARGI; do
     elif [ "${ARGI:0:6}" = "--cid=" ] ; then
         CID="${ARGI#--cid=*}"
         CID=$(printf "%03d" $CID)
+    elif [ "${arg:0:10}" = "--logpath=" ]; then
+        LOGPATH="${arg#--logpath=*}"
     else
         echo "Bad Argument: " $ARGI
         exit 1
@@ -50,7 +54,7 @@ done
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
        VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP CID=$CID     \
-       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG} VR_PORT=${VR_PORT}
+       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG} VR_PORT=${VR_PORT} LOGPATH=$LOGPATH
 
 if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit 1; fi
 

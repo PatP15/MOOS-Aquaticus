@@ -5,6 +5,7 @@ CMD_ARGS=""
 NO_HERON=""
 NO_MOKAI=""
 NO_SHORESIDE=""
+LOGPATH=""
 
 #-------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -20,6 +21,8 @@ for ARGI; do
     elif [ "${ARGI}" = "--just_build" -o "${ARGI}" = "-j" ] ; then
         JUST_BUILD="yes"
         echo "Just building files; no vehicle launch."
+    elif [ "${ARGI:0:10}" = "--logpath=" ]; then
+        LOGPATH="${ARGI#--logpath=*}"
     else
         CMD_ARGS=$CMD_ARGS" "$ARGI
     fi
@@ -31,9 +34,16 @@ if [ "${HELP}" = "yes" ]; then
   echo "  XX                  : Time warp"
   echo "  --no_shoreside, -ns"
   echo "  --just_build, -j"
+  echo "  --logpath="
   echo "  --help, -h"
   exit 0;
 fi
+
+if [ -n "${LOGPATH}" ]; then
+  LOGDIR=--logpath=${LOGPATH}
+fi
+
+echo Logging to $LOGDIR
 
 #-------------------------------------------------------
 #  Part 2: Launching herons
@@ -41,16 +51,16 @@ fi
 if [[ -z $NO_HERON ]]; then
   cd ./heron
   # Gus Red
-  ./launch_heron.sh g r1 r2 $TIME_WARP -s --start-x=140 --start-y=45 --start-a=240 > /dev/null &
+  ./launch_heron.sh g r1 r2 $TIME_WARP $LOGDIR -s --start-x=140 --start-y=45 --start-a=240 > /dev/null &
   sleep 1
   # Luke Red
-  ./launch_heron.sh l r2 r1 $TIME_WARP -s --start-x=140 --start-y=35 --start-a=240 > /dev/null &
+  ./launch_heron.sh l r2 r1 $TIME_WARP $LOGDIR -s --start-x=140 --start-y=35 --start-a=240 > /dev/null &
   sleep 1
   # Kirk Blue
-  ./launch_heron.sh k b1 b2 $TIME_WARP -s --start-x=20 --start-y=45 --start-a=60 > /dev/null &
+  ./launch_heron.sh k b1 b2 $TIME_WARP $LOGDIR -s --start-x=20 --start-y=45 --start-a=60 > /dev/null &
   sleep 1
   # Jing Blue
-  ./launch_heron.sh j b2 b1 $TIME_WARP -s --start-x=20 --start-y=35 --start-a=60 > /dev/null &
+  ./launch_heron.sh j b2 b1 $TIME_WARP $LOGDIR -s --start-x=20 --start-y=35 --start-a=60 > /dev/null &
   sleep 1
   cd ..
 fi
