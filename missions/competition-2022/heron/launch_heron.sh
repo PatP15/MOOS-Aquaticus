@@ -234,6 +234,9 @@ if [ "${VTEAM}" = "red" ]; then
     UNTAG_POS="140,40"
     RETURN_POS="5,0"
     START_POS="50,-24,240"
+    STATION_KEEP_AGGRESSIVE="122,38"
+    OPFOR="blue"
+    OPFOR_ZONE="80,0,160,80"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
     GRAB_POS="140,40"
@@ -242,6 +245,9 @@ elif [ "${VTEAM}" = "blue" ]; then
     UNTAG_POS="20,40"
     RETURN_POS="5,0"
     START_POS="-52,-70,60"
+    STATION_KEEP_AGGRESSIVE="40,40"
+    OPFOR="red"
+    OPFOR_ZONE="1,0,80,80"
     echo "Blue team selected."
 fi
    
@@ -282,7 +288,10 @@ nsplug meta_heron.moos targ_${RNAME}.moos -f \
     START_POS=$START_POS         \
     CID=$CID                     \
     LOGPATH=$LOGPATH             \
-    $SIM
+    UNTAG_POS=$UNTAG_POS         \
+    OPFOR=$OPFOR                 \
+    OPFOR_ZONE=$OPFOR_ZONE       \
+    $SIM                         
 
 echo "Assembling BHV file targ_${RNAME}.bhv"
 nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
@@ -297,6 +306,7 @@ nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
     GRABL_POS=$GRABL_POS           \
     UNTAG_POS=$UNTAG_POS           \
     HERON_TEAMMATE=$HERON_TEAMMATE \
+    STATION_KEEP_AGGRESSIVE=$STATION_KEEP_AGGRESSIVE
 	START_ACTION=$START_ACTION
 
 
