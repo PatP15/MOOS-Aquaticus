@@ -1,0 +1,20 @@
+README-MISSION-AUTONOMY
+DATE: June 12th 2022
+AUTHOR: Michael "Misha" Novitzky
+
+#Launching the example mission -- from within directory moos-ivp-aquaticus/missions/competition-2022/
+
+$launch_demo.sh 4
+
+
+#Launching the mission piece meal
+#Launching the shoreside
+$./launch_shoreside.sh 4
+
+#Launching individual robot agents
+
+$./launch_heron.sh <physical-vehicle-name>
+
+$./launch_heron.sh j b1 b2 -s --role=ATTACK_E
+
+--role, ATTACK_E, ATTACK_MED, DEFEND_E, DEFEND_MED
