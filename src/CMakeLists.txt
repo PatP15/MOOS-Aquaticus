@@ -26,6 +26,8 @@ ADD_SUBDIRECTORY(pRangeEvent)
 ADD_SUBDIRECTORY(uFldTagManager)
 ADD_SUBDIRECTORY(uFldFlagManager)
 ADD_SUBDIRECTORY(uFldZoneEvent)
+ADD_SUBDIRECTORY(pZoneTrackOpponents)
+
 
 ##############################################################################
 #                           END of CMakeLists.txt

@@ -1,0 +1,5 @@
+create voice with amazon aws
+which makes an mp3 file
+
+Converting mp3 to wav for iSay
+ffmpeg -i input.mp3 output.wav
