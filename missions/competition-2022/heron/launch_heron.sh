@@ -14,7 +14,7 @@ VNAME=""
 RNAME=""
 VMODEL="M300"
 
-START_POS="140,40,240"
+START_POS="140,45,240"
 RETURN_POS="5,0"
 LOITER_POS="x=100,y=-180"
 GRAB_POS=""
@@ -54,6 +54,7 @@ function help(){
 
     echo ""
     echo "POSSIBLE SWITCHES:"
+    echo "  --role,           : Autonomy startup role."
     echo "  --sim,        -s  : Simulation mode."
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
@@ -62,6 +63,7 @@ function help(){
     echo "  --logpath=        : Log path"
     echo "  --just_build, -J  : Just build targ files."
     echo "  --help,       -H  : Display this message."
+    echo "  #                 : Moos Time Warp."
     exit 0
 }
 
@@ -233,7 +235,7 @@ if [ "${VTEAM}" = "red" ]; then
     GRABL_POS="30,30"
     UNTAG_POS="140,40"
     RETURN_POS="5,0"
-    START_POS="50,-24,240"
+    START_POS="140,45,240"
     STATION_KEEP_AGGRESSIVE="122,38"
     OPFOR="blue"
     OPFOR_ZONE="80,0,160,80"
@@ -244,7 +246,7 @@ elif [ "${VTEAM}" = "blue" ]; then
     GRABL_POS="130,50"
     UNTAG_POS="20,40"
     RETURN_POS="5,0"
-    START_POS="-52,-70,60"
+    START_POS="20,35,60"
     STATION_KEEP_AGGRESSIVE="40,40"
     OPFOR="red"
     OPFOR_ZONE="1,0,80,80"
@@ -306,7 +308,7 @@ nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
     GRABL_POS=$GRABL_POS           \
     UNTAG_POS=$UNTAG_POS           \
     HERON_TEAMMATE=$HERON_TEAMMATE \
-    STATION_KEEP_AGGRESSIVE=$STATION_KEEP_AGGRESSIVE
+    STATION_KEEP_AGGRESSIVE=$STATION_KEEP_AGGRESSIVE \
 	START_ACTION=$START_ACTION
 
 
