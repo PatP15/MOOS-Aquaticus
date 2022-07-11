@@ -40,8 +40,8 @@ for ARGI; do
     elif [ "${ARGI:0:6}" = "--cid=" ] ; then
         CID="${ARGI#--cid=*}"
         CID=$(printf "%03d" $CID)
-    elif [ "${arg:0:10}" = "--logpath=" ]; then
-        LOGPATH="${arg#--logpath=*}"
+    elif [ "${ARGI:0:10}" = "--logpath=" ]; then
+        LOGPATH="${ARGI#--logpath=*}"
     else
         echo "Bad Argument: " $ARGI
         exit 1
