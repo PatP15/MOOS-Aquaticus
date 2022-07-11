@@ -54,7 +54,7 @@ function help(){
 
     echo ""
     echo "POSSIBLE SWITCHES:"
-    echo "  --role,           : Autonomy startup role."
+    echo "  --role,           : Autonomy startup roles: ATTACK/DEFEND _E/_MED."
     echo "  --sim,        -s  : Simulation mode."
     echo "  --start-x=        : Start from x position (requires x y a)."
     echo "  --start-y=        : Start from y position (requires x y a)."
