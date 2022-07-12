@@ -308,10 +308,10 @@ ProcessConfig = pMarineViewer
   button_four = MOOS_MANUAL_OVERRIDE_ALL=true
   button_four = AQUATICUS_GAME_STATE=pause
 
-  op_vertex = x=56,   y=16,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=-83, y=-49,  lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=-53, y=-114, lwidth=1,lcolor=yellow,looped=true,group=moa
-  op_vertex = x=82,   y=-56, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=160,   y=80,  lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=160, y=0,  lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=0, y=0, lwidth=1,lcolor=yellow,looped=true,group=moa
+  op_vertex = x=0,   y=80, lwidth=1,lcolor=yellow,looped=true,group=moa
 
 
   cmd = label=DEPLOY, var=DEPLOY,  sval=true,  receivers=all:red_one:red_two:blue_one:blue_two
