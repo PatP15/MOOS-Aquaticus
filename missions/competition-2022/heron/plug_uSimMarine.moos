@@ -8,6 +8,8 @@ ProcessConfig = uSimMarine
 
   START_POS = $(START_POS)
   PREFIX    = NAV
+  
+  deprecated_ok = true
 
   //rotate_speed = 0.012
   //drift_x      = 0.0045

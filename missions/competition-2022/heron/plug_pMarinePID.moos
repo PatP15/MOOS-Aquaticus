@@ -23,6 +23,8 @@ ProcessConfig = pMarinePID
   // Maximums
   MAXRUDDER  = 100 // 100
   MAXTHRUST  = 84
+  
+  deprecated_ok = true
 
   // A non-zero SPEED_FACTOR overrides use of SPEED_PID
   // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR

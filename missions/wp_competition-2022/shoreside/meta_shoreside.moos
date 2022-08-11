@@ -158,8 +158,11 @@ ProcessConfig = uFldTagManager
   team_one=red
   team_two=blue
 
-  zone_one = pts={ 80,0 : 80,80 : 160,80 : 160,0 }
-  zone_two = pts={ 0,0 : 0,80 : 80,80 : 80,0 }
+//  zone_one = pts={ 80,0 : 80,80 : 160,80 : 160,0 }
+//  zone_two = pts={ 0,0 : 0,80 : 80,80 : 80,0 }
+
+  zone_one = pts={ 266,107: 286,158.3 : 234.7,178.3: 214.7, 127 }
+  zone_two = pts={ 246,55.7 : 266, 107 : 214.7, 127: 194.7, 75.7 }
 
   zone_one_color = pink
   zone_two_color = dodger_blue
@@ -271,7 +274,7 @@ ProcessConfig = pMarineViewer
   CommsTick  = 4
 
   //TIFF_FILE            = forrest19.tif
-  TIFF_FILE            = Map_18_77141-77144_97943-97947.tif
+  TIFF_FILE            = popolopen.tif
   set_pan_x            = 0
   set_pan_y            = 0
   zoom                 = 1

@@ -1,8 +1,8 @@
 #!/bin/bash
 TIME_WARP=1
 
-#SHORE_IP=192.168.1.150
-SHORE_IP=localhost
+SHORE_IP=192.168.1.252
+#SHORE_IP=localhost
 SHORE_LISTEN="9300"
 
 TRAIL_RANGE="3"
@@ -230,10 +230,10 @@ echo $LOGPATH
 
 
 if [ "${VTEAM}" = "red" ]; then
-    GRAB_POS="20,40"
+    GRAB_POS="216,72"
     GRABR_POS="20,20"
     GRABL_POS="30,30"
-    UNTAG_POS="140,40"
+    UNTAG_POS="250,151"
     RETURN_POS="5,0"
     START_POS="140,45,240"
     STATION_KEEP_AGGRESSIVE="122,38"
@@ -241,10 +241,10 @@ if [ "${VTEAM}" = "red" ]; then
     OPFOR_ZONE="80,0,160,80"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
-    GRAB_POS="140,40"
+    GRAB_POS="250,151"
     GRABR_POS="130,30"
     GRABL_POS="130,50"
-    UNTAG_POS="20,40"
+    UNTAG_POS="216,72"
     RETURN_POS="5,0"
     START_POS="20,35,60"
     STATION_KEEP_AGGRESSIVE="40,40"
@@ -296,7 +296,7 @@ nsplug meta_surveyor.moos targ_${RNAME}.moos -f \
     $SIM                         
 
 echo "Assembling BHV file targ_${RNAME}.bhv"
-nsplug meta_heron.bhv targ_${RNAME}.bhv -f  \
+nsplug meta_surveyor.bhv targ_${RNAME}.bhv -f  \
     RETURN_POS=${RETURN_POS}       \
     TRAIL_RANGE=$TRAIL_RANGE       \
     TRAIL_ANGLE=$TRAIL_ANGLE       \
