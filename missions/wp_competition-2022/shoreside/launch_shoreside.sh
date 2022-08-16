@@ -9,8 +9,8 @@ VTEAM1="red"
 VTEAM2="blue"
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
-BLUE_FLAG="x=226,y=76"
-RED_FLAG="x=256,y=158"
+BLUE_FLAG="x=225.5,y=79.8"
+RED_FLAG="x=254.7,y=154.5"
 VR_PORT="9800"
 
 CID=000 # Competiton id
