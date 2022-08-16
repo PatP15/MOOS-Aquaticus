@@ -247,7 +247,7 @@ elif [ "${VTEAM}" = "blue" ]; then
     UNTAG_POS="226,76"
     RETURN_POS="5,0"
     START_POS="20,35,60"
-    STATION_KEEP_AGGRESSIVE="41.35,-74
+    STATION_KEEP_AGGRESSIVE="41.35,-74"
     OPFOR="red"
     OPFOR_ZONE="1,0,80,80"
     echo "Blue team selected."
