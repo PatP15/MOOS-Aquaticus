@@ -1,8 +1,8 @@
 #!/bin/bash
 TIME_WARP=1
 
-SHORE_IP=192.168.1.252
-#SHORE_IP=localhost
+#SHORE_IP=192.168.1.252
+SHORE_IP=localhost
 SHORE_LISTEN="9300"
 
 TRAIL_RANGE="3"
@@ -236,9 +236,9 @@ if [ "${VTEAM}" = "red" ]; then
     UNTAG_POS="256,158"
     RETURN_POS="5,0"
     START_POS="140,45,240"
-    STATION_KEEP_AGGRESSIVE="41.35,-74"
+    STATION_KEEP_AGGRESSIVE="250,143"
     OPFOR="blue"
-    OPFOR_ZONE="80,0,160,80"
+    OPFOR_ZONE="211,127,284,177"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
     GRAB_POS="256,158"
@@ -247,9 +247,9 @@ elif [ "${VTEAM}" = "blue" ]; then
     UNTAG_POS="226,76"
     RETURN_POS="5,0"
     START_POS="20,35,60"
-    STATION_KEEP_AGGRESSIVE="41.35,-74"
+    STATION_KEEP_AGGRESSIVE="231,90"
     OPFOR="red"
-    OPFOR_ZONE="1,0,80,80"
+    OPFOR_ZONE="194,55,265,107"
     echo "Blue team selected."
 fi
    

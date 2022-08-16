@@ -19,4 +19,6 @@ ProcessConfig = pBasicContactMgr
 
 
   Alert = id=trail, var=TRAIL_INFO, val="name=$[RNAME] # contact=mokai", alert_range=140
+
+ deprecated_ok = true
 }
