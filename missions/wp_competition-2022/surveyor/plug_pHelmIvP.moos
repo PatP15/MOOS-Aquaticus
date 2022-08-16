@@ -11,6 +11,6 @@ ProcessConfig = pHelmIvP
 #ifdef VTYPE uuv
   Domain       = speed:0:4.5:26
 #elseifdef VTYPE kayak
-  Domain       = speed:0:2.5:26
+  Domain       = speed:0:1.5:26
 #endif
 }
