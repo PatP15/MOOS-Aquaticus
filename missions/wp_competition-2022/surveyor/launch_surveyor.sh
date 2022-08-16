@@ -230,24 +230,24 @@ echo $LOGPATH
 
 
 if [ "${VTEAM}" = "red" ]; then
-    GRAB_POS="216,72"
+    GRAB_POS="226,76"
     GRABR_POS="20,20"
     GRABL_POS="30,30"
-    UNTAG_POS="250,151"
+    UNTAG_POS="256,158"
     RETURN_POS="5,0"
     START_POS="140,45,240"
-    STATION_KEEP_AGGRESSIVE="122,38"
+    STATION_KEEP_AGGRESSIVE="41.35,-74"
     OPFOR="blue"
     OPFOR_ZONE="80,0,160,80"
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
-    GRAB_POS="250,151"
+    GRAB_POS="256,158"
     GRABR_POS="130,30"
     GRABL_POS="130,50"
-    UNTAG_POS="216,72"
+    UNTAG_POS="226,76"
     RETURN_POS="5,0"
     START_POS="20,35,60"
-    STATION_KEEP_AGGRESSIVE="40,40"
+    STATION_KEEP_AGGRESSIVE="41.35,-74
     OPFOR="red"
     OPFOR_ZONE="1,0,80,80"
     echo "Blue team selected."
