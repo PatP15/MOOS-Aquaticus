@@ -10,6 +10,8 @@
 #include "ACTable.h"
 #include "ZoneTrackOpponents.h"
 #include "NodeRecordUtils.h"
+#include <math.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -42,7 +44,7 @@ bool ZoneTrackOpponents::OnNewMail(MOOSMSG_LIST &NewMail)
     string key    = msg.GetKey();
 
 #if 0 // Keep these around just for template
-    string comm  = msg.GetCommunity();
+    string comm  = msg.GetCommunity();op_for_x
     double dval  = msg.GetDouble();
     string sval  = msg.GetString(); 
     string msrc  = msg.GetSource();
@@ -100,12 +102,139 @@ bool ZoneTrackOpponents::Iterate()
       //not a contact of opposing force
       continue;
     }
-    else {
-      //extract location and check if within bounds
-      double op_for_x = node_record.getX();
-      double op_for_y = node_record.getY();
-
-      //check if within bounds
+    //extract location and check if within bounds
+    double op_for_x = node_record.getX();
+    double op_for_y = node_record.getY();
+    //get bounding angle
+    /*
+    theta_1_a = abs(atan((y2 - y1)/(x2 - x1)));
+    theta_1_b = abs(atan((y4 - y1)/(x4 - x1)));
+    theta_2_a = abs(atan((y3 - y2)/(x3 - x2)));
+    theta_2_b = abs(atan((y1 - y2)/(x1 - x2)));
+    theta_3_a = abs(atan((y4 - y3)/(x4 - x3)));
+    theta_3_b = abs(atan((y2 - y3)/(x2 - x3)));
+    theta_4_a = abs(atan((y1 - y4)/(x1 - x4)));
+    theta_4_b = abs(atan((y3 - y4)/(x3 - x4)));
+    */
+    if((x1 <= x2) && (y1 <= y2)){
+    	theta_1_a = (atan((y2 - y1)/(x2 - x1)))*(180/M_PI);
+    } else if ((x1 <= x2) && (y1 > y2)){
+    	theta_1_a = 360 + (atan((y2 - y1)/(x2 - x1)))*(180/M_PI);
+    } else if (((x1 >= x2) && (y1 <= y2)) || ((x1 >= x2) && (y1 >= y2))) {
+    	theta_1_a = 180 + (atan((y2 - y1)/(x2 - x1)))*(180/M_PI);
+    }
+    if((x1 <= x4) && (y1 <= y4)){
+    	theta_1_b = (atan((y4 - y1)/(x4 - x1)))*(180/M_PI);
+    } else if ((x1 <= x4) && (y1 > y4)){
+    	theta_1_b = 360 + (atan((y4 - y1)/(x4 - x1)))*(180/M_PI);
+    } else if (((x1 >= x4) && (y1 <= y4)) || ((x1 >= x4) && (y4 >= y2))) {
+    	theta_1_b = 180 + (atan((y4 - y1)/(x4 - x1)))*(180/M_PI);
+    }
+    if((x2 <= x3) && (y2 <= y3)){
+    	theta_2_a = (atan((y3 - y2)/(x3 - x2)))*(180/M_PI);
+    } else if ((x2 <= x3) && (y2 > y3)){
+    	theta_2_a = 360 + (atan((y3 - y2)/(x3 - x2)))*(180/M_PI);
+    } else if (((x2 >= x3) && (y2 <= y3)) || ((x2 >= x3) && (y2 >= y3))) {
+    	theta_2_a = 180 + (atan((y3 - y2)/(x3 - x2)))*(180/M_PI);
+    }
+    if((x2 <= x1) && (y2 <= y1)){
+    	theta_2_b = (atan((y1 - y2)/(x1 - x2)))*(180/M_PI);
+    } else if ((x2 <= x1) && (y2 > y1)){
+    	theta_2_b = 360 + (atan((y1 - y2)/(x1 - x2)))*(180/M_PI);
+    } else if (((x2 >= x1) && (y2 <= y1)) || ((x2 >= x1) && (y2 >= y1))) {
+    	theta_2_b = 180 + (atan((y1 - y2)/(x1 - x2)))*(180/M_PI);
+    }
+    if((x3 <= x4) && (y3 <= y4)){
+    	theta_3_a = (atan((y4 - y3)/(x4 - x3)))*(180/M_PI);
+    } else if ((x3 <= x4) && (y3 > y4)){
+    	theta_3_a = 360 + (atan((y4 - y3)/(x4 - x3)))*(180/M_PI);
+    } else if (((x3 >= x4) && (y3 <= y4)) || ((x3 >= x4) && (y3 >= y4))) {
+    	theta_3_a = 180 + (atan((y4 - y3)/(x4 - x3)))*(180/M_PI);
+    }
+    if((x3 <= x2) && (y3 <= y2)){
+    	theta_3_b = (atan((y2 - y3)/(x2 - x3)))*(180/M_PI);
+    } else if ((x3 <= x2) && (y3 > y2)){
+    	theta_3_b = 360 + (atan((y2 - y3)/(x2 - x3)))*(180/M_PI);
+    } else if (((x3 >= x2) && (y3 <= y2)) || ((x3 >= x2) && (y3 >= y2))) {
+    	theta_3_b = 180 + (atan((y2 - y3)/(x2 - x3)))*(180/M_PI);
+    }
+    if((x4 <= x1) && (y4 <= y1)){
+    	theta_4_a = (atan((y1 - y4)/(x1 - x4)))*(180/M_PI);
+    } else if ((x4 <= x1) && (y4 > y1)){
+    	theta_4_a = 360 + (atan((y1 - y4)/(x1 - x4)))*(180/M_PI);
+    } else if (((x4 >= x1) && (y4 <= y1)) || ((x4 >= x1) && (y4 >= y1))) {
+    	theta_4_a = 180 + (atan((y1 - y4)/(x1 - x4)))*(180/M_PI);
+    }
+    if((x4 <= x3) && (y4 <= y3)){
+    	theta_4_b = (atan((y3 - y4)/(x3 - x4)))*(180/M_PI);
+    } else if ((x4 <= x3) && (y4 > y3)){
+    	theta_4_b = 360 + (atan((y3 - y4)/(x3 - x4)))*(180/M_PI);
+    } else if (((x4 >= x3) && (y4 <= y3)) || ((x4 >= x3) && (y4 >= y3))) {
+    	theta_4_b = 180 + (atan((y3 - y4)/(x3 - x4)))*(180/M_PI);
+    }
+    /*
+    theta_1_b = atan((y4 - y1)/(x4 - x1));
+    theta_2_a = atan((y3 - y2)/(x3 - x2));
+    theta_2_b = atan((y1 - y2)/(x1 - x2));
+    theta_3_a = atan((y4 - y3)/(x4 - x3));
+    theta_3_b = atan((y2 - y3)/(x2 - x3));
+    theta_4_a = atan((y1 - y4)/(x1 - x4));
+    theta_4_b = atan((y3 - y4)/(x3 - x4));
+    */
+    //check if within bounds
+    /*
+    theta_1 = abs(atan((op_for_y - y1)/(op_for_x - x1)));
+    theta_2 = abs(atan((op_for_y - y2)/(op_for_x - x2)));
+    theta_3 = abs(atan((op_for_y - y3)/(op_for_x - x3)));
+    theta_4 = abs(atan((op_for_y - y4)/(op_for_x - x4)));
+    */
+    if((x1 <= op_for_x) && (y1 <= op_for_y)){
+    	theta_1 = (atan((op_for_y - y1)/(op_for_x - x1)))*(180/M_PI);
+    } else if ((x1 <= op_for_x) && (y1 >= op_for_y)){
+    	theta_1 = 360 + (atan((op_for_y - y1)/(op_for_x - x1)))*(180/M_PI);
+    } else if (((x1 >= op_for_x) && (y1 <= op_for_y)) || ((x1 >= op_for_x) && (y1 >= op_for_y))) {
+    	theta_1 = 180 + (atan((op_for_y - y1)/(op_for_x - x1)))*(180/M_PI);
+    }
+    if((x2 <= op_for_x) && (y2 <= op_for_y)){
+    	theta_2 = (atan((op_for_y - y2)/(op_for_x - x2)))*(180/M_PI);
+    } else if ((x2 <= op_for_x) && (y2 >= op_for_y)){
+    	theta_2 = 360 + (atan((op_for_y - y2)/(op_for_x - x2)))*(180/M_PI);
+    } else if (((x2 >= op_for_x) && (y2 <= op_for_y)) || ((x2 >= op_for_x) && (y2 >= op_for_y))) {
+    	theta_2 = 180 + (atan((op_for_y - y2)/(op_for_x - x2)))*(180/M_PI);
+    }
+    if((x3 <= op_for_x) && (y3 <= op_for_y)){
+    	theta_3 = (atan((op_for_y - y3)/(op_for_x - x3)))*(180/M_PI);
+    } else if ((x3 <= op_for_x) && (y3 >= op_for_y)){
+    	theta_3 = 360 + (atan((op_for_y - y3)/(op_for_x - x3)))*(180/M_PI);
+    } else if (((x3 >= op_for_x) && (y3 <= op_for_y)) || ((x3 >= op_for_x) && (y3 >= op_for_y))) {
+    	theta_3 = 180 + (atan((op_for_y - y3)/(op_for_x - x3)))*(180/M_PI);
+    }
+    if((x4 <= op_for_x) && (y4 <= op_for_y)){
+    	theta_4 = (atan((op_for_y - y4)/(op_for_x - x4)))*(180/M_PI);
+    } else if ((x4 <= op_for_x) && (y4 >= op_for_y)){
+    	theta_4 = 360 + (atan((op_for_y - y4)/(op_for_x - x4)))*(180/M_PI);
+    } else if (((x4 >= op_for_x) && (y4 <= op_for_y)) || ((x4 >= op_for_x) && (y4 >= op_for_y))) {
+    	theta_4 = 180 + (atan((op_for_y - y4)/(op_for_x - x4)))*(180/M_PI);
+    }
+    /*
+    theta_1 = atan((op_for_y - y1)/(op_for_x - x1));
+    theta_2 = atan((op_for_y - y2)/(op_for_x - x2));
+    theta_3 = atan((op_for_y - y3)/(op_for_x - x3));
+    theta_4 = atan((op_for_y - y4)/(op_for_x - x4));
+    */
+    if(((theta_1 >= theta_1_b) || (theta_1 <= theta_1_a)) && ((theta_2 >= theta_2_b) && (theta_2 <= theta_2_a)) && ((theta_3 >= theta_3_b) && (theta_3 <= theta_3_a)) && ((theta_4 >= theta_4_b) && 	(theta_4 <= theta_4_a))){
+	foundIntrudingContact = true;
+        Notify("AGGRESSIVE","TRUE");
+        Notify("AGGRESSIVE_CONTACT",contact_name);
+        m_in_zone = "TRUE";
+        if(m_high_value_point_set) {
+        	//we keep intruder location for high value threat
+        	m_map_intruders_x[contact_name] = op_for_x;
+        	m_map_intruders_y[contact_name] = op_for_y;
+        	m_map_intruders_name[contact_name] = contact_name; //used for convenience
+    	}
+    }
+      /*
       //check x first
       if(op_for_x > m_min_x && op_for_x < m_max_x){
         //ok now check within y
@@ -124,6 +253,7 @@ bool ZoneTrackOpponents::Iterate()
                               
         }
       }
+*/      
       else {
         //means a contact may previously exist and should be removed
         if(m_high_value_point_set) {
@@ -134,7 +264,7 @@ bool ZoneTrackOpponents::Iterate()
         
       }
     }
-  }
+  
   
   if(!foundIntrudingContact){
     Notify("AGGRESSIVE","FALSE");
@@ -231,6 +361,9 @@ bool ZoneTrackOpponents::OnStartUp()
     else if(param == "zone"){
       handled = handleZoneAssignment(orig);
     }
+    else if(param == "pts"){
+      handled = handlePointsAssignment(orig);
+    }
     else if(param == "opfor"){
       handled = handleOpForAssignment(value);
     }
@@ -269,8 +402,14 @@ bool ZoneTrackOpponents::buildReport()
   m_msgs << "============================================ \n";
   m_msgs << "Ownship: " << m_ownship << endl;
   m_msgs << "OpFor: " << m_op_for << endl;
-  m_msgs << "min x: " << m_min_x << " max x: " << m_max_x << endl;
-  m_msgs << "min y: " << m_min_y << " max y: " << m_max_y << endl;
+  m_msgs << "South West Corner: x = " << x1 << " y = " << y1 << endl;
+  m_msgs << "North West Corner: x = " << x2 << " y = " << y2 << endl;
+  m_msgs << "North East Corner: x = " << x3 << " y = " << y3 << endl;
+  m_msgs << "South East Corner: x = " << x4 << " y = " << y4 << endl;
+  m_msgs << "Theta 1 a: " << theta_1_a << " Theta 1 b: " << theta_1_b << " Theta 1: " << theta_1 << endl;
+  m_msgs << "Theta 2 a: " << theta_2_a << " Theta 2 b: " << theta_2_b << " Theta 2: " << theta_2 << endl;
+  m_msgs << "Theta 3 a: " << theta_3_a << " Theta 3 b: " << theta_3_b << " Theta 3: " << theta_3 << endl;
+  m_msgs << "Theta 4 a: " << theta_4_a << " Theta 4 b: " << theta_4_b << " Theta 4: " << theta_4 << endl;
   if(m_high_value_point_set){
     m_msgs << "high value point x: " << m_high_value_point_x << " y: " << m_high_value_point_y <<endl;
   }
@@ -323,6 +462,32 @@ bool ZoneTrackOpponents::handleZoneAssignment(std::string orig)
 
  return true;
 }
+
+//---------------------------------------------------------
+// Procedure: handlePointsAssignment
+
+bool ZoneTrackOpponents::handlePointsAssignment(std::string orig)
+{
+  //expecting in .moos parameter file: pts={x1,y1:x2,y2:x3,y3:x4,y4}
+  std::string ptsString = biteStringX(orig, '=');
+  vector<std::string> str_vector = parseString(orig, ',');
+  if(str_vector.size() !=8){
+    return false;
+  }
+
+    //we will convert strings to double
+  x1 = atof(str_vector[0].c_str());
+  y1 = atof(str_vector[1].c_str());
+  x2 = atof(str_vector[2].c_str());
+  y2 = atof(str_vector[3].c_str());
+  x3 = atof(str_vector[4].c_str());
+  y3 = atof(str_vector[5].c_str());
+  x4 = atof(str_vector[6].c_str());
+  y4 = atof(str_vector[7].c_str());
+
+ return true;
+}
+
 
 //---------------------------------------------------------
 // Procedure: handleHighValuePoint

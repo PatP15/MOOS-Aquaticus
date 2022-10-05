@@ -31,6 +31,7 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
    void registerVariables();
   bool handleOpForAssignment(std::string orig);
   bool handleZoneAssignment(std::string orig);
+  bool handlePointsAssignment(std::string orig);
   bool handleHighValuePoint(std::string value);
   void handleMailNodeReport(std::string report);
 
@@ -41,6 +42,26 @@ class ZoneTrackOpponents : public AppCastingMOOSApp
   double m_min_y;
   double m_max_x;
   double m_max_y;
+  double theta_1_a;
+  double theta_1_b;
+  double theta_2_a;
+  double theta_2_b;
+  double theta_3_a;
+  double theta_3_b;
+  double theta_4_a;
+  double theta_4_b;
+  double theta_1;
+  double theta_2;
+  double theta_3;
+  double theta_4;
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+  double x3;
+  double y3;
+  double x4;
+  double y4;
   std::string m_in_zone;
   bool m_high_value_point_set;
   double m_high_value_point_x;
