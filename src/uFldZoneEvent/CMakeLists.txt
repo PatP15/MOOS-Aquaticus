@@ -13,9 +13,9 @@ ADD_EXECUTABLE(uFldZoneEvent ${SRC})
 
 TARGET_LINK_LIBRARIES(uFldZoneEvent
   ${MOOS_LIBRARIES}
+  contacts
   apputil
   geometry
   mbutil
-  contacts
   ${SYSTEM_LIBS}
 )

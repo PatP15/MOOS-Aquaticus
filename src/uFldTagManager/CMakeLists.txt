@@ -17,10 +17,10 @@ ADD_EXECUTABLE(uFldTagManager ${SRC})
 
 TARGET_LINK_LIBRARIES(uFldTagManager
   ${MOOS_LIBRARIES}
+  contacts
   apputil
   geometry 
   mbutil
-  contacts
   ${SYSTEM_LIBS}
 )
 
