@@ -4,8 +4,11 @@ lat_south= 41.348246
 lon_east= -74.057583
 lon_west= -74.064343
 
-datum_lat = 41.350208
-datum_lon = -74.061124
+//datum_lat = 41.350208
+//datum_lon = -74.061124
+
+datum_lat = 41.34928
+datum_lon = -74.063645
 
 
 //tileStartX= 154282
