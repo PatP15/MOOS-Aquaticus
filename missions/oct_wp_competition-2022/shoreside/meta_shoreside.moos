@@ -38,7 +38,6 @@ ProcessConfig = uFldFlagManager
   CommsTick     = 2
 
   near_flag_range_buffer = 0
-
   flag = $(RED_FLAG), color=red, label=red
   flag = $(BLUE_FLAG), color=blue, label=blue
 
@@ -161,8 +160,8 @@ ProcessConfig = uFldTagManager
 //  zone_one = pts={ 80,0 : 80,80 : 160,80 : 160,0 }
 //  zone_two = pts={ 0,0 : 0,80 : 80,80 : 80,0 }
 
-  zone_one = pts={214.74, 126.92 : 234.72, 178.16 : 285.96, 157.88: 265.98, 106.94 }
-  zone_two = pts={194.76,  75.68 : 214.74, 126.92 : 265.98, 106.94: 246.00,  55.70 }
+  zone_one = pts={$(MIDFIELD_1) : $(CORNER_2) : $(CORNER_3): $(MIDFIELD_2) }
+  zone_two = pts={$(CORNER_1) : $(MIDFIELD_1) : $(MIDFIELD_2): $(CORNER_4) }
 
   zone_one_color = pink
   zone_two_color = dodger_blue

@@ -9,9 +9,11 @@ VTEAM1="red"
 VTEAM2="blue"
 SHORE_IP="localhost"
 SHORE_LISTEN="9300"
-BLUE_FLAG="x=225.83,y=79.67"
-RED_FLAG="x=254.89,y=154.21"
 VR_PORT="9800"
+
+#load variables from aquaticus param file
+source ../aquaticus_params.txt
+echo $BLUE_FLAG
 
 CID=000 # Competiton id
 LOGPATH=./
@@ -54,7 +56,10 @@ done
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
        VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP CID=$CID     \
-       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG} VR_PORT=${VR_PORT} LOGPATH=$LOGPATH
+       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG} VR_PORT=${VR_PORT} \
+       LOGPATH=$LOGPATH MIDFIELD_1=$MIDFIELD_1 MIDFIELD_2=$MIDFIELD_2 \
+       CORNER_1=$CORNER_1 CORNER_2=$CORNER_2 CORNER_3=$CORNER_3 \
+       CORNER_4=$CORNER_4
 
 if [ ! -e targ_shoreside.moos ]; then echo "no targ_shoreside.moos"; exit 1; fi
 
