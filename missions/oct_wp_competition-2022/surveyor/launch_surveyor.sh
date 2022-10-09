@@ -30,6 +30,13 @@ LOGPATH=./
 
 START_ACTION="PROTECT"
 
+source ../aquaticus_params.txt
+echo $CORNER_1
+echo $MIDFIELD_1
+TEST=$MIDFIELD_1,$CORNER_1
+echo $TEST
+#exit
+
 function help(){
     echo ""
     echo "USAGE: $0 <heron_vehicle_name> <vehicle_role> <heron_teammate_vehicle_role> [SWITCHES]"
@@ -230,26 +237,27 @@ echo $LOGPATH
 
 
 if [ "${VTEAM}" = "red" ]; then
-    GRAB_POS="225.83,79.67"
+    GRAB_POS=$BLUE_FLAG_X,$BLUE_FLAG_Y
     GRABR_POS="20,20"
     GRABL_POS="30,30"
-    UNTAG_POS="254.89,154.21"
+    UNTAG_POS=$RED_FLAG_X,$RED_FLAG_Y
     RETURN_POS="5,0"
     START_POS="140,45,240"
     STATION_KEEP_AGGRESSIVE="249.44,140.23"
     OPFOR="blue"
-    OPFOR_ZONE="214.74,126.92,234.72,178.16,285.96,157.88,265.98,106.94"
+    OPFOR_ZONE=$MIDFIELD_1,$CORNER_2,$CORNER_3,$MIDFIELD_2
+    echo $OPFOR_ZONE
     echo "Red team selected."
 elif [ "${VTEAM}" = "blue" ]; then
-    GRAB_POS="254.89,154.21"
+    GRAB_POS=$RED_FLAG_X,$RED_FLAG_Y
     GRABR_POS="130,30"
     GRABL_POS="130,50"
-    UNTAG_POS="225.83,79.67"
+    UNTAG_POS=$BLUE_FLAG_X,$BLUE_FLAG_Y
     RETURN_POS="5,0"
     START_POS="20,35,60"
     STATION_KEEP_AGGRESSIVE="231.28,93.65"
     OPFOR="red"
-    OPFOR_ZONE="194.76,75.68,214.74,126.92,265.98,106.94,246.00,55.70"
+    OPFOR_ZONE=$CORNER_1,$MIDFIELD_1,$MIDFIELD_2,$CORNER_4
     echo "Blue team selected."
 fi
    
@@ -309,7 +317,11 @@ nsplug meta_surveyor.bhv targ_${RNAME}.bhv -f  \
     UNTAG_POS=$UNTAG_POS           \
     HERON_TEAMMATE=$HERON_TEAMMATE \
     STATION_KEEP_AGGRESSIVE=$STATION_KEEP_AGGRESSIVE \
-	START_ACTION=$START_ACTION
+    START_ACTION=$START_ACTION     \
+    CORNER_1=$CORNER_1             \
+    CORNER_2=$CORNER_2             \
+    CORNER_3=$CORNER_3             \
+    CORNER_4=$CORNER_4             
 
 
 if [ ${JUST_BUILD} = "yes" ] ; then

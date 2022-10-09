@@ -13,7 +13,7 @@ VR_PORT="9800"
 
 #load variables from aquaticus param file
 source ../aquaticus_params.txt
-echo $BLUE_FLAG
+echo $BLUE_FLAG_X
 
 CID=000 # Competiton id
 LOGPATH=./
@@ -56,7 +56,8 @@ done
 nsplug meta_shoreside.moos targ_shoreside.moos -f WARP=$TIME_WARP    \
        SNAME="shoreside"  SHARE_LISTEN=$SHORE_LISTEN  SPORT="9000"   \
        VTEAM1=$VTEAM1 VTEAM2=$VTEAM2 SHORE_IP=$SHORE_IP CID=$CID     \
-       RED_FLAG=${RED_FLAG} BLUE_FLAG=${BLUE_FLAG} VR_PORT=${VR_PORT} \
+       RED_FLAG_X=$RED_FLAG_X BLUE_FLAG_X=$BLUE_FLAG_X VR_PORT=${VR_PORT} \
+       RED_FLAG_Y=$RED_FLAG_Y BLUE_FLAG_Y=$BLUE_FLAG_Y  \
        LOGPATH=$LOGPATH MIDFIELD_1=$MIDFIELD_1 MIDFIELD_2=$MIDFIELD_2 \
        CORNER_1=$CORNER_1 CORNER_2=$CORNER_2 CORNER_3=$CORNER_3 \
        CORNER_4=$CORNER_4
