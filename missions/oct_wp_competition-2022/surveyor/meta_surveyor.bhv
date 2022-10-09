@@ -59,7 +59,7 @@ Behavior = BHV_OpRegionRecover
   activeflag   = RECOVER = true
   inactiveflag = RECOVER = false
 
-             polygon = pts={234.7,178.3 : 286,158.3: 246,55.7:194.7,75.7}
+             polygon = pts={234.72,178.16 : 285.96,157.88: 246,55.70:194.76,75.68}
         trigger_entry_time = 1
         trigger_exit_time  = 1
 }

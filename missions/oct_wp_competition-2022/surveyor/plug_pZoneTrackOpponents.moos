@@ -9,7 +9,9 @@ ProcessConfig = pZoneTrackOpponents
 //   opfor=blue
    opfor=$(OPFOR)
 //   zone=80,0,160,80
-   zone=$(OPFOR_ZONE)
+//   zone=$(OPFOR_ZONE)
+   pts=$(OPFOR_ZONE)
    point=$(UNTAG_POS)
+
 }
 
