@@ -15,4 +15,5 @@ ProcessConfig = uSimMarine
 
   //thrust_map = -100:-2, 0:0, 20:1, 40:2, 60:3, 80:5, 100:5
   //thrust_map = -100:-2, 0:0, 20:1, 40:2, 60:3, 80:5, 100:5
+  deprecated_ok = true
 }
